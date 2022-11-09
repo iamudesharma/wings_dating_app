@@ -9,6 +9,17 @@ class ProfileView extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         SliverAppBar.medium(
+          flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
+              title: Text("Collapsing Toolbar",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  )),
+              background: Image.network(
+                "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&h=350",
+                fit: BoxFit.cover,
+              )),
           pinned: true,
           leading: IconButton(
             icon: const Icon(Icons.menu),
@@ -22,23 +33,24 @@ class ProfileView extends StatelessWidget {
             ),
           ],
           // centerTitle: true,
-          title: Text("username"),
+          title: const Text("username"),
         ),
         SliverToBoxAdapter(
           child: Row(
             children: [
-              Card(
+              const Card(
                 child: Placeholder(
                   fallbackWidth: 100,
                   fallbackHeight: 100,
                 ),
               ),
+
               // 10.h.,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("username"),
-                  Text("bio"),
+                children: const [
+                  const Text("username"),
+                  const Text("bio"),
                 ],
               )
             ],
