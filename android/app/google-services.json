@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wings_dating_app",
+            "certificate_hash": "6b3ea3f47d8abbd3a4761f202888105d7948d33a"
+          }
+        },
+        {
           "client_id": "546119961072-3jrbpt2k3jdm649jqumspdt3rpt7crnm.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "546119961072-3jrbpt2k3jdm649jqumspdt3rpt7crnm.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.wingsDatingApp"
+              }
             }
           ]
         }

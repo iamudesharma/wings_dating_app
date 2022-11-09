@@ -22,15 +22,60 @@ class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: const SignOptionsView(),
       );
-    }
+    },
+    DashboardRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const DashboardView(),
+      );
+    },
+    UsersRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const UsersView(),
+      );
+    },
+    ChatListRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const ChatListView(),
+      );
+    },
+    ProfileRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const ProfileView(),
+      );
+    },
   };
 
   @override
   List<RouteConfig> get routes => [
         RouteConfig(
           SignOptionsRoute.name,
+          path: '/sign-options-view',
+        ),
+        RouteConfig(
+          DashboardRoute.name,
           path: '/',
-        )
+          children: [
+            RouteConfig(
+              UsersRoute.name,
+              path: 'users-view',
+              parent: DashboardRoute.name,
+            ),
+            RouteConfig(
+              ChatListRoute.name,
+              path: 'chat-list-view',
+              parent: DashboardRoute.name,
+            ),
+            RouteConfig(
+              ProfileRoute.name,
+              path: 'profile-view',
+              parent: DashboardRoute.name,
+            ),
+          ],
+        ),
       ];
 }
 
@@ -40,8 +85,57 @@ class SignOptionsRoute extends PageRouteInfo<void> {
   const SignOptionsRoute()
       : super(
           SignOptionsRoute.name,
-          path: '/',
+          path: '/sign-options-view',
         );
 
   static const String name = 'SignOptionsRoute';
+}
+
+/// generated route for
+/// [DashboardView]
+class DashboardRoute extends PageRouteInfo<void> {
+  const DashboardRoute({List<PageRouteInfo>? children})
+      : super(
+          DashboardRoute.name,
+          path: '/',
+          initialChildren: children,
+        );
+
+  static const String name = 'DashboardRoute';
+}
+
+/// generated route for
+/// [UsersView]
+class UsersRoute extends PageRouteInfo<void> {
+  const UsersRoute()
+      : super(
+          UsersRoute.name,
+          path: 'users-view',
+        );
+
+  static const String name = 'UsersRoute';
+}
+
+/// generated route for
+/// [ChatListView]
+class ChatListRoute extends PageRouteInfo<void> {
+  const ChatListRoute()
+      : super(
+          ChatListRoute.name,
+          path: 'chat-list-view',
+        );
+
+  static const String name = 'ChatListRoute';
+}
+
+/// generated route for
+/// [ProfileView]
+class ProfileRoute extends PageRouteInfo<void> {
+  const ProfileRoute()
+      : super(
+          ProfileRoute.name,
+          path: 'profile-view',
+        );
+
+  static const String name = 'ProfileRoute';
 }

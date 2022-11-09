@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '546119961072',
     projectId: 'wings-dating-951ed',
     storageBucket: 'wings-dating-951ed.appspot.com',
+    androidClientId: '546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com',
     iosClientId: '546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com',
     iosBundleId: 'com.example.wingsDatingApp',
   );

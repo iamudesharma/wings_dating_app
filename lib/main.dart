@@ -1,9 +1,19 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
+import 'package:wings_dating_app/routes/navigation_observers.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
@@ -14,8 +24,44 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final appRouter = ref.watch(appRouteProvider);
     return MaterialApp.router(
-      routerDelegate: appRouter.delegate(),      
-      routeInformationParser: appRouter.defaultRouteParser(),    
+      theme: FlexThemeData.light(
+        scheme: FlexScheme.aquaBlue,
+        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+        blendLevel: 20,
+        appBarOpacity: 0.95,
+        subThemesData: const FlexSubThemesData(
+          blendOnLevel: 20,
+          blendOnColors: false,
+          inputDecoratorRadius: 12.0,
+        ),
+        visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        useMaterial3: true,
+        // To use the playground font, add GoogleFonts package and uncomment
+        // fontFamily: GoogleFonts.notoSans().fontFamily,
+      ),
+      darkTheme: FlexThemeData.dark(
+        scheme: FlexScheme.aquaBlue,
+        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+        blendLevel: 15,
+        appBarOpacity: 0.90,
+        subThemesData: const FlexSubThemesData(
+          blendOnLevel: 30,
+          inputDecoratorRadius: 12.0,
+        ),
+        visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        useMaterial3: true,
+        // To use the playground font, add GoogleFonts package and uncomment
+        // fontFamily: GoogleFonts.notoSans().fontFamily,
+      ),
+// If you do not have a themeMode switch, uncomment this line
+// to let the device system mode control the theme mode:
+// themeMode: ThemeMode.system,
+
+      themeMode: ThemeMode.dark,
+
+      routerDelegate:
+          appRouter.delegate(navigatorObservers: () => [MyObserver()]),
+      routeInformationParser: appRouter.defaultRouteParser(),
       title: 'Flutter Demo',
     );
   }
@@ -23,15 +69,6 @@ class MyApp extends ConsumerWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -44,23 +81,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -105,3 +131,11 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
+//dashboard.dart
+// with this code, the app crashes
+// import 'package:auto_route/auto_route.dart';
+// import 'package:flutter/material.dart';
+
+  

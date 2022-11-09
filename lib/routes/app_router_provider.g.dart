@@ -29,13 +29,13 @@ class _SystemHash {
   }
 }
 
-String $appRouteHash() => r'0d4c0fc371cec387e0df3172fc12aaa29701b7f2';
+String $appRouteHash() => r'e68f497713f4c39151f05330d812ea415ff3a23f';
 
 /// See also [appRoute].
-final appRouteProvider = AutoDisposeProvider<AppRouter>(
+final appRouteProvider = Provider<AppRouter>(
   appRoute,
   name: r'appRouteProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product') ? null : $appRouteHash,
 );
-typedef AppRouteRef = AutoDisposeProviderRef<AppRouter>;
+typedef AppRouteRef = ProviderRef<AppRouter>;
