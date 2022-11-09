@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "546119961072",
+    "project_id": "wings-dating-951ed",
+    "storage_bucket": "wings-dating-951ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546119961072:android:ccd2092af11903ccd9b535",
+        "android_client_info": {
+          "package_name": "com.example.wings_dating_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "546119961072-3jrbpt2k3jdm649jqumspdt3rpt7crnm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcHVq9mSbSRUWDHe_jmSVafTr_BvXSfkE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "546119961072-3jrbpt2k3jdm649jqumspdt3rpt7crnm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
