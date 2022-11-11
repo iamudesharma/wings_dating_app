@@ -35,6 +35,8 @@ mixin _$UserModel {
   bool get isOnline => throw _privateConstructorUsedError;
   bool get isVerified => throw _privateConstructorUsedError;
   bool get isBlocked => throw _privateConstructorUsedError;
+  double get latitude => throw _privateConstructorUsedError;
+  double get longitude => throw _privateConstructorUsedError;
   int? get age => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -63,6 +65,8 @@ abstract class $UserModelCopyWith<$Res> {
       bool isOnline,
       bool isVerified,
       bool isBlocked,
+      double latitude,
+      double longitude,
       int? age});
 
   $UserBasicModelCopyWith<$Res>? get userBasicModel;
@@ -95,6 +99,8 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? isOnline = null,
     Object? isVerified = null,
     Object? isBlocked = null,
+    Object? latitude = null,
+    Object? longitude = null,
     Object? age = freezed,
   }) {
     return _then(_value.copyWith(
@@ -154,6 +160,14 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.isBlocked
           : isBlocked // ignore: cast_nullable_to_non_nullable
               as bool,
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
       age: freezed == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
@@ -196,6 +210,8 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       bool isOnline,
       bool isVerified,
       bool isBlocked,
+      double latitude,
+      double longitude,
       int? age});
 
   @override
@@ -227,6 +243,8 @@ class __$$_UserModelCopyWithImpl<$Res>
     Object? isOnline = null,
     Object? isVerified = null,
     Object? isBlocked = null,
+    Object? latitude = null,
+    Object? longitude = null,
     Object? age = freezed,
   }) {
     return _then(_$_UserModel(
@@ -286,6 +304,14 @@ class __$$_UserModelCopyWithImpl<$Res>
           ? _value.isBlocked
           : isBlocked // ignore: cast_nullable_to_non_nullable
               as bool,
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
       age: freezed == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
@@ -312,6 +338,8 @@ class _$_UserModel implements _UserModel {
       this.isOnline = false,
       this.isVerified = false,
       this.isBlocked = false,
+      required this.latitude,
+      required this.longitude,
       this.age})
       : _albumUrl = albumUrl;
 
@@ -361,11 +389,15 @@ class _$_UserModel implements _UserModel {
   @JsonKey()
   final bool isBlocked;
   @override
+  final double latitude;
+  @override
+  final double longitude;
+  @override
   final int? age;
 
   @override
   String toString() {
-    return 'UserModel(nickname: $nickname, aboutMe: $aboutMe, albumUrl: $albumUrl, avatarUrl: $avatarUrl, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, age: $age)';
+    return 'UserModel(nickname: $nickname, aboutMe: $aboutMe, albumUrl: $albumUrl, avatarUrl: $avatarUrl, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, latitude: $latitude, longitude: $longitude, age: $age)';
   }
 
   @override
@@ -398,6 +430,10 @@ class _$_UserModel implements _UserModel {
                 other.isVerified == isVerified) &&
             (identical(other.isBlocked, isBlocked) ||
                 other.isBlocked == isBlocked) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
             (identical(other.age, age) || other.age == age));
   }
 
@@ -419,6 +455,8 @@ class _$_UserModel implements _UserModel {
       isOnline,
       isVerified,
       isBlocked,
+      latitude,
+      longitude,
       age);
 
   @JsonKey(ignore: true)
@@ -451,6 +489,8 @@ abstract class _UserModel implements UserModel {
       final bool isOnline,
       final bool isVerified,
       final bool isBlocked,
+      required final double latitude,
+      required final double longitude,
       final int? age}) = _$_UserModel;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
@@ -484,6 +524,10 @@ abstract class _UserModel implements UserModel {
   bool get isVerified;
   @override
   bool get isBlocked;
+  @override
+  double get latitude;
+  @override
+  double get longitude;
   @override
   int? get age;
   @override

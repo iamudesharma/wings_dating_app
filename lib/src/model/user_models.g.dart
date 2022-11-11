@@ -31,6 +31,8 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       isOnline: json['isOnline'] as bool? ?? false,
       isVerified: json['isVerified'] as bool? ?? false,
       isBlocked: json['isBlocked'] as bool? ?? false,
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
       age: json['age'] as int?,
     );
 
@@ -51,6 +53,8 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'isOnline': instance.isOnline,
       'isVerified': instance.isVerified,
       'isBlocked': instance.isBlocked,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
       'age': instance.age,
     };
 

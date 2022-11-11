@@ -49,6 +49,8 @@ class UserModel with _$UserModel {
     @Default(false) bool isOnline,
     @Default(false) bool isVerified,
     @Default(false) bool isBlocked,
+    required double latitude,
+    required double longitude,
     int? age,
   }) = _UserModel;
 
@@ -58,6 +60,8 @@ class UserModel with _$UserModel {
 
 // @Collection<UserModel>("users", prefix: 'User')
 // final usersRef = UserModelCollectionReference();
+
+
 
 
 // // final personRef = UserModel();
