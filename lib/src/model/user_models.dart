@@ -7,6 +7,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:wings_dating_app/helpers/extra_data.dart';
+import 'package:wings_dating_app/src/model/user_basic_model.dart';
 // import 'package:get/get_connect/http/src/utils/utils.dart';
 
 part 'user_models.freezed.dart';
@@ -36,6 +38,18 @@ class UserModel with _$UserModel {
     String? aboutMe,
     List<String>? albumUrl,
     String? avatarUrl,
+    UserBasicModel? userBasicModel,
+    @Default(Role.doNotShow) Role role,
+    @Default(BodyType.doNotShow) BodyType bodyType,
+    @Default(RelationshipStatus.doNotShow)
+        RelationshipStatus relationshipStatus,
+    @Default(Ethnicity.doNotShow) Ethnicity ethnicity,
+    LookingFor? lookingFor,
+    WhereToMeet? whereToMeet,
+    @Default(false) bool isOnline,
+    @Default(false) bool isVerified,
+    @Default(false) bool isBlocked,
+    int? age,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, Object?> json) =>

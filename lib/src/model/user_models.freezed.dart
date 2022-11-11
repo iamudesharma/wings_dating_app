@@ -24,6 +24,18 @@ mixin _$UserModel {
   String? get aboutMe => throw _privateConstructorUsedError;
   List<String>? get albumUrl => throw _privateConstructorUsedError;
   String? get avatarUrl => throw _privateConstructorUsedError;
+  UserBasicModel? get userBasicModel => throw _privateConstructorUsedError;
+  Role get role => throw _privateConstructorUsedError;
+  BodyType get bodyType => throw _privateConstructorUsedError;
+  RelationshipStatus get relationshipStatus =>
+      throw _privateConstructorUsedError;
+  Ethnicity get ethnicity => throw _privateConstructorUsedError;
+  LookingFor? get lookingFor => throw _privateConstructorUsedError;
+  WhereToMeet? get whereToMeet => throw _privateConstructorUsedError;
+  bool get isOnline => throw _privateConstructorUsedError;
+  bool get isVerified => throw _privateConstructorUsedError;
+  bool get isBlocked => throw _privateConstructorUsedError;
+  int? get age => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,7 +52,20 @@ abstract class $UserModelCopyWith<$Res> {
       {String nickname,
       String? aboutMe,
       List<String>? albumUrl,
-      String? avatarUrl});
+      String? avatarUrl,
+      UserBasicModel? userBasicModel,
+      Role role,
+      BodyType bodyType,
+      RelationshipStatus relationshipStatus,
+      Ethnicity ethnicity,
+      LookingFor? lookingFor,
+      WhereToMeet? whereToMeet,
+      bool isOnline,
+      bool isVerified,
+      bool isBlocked,
+      int? age});
+
+  $UserBasicModelCopyWith<$Res>? get userBasicModel;
 }
 
 /// @nodoc
@@ -60,6 +85,17 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? aboutMe = freezed,
     Object? albumUrl = freezed,
     Object? avatarUrl = freezed,
+    Object? userBasicModel = freezed,
+    Object? role = null,
+    Object? bodyType = null,
+    Object? relationshipStatus = null,
+    Object? ethnicity = null,
+    Object? lookingFor = freezed,
+    Object? whereToMeet = freezed,
+    Object? isOnline = null,
+    Object? isVerified = null,
+    Object? isBlocked = null,
+    Object? age = freezed,
   }) {
     return _then(_value.copyWith(
       nickname: null == nickname
@@ -78,7 +114,63 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      userBasicModel: freezed == userBasicModel
+          ? _value.userBasicModel
+          : userBasicModel // ignore: cast_nullable_to_non_nullable
+              as UserBasicModel?,
+      role: null == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as Role,
+      bodyType: null == bodyType
+          ? _value.bodyType
+          : bodyType // ignore: cast_nullable_to_non_nullable
+              as BodyType,
+      relationshipStatus: null == relationshipStatus
+          ? _value.relationshipStatus
+          : relationshipStatus // ignore: cast_nullable_to_non_nullable
+              as RelationshipStatus,
+      ethnicity: null == ethnicity
+          ? _value.ethnicity
+          : ethnicity // ignore: cast_nullable_to_non_nullable
+              as Ethnicity,
+      lookingFor: freezed == lookingFor
+          ? _value.lookingFor
+          : lookingFor // ignore: cast_nullable_to_non_nullable
+              as LookingFor?,
+      whereToMeet: freezed == whereToMeet
+          ? _value.whereToMeet
+          : whereToMeet // ignore: cast_nullable_to_non_nullable
+              as WhereToMeet?,
+      isOnline: null == isOnline
+          ? _value.isOnline
+          : isOnline // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isVerified: null == isVerified
+          ? _value.isVerified
+          : isVerified // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isBlocked: null == isBlocked
+          ? _value.isBlocked
+          : isBlocked // ignore: cast_nullable_to_non_nullable
+              as bool,
+      age: freezed == age
+          ? _value.age
+          : age // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserBasicModelCopyWith<$Res>? get userBasicModel {
+    if (_value.userBasicModel == null) {
+      return null;
+    }
+
+    return $UserBasicModelCopyWith<$Res>(_value.userBasicModel!, (value) {
+      return _then(_value.copyWith(userBasicModel: value) as $Val);
+    });
   }
 }
 
@@ -93,7 +185,21 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       {String nickname,
       String? aboutMe,
       List<String>? albumUrl,
-      String? avatarUrl});
+      String? avatarUrl,
+      UserBasicModel? userBasicModel,
+      Role role,
+      BodyType bodyType,
+      RelationshipStatus relationshipStatus,
+      Ethnicity ethnicity,
+      LookingFor? lookingFor,
+      WhereToMeet? whereToMeet,
+      bool isOnline,
+      bool isVerified,
+      bool isBlocked,
+      int? age});
+
+  @override
+  $UserBasicModelCopyWith<$Res>? get userBasicModel;
 }
 
 /// @nodoc
@@ -111,6 +217,17 @@ class __$$_UserModelCopyWithImpl<$Res>
     Object? aboutMe = freezed,
     Object? albumUrl = freezed,
     Object? avatarUrl = freezed,
+    Object? userBasicModel = freezed,
+    Object? role = null,
+    Object? bodyType = null,
+    Object? relationshipStatus = null,
+    Object? ethnicity = null,
+    Object? lookingFor = freezed,
+    Object? whereToMeet = freezed,
+    Object? isOnline = null,
+    Object? isVerified = null,
+    Object? isBlocked = null,
+    Object? age = freezed,
   }) {
     return _then(_$_UserModel(
       nickname: null == nickname
@@ -129,6 +246,50 @@ class __$$_UserModelCopyWithImpl<$Res>
           ? _value.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      userBasicModel: freezed == userBasicModel
+          ? _value.userBasicModel
+          : userBasicModel // ignore: cast_nullable_to_non_nullable
+              as UserBasicModel?,
+      role: null == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as Role,
+      bodyType: null == bodyType
+          ? _value.bodyType
+          : bodyType // ignore: cast_nullable_to_non_nullable
+              as BodyType,
+      relationshipStatus: null == relationshipStatus
+          ? _value.relationshipStatus
+          : relationshipStatus // ignore: cast_nullable_to_non_nullable
+              as RelationshipStatus,
+      ethnicity: null == ethnicity
+          ? _value.ethnicity
+          : ethnicity // ignore: cast_nullable_to_non_nullable
+              as Ethnicity,
+      lookingFor: freezed == lookingFor
+          ? _value.lookingFor
+          : lookingFor // ignore: cast_nullable_to_non_nullable
+              as LookingFor?,
+      whereToMeet: freezed == whereToMeet
+          ? _value.whereToMeet
+          : whereToMeet // ignore: cast_nullable_to_non_nullable
+              as WhereToMeet?,
+      isOnline: null == isOnline
+          ? _value.isOnline
+          : isOnline // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isVerified: null == isVerified
+          ? _value.isVerified
+          : isVerified // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isBlocked: null == isBlocked
+          ? _value.isBlocked
+          : isBlocked // ignore: cast_nullable_to_non_nullable
+              as bool,
+      age: freezed == age
+          ? _value.age
+          : age // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -140,7 +301,18 @@ class _$_UserModel implements _UserModel {
       {required this.nickname,
       this.aboutMe,
       final List<String>? albumUrl,
-      this.avatarUrl})
+      this.avatarUrl,
+      this.userBasicModel,
+      this.role = Role.doNotShow,
+      this.bodyType = BodyType.doNotShow,
+      this.relationshipStatus = RelationshipStatus.doNotShow,
+      this.ethnicity = Ethnicity.doNotShow,
+      this.lookingFor,
+      this.whereToMeet,
+      this.isOnline = false,
+      this.isVerified = false,
+      this.isBlocked = false,
+      this.age})
       : _albumUrl = albumUrl;
 
   factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
@@ -161,10 +333,39 @@ class _$_UserModel implements _UserModel {
 
   @override
   final String? avatarUrl;
+  @override
+  final UserBasicModel? userBasicModel;
+  @override
+  @JsonKey()
+  final Role role;
+  @override
+  @JsonKey()
+  final BodyType bodyType;
+  @override
+  @JsonKey()
+  final RelationshipStatus relationshipStatus;
+  @override
+  @JsonKey()
+  final Ethnicity ethnicity;
+  @override
+  final LookingFor? lookingFor;
+  @override
+  final WhereToMeet? whereToMeet;
+  @override
+  @JsonKey()
+  final bool isOnline;
+  @override
+  @JsonKey()
+  final bool isVerified;
+  @override
+  @JsonKey()
+  final bool isBlocked;
+  @override
+  final int? age;
 
   @override
   String toString() {
-    return 'UserModel(nickname: $nickname, aboutMe: $aboutMe, albumUrl: $albumUrl, avatarUrl: $avatarUrl)';
+    return 'UserModel(nickname: $nickname, aboutMe: $aboutMe, albumUrl: $albumUrl, avatarUrl: $avatarUrl, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, age: $age)';
   }
 
   @override
@@ -177,13 +378,48 @@ class _$_UserModel implements _UserModel {
             (identical(other.aboutMe, aboutMe) || other.aboutMe == aboutMe) &&
             const DeepCollectionEquality().equals(other._albumUrl, _albumUrl) &&
             (identical(other.avatarUrl, avatarUrl) ||
-                other.avatarUrl == avatarUrl));
+                other.avatarUrl == avatarUrl) &&
+            (identical(other.userBasicModel, userBasicModel) ||
+                other.userBasicModel == userBasicModel) &&
+            (identical(other.role, role) || other.role == role) &&
+            (identical(other.bodyType, bodyType) ||
+                other.bodyType == bodyType) &&
+            (identical(other.relationshipStatus, relationshipStatus) ||
+                other.relationshipStatus == relationshipStatus) &&
+            (identical(other.ethnicity, ethnicity) ||
+                other.ethnicity == ethnicity) &&
+            (identical(other.lookingFor, lookingFor) ||
+                other.lookingFor == lookingFor) &&
+            (identical(other.whereToMeet, whereToMeet) ||
+                other.whereToMeet == whereToMeet) &&
+            (identical(other.isOnline, isOnline) ||
+                other.isOnline == isOnline) &&
+            (identical(other.isVerified, isVerified) ||
+                other.isVerified == isVerified) &&
+            (identical(other.isBlocked, isBlocked) ||
+                other.isBlocked == isBlocked) &&
+            (identical(other.age, age) || other.age == age));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, nickname, aboutMe,
-      const DeepCollectionEquality().hash(_albumUrl), avatarUrl);
+  int get hashCode => Object.hash(
+      runtimeType,
+      nickname,
+      aboutMe,
+      const DeepCollectionEquality().hash(_albumUrl),
+      avatarUrl,
+      userBasicModel,
+      role,
+      bodyType,
+      relationshipStatus,
+      ethnicity,
+      lookingFor,
+      whereToMeet,
+      isOnline,
+      isVerified,
+      isBlocked,
+      age);
 
   @JsonKey(ignore: true)
   @override
@@ -204,7 +440,18 @@ abstract class _UserModel implements UserModel {
       {required final String nickname,
       final String? aboutMe,
       final List<String>? albumUrl,
-      final String? avatarUrl}) = _$_UserModel;
+      final String? avatarUrl,
+      final UserBasicModel? userBasicModel,
+      final Role role,
+      final BodyType bodyType,
+      final RelationshipStatus relationshipStatus,
+      final Ethnicity ethnicity,
+      final LookingFor? lookingFor,
+      final WhereToMeet? whereToMeet,
+      final bool isOnline,
+      final bool isVerified,
+      final bool isBlocked,
+      final int? age}) = _$_UserModel;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$_UserModel.fromJson;
@@ -217,6 +464,28 @@ abstract class _UserModel implements UserModel {
   List<String>? get albumUrl;
   @override
   String? get avatarUrl;
+  @override
+  UserBasicModel? get userBasicModel;
+  @override
+  Role get role;
+  @override
+  BodyType get bodyType;
+  @override
+  RelationshipStatus get relationshipStatus;
+  @override
+  Ethnicity get ethnicity;
+  @override
+  LookingFor? get lookingFor;
+  @override
+  WhereToMeet? get whereToMeet;
+  @override
+  bool get isOnline;
+  @override
+  bool get isVerified;
+  @override
+  bool get isBlocked;
+  @override
+  int? get age;
   @override
   @JsonKey(ignore: true)
   _$$_UserModelCopyWith<_$_UserModel> get copyWith =>
