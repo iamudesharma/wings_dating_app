@@ -57,6 +57,7 @@ dependencies:
   intl: ^0.17.0
   velocity_x: ^3.6.0
   fluttertoast: ^8.1.1
+  image_picker: ^0.8.6
 
 dev_dependencies:
   flutter_test:
