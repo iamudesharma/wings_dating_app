@@ -6,6 +6,7 @@ import 'package:wings_dating_app/src/profile/edit_profile_view.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
 import '../src/dashboard.dart';
+import 'app_router_provider.dart';
 
 part 'app_router.gr.dart';
 
@@ -19,6 +20,7 @@ part 'app_router.gr.dart';
 
     AutoRoute(
       page: DashboardView,
+      guards: [ProfileDocGuard],
       initial: true,
       children: [
         AutoRoute(
@@ -37,4 +39,8 @@ part 'app_router.gr.dart';
   ],
 )
 // extend the generated private router
-class AppRouter extends _$AppRouter {}
+class AppRouter extends _$AppRouter {
+  AppRouter({required super.profileDocGuard});
+}
+
+
