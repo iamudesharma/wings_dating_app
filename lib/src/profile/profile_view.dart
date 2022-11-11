@@ -1,5 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../routes/app_router.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -11,7 +14,7 @@ class ProfileView extends StatelessWidget {
         SliverAppBar.medium(
           flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
-              title: Text("Collapsing Toolbar",
+              title: const Text("username",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0,
@@ -23,7 +26,9 @@ class ProfileView extends StatelessWidget {
           pinned: true,
           leading: IconButton(
             icon: const Icon(Icons.menu),
-            onPressed: () {},
+            onPressed: () {
+              AutoRouter.of(context).push(const EditProfileRoute());
+            },
           ),
 
           actions: [
@@ -49,8 +54,8 @@ class ProfileView extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  const Text("username"),
-                  const Text("bio"),
+                  Text("username"),
+                  Text("bio"),
                 ],
               )
             ],

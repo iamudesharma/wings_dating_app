@@ -29,6 +29,12 @@ class _$AppRouter extends RootStackRouter {
         child: const DashboardView(),
       );
     },
+    EditProfileRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const EditProfileView(),
+      );
+    },
     UsersRoute.name: (routeData) {
       return MaterialPageX<dynamic>(
         routeData: routeData,
@@ -76,6 +82,10 @@ class _$AppRouter extends RootStackRouter {
             ),
           ],
         ),
+        RouteConfig(
+          EditProfileRoute.name,
+          path: '/edit-profile-view',
+        ),
       ];
 }
 
@@ -102,6 +112,18 @@ class DashboardRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'DashboardRoute';
+}
+
+/// generated route for
+/// [EditProfileView]
+class EditProfileRoute extends PageRouteInfo<void> {
+  const EditProfileRoute()
+      : super(
+          EditProfileRoute.name,
+          path: '/edit-profile-view',
+        );
+
+  static const String name = 'EditProfileRoute';
 }
 
 /// generated route for
