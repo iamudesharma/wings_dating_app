@@ -27,7 +27,7 @@ class ProfileView extends StatelessWidget {
           leading: IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () {
-              AutoRouter.of(context).push(const EditProfileRoute());
+              AutoRouter.of(context).push( EditProfileRoute(isEditProfile: false));
             },
           ),
 

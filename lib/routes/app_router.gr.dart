@@ -30,9 +30,13 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     EditProfileRoute.name: (routeData) {
+      final args = routeData.argsAs<EditProfileRouteArgs>();
       return MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const EditProfileView(),
+        child: EditProfileView(
+          key: args.key,
+          isEditProfile: args.isEditProfile,
+        ),
       );
     },
     UsersRoute.name: (routeData) {
@@ -116,14 +120,36 @@ class DashboardRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [EditProfileView]
-class EditProfileRoute extends PageRouteInfo<void> {
-  const EditProfileRoute()
-      : super(
+class EditProfileRoute extends PageRouteInfo<EditProfileRouteArgs> {
+  EditProfileRoute({
+    Key? key,
+    required bool isEditProfile,
+  }) : super(
           EditProfileRoute.name,
           path: '/edit-profile-view',
+          args: EditProfileRouteArgs(
+            key: key,
+            isEditProfile: isEditProfile,
+          ),
         );
 
   static const String name = 'EditProfileRoute';
+}
+
+class EditProfileRouteArgs {
+  const EditProfileRouteArgs({
+    this.key,
+    required this.isEditProfile,
+  });
+
+  final Key? key;
+
+  final bool isEditProfile;
+
+  @override
+  String toString() {
+    return 'EditProfileRouteArgs{key: $key, isEditProfile: $isEditProfile}';
+  }
 }
 
 /// generated route for

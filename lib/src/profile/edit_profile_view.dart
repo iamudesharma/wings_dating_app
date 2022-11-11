@@ -1,16 +1,27 @@
-import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
-import 'package:wings_dating_app/helpers/logger.dart';
-import 'package:intl/intl.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
 
-class EditProfileView extends StatefulWidget {
-  const EditProfileView({super.key});
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:velocity_x/velocity_x.dart';
+
+import 'package:wings_dating_app/dependency/dependenies.dart';
+import 'package:wings_dating_app/helpers/logger.dart';
+
+class EditProfileView extends ConsumerStatefulWidget {
+  const EditProfileView({
+    super.key,
+    required this.isEditProfile,
+  });
+
+  final bool isEditProfile;
 
   @override
-  State<EditProfileView> createState() => _EditProfileViewState();
+  ConsumerState<EditProfileView> createState() => _EditProfileViewState();
 }
 
-class _EditProfileViewState extends State<EditProfileView> {
+class _EditProfileViewState extends ConsumerState<EditProfileView> {
   late TextEditingController _usernameController;
   late TextEditingController _nicknameController;
   // TextEditingController _phoneController ;
@@ -25,13 +36,15 @@ class _EditProfileViewState extends State<EditProfileView> {
 // _phoneController = TextEditingController();
     _dobController = TextEditingController();
     super.initState();
+
+    ref.read(Dependency.profileProvider).checkUserDocExist();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Profile"),
+        title: Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
       ),
       body: Form(
         // autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -46,14 +59,46 @@ class _EditProfileViewState extends State<EditProfileView> {
             const SizedBox(
               height: 20,
             ),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text("Change Profile Picture"),
-            ),
+            Builder(builder: (context) {
+              return ElevatedButton(
+                onPressed: () async {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return BottomSheet(onClosing: () {
+                          Navigator.pop(context);
+                        }, builder: (context) {
+                          return SizedBox(
+                            height: 120,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ListTile(
+                                  leading: Icon(Icons.camera),
+                                  title: const Text("Camera"),
+                                  onTap: () {},
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.photo),
+                                  title: const Text("Gallery"),
+                                  onTap: () {},
+                                ),
+                              ],
+                            ),
+                          );
+                        });
+                      });
+                },
+                child: Text(widget.isEditProfile
+                    ? "Change Profile Picture"
+                    : "Upload Profile Picture"),
+              );
+            }),
             const SizedBox(
               height: 20,
             ),
             TextFormField(
+              controller: _usernameController,
               decoration: const InputDecoration(
                 hintText: "Username",
               ),
@@ -78,6 +123,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               height: 20,
             ),
             TextFormField(
+              controller: _nicknameController,
               decoration: const InputDecoration(
                 hintText: "Nickname",
               ),
@@ -86,6 +132,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               height: 20,
             ),
             TextFormField(
+              controller: _dobController,
               decoration: const InputDecoration(
                 hintText: "Date of Birth",
               ),
@@ -121,7 +168,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               curve: Curves.easeInOut,
               child: ElevatedButton(
                 onPressed: () {},
-                child: const Text("Save"),
+                child: Text(widget.isEditProfile ? "Update" : "Save"),
               ),
             ),
           ],
