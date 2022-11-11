@@ -40,7 +40,7 @@ dependencies:
   # freezed: ^2.2.1
   freezed_annotation: ^2.0.0
   json_annotation: ^4.6.0
-  get: ^4.6.5
+  # get: ^4.6.5
   firebase_auth: ^4.1.1
   cloud_firestore: ^4.0.4
   firebase_storage: ^11.0.4
@@ -55,6 +55,7 @@ dependencies:
   # screen_utils: ^0.0.1
   flutter_screenutil: ^5.6.0
   intl: ^0.17.0
+  velocity_x: ^3.6.0
 
 dev_dependencies:
   flutter_test:
