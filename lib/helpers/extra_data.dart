@@ -7,9 +7,9 @@ enum Role {
 
   bottom("Bottom");
 
-  final String role;
+  final String value;
 
-  const Role(this.role);
+  const Role(this.value);
 }
 
 enum BodyType {
@@ -24,9 +24,9 @@ enum BodyType {
 
   heavy("Heavy");
 
-  final String bodyType;
+  final String value;
 
-  const BodyType(this.bodyType);
+  const BodyType(this.value);
 }
 
 enum RelationshipStatus {
@@ -43,9 +43,9 @@ enum RelationshipStatus {
 
   partnered("Partnered");
 
-  final String relationshipStatus;
+  final String value;
 
-  const RelationshipStatus(this.relationshipStatus);
+  const RelationshipStatus(this.value);
 }
 
 enum Ethnicity {
@@ -63,9 +63,9 @@ enum Ethnicity {
 
   partnered("Partnered");
 
-  final String ethnicity;
+  final String value;
 
-  const Ethnicity(this.ethnicity);
+  const Ethnicity(this.value);
 }
 
 enum LookingFor {
@@ -78,9 +78,9 @@ enum LookingFor {
   casual("Casual"),
   ightNow("Right Now");
 
-  final String lookingFor;
+  final String value;
 
-  const LookingFor(this.lookingFor);
+  const LookingFor(this.value);
 }
 
 enum WhereToMeet {
@@ -91,7 +91,7 @@ enum WhereToMeet {
   restaurant("Restaurant"),
   coffeeShop("Coffee Shop");
 
-  final String whereToMeet;
+  final String value;
 
-  const WhereToMeet(this.whereToMeet);
+  const WhereToMeet(this.value);
 }

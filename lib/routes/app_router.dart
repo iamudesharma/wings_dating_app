@@ -34,6 +34,9 @@ part 'app_router.gr.dart';
         ),
       ],
     ),
+    AutoRoute(
+      page: AddAdditionalInformationView,
+    ),
 
     AutoRoute(page: EditProfileView),
   ],

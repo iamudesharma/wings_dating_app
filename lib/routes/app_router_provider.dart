@@ -26,6 +26,8 @@ class ProfileDocGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) async {
     if (await ref.read(Dependency.profileProvider).checkUserDocExist()) {
+      await ref.read(ProfileController.userControllerProvider).getCurrentUser();
+
       resolver.next(true);
     } else {
       resolver.next(false);
@@ -42,7 +44,6 @@ class AuthGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) async {
     if (ref.read(Dependency.firebaseAuthProvider).currentUser != null) {
-      await ref.read(UserController.userControllerProvider).getCurrentUser();
       resolver.next(true);
     } else {
       resolver.next(false);

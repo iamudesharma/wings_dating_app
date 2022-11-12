@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wings_dating_app/helpers/logger.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import '../../routes/app_router.dart';
@@ -12,7 +13,10 @@ class ProfileView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final userData = ref.watch(UserController.userControllerProvider).userModel;
+    final userData =
+        ref.watch(ProfileController.userControllerProvider).userModel;
+
+    logger.i(userData?.avatarUrl);
     return CustomScrollView(
       slivers: [
         SliverAppBar.medium(
@@ -48,11 +52,8 @@ class ProfileView extends ConsumerWidget {
         SliverToBoxAdapter(
           child: Row(
             children: [
-              const Card(
-                child: Placeholder(
-                  fallbackWidth: 100,
-                  fallbackHeight: 100,
-                ),
+              CircleAvatar(
+                backgroundImage: NetworkImage(userData?.avatarUrl ?? ""),
               ),
               10.widthBox,
               Column(
