@@ -15,8 +15,11 @@ part of 'app_router.dart';
 class _$AppRouter extends RootStackRouter {
   _$AppRouter({
     GlobalKey<NavigatorState>? navigatorKey,
+    required this.authGuard,
     required this.profileDocGuard,
   }) : super(navigatorKey);
+
+  final AuthGuard authGuard;
 
   final ProfileDocGuard profileDocGuard;
 
@@ -73,7 +76,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           DashboardRoute.name,
           path: '/',
-          guards: [profileDocGuard],
+          guards: [
+            authGuard,
+            profileDocGuard,
+          ],
           children: [
             RouteConfig(
               UsersRoute.name,

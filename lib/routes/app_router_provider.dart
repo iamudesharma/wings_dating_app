@@ -12,6 +12,7 @@ part 'app_router_provider.g.dart';
 @Riverpod(keepAlive: true)
 AppRouter appRoute(AppRouteRef ref) {
   return AppRouter(
+    authGuard: AuthGuard(ref: ref),
     profileDocGuard: ProfileDocGuard(ref: ref),
   );
 }
@@ -28,6 +29,24 @@ class ProfileDocGuard extends AutoRouteGuard {
     } else {
       resolver.next(false);
       router.push(EditProfileRoute(isEditProfile: false));
+    }
+  }
+}
+
+class AuthGuard extends AutoRouteGuard {
+  final Ref ref;
+  AuthGuard({
+    required this.ref,
+  });
+  @override
+  void onNavigation(NavigationResolver resolver, StackRouter router) async {
+    if (ref.read(Dependency.firebaseAuthProvider).currentUser != null) {
+      resolver.next(true);
+    } else {
+      resolver.next(false);
+      router.push(
+        SignOptionsRoute(),
+      );
     }
   }
 }

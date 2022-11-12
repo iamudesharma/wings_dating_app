@@ -20,7 +20,7 @@ part 'app_router.gr.dart';
 
     AutoRoute(
       page: DashboardView,
-      guards: [ProfileDocGuard],
+      guards: [AuthGuard, ProfileDocGuard],
       initial: true,
       children: [
         AutoRoute(
@@ -40,7 +40,5 @@ part 'app_router.gr.dart';
 )
 // extend the generated private router
 class AppRouter extends _$AppRouter {
-  AppRouter({required super.profileDocGuard});
+  AppRouter({required super.profileDocGuard, required super.authGuard});
 }
-
-

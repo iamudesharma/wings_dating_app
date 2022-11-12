@@ -13,6 +13,9 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
           ?.map((e) => e as String)
           .toList(),
       avatarUrl: json['avatarUrl'] as String?,
+      age: json['age'] as int?,
+      location: _$JsonConverterFromJson<GeoPoint, GeoPoint>(
+          json['location'], const GeoPointConverter().fromJson),
       userBasicModel: json['userBasicModel'] == null
           ? null
           : UserBasicModel.fromJson(
@@ -31,9 +34,6 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       isOnline: json['isOnline'] as bool? ?? false,
       isVerified: json['isVerified'] as bool? ?? false,
       isBlocked: json['isBlocked'] as bool? ?? false,
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
-      age: json['age'] as int?,
     );
 
 Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
@@ -42,6 +42,9 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'aboutMe': instance.aboutMe,
       'albumUrl': instance.albumUrl,
       'avatarUrl': instance.avatarUrl,
+      'age': instance.age,
+      'location': _$JsonConverterToJson<GeoPoint, GeoPoint>(
+          instance.location, const GeoPointConverter().toJson),
       'userBasicModel': instance.userBasicModel,
       'role': _$RoleEnumMap[instance.role]!,
       'bodyType': _$BodyTypeEnumMap[instance.bodyType]!,
@@ -53,10 +56,13 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'isOnline': instance.isOnline,
       'isVerified': instance.isVerified,
       'isBlocked': instance.isBlocked,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
-      'age': instance.age,
     };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) =>
+    json == null ? null : fromJson(json as Json);
 
 const _$RoleEnumMap = {
   Role.doNotShow: 'doNotShow',
@@ -127,3 +133,9 @@ const _$WhereToMeetEnumMap = {
   WhereToMeet.restaurant: 'restaurant',
   WhereToMeet.coffeeShop: 'coffeeShop',
 };
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);

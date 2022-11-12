@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -20,18 +21,31 @@ class ProfileRepo with RepositoryExceptionMixin {
   ProfileRepo(this.ref);
 
   Future<void> createUserDoc(UserModel userModel) async {
-    await exceptionHandler(ref
+    //  exceptionHandler(
+    // .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+    // .set(
+    //   userModel.toJson(),
+    // ),
+    // );
+
+    final usercollection = ref
         .read(Dependency.firebaseStoreProvider)
-        .collection(FirebaseConstants.USERS)
-        .doc(userModel.nickname)
-        .set(userModel.toJson()));
+        .collection("users")
+        .withConverter<UserModel>(
+            fromFirestore: (snapshot, options) =>
+                UserModel.fromJson(snapshot.data()!),
+            toFirestore: (value, options) => value.toJson());
+
+    await usercollection
+        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+        .set(userModel);
   }
 
   Future<bool> checkUserDocExist() async {
     final data = await exceptionHandler<bool>(
       ref
           .read(Dependency.firebaseStoreProvider)
-          .collection(FirebaseConstants.USERS)
+          .collection("users")
           .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
           .get()
           .then(

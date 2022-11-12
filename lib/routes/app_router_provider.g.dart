@@ -29,7 +29,7 @@ class _SystemHash {
   }
 }
 
-String $appRouteHash() => r'a4e08bd5954ae280cc2bc5e75cef29b13dadc187';
+String $appRouteHash() => r'abba8f7831974eb11b466fbe5325ff8832d70e9d';
 
 /// See also [appRoute].
 final appRouteProvider = Provider<AppRouter>(

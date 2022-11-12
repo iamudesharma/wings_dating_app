@@ -4,11 +4,14 @@
 
 // // // ignore_for_file: invalid_annotation_target
 
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
+import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:wings_dating_app/helpers/extra_data.dart';
 import 'package:wings_dating_app/src/model/user_basic_model.dart';
+
+import 'geo_point.dart';
 // import 'package:get/get_connect/http/src/utils/utils.dart';
 
 part 'user_models.freezed.dart';
@@ -29,7 +32,8 @@ part 'user_models.g.dart';
 // // final usersRef = UserCollectionReference();
 
 // // // @JsonSerializable()
-@freezed
+
+@Freezed()
 class UserModel with _$UserModel {
   // ignore: invalid_annotation_target
   // @JsonSerializable(explicitToJson: true)
@@ -38,6 +42,8 @@ class UserModel with _$UserModel {
     String? aboutMe,
     List<String>? albumUrl,
     String? avatarUrl,
+    int? age,
+    @GeoPointConverter() GeoPoint? location,
     UserBasicModel? userBasicModel,
     @Default(Role.doNotShow) Role role,
     @Default(BodyType.doNotShow) BodyType bodyType,
@@ -49,15 +55,31 @@ class UserModel with _$UserModel {
     @Default(false) bool isOnline,
     @Default(false) bool isVerified,
     @Default(false) bool isBlocked,
-    required double latitude,
-    required double longitude,
-    int? age,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, Object?> json) =>
       _$UserModelFromJson(json);
 }
 
+// GeoPoint _fromJsonGeoPoint(GeoPoint geoPoint) {
+//   return geoPoint;
+// }
+
+// GeoPoint _toJsonGeoPoint(GeoPoint geoPoint) {
+//   return geoPoint;
+// }
+
+class GeoPointConverter implements JsonConverter<GeoPoint, GeoPoint> {
+  const GeoPointConverter();
+
+  @override
+  GeoPoint fromJson(GeoPoint geoPoint) {
+    return geoPoint;
+  }
+
+  @override
+  GeoPoint toJson(GeoPoint geoPoint) => geoPoint;
+}
 // @Collection<UserModel>("users", prefix: 'User')
 // final usersRef = UserModelCollectionReference();
 
