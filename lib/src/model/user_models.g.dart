@@ -13,6 +13,7 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
           ?.map((e) => e as String)
           .toList(),
       avatarUrl: json['avatarUrl'] as String?,
+      birthday: json['birthday'] as String?,
       age: json['age'] as int?,
       location: _$JsonConverterFromJson<GeoPoint, GeoPoint>(
           json['location'], const GeoPointConverter().fromJson),
@@ -42,6 +43,7 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'aboutMe': instance.aboutMe,
       'albumUrl': instance.albumUrl,
       'avatarUrl': instance.avatarUrl,
+      'birthday': instance.birthday,
       'age': instance.age,
       'location': _$JsonConverterToJson<GeoPoint, GeoPoint>(
           instance.location, const GeoPointConverter().toJson),

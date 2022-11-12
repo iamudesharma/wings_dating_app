@@ -16,13 +16,12 @@ part 'user_models.g.dart';
 
 @Freezed()
 class UserModel with _$UserModel {
-  // ignore: invalid_annotation_target
-  // @JsonSerializable(explicitToJson: true)
   factory UserModel({
     required String nickname,
     String? aboutMe,
     List<String>? albumUrl,
     String? avatarUrl,
+    String? birthday,
     int? age,
     @GeoPointConverter() GeoPoint? location,
     UserBasicModel? userBasicModel,

@@ -24,6 +24,7 @@ mixin _$UserModel {
   String? get aboutMe => throw _privateConstructorUsedError;
   List<String>? get albumUrl => throw _privateConstructorUsedError;
   String? get avatarUrl => throw _privateConstructorUsedError;
+  String? get birthday => throw _privateConstructorUsedError;
   int? get age => throw _privateConstructorUsedError;
   @GeoPointConverter()
   GeoPoint? get location => throw _privateConstructorUsedError;
@@ -55,6 +56,7 @@ abstract class $UserModelCopyWith<$Res> {
       String? aboutMe,
       List<String>? albumUrl,
       String? avatarUrl,
+      String? birthday,
       int? age,
       @GeoPointConverter() GeoPoint? location,
       UserBasicModel? userBasicModel,
@@ -88,6 +90,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? aboutMe = freezed,
     Object? albumUrl = freezed,
     Object? avatarUrl = freezed,
+    Object? birthday = freezed,
     Object? age = freezed,
     Object? location = freezed,
     Object? userBasicModel = freezed,
@@ -117,6 +120,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
       avatarUrl: freezed == avatarUrl
           ? _value.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      birthday: freezed == birthday
+          ? _value.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
               as String?,
       age: freezed == age
           ? _value.age
@@ -194,6 +201,7 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       String? aboutMe,
       List<String>? albumUrl,
       String? avatarUrl,
+      String? birthday,
       int? age,
       @GeoPointConverter() GeoPoint? location,
       UserBasicModel? userBasicModel,
@@ -226,6 +234,7 @@ class __$$_UserModelCopyWithImpl<$Res>
     Object? aboutMe = freezed,
     Object? albumUrl = freezed,
     Object? avatarUrl = freezed,
+    Object? birthday = freezed,
     Object? age = freezed,
     Object? location = freezed,
     Object? userBasicModel = freezed,
@@ -255,6 +264,10 @@ class __$$_UserModelCopyWithImpl<$Res>
       avatarUrl: freezed == avatarUrl
           ? _value.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      birthday: freezed == birthday
+          ? _value.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
               as String?,
       age: freezed == age
           ? _value.age
@@ -316,6 +329,7 @@ class _$_UserModel implements _UserModel {
       this.aboutMe,
       final List<String>? albumUrl,
       this.avatarUrl,
+      this.birthday,
       this.age,
       @GeoPointConverter() this.location,
       this.userBasicModel,
@@ -348,6 +362,8 @@ class _$_UserModel implements _UserModel {
 
   @override
   final String? avatarUrl;
+  @override
+  final String? birthday;
   @override
   final int? age;
   @override
@@ -383,7 +399,7 @@ class _$_UserModel implements _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(nickname: $nickname, aboutMe: $aboutMe, albumUrl: $albumUrl, avatarUrl: $avatarUrl, age: $age, location: $location, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked)';
+    return 'UserModel(nickname: $nickname, aboutMe: $aboutMe, albumUrl: $albumUrl, avatarUrl: $avatarUrl, birthday: $birthday, age: $age, location: $location, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked)';
   }
 
   @override
@@ -397,6 +413,8 @@ class _$_UserModel implements _UserModel {
             const DeepCollectionEquality().equals(other._albumUrl, _albumUrl) &&
             (identical(other.avatarUrl, avatarUrl) ||
                 other.avatarUrl == avatarUrl) &&
+            (identical(other.birthday, birthday) ||
+                other.birthday == birthday) &&
             (identical(other.age, age) || other.age == age) &&
             (identical(other.location, location) ||
                 other.location == location) &&
@@ -429,6 +447,7 @@ class _$_UserModel implements _UserModel {
       aboutMe,
       const DeepCollectionEquality().hash(_albumUrl),
       avatarUrl,
+      birthday,
       age,
       location,
       userBasicModel,
@@ -462,6 +481,7 @@ abstract class _UserModel implements UserModel {
       final String? aboutMe,
       final List<String>? albumUrl,
       final String? avatarUrl,
+      final String? birthday,
       final int? age,
       @GeoPointConverter() final GeoPoint? location,
       final UserBasicModel? userBasicModel,
@@ -486,6 +506,8 @@ abstract class _UserModel implements UserModel {
   List<String>? get albumUrl;
   @override
   String? get avatarUrl;
+  @override
+  String? get birthday;
   @override
   int? get age;
   @override

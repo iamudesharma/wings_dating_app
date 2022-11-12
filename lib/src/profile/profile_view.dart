@@ -1,10 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
-
 import '../../routes/app_router.dart';
+
+import 'package:velocity_x/velocity_x.dart';
 
 class ProfileView extends ConsumerWidget {
   const ProfileView({super.key});
@@ -27,13 +28,13 @@ class ProfileView extends ConsumerWidget {
                 fit: BoxFit.cover,
               )),
           pinned: true,
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              AutoRouter.of(context)
-                  .push(EditProfileRoute(isEditProfile: false));
-            },
-          ),
+          // leading: IconButton(
+          //   icon: const Icon(Icons.menu),
+          //   onPressed: () {
+          //     AutoRouter.of(context)
+          //         .push(EditProfileRoute(isEditProfile: false));
+          //   },
+          // ),
 
           actions: [
             IconButton(
@@ -53,15 +54,26 @@ class ProfileView extends ConsumerWidget {
                   fallbackHeight: 100,
                 ),
               ),
-
-              // 10.h.,
+              10.widthBox,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   Text("username"),
                   Text("bio"),
                 ],
-              )
+              ),
+              Spacer(),
+              ElevatedButton.icon(
+                  onPressed: () {
+                    context.router.push(
+                      EditProfileRoute(isEditProfile: true),
+                    );
+                  },
+                  icon: Icon(Icons.edit, size: 10),
+                  label: Text(
+                    "Edit Profile",
+                    style: Theme.of(context).textTheme.caption,
+                  ))
             ],
           ),
         )

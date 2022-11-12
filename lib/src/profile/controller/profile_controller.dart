@@ -7,9 +7,13 @@ import 'package:wings_dating_app/src/model/user_models.dart';
 
 import '../../../dependency/dependenies.dart';
 
-final _userControllerProvider = ChangeNotifierProvider<UserController>((ref) {
-  return UserController(ref: ref);
-});
+// part 'profile_controller.g.dart';
+
+final _userControllerProvider = ChangeNotifierProvider<UserController>(
+  (ref) {
+    return UserController(ref: ref);
+  },
+);
 
 class UserController extends ChangeNotifier {
   static ChangeNotifierProvider<UserController> userControllerProvider =
