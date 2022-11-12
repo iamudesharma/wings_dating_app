@@ -11,27 +11,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:wings_dating_app/helpers/extra_data.dart';
 import 'package:wings_dating_app/src/model/user_basic_model.dart';
 
-import 'geo_point.dart';
-// import 'package:get/get_connect/http/src/utils/utils.dart';
-
 part 'user_models.freezed.dart';
 part 'user_models.g.dart';
-
-// // @JsonSerializable(explicitToJson: true)
-// // class User {
-// //   User({
-// //     required this.name,
-// //     required this.age,
-// //   });
-
-// //   final String name;
-// //   final int age;
-// // }
-
-// // @Collection<User>('users')
-// // final usersRef = UserCollectionReference();
-
-// // // @JsonSerializable()
 
 @Freezed()
 class UserModel with _$UserModel {

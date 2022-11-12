@@ -20,25 +20,34 @@ class ProfileRepo with RepositoryExceptionMixin {
 
   ProfileRepo(this.ref);
 
-  Future<void> createUserDoc(UserModel userModel) async {
-    //  exceptionHandler(
-    // .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-    // .set(
-    //   userModel.toJson(),
-    // ),
-    // );
-
-    final usercollection = ref
+  CollectionReference<UserModel> userCollection() {
+    return ref
         .read(Dependency.firebaseStoreProvider)
         .collection("users")
         .withConverter<UserModel>(
             fromFirestore: (snapshot, options) =>
                 UserModel.fromJson(snapshot.data()!),
             toFirestore: (value, options) => value.toJson());
+  }
 
-    await usercollection
+  Future<void> createUserDoc(UserModel userModel) async {
+    final usercollection = userCollection();
+    usercollection
         .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
         .set(userModel);
+  }
+
+  Future<UserModel> getCurrentUser() async {
+    final usercollection = userCollection();
+
+    return await exceptionHandler<UserModel>(
+      usercollection
+          .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+          .get()
+          .then((value) {
+        return value.data()!;
+      }),
+    );
   }
 
   Future<bool> checkUserDocExist() async {

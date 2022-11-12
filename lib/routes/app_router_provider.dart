@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 
 import '../dependency/dependenies.dart';
+import '../src/profile/controller/profile_controller.dart';
 
 part 'app_router_provider.g.dart';
 
@@ -41,11 +42,12 @@ class AuthGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) async {
     if (ref.read(Dependency.firebaseAuthProvider).currentUser != null) {
+      await ref.read(UserController.userControllerProvider).getCurrentUser();
       resolver.next(true);
     } else {
       resolver.next(false);
       router.push(
-        SignOptionsRoute(),
+        const SignOptionsRoute(),
       );
     }
   }
