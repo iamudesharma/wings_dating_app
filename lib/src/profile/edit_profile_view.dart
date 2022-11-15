@@ -5,6 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -15,7 +16,7 @@ import 'package:wings_dating_app/helpers/age.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
-// /  / / import 'package:wings_dating_app/src/model/geo_point.dart';
+// / /  / / import 'package:wings_dating_app/src/model/geo_point.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
@@ -116,186 +117,198 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   Widget build(BuildContext context) {
     final profile = ref.watch(ProfileController.userControllerProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
-      ),
-      body: Form(
-        key: _formKey,
-        // autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              profile.profileImage != null
-                  ? CircleAvatar(
-                      radius: 35,
-                      backgroundImage: FileImage(
-                        File(profile.profileImage!),
-                      ),
-                    )
-                  : const CircleAvatar(
-                      radius: 35,
+      // appBar: AppBar(
+      //   title: Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
+      // ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar.medium(
+            title: Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
+          ),
+          SliverToBoxAdapter(
+            child: Form(
+              key: _formKey,
+              // autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
                     ),
-              const SizedBox(
-                height: 20,
-              ),
-              Builder(builder: (context) {
-                return ElevatedButton(
-                  onPressed: () async {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return BottomSheet(onClosing: () {
-                            Navigator.pop(context);
-                          }, builder: (context) {
-                            return ImagePickerWidget(
-                              camera: () async {
-                                await ref
-                                    .read(ProfileController
-                                        .userControllerProvider)
-                                    .pickImage(imageSource: ImageSource.camera);
-                              },
-                              gallery: () async {
-                                await ref
-                                    .read(ProfileController
-                                        .userControllerProvider)
-                                    .pickImage(
-                                        imageSource: ImageSource.gallery);
-                              },
-                            );
-                          });
-                        });
-                  },
-                  child: Text(widget.isEditProfile
-                      ? "Change Profile Picture"
-                      : "Upload Profile Picture"),
-                );
-              }),
-              const SizedBox(
-                height: 20,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Please enter a nickname";
-                  } else {
-                    return null;
-                  }
-                },
-                controller: _nicknameController,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  hintText: "Nickname",
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Please enter a nickname";
-                  } else {
-                    return null;
-                  }
-                }),
-                controller: _dobController,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  hintText: "Date of Birth",
-                ),
-                readOnly: true,
-                onTap: () async {
-                  showDatePicker(
-                    context: context,
-                    initialDate: DateTime(2004),
-                    firstDate: DateTime(1960),
-                    lastDate: DateTime(2004),
-                  ).then((value) {
-                    logger.i(value);
-
-                    _dobController.text = DateFormat.yMd().format(value!);
-
-                    _selectedDate = value;
-                    setState(() {});
-                  });
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Please enter a nickname";
-                  } else {
-                    return null;
-                  }
-                },
-                maxLines: 2,
-                controller: _bioController,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  hintText: "bio",
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                    icon: const Icon(Icons.add),
-                    onPressed: () async {
-                      context.router.push(AddAdditionalInformationRoute());
-                    },
-                    label: const Text("Add Additional Information")),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              AnimatedContainer(
-                duration: const Duration(seconds: 1),
-                curve: Curves.easeInOut,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final data = await location.getLocation();
-                    if (_formKey.currentState!.validate()) {
-                      int age = calculateAge(_selectedDate!);
-
-                      UserModel user = UserModel(
-                        nickname: "udesh",
-                        location: GeoPoint(
-                          data.latitude!,
-                          data.longitude!,
-                        ),
-                        aboutMe: _bioController.text,
-                        age: age,
-                        avatarUrl: await ref
-                            .read(ProfileController.userControllerProvider)
-                            .uploadImage(),
-                        birthday: _dobController.text,
-                        // userBasicModel: UserBasicModel(
-                        //   dob: _dobController.text,
-                        // ),
+                    profile.profileImage != null
+                        ? CircleAvatar(
+                            radius: 35,
+                            backgroundImage: FileImage(
+                              File(profile.profileImage!),
+                            ),
+                          )
+                        : const CircleAvatar(
+                            radius: 35,
+                          ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Builder(builder: (context) {
+                      return ElevatedButton(
+                        onPressed: () async {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return BottomSheet(onClosing: () {
+                                  Navigator.pop(context);
+                                }, builder: (context) {
+                                  return ImagePickerWidget(
+                                    camera: () async {
+                                      await ref
+                                          .read(ProfileController
+                                              .userControllerProvider)
+                                          .pickImage(
+                                              imageSource: ImageSource.camera);
+                                    },
+                                    gallery: () async {
+                                      await ref
+                                          .read(ProfileController
+                                              .userControllerProvider)
+                                          .pickImage(
+                                              imageSource: ImageSource.gallery);
+                                    },
+                                  );
+                                });
+                              });
+                        },
+                        child: Text(widget.isEditProfile
+                            ? "Change Profile Picture"
+                            : "Upload Profile Picture"),
                       );
+                    }),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter a nickname";
+                        } else {
+                          return null;
+                        }
+                      },
+                      controller: _nicknameController,
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        hintText: "Nickname",
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      validator: ((value) {
+                        if (value!.isEmpty) {
+                          return "Please enter a nickname";
+                        } else {
+                          return null;
+                        }
+                      }),
+                      controller: _dobController,
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        hintText: "Date of Birth",
+                      ),
+                      readOnly: true,
+                      onTap: () async {
+                        showDatePicker(
+                          context: context,
+                          initialDate: DateTime(2004),
+                          firstDate: DateTime(1960),
+                          lastDate: DateTime(2004),
+                        ).then((value) {
+                          logger.i(value);
 
-                      await ref
-                          .read(Dependency.profileProvider)
-                          .createUserDoc(user);
-                    }
-                  },
-                  child: Text(widget.isEditProfile ? "Update" : "Save"),
-                ),
+                          _dobController.text = DateFormat.yMd().format(value!);
+
+                          _selectedDate = value;
+                          setState(() {});
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter a nickname";
+                        } else {
+                          return null;
+                        }
+                      },
+                      maxLines: 2,
+                      controller: _bioController,
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        hintText: "bio",
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                          icon: const Icon(Icons.add),
+                          onPressed: () async {
+                            context.router
+                                .push(AddAdditionalInformationRoute());
+                          },
+                          label: const Text("Add Additional Information")),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    AnimatedContainer(
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.easeInOut,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final data = await location.getLocation();
+                          if (_formKey.currentState!.validate()) {
+                            int age = calculateAge(_selectedDate!);
+
+                            UserModel user = UserModel(
+                              nickname: "udesh",
+                              location: GeoPoint(
+                                data.latitude!,
+                                data.longitude!,
+                              ),
+                              aboutMe: _bioController.text,
+                              age: age,
+                              avatarUrl: await ref
+                                  .read(
+                                      ProfileController.userControllerProvider)
+                                  .uploadImage(),
+                              birthday: _dobController.text,
+                              // userBasicModel: UserBasicModel(
+                              //   dob: _dobController.text,
+                              // ),
+                            );
+
+                            await ref
+                                .read(Dependency.profileProvider)
+                                .createUserDoc(user);
+                          }
+                        },
+                        child: Text(widget.isEditProfile ? "Update" : "Save"),
+                      ),
+                    ),
+                  ],
+                ).p16(),
               ),
-            ],
-          ).p16(),
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -357,37 +370,114 @@ class _AddAdditionalInformationViewState
 
     logger.i(prfiledata?.role.index);
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          children: [
-            TextField(),
-            const Divider(),
-            ListTile(
-              selected: true,
-              style: ListTileStyle.list,
-              onTap: () {
-                _showRole(context);
-              },
-              title: const Text("Role"),
-              subtitle: Text(role.value),
-              enabled: true,
-              trailing: Icon(Icons.arrow_forward_ios),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(),
+          SliverToBoxAdapter(
+            child: StaggeredGrid.count(
+              crossAxisCount: 4,
+              mainAxisSpacing: 4,
+              crossAxisSpacing: 4,
+              children: [
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 2,
+                  mainAxisCellCount: 2,
+                  child: AlbumWidgetPicker(),
+                ),
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 2,
+                  mainAxisCellCount: 1,
+                  child: AlbumWidgetPicker(),
+                ),
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 1,
+                  mainAxisCellCount: 1,
+                  child: AlbumWidgetPicker(),
+                ),
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 1,
+                  mainAxisCellCount: 1,
+                  child: AlbumWidgetPicker(),
+                ),
+                // StaggeredGridTile.count(
+                //   crossAxisCellCount: 4,
+                //   mainAxisCellCount: 2,
+                //   child: Text("hello"),
+                // ),
+              ],
             ),
-            ListTile(
-              selected: true,
-              style: ListTileStyle.list,
-              onTap: () {
-                _showRole(context);
-              },
-              title: const Text("Body Type"),
-              subtitle: Text(role.value),
-              enabled: true,
-              trailing: Icon(Icons.arrow_forward_ios),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                children: [
+                  const Divider(),
+                  ListTile(
+                    selected: true,
+                    style: ListTileStyle.list,
+                    onTap: () {
+                      _showRole(context);
+                    },
+                    title: const Text("Role"),
+                    subtitle: Text(role.value),
+                    enabled: true,
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    selected: true,
+                    style: ListTileStyle.list,
+                    onTap: () {
+                      _showBodyType(context);
+                    },
+                    title: const Text("Body Type"),
+                    subtitle: Text(bodyType.value),
+                    enabled: true,
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    selected: true,
+                    style: ListTileStyle.list,
+                    onTap: () {
+                      _showBodyType(context);
+                    },
+                    title: const Text("Body Type"),
+                    subtitle: Text(bodyType.value),
+                    enabled: true,
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    selected: true,
+                    style: ListTileStyle.list,
+                    onTap: () {
+                      _showBodyType(context);
+                    },
+                    title: const Text("Body Type"),
+                    subtitle: Text(bodyType.value),
+                    enabled: true,
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    selected: true,
+                    style: ListTileStyle.list,
+                    onTap: () {
+                      _showBodyType(context);
+                    },
+                    title: const Text("Body Type"),
+                    subtitle: Text(bodyType.value),
+                    enabled: true,
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                  const Divider()
+                ],
+              ),
             ),
-            const Divider()
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -412,6 +502,32 @@ class _AddAdditionalInformationViewState
                       context.router.pop();
                     },
                     value: Role.values,
+                  ));
+            });
+          });
+        });
+  }
+
+  void _showBodyType(context) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        builder: (BuildContext bc) {
+          return StatefulBuilder(builder: (context, setState) {
+            return Consumer(builder: (context, ref, child) {
+              final bodyType = ref.watch(bodyTypeProvider);
+              return SizedBox(
+                  height: 200,
+                  child: AdditionalDataWidget<BodyType>(
+                    selected: bodyType,
+                    onChanged: <BodyType>(value) {
+                      logger.i(value);
+                      ref.read(bodyTypeProvider.notifier).state = value;
+
+                      setState(() {});
+                      context.router.pop();
+                    },
+                    value: BodyType.values,
                   ));
             });
           });
@@ -480,6 +596,30 @@ class ListWheelItemWidget extends StatelessWidget {
           child: Text(role),
         ),
       ),
+    );
+  }
+}
+
+class AlbumWidgetPicker extends StatelessWidget {
+  const AlbumWidgetPicker({
+    Key? key,
+    this.path,
+  }) : super(key: key);
+
+  final String? path;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 1.5,
+          color: Theme.of(context).primaryColor.withOpacity(0.5),
+        ),
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: const Icon(Icons.add),
     );
   }
 }
