@@ -84,32 +84,32 @@ class GeoPointConverter implements JsonConverter<GeoPoint, GeoPoint> {
 // //   final DateTime time;
 // // }
 
-// // class FirestoreDateTimeConverter extends JsonConverter<DateTime, Timestamp> {
-// //   const FirestoreDateTimeConverter();
-// //   @override
-// //   DateTime fromJson(Timestamp json) => json.toDate();
+class FirestoreDateTimeConverter extends JsonConverter<DateTime, Timestamp> {
+  const FirestoreDateTimeConverter();
+  @override
+  DateTime fromJson(Timestamp json) => json.toDate();
 
-// //   @override
-// //   Timestamp toJson(DateTime object) => Timestamp.fromDate(object);
-// // }
+  @override
+  Timestamp toJson(DateTime object) => Timestamp.fromDate(object);
+}
 
-// // // @Collection<TimestampQuery>('firestore-example-app/42/timestamp-time')
-// // // final timestampQueryRef = TimestampQueryCollectionReference();
+// // @Collection<TimestampQuery>('firestore-example-app/42/timestamp-time')
+// // final timestampQueryRef = TimestampQueryCollectionReference();
 
-// // @JsonSerializable(converters: firestoreJsonConverters)
-// // class TimestampQuery {
-// //   TimestampQuery(this.time);
-// //   final Timestamp time;
-// // }
+@JsonSerializable(converters: firestoreJsonConverters)
+class TimestampQuery {
+  TimestampQuery(this.time);
+  final Timestamp time;
+}
 
 // // // @Collection<GeoPointQuery>('firestore-example-app/42/geopoint-time')
 // // // final geoPointQueryRef = GeoPointQueryCollectionReference();
 
-// // @JsonSerializable(converters: firestoreJsonConverters)
-// // class GeoPointQuery {
-// //   GeoPointQuery(this.point);
-// //   final GeoPoint point;
-// // }
+@JsonSerializable(converters: firestoreJsonConverters)
+class GeoPointQuery {
+  GeoPointQuery(this.point);
+  final GeoPoint point;
+}
 
 // // // @Collection<DocumentReferenceQuery>('firestore-example-app/42/doc-ref')
 // // // final documentReferenceRef = DocumentReferenceQueryCollectionReference();

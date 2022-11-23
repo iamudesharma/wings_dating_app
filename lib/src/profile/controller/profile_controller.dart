@@ -27,6 +27,8 @@ class ProfileController extends ChangeNotifier {
 
   String? profileImage;
 
+  List<String> albumImages = [];
+
   final Ref ref;
   ProfileController({
     required this.ref,
@@ -36,6 +38,15 @@ class ProfileController extends ChangeNotifier {
     userModel = await ref.read(Dependency.profileProvider).getCurrentUser();
     notifyListeners();
   }
+
+
+  Future updateUserData( UserModel user)async{
+await ref.read(Dependency.profileProvider).updateUserDoc(user);
+
+  }
+
+
+
 
   Future<void> pickImage({required ImageSource imageSource}) async {
     final image = await pickImageForm(imageSource);
@@ -61,5 +72,13 @@ class ProfileController extends ChangeNotifier {
     } else {
       return null;
     }
+  }
+
+  pickImageFromAlbum(int index, ImageSource source) async {
+    final image = await pickImageForm(source);
+
+    albumImages.add(image!);
+
+    notifyListeners();
   }
 }

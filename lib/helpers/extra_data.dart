@@ -69,6 +69,8 @@ enum Ethnicity {
 }
 
 enum LookingFor {
+  doNotShow("Do not show"),
+
   chat("Chat"),
   dates("Dates"),
   friends("Friends"),
@@ -84,6 +86,8 @@ enum LookingFor {
 }
 
 enum WhereToMeet {
+  doNotShow("Do not show"),
+
   myPlace("My Place"),
   yourPlace("Your Place"),
   hotel("Hotel"),

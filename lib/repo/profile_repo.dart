@@ -73,4 +73,15 @@ class ProfileRepo with RepositoryExceptionMixin {
 
     return data;
   }
+
+  Future<void> updateUserDoc(UserModel userModel) async {
+    final usercollection = userCollection();
+    await exceptionHandler<void>(
+      usercollection
+          .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+          .update(
+            userModel.toJson(),
+          ),
+    );
+  }
 }

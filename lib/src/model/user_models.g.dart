@@ -6,6 +6,26 @@ part of 'user_models.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+TimestampQuery _$TimestampQueryFromJson(Map<String, dynamic> json) =>
+    TimestampQuery(
+      const FirestoreTimestampConverter().fromJson(json['time'] as Timestamp),
+    );
+
+Map<String, dynamic> _$TimestampQueryToJson(TimestampQuery instance) =>
+    <String, dynamic>{
+      'time': const FirestoreTimestampConverter().toJson(instance.time),
+    };
+
+GeoPointQuery _$GeoPointQueryFromJson(Map<String, dynamic> json) =>
+    GeoPointQuery(
+      const FirestoreGeoPointConverter().fromJson(json['point'] as GeoPoint),
+    );
+
+Map<String, dynamic> _$GeoPointQueryToJson(GeoPointQuery instance) =>
+    <String, dynamic>{
+      'point': const FirestoreGeoPointConverter().toJson(instance.point),
+    };
+
 _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       nickname: json['nickname'] as String,
       aboutMe: json['aboutMe'] as String?,
@@ -117,6 +137,7 @@ const _$EthnicityEnumMap = {
 };
 
 const _$LookingForEnumMap = {
+  LookingFor.doNotShow: 'doNotShow',
   LookingFor.chat: 'chat',
   LookingFor.dates: 'dates',
   LookingFor.friends: 'friends',
@@ -128,6 +149,7 @@ const _$LookingForEnumMap = {
 };
 
 const _$WhereToMeetEnumMap = {
+  WhereToMeet.doNotShow: 'doNotShow',
   WhereToMeet.myPlace: 'myPlace',
   WhereToMeet.yourPlace: 'yourPlace',
   WhereToMeet.hotel: 'hotel',
