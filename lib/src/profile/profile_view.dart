@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
+import 'package:wings_dating_app/repo/profile_repo.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import '../../routes/app_router.dart';
@@ -65,10 +66,12 @@ class ProfileView extends ConsumerWidget {
               ),
               Spacer(),
               ElevatedButton.icon(
-                  onPressed: () {
-                    context.router.push(
-                      EditProfileRoute(isEditProfile: true),
-                    );
+                  onPressed: () async {
+                    await ref.read(profileRepoProvider).getUserList();
+
+                    // context.router.push(
+                    //   EditProfileRoute(isEditProfile: true),
+                    // );
                   },
                   icon: Icon(Icons.edit, size: 10),
                   label: Text(

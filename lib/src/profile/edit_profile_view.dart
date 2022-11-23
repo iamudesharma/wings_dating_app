@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -73,6 +74,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Location location = Location();
+  final geo = GeoFlutterFire();
 
   @override
   void initState() {
@@ -295,13 +297,12 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                           final data = await location.getLocation();
                           if (_formKey.currentState!.validate()) {
                             int age = calculateAge(_selectedDate!);
+                            GeoFirePoint myLocation = geo.point(
+                                latitude: 12.960632, longitude: 77.641603);
 
                             UserModel user = UserModel(
                               nickname: "udesh",
-                              location: GeoPoint(
-                                data.latitude!,
-                                data.longitude!,
-                              ),
+
                               aboutMe: _bioController.text,
                               age: age,
                               avatarUrl: await ref
@@ -314,9 +315,16 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               // ),
                             );
 
+                            logger.w(user.position?.toJson());
                             await ref
                                 .read(Dependency.profileProvider)
                                 .createUserDoc(user);
+
+                            await ref
+                                .read(Dependency.profileProvider)
+                                .addLocation(GeoPointData(
+                                    geopoint: myLocation.geoPoint,
+                                    geohash: myLocation.hash));
                           }
                         },
                         child: Text(widget.isEditProfile ? "Update" : "Save"),

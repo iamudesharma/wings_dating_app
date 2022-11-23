@@ -490,6 +490,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
+  geoflutterfire2:
+    dependency: "direct main"
+    description:
+      name: geoflutterfire2
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.3.14"
   glob:
     dependency: transitive
     description:
@@ -798,6 +805,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.6"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.27.7"
   shelf:
     dependency: transitive
     description:

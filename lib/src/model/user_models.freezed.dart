@@ -26,8 +26,8 @@ mixin _$UserModel {
   String? get avatarUrl => throw _privateConstructorUsedError;
   String? get birthday => throw _privateConstructorUsedError;
   int? get age => throw _privateConstructorUsedError;
-  @GeoPointConverter()
-  GeoPoint? get location => throw _privateConstructorUsedError;
+  @JsonKey(name: "position")
+  GeoPointData? get position => throw _privateConstructorUsedError;
   UserBasicModel? get userBasicModel => throw _privateConstructorUsedError;
   Role get role => throw _privateConstructorUsedError;
   BodyType get bodyType => throw _privateConstructorUsedError;
@@ -40,6 +40,22 @@ mixin _$UserModel {
   bool get isVerified => throw _privateConstructorUsedError;
   bool get isBlocked => throw _privateConstructorUsedError;
 
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_UserModel value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_UserModel value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_UserModel value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $UserModelCopyWith<UserModel> get copyWith =>
@@ -58,7 +74,7 @@ abstract class $UserModelCopyWith<$Res> {
       String? avatarUrl,
       String? birthday,
       int? age,
-      @GeoPointConverter() GeoPoint? location,
+      @JsonKey(name: "position") GeoPointData? position,
       UserBasicModel? userBasicModel,
       Role role,
       BodyType bodyType,
@@ -70,6 +86,7 @@ abstract class $UserModelCopyWith<$Res> {
       bool isVerified,
       bool isBlocked});
 
+  $GeoPointDataCopyWith<$Res>? get position;
   $UserBasicModelCopyWith<$Res>? get userBasicModel;
 }
 
@@ -92,7 +109,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? avatarUrl = freezed,
     Object? birthday = freezed,
     Object? age = freezed,
-    Object? location = freezed,
+    Object? position = freezed,
     Object? userBasicModel = freezed,
     Object? role = null,
     Object? bodyType = null,
@@ -129,10 +146,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
               as int?,
-      location: freezed == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as GeoPoint?,
+      position: freezed == position
+          ? _value.position
+          : position // ignore: cast_nullable_to_non_nullable
+              as GeoPointData?,
       userBasicModel: freezed == userBasicModel
           ? _value.userBasicModel
           : userBasicModel // ignore: cast_nullable_to_non_nullable
@@ -178,6 +195,18 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
 
   @override
   @pragma('vm:prefer-inline')
+  $GeoPointDataCopyWith<$Res>? get position {
+    if (_value.position == null) {
+      return null;
+    }
+
+    return $GeoPointDataCopyWith<$Res>(_value.position!, (value) {
+      return _then(_value.copyWith(position: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
   $UserBasicModelCopyWith<$Res>? get userBasicModel {
     if (_value.userBasicModel == null) {
       return null;
@@ -203,7 +232,7 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       String? avatarUrl,
       String? birthday,
       int? age,
-      @GeoPointConverter() GeoPoint? location,
+      @JsonKey(name: "position") GeoPointData? position,
       UserBasicModel? userBasicModel,
       Role role,
       BodyType bodyType,
@@ -215,6 +244,8 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       bool isVerified,
       bool isBlocked});
 
+  @override
+  $GeoPointDataCopyWith<$Res>? get position;
   @override
   $UserBasicModelCopyWith<$Res>? get userBasicModel;
 }
@@ -236,7 +267,7 @@ class __$$_UserModelCopyWithImpl<$Res>
     Object? avatarUrl = freezed,
     Object? birthday = freezed,
     Object? age = freezed,
-    Object? location = freezed,
+    Object? position = freezed,
     Object? userBasicModel = freezed,
     Object? role = null,
     Object? bodyType = null,
@@ -273,10 +304,10 @@ class __$$_UserModelCopyWithImpl<$Res>
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
               as int?,
-      location: freezed == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as GeoPoint?,
+      position: freezed == position
+          ? _value.position
+          : position // ignore: cast_nullable_to_non_nullable
+              as GeoPointData?,
       userBasicModel: freezed == userBasicModel
           ? _value.userBasicModel
           : userBasicModel // ignore: cast_nullable_to_non_nullable
@@ -331,7 +362,7 @@ class _$_UserModel implements _UserModel {
       this.avatarUrl,
       this.birthday,
       this.age,
-      @GeoPointConverter() this.location,
+      @JsonKey(name: "position") this.position,
       this.userBasicModel,
       this.role = Role.doNotShow,
       this.bodyType = BodyType.doNotShow,
@@ -367,8 +398,8 @@ class _$_UserModel implements _UserModel {
   @override
   final int? age;
   @override
-  @GeoPointConverter()
-  final GeoPoint? location;
+  @JsonKey(name: "position")
+  final GeoPointData? position;
   @override
   final UserBasicModel? userBasicModel;
   @override
@@ -399,7 +430,7 @@ class _$_UserModel implements _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(nickname: $nickname, aboutMe: $aboutMe, albumUrl: $albumUrl, avatarUrl: $avatarUrl, birthday: $birthday, age: $age, location: $location, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked)';
+    return 'UserModel(nickname: $nickname, aboutMe: $aboutMe, albumUrl: $albumUrl, avatarUrl: $avatarUrl, birthday: $birthday, age: $age, position: $position, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked)';
   }
 
   @override
@@ -416,8 +447,8 @@ class _$_UserModel implements _UserModel {
             (identical(other.birthday, birthday) ||
                 other.birthday == birthday) &&
             (identical(other.age, age) || other.age == age) &&
-            (identical(other.location, location) ||
-                other.location == location) &&
+            (identical(other.position, position) ||
+                other.position == position) &&
             (identical(other.userBasicModel, userBasicModel) ||
                 other.userBasicModel == userBasicModel) &&
             (identical(other.role, role) || other.role == role) &&
@@ -449,7 +480,7 @@ class _$_UserModel implements _UserModel {
       avatarUrl,
       birthday,
       age,
-      location,
+      position,
       userBasicModel,
       role,
       bodyType,
@@ -468,6 +499,34 @@ class _$_UserModel implements _UserModel {
       __$$_UserModelCopyWithImpl<_$_UserModel>(this, _$identity);
 
   @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_UserModel value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_UserModel value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_UserModel value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
+
+  @override
   Map<String, dynamic> toJson() {
     return _$$_UserModelToJson(
       this,
@@ -483,7 +542,7 @@ abstract class _UserModel implements UserModel {
       final String? avatarUrl,
       final String? birthday,
       final int? age,
-      @GeoPointConverter() final GeoPoint? location,
+      @JsonKey(name: "position") final GeoPointData? position,
       final UserBasicModel? userBasicModel,
       final Role role,
       final BodyType bodyType,
@@ -511,8 +570,8 @@ abstract class _UserModel implements UserModel {
   @override
   int? get age;
   @override
-  @GeoPointConverter()
-  GeoPoint? get location;
+  @JsonKey(name: "position")
+  GeoPointData? get position;
   @override
   UserBasicModel? get userBasicModel;
   @override
@@ -536,5 +595,178 @@ abstract class _UserModel implements UserModel {
   @override
   @JsonKey(ignore: true)
   _$$_UserModelCopyWith<_$_UserModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+GeoPointData _$GeoPointDataFromJson(Map<String, dynamic> json) {
+  return _GeoPointData.fromJson(json);
+}
+
+/// @nodoc
+mixin _$GeoPointData {
+  @GeoPointConverter()
+  @JsonKey(name: "geopoint")
+  GeoPoint get geopoint => throw _privateConstructorUsedError;
+  @JsonKey(name: "geohash")
+  String get geohash => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $GeoPointDataCopyWith<GeoPointData> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $GeoPointDataCopyWith<$Res> {
+  factory $GeoPointDataCopyWith(
+          GeoPointData value, $Res Function(GeoPointData) then) =
+      _$GeoPointDataCopyWithImpl<$Res, GeoPointData>;
+  @useResult
+  $Res call(
+      {@GeoPointConverter() @JsonKey(name: "geopoint") GeoPoint geopoint,
+      @JsonKey(name: "geohash") String geohash});
+}
+
+/// @nodoc
+class _$GeoPointDataCopyWithImpl<$Res, $Val extends GeoPointData>
+    implements $GeoPointDataCopyWith<$Res> {
+  _$GeoPointDataCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? geopoint = null,
+    Object? geohash = null,
+  }) {
+    return _then(_value.copyWith(
+      geopoint: null == geopoint
+          ? _value.geopoint
+          : geopoint // ignore: cast_nullable_to_non_nullable
+              as GeoPoint,
+      geohash: null == geohash
+          ? _value.geohash
+          : geohash // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_GeoPointDataCopyWith<$Res>
+    implements $GeoPointDataCopyWith<$Res> {
+  factory _$$_GeoPointDataCopyWith(
+          _$_GeoPointData value, $Res Function(_$_GeoPointData) then) =
+      __$$_GeoPointDataCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@GeoPointConverter() @JsonKey(name: "geopoint") GeoPoint geopoint,
+      @JsonKey(name: "geohash") String geohash});
+}
+
+/// @nodoc
+class __$$_GeoPointDataCopyWithImpl<$Res>
+    extends _$GeoPointDataCopyWithImpl<$Res, _$_GeoPointData>
+    implements _$$_GeoPointDataCopyWith<$Res> {
+  __$$_GeoPointDataCopyWithImpl(
+      _$_GeoPointData _value, $Res Function(_$_GeoPointData) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? geopoint = null,
+    Object? geohash = null,
+  }) {
+    return _then(_$_GeoPointData(
+      geopoint: null == geopoint
+          ? _value.geopoint
+          : geopoint // ignore: cast_nullable_to_non_nullable
+              as GeoPoint,
+      geohash: null == geohash
+          ? _value.geohash
+          : geohash // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_GeoPointData implements _GeoPointData {
+  const _$_GeoPointData(
+      {@GeoPointConverter() @JsonKey(name: "geopoint") required this.geopoint,
+      @JsonKey(name: "geohash") required this.geohash});
+
+  factory _$_GeoPointData.fromJson(Map<String, dynamic> json) =>
+      _$$_GeoPointDataFromJson(json);
+
+  @override
+  @GeoPointConverter()
+  @JsonKey(name: "geopoint")
+  final GeoPoint geopoint;
+  @override
+  @JsonKey(name: "geohash")
+  final String geohash;
+
+  @override
+  String toString() {
+    return 'GeoPointData(geopoint: $geopoint, geohash: $geohash)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_GeoPointData &&
+            (identical(other.geopoint, geopoint) ||
+                other.geopoint == geopoint) &&
+            (identical(other.geohash, geohash) || other.geohash == geohash));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, geopoint, geohash);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_GeoPointDataCopyWith<_$_GeoPointData> get copyWith =>
+      __$$_GeoPointDataCopyWithImpl<_$_GeoPointData>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_GeoPointDataToJson(
+      this,
+    );
+  }
+}
+
+abstract class _GeoPointData implements GeoPointData {
+  const factory _GeoPointData(
+      {@GeoPointConverter()
+      @JsonKey(name: "geopoint")
+          required final GeoPoint geopoint,
+      @JsonKey(name: "geohash")
+          required final String geohash}) = _$_GeoPointData;
+
+  factory _GeoPointData.fromJson(Map<String, dynamic> json) =
+      _$_GeoPointData.fromJson;
+
+  @override
+  @GeoPointConverter()
+  @JsonKey(name: "geopoint")
+  GeoPoint get geopoint;
+  @override
+  @JsonKey(name: "geohash")
+  String get geohash;
+  @override
+  @JsonKey(ignore: true)
+  _$$_GeoPointDataCopyWith<_$_GeoPointData> get copyWith =>
       throw _privateConstructorUsedError;
 }

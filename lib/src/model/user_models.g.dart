@@ -35,8 +35,9 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       avatarUrl: json['avatarUrl'] as String?,
       birthday: json['birthday'] as String?,
       age: json['age'] as int?,
-      location: _$JsonConverterFromJson<GeoPoint, GeoPoint>(
-          json['location'], const GeoPointConverter().fromJson),
+      position: json['position'] == null
+          ? null
+          : GeoPointData.fromJson(json['position'] as Map<String, dynamic>),
       userBasicModel: json['userBasicModel'] == null
           ? null
           : UserBasicModel.fromJson(
@@ -65,8 +66,7 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'avatarUrl': instance.avatarUrl,
       'birthday': instance.birthday,
       'age': instance.age,
-      'location': _$JsonConverterToJson<GeoPoint, GeoPoint>(
-          instance.location, const GeoPointConverter().toJson),
+      'position': instance.position,
       'userBasicModel': instance.userBasicModel,
       'role': _$RoleEnumMap[instance.role]!,
       'bodyType': _$BodyTypeEnumMap[instance.bodyType]!,
@@ -79,12 +79,6 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'isVerified': instance.isVerified,
       'isBlocked': instance.isBlocked,
     };
-
-Value? _$JsonConverterFromJson<Json, Value>(
-  Object? json,
-  Value? Function(Json json) fromJson,
-) =>
-    json == null ? null : fromJson(json as Json);
 
 const _$RoleEnumMap = {
   Role.doNotShow: 'doNotShow',
@@ -158,8 +152,15 @@ const _$WhereToMeetEnumMap = {
   WhereToMeet.coffeeShop: 'coffeeShop',
 };
 
-Json? _$JsonConverterToJson<Json, Value>(
-  Value? value,
-  Json? Function(Value value) toJson,
-) =>
-    value == null ? null : toJson(value);
+_$_GeoPointData _$$_GeoPointDataFromJson(Map<String, dynamic> json) =>
+    _$_GeoPointData(
+      geopoint:
+          const GeoPointConverter().fromJson(json['geopoint'] as GeoPoint),
+      geohash: json['geohash'] as String,
+    );
+
+Map<String, dynamic> _$$_GeoPointDataToJson(_$_GeoPointData instance) =>
+    <String, dynamic>{
+      'geopoint': const GeoPointConverter().toJson(instance.geopoint),
+      'geohash': instance.geohash,
+    };

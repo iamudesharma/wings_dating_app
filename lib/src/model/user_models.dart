@@ -14,7 +14,11 @@ import 'package:wings_dating_app/src/model/user_basic_model.dart';
 part 'user_models.freezed.dart';
 part 'user_models.g.dart';
 
-@Freezed()
+@Freezed(
+  map: FreezedMapOptions.all,
+  toStringOverride: true,
+)
+// @JsonSerializable(anyMap: true, explicitToJson: false)
 class UserModel with _$UserModel {
   factory UserModel({
     required String nickname,
@@ -23,7 +27,7 @@ class UserModel with _$UserModel {
     String? avatarUrl,
     String? birthday,
     int? age,
-    @GeoPointConverter() GeoPoint? location,
+    @JsonKey(name: "position") GeoPointData? position,
     UserBasicModel? userBasicModel,
     @Default(Role.doNotShow) Role role,
     @Default(BodyType.doNotShow) BodyType bodyType,
@@ -63,8 +67,16 @@ class GeoPointConverter implements JsonConverter<GeoPoint, GeoPoint> {
 // @Collection<UserModel>("users", prefix: 'User')
 // final usersRef = UserModelCollectionReference();
 
+@freezed
+class GeoPointData with _$GeoPointData {
+  const factory GeoPointData({
+    @GeoPointConverter() @JsonKey(name: "geopoint") required GeoPoint geopoint,
+    @JsonKey(name: "geohash") required String geohash,
+  }) = _GeoPointData;
 
-
+  factory GeoPointData.fromJson(Map<String, Object?> json) =>
+      _$GeoPointDataFromJson(json);
+}
 
 // // final personRef = UserModel();
 

@@ -22,8 +22,8 @@ class DashboardView extends StatelessWidget {
               BottomNavigationBarItem(
                   label: 'Posts', icon: Icon(Icons.abc_outlined)),
               BottomNavigationBarItem(
-                label: 'Settings',
-                icon: Icon(Icons.search),
+                label: 'Profile',
+                icon: Icon(Icons.play_circle_filled),
               ),
             ],
           );
