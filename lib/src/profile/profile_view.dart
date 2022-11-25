@@ -23,11 +23,13 @@ class ProfileView extends ConsumerWidget {
         SliverAppBar.medium(
           flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
-              title: Text(userData?.nickname ?? "",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
-                  )),
+              title: Text(
+                userData?.nickname ?? "",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                ),
+              ),
               background: Image.network(
                 "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&h=350",
                 fit: BoxFit.cover,
@@ -67,11 +69,11 @@ class ProfileView extends ConsumerWidget {
               Spacer(),
               ElevatedButton.icon(
                   onPressed: () async {
-                    await ref.read(profileRepoProvider).getUserList();
+                    // await ref.read(profileRepoProvider).getUserList();
 
-                    // context.router.push(
-                    //   EditProfileRoute(isEditProfile: true),
-                    // );
+                    context.router.push(
+                      EditProfileRoute(isEditProfile: true),
+                    );
                   },
                   icon: Icon(Icons.edit, size: 10),
                   label: Text(

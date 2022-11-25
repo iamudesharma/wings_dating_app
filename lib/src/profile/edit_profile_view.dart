@@ -373,8 +373,6 @@ class ImagePickerWidget extends StatelessWidget {
   }
 }
 
-// padding extansion
-
 class AddAdditionalInformationView extends ConsumerStatefulWidget {
   const AddAdditionalInformationView({super.key});
 
@@ -396,11 +394,11 @@ class _AddAdditionalInformationViewState
     final bodyType = ref.watch(bodyTypeProvider);
 
     final relationshipStatus = ref.watch(relationshipStatusProvider);
-    final ethicity = ref.watch(ethnicityProvider);
+    final ethnicity = ref.watch(ethnicityProvider);
     final lookingFor = ref.watch(lookingForProvider);
     final whereTomeet = ref.watch(whereToMeetProvider);
 
-    logger.i(prfiledata?.role.index);
+    logger.i(prfiledata?.role?.index);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -498,7 +496,7 @@ class _AddAdditionalInformationViewState
                       _showEthnicityStatus(context);
                     },
                     title: const Text("Ethnicity"),
-                    subtitle: Text(ethicity.value),
+                    subtitle: Text(ethnicity.value),
                     enabled: true,
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
@@ -533,7 +531,7 @@ class _AddAdditionalInformationViewState
                       final data = prfiledata?.copyWith(
                         bodyType: bodyType,
                         lookingFor: lookingFor,
-                        ethnicity: ethicity,
+                        ethnicity: ethnicity,
                         relationshipStatus: relationshipStatus,
                         whereToMeet: whereTomeet,
                         role: role,
