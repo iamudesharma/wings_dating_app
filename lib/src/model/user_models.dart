@@ -11,6 +11,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:wings_dating_app/helpers/extra_data.dart';
 import 'package:wings_dating_app/src/model/user_basic_model.dart';
 
+import 'geo_point_data.dart';
+
 part 'user_models.freezed.dart';
 part 'user_models.g.dart';
 
@@ -67,16 +69,6 @@ class GeoPointConverter implements JsonConverter<GeoPoint, GeoPoint> {
 // @Collection<UserModel>("users", prefix: 'User')
 // final usersRef = UserModelCollectionReference();
 
-@freezed
-class GeoPointData with _$GeoPointData {
-  const factory GeoPointData({
-    @GeoPointConverter() @JsonKey(name: "geopoint") required GeoPoint geopoint,
-    @JsonKey(name: "geohash") required String geohash,
-  }) = _GeoPointData;
-
-  factory GeoPointData.fromJson(Map<String, Object?> json) =>
-      _$GeoPointDataFromJson(json);
-}
 
 // // final personRef = UserModel();
 

@@ -19,6 +19,7 @@ import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
+import '../model/geo_point_data.dart';
 import '../model/user_basic_model.dart';
 
 final roleProvider = StateProvider<Role>((ref) {
@@ -292,10 +293,10 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       curve: Curves.easeInOut,
                       child: ElevatedButton(
                         onPressed: () async {
-                          final data = await location.getLocation();
                           if (_formKey.currentState!.validate()) {
                             if (widget.isEditProfile) {
                               UserModel? user = profile.userModel?.copyWith(
+                                position: profile.userModel!.position,
                                 nickname: _nicknameController.text,
                                 aboutMe: _bioController.text,
                                 avatarUrl: await ref
@@ -304,11 +305,13 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     .uploadImage(),
                                 birthday: _dobController.text,
                               );
-
+                              logger.i(user?.toJson());
                               await ref
                                   .read(Dependency.profileProvider)
                                   .updateUserDoc(user!);
                             } else {
+                              final data = await location.getLocation();
+
                               int age = calculateAge(_selectedDate!);
                               GeoFirePoint myLocation = geo.point(
                                   latitude: 12.960632, longitude: 77.641603);

@@ -9,6 +9,8 @@ import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/repo/repo_exception.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 
+import '../src/model/geo_point_data.dart';
+
 part 'profile_repo.g.dart';
 
 @riverpod
