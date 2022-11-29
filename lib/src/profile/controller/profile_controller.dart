@@ -39,14 +39,9 @@ class ProfileController extends ChangeNotifier {
     notifyListeners();
   }
 
-
-  Future updateUserData( UserModel user)async{
-await ref.read(Dependency.profileProvider).updateUserDoc(user);
-
+  Future updateUserData(UserModel user) async {
+    await ref.read(Dependency.profileProvider).updateUserDoc(user);
   }
-
-
-
 
   Future<void> pickImage({required ImageSource imageSource}) async {
     final image = await pickImageForm(imageSource);
@@ -59,7 +54,8 @@ await ref.read(Dependency.profileProvider).updateUserDoc(user);
     if (profileImage != null) {
       final image = await ref
           .read(Dependency.firebaseStorageProvider)
-          .ref("profileImage")
+          .ref("profileImages")
+          .child("${DateTime.now().millisecondsSinceEpoch.toString()}.jpg")
           .putFile(
             File(profileImage!),
             SettableMetadata(contentType: 'image/jpeg'),

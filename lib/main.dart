@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
 import 'package:wings_dating_app/routes/navigation_observers.dart';
 
@@ -37,7 +38,7 @@ class MyApp extends ConsumerWidget {
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
         useMaterial3: true,
         // To use the playground font, add GoogleFonts package and uncomment
-        // fontFamily: GoogleFonts.notoSans().fontFamily,
+        fontFamily: GoogleFonts.notoSans().fontFamily,
       ),
       darkTheme: FlexThemeData.dark(
         scheme: FlexScheme.aquaBlue,
@@ -46,12 +47,13 @@ class MyApp extends ConsumerWidget {
         appBarOpacity: 0.90,
         subThemesData: const FlexSubThemesData(
           blendOnLevel: 30,
+
           inputDecoratorRadius: 12.0,
         ),
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
         useMaterial3: true,
         // To use the playground font, add GoogleFonts package and uncomment
-        // fontFamily: GoogleFonts.notoSans().fontFamily,
+        fontFamily: GoogleFonts.notoSans().fontFamily,
       ),
 // If you do not have a themeMode switch, uncomment this line
 // to let the device system mode control the theme mode:

@@ -294,35 +294,51 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         onPressed: () async {
                           final data = await location.getLocation();
                           if (_formKey.currentState!.validate()) {
-                            int age = calculateAge(_selectedDate!);
-                            GeoFirePoint myLocation = geo.point(
-                                latitude: 12.960632, longitude: 77.641603);
+                            if (widget.isEditProfile) {
+                              UserModel? user = profile.userModel?.copyWith(
+                                nickname: _nicknameController.text,
+                                aboutMe: _bioController.text,
+                                avatarUrl: await ref
+                                    .read(ProfileController
+                                        .userControllerProvider)
+                                    .uploadImage(),
+                                birthday: _dobController.text,
+                              );
 
-                            UserModel user = UserModel(
-                              nickname: "udesh",
+                              await ref
+                                  .read(Dependency.profileProvider)
+                                  .updateUserDoc(user!);
+                            } else {
+                              int age = calculateAge(_selectedDate!);
+                              GeoFirePoint myLocation = geo.point(
+                                  latitude: 12.960632, longitude: 77.641603);
 
-                              aboutMe: _bioController.text,
-                              age: age,
-                              avatarUrl: await ref
-                                  .read(
-                                      ProfileController.userControllerProvider)
-                                  .uploadImage(),
-                              birthday: _dobController.text,
-                              // userBasicModel: UserBasicModel(
-                              //   dob: _dobController.text,
-                              // ),
-                            );
+                              UserModel user = UserModel(
+                                nickname: "udesh",
 
-                            logger.w(user.position?.toJson());
-                            await ref
-                                .read(Dependency.profileProvider)
-                                .createUserDoc(user);
+                                aboutMe: _bioController.text,
+                                age: age,
+                                avatarUrl: await ref
+                                    .read(ProfileController
+                                        .userControllerProvider)
+                                    .uploadImage(),
+                                birthday: _dobController.text,
+                                // userBasicModel: UserBasicModel(
+                                //   dob: _dobController.text,
+                                // ),
+                              );
 
-                            await ref
-                                .read(Dependency.profileProvider)
-                                .addLocation(GeoPointData(
-                                    geopoint: myLocation.geoPoint,
-                                    geohash: myLocation.hash));
+                              logger.w(user.position?.toJson());
+                              await ref
+                                  .read(Dependency.profileProvider)
+                                  .createUserDoc(user);
+
+                              await ref
+                                  .read(Dependency.profileProvider)
+                                  .addLocation(GeoPointData(
+                                      geopoint: myLocation.geoPoint,
+                                      geohash: myLocation.hash));
+                            }
                           }
                         },
                         child: Text(widget.isEditProfile ? "Update" : "Save"),
