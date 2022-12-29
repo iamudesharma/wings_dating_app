@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +14,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await FirebaseStorage.instance.app.setAutomaticDataCollectionEnabled(true);
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -47,7 +50,6 @@ class MyApp extends ConsumerWidget {
         appBarOpacity: 0.90,
         subThemesData: const FlexSubThemesData(
           blendOnLevel: 30,
-
           inputDecoratorRadius: 12.0,
         ),
         visualDensity: FlexColorScheme.comfortablePlatformDensity,

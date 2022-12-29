@@ -554,6 +554,7 @@ class _AddAdditionalInformationViewState
                         role: role,
                       );
 
+                      logger.i(data?.toJson());
                       await ref
                           .read(ProfileController.userControllerProvider)
                           .updateUserData(data!);
