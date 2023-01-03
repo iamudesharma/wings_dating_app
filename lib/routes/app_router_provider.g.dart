@@ -29,13 +29,13 @@ class _SystemHash {
   }
 }
 
-String $appRouteHash() => r'abba8f7831974eb11b466fbe5325ff8832d70e9d';
+String _$appRouteHash() => r'97495f7a98e9e8ef92cc451fb94274a3c3f1422d';
 
 /// See also [appRoute].
 final appRouteProvider = Provider<AppRouter>(
   appRoute,
   name: r'appRouteProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : $appRouteHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$appRouteHash,
 );
 typedef AppRouteRef = ProviderRef<AppRouter>;

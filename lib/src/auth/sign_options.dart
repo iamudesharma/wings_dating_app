@@ -9,42 +9,22 @@ import 'package:wings_dating_app/src/dashboard.dart';
 
 import '../../routes/app_router_provider.dart';
 
-// @riverpod
-// Stream<User?> authStateChanges(Ref ref) {
-//   return FirebaseAuth.instance.authStateChanges();
-// }
-
 class SignOptionsView extends ConsumerWidget {
   const SignOptionsView({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
-    final authState = ref.watch(authstateProvider);
-
-    return authState.when(
-      data: (user) {
-        if (user != null) {
-          ref.read(appRouteProvider).push(
-                const DashboardRoute(),
-              );
-          return const SizedBox.shrink();
-        } else {
-          return SignInScreen(
-            auth: FirebaseAuth.instance,
-            providerConfigs: const [
-              EmailProviderConfiguration(),
-              GoogleProviderConfiguration(
-                  clientId:
-                      '546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com'),
-              PhoneProviderConfiguration()
-            ],
-            actions: [],
-            showAuthActionSwitch: true,
-          );
-        }
-      },
-      loading: () => const CircularProgressIndicator(),
-      error: (error, stack) => Text(error.toString()),
+    return SignInScreen(
+      auth: FirebaseAuth.instance,
+      providerConfigs: const [
+        EmailProviderConfiguration(),
+        // GoogleProviderConfiguration(
+        //     clientId:
+        //         '546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com'),
+        // PhoneProviderConfiguration()
+      ],
+      actions: [],
+      showAuthActionSwitch: true,
     );
   }
 }

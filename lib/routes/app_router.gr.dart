@@ -16,12 +16,9 @@ class _$AppRouter extends RootStackRouter {
   _$AppRouter({
     GlobalKey<NavigatorState>? navigatorKey,
     required this.authGuard,
-    required this.profileDocGuard,
   }) : super(navigatorKey);
 
   final AuthGuard authGuard;
-
-  final ProfileDocGuard profileDocGuard;
 
   @override
   final Map<String, PageFactory> pagesMap = {
@@ -82,10 +79,7 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           DashboardRoute.name,
           path: '/',
-          guards: [
-            authGuard,
-            profileDocGuard,
-          ],
+          guards: [authGuard],
           children: [
             RouteConfig(
               UsersRoute.name,

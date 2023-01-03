@@ -29,13 +29,13 @@ class _SystemHash {
   }
 }
 
-String $profileRepoHash() => r'5a29949f0746d667254a22cdf5932cc7b5197605';
+String _$profileRepoHash() => r'5a29949f0746d667254a22cdf5932cc7b5197605';
 
 /// See also [profileRepo].
 final profileRepoProvider = AutoDisposeProvider<ProfileRepo>(
   profileRepo,
   name: r'profileRepoProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : $profileRepoHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$profileRepoHash,
 );
 typedef ProfileRepoRef = AutoDisposeProviderRef<ProfileRepo>;

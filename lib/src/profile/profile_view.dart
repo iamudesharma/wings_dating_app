@@ -14,76 +14,78 @@ class ProfileView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final userData =
-        ref.watch(ProfileController.userControllerProvider).userModel;
+    // final userData =
+    //     ref.watch(ProfileController.userControllerProvider).userModel;
 
-    logger.i(userData?.avatarUrl);
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar.medium(
-          flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              title: Text(
-                userData?.nickname ?? "",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                ),
-              ),
-              background: Image.network(
-                "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&h=350",
-                fit: BoxFit.cover,
-              )),
-          pinned: true,
-          // leading: IconButton(
-          //   icon: const Icon(Icons.menu),
-          //   onPressed: () {
-          //     AutoRouter.of(context)
-          //         .push(EditProfileRoute(isEditProfile: false));
-          //   },
-          // ),
+    // logger.i(userData?.avatarUrl);
 
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.more_vert_outlined),
-              onPressed: () {},
-            ),
-          ],
-          // centerTitle: true,
-          title: Text(userData?.nickname ?? ""),
-        ),
-        SliverToBoxAdapter(
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(userData?.avatarUrl ?? ""),
-              ),
-              10.widthBox,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text("username"),
-                  Text("bio"),
-                ],
-              ),
-              Spacer(),
-              ElevatedButton.icon(
-                  onPressed: () async {
-                    // await ref.read(profileRepoProvider).getUserList();
+    return Container();
+    // return CustomScrollView(
+    //   slivers: [
+    //     SliverAppBar.medium(
+    //       flexibleSpace: FlexibleSpaceBar(
+    //           centerTitle: true,
+    //           title: Text(
+    //             userData?.nickname ?? "",
+    //             style: const TextStyle(
+    //               color: Colors.white,
+    //               fontSize: 16.0,
+    //             ),
+    //           ),
+    //           background: Image.network(
+    //             "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&h=350",
+    //             fit: BoxFit.cover,
+    //           )),
+    //       pinned: true,
+    //       // leading: IconButton(
+    //       //   icon: const Icon(Icons.menu),
+    //       //   onPressed: () {
+    //       //     AutoRouter.of(context)
+    //       //         .push(EditProfileRoute(isEditProfile: false));
+    //       //   },
+    //       // ),
 
-                    context.router.push(
-                      EditProfileRoute(isEditProfile: true),
-                    );
-                  },
-                  icon: Icon(Icons.edit, size: 10),
-                  label: Text(
-                    "Edit Profile",
-                    style: Theme.of(context).textTheme.caption,
-                  ))
-            ],
-          ),
-        )
-      ],
-    );
+    //       actions: [
+    //         IconButton(
+    //           icon: const Icon(Icons.more_vert_outlined),
+    //           onPressed: () {},
+    //         ),
+    //       ],
+    //       // centerTitle: true,
+    //       title: Text(userData?.nickname ?? ""),
+    //     ),
+    //     SliverToBoxAdapter(
+    //       child: Row(
+    //         children: [
+    //           CircleAvatar(
+    //             backgroundImage: NetworkImage(userData?.avatarUrl ?? ""),
+    //           ),
+    //           10.widthBox,
+    //           Column(
+    //             crossAxisAlignment: CrossAxisAlignment.start,
+    //             children: const [
+    //               Text("username"),
+    //               Text("bio"),
+    //             ],
+    //           ),
+    //           Spacer(),
+    //           ElevatedButton.icon(
+    //               onPressed: () async {
+    //                 // await ref.read(profileRepoProvider).getUserList();
+
+    //                 context.router.push(
+    //                   EditProfileRoute(isEditProfile: true),
+    //                 );
+    //               },
+    //               icon: Icon(Icons.edit, size: 10),
+    //               label: Text(
+    //                 "Edit Profile",
+    //                 style: Theme.of(context).textTheme.caption,
+    //               ))
+    //         ],
+    //       ),
+    //     )
+    //   ],
+    // );
   }
 }

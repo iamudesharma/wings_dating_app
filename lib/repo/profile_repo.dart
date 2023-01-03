@@ -54,27 +54,19 @@ class ProfileRepo with RepositoryExceptionMixin {
   }
 
   Future<bool> checkUserDocExist() async {
-    final data = await exceptionHandler<bool>(
-      ref
-          .read(Dependency.firebaseStoreProvider)
-          .collection("users")
-          .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-          .get()
-          .then(
-        (value) {
-          if (value.exists) {
-            logger.i('User doc exist');
-            return true;
-          } else {
-            logger.i('User doc does not exist');
+    final data = await ref
+        .read(Dependency.firebaseStoreProvider)
+        .collection("users")
+        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+        .get();
 
-            return false;
-          }
-        },
-      ),
-    );
-
-    return data;
+    if (data.exists) {
+      logger.i('User doc exist');
+      return true;
+    } else {
+      logger.i('User doc does not exist');
+      return false;
+    }
   }
 
   Future<void> updateUserDoc(UserModel userModel) async {

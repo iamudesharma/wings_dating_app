@@ -57,12 +57,7 @@ class MyApp extends ConsumerWidget {
         // To use the playground font, add GoogleFonts package and uncomment
         fontFamily: GoogleFonts.notoSans().fontFamily,
       ),
-// If you do not have a themeMode switch, uncomment this line
-// to let the device system mode control the theme mode:
-// themeMode: ThemeMode.system,
-
       themeMode: ThemeMode.dark,
-
       routerDelegate:
           appRouter.delegate(navigatorObservers: () => [MyObserver()]),
       routeInformationParser: appRouter.defaultRouteParser(),
