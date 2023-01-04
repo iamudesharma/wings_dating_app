@@ -145,213 +145,213 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
           SliverAppBar.medium(
             title: Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
           ),
-          // SliverToBoxAdapter(
-          //   child: Form(
-          //     key: _formKey,
-          //     // autovalidateMode: AutovalidateMode.onUserInteraction,
-          //     child: SingleChildScrollView(
-          //       child: Column(
-          //         children: [
-          //           const SizedBox(
-          //             height: 20,
-          //           ),
-          //           profile.profileImage != null
-          //               ? CircleAvatar(
-          //                   radius: 35,
-          //                   backgroundImage: FileImage(
-          //                     File(profile.profileImage!),
-          //                   ),
-          //                 )
-          //               : const CircleAvatar(
-          //                   radius: 35,
-          //                 ),
-          //           const SizedBox(
-          //             height: 20,
-          //           ),
-          //           Builder(builder: (context) {
-          //             return ElevatedButton(
-          //               onPressed: () async {
-          //                 showModalBottomSheet(
-          //                     context: context,
-          //                     builder: (context) {
-          //                       return BottomSheet(onClosing: () {
-          //                         Navigator.pop(context);
-          //                       }, builder: (context) {
-          //                         return ImagePickerWidget(
-          //                           camera: () async {
-          //                             await ref
-          //                                 .read(ProfileController
-          //                                     .userControllerProvider)
-          //                                 .pickImage(
-          //                                     imageSource: ImageSource.camera);
-          //                           },
-          //                           gallery: () async {
-          //                             await ref
-          //                                 .read(ProfileController
-          //                                     .userControllerProvider)
-          //                                 .pickImage(
-          //                                     imageSource: ImageSource.gallery);
-          //                           },
-          //                         );
-          //                       });
-          //                     });
-          //               },
-          //               child: Text(widget.isEditProfile
-          //                   ? "Change Profile Picture"
-          //                   : "Upload Profile Picture"),
-          //             );
-          //           }),
-          //           const SizedBox(
-          //             height: 20,
-          //           ),
-          //           const SizedBox(
-          //             height: 20,
-          //           ),
-          //           TextFormField(
-          //             validator: (value) {
-          //               if (value!.isEmpty) {
-          //                 return "Please enter a nickname";
-          //               } else {
-          //                 return null;
-          //               }
-          //             },
-          //             controller: _nicknameController,
-          //             decoration: const InputDecoration(
-          //               isDense: true,
-          //               hintText: "Nickname",
-          //             ),
-          //           ),
-          //           const SizedBox(
-          //             height: 20,
-          //           ),
-          //           TextFormField(
-          //             validator: ((value) {
-          //               if (value!.isEmpty) {
-          //                 return "Please enter a nickname";
-          //               } else {
-          //                 return null;
-          //               }
-          //             }),
-          //             controller: _dobController,
-          //             decoration: const InputDecoration(
-          //               isDense: true,
-          //               hintText: "Date of Birth",
-          //             ),
-          //             readOnly: true,
-          //             onTap: () async {
-          //               showDatePicker(
-          //                 context: context,
-          //                 initialDate: DateTime(2004),
-          //                 firstDate: DateTime(1960),
-          //                 lastDate: DateTime(2004),
-          //               ).then((value) {
-          //                 logger.i(value);
+          SliverToBoxAdapter(
+            child: Form(
+              key: _formKey,
+              // autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    profile.profileImage != null
+                        ? CircleAvatar(
+                            radius: 35,
+                            backgroundImage: FileImage(
+                              File(profile.profileImage!),
+                            ),
+                          )
+                        : const CircleAvatar(
+                            radius: 35,
+                          ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Builder(builder: (context) {
+                      return ElevatedButton(
+                        onPressed: () async {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return BottomSheet(onClosing: () {
+                                  Navigator.pop(context);
+                                }, builder: (context) {
+                                  return ImagePickerWidget(
+                                    camera: () async {
+                                      await ref
+                                          .read(ProfileController
+                                              .userControllerProvider)
+                                          .pickImage(
+                                              imageSource: ImageSource.camera);
+                                    },
+                                    gallery: () async {
+                                      await ref
+                                          .read(ProfileController
+                                              .userControllerProvider)
+                                          .pickImage(
+                                              imageSource: ImageSource.gallery);
+                                    },
+                                  );
+                                });
+                              });
+                        },
+                        child: Text(widget.isEditProfile
+                            ? "Change Profile Picture"
+                            : "Upload Profile Picture"),
+                      );
+                    }),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter a nickname";
+                        } else {
+                          return null;
+                        }
+                      },
+                      controller: _nicknameController,
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        hintText: "Nickname",
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      validator: ((value) {
+                        if (value!.isEmpty) {
+                          return "Please enter a nickname";
+                        } else {
+                          return null;
+                        }
+                      }),
+                      controller: _dobController,
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        hintText: "Date of Birth",
+                      ),
+                      readOnly: true,
+                      onTap: () async {
+                        showDatePicker(
+                          context: context,
+                          initialDate: DateTime(2004),
+                          firstDate: DateTime(1960),
+                          lastDate: DateTime(2004),
+                        ).then((value) {
+                          logger.i(value);
 
-          //                 _dobController.text = DateFormat.yMd().format(value!);
+                          _dobController.text = DateFormat.yMd().format(value!);
 
-          //                 _selectedDate = value;
-          //                 setState(() {});
-          //               });
-          //             },
-          //           ),
-          //           const SizedBox(
-          //             height: 20,
-          //           ),
-          //           TextFormField(
-          //             validator: (value) {
-          //               if (value!.isEmpty) {
-          //                 return "Please enter a nickname";
-          //               } else {
-          //                 return null;
-          //               }
-          //             },
-          //             maxLines: 2,
-          //             controller: _bioController,
-          //             decoration: const InputDecoration(
-          //               isDense: true,
-          //               hintText: "bio",
-          //             ),
-          //           ),
-          //           const SizedBox(
-          //             height: 20,
-          //           ),
-          //           Align(
-          //             alignment: Alignment.centerLeft,
-          //             child: TextButton.icon(
-          //                 icon: const Icon(Icons.add),
-          //                 onPressed: () async {
-          //                   context.router
-          //                       .push(const AddAdditionalInformationRoute());
-          //                 },
-          //                 label: const Text("Add Additional Information")),
-          //           ),
-          //           const SizedBox(
-          //             height: 20,
-          //           ),
-          //           AnimatedContainer(
-          //             duration: const Duration(seconds: 1),
-          //             curve: Curves.easeInOut,
-          //             child: ElevatedButton(
-          //               onPressed: () async {
-          //                 if (_formKey.currentState!.validate()) {
-          //                   if (widget.isEditProfile) {
-          //                     UserModel? user = profile.userModel?.copyWith(
-          //                       position: profile.userModel!.position,
-          //                       nickname: _nicknameController.text,
-          //                       aboutMe: _bioController.text,
-          //                       avatarUrl: await ref
-          //                           .read(ProfileController
-          //                               .userControllerProvider)
-          //                           .uploadImage(),
-          //                       birthday: _dobController.text,
-          //                     );
-          //                     logger.i(user?.toJson());
-          //                     await ref
-          //                         .read(Dependency.profileProvider)
-          //                         .updateUserDoc(user!);
-          //                   } else {
-          //                     final data = await location.getLocation();
+                          _selectedDate = value;
+                          setState(() {});
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter a nickname";
+                        } else {
+                          return null;
+                        }
+                      },
+                      maxLines: 2,
+                      controller: _bioController,
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        hintText: "bio",
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                          icon: const Icon(Icons.add),
+                          onPressed: () async {
+                            context.router
+                                .push(const AddAdditionalInformationRoute());
+                          },
+                          label: const Text("Add Additional Information")),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    AnimatedContainer(
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.easeInOut,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            if (widget.isEditProfile) {
+                              UserModel? user = profile.userModel?.copyWith(
+                                position: profile.userModel!.position,
+                                nickname: _nicknameController.text,
+                                aboutMe: _bioController.text,
+                                avatarUrl: await ref
+                                    .read(ProfileController
+                                        .userControllerProvider)
+                                    .uploadImage(),
+                                birthday: _dobController.text,
+                              );
+                              logger.i(user?.toJson());
+                              await ref
+                                  .read(Dependency.profileProvider)
+                                  .updateUserDoc(user!);
+                            } else {
+                              final data = await location.getLocation();
 
-          //                     int age = calculateAge(_selectedDate!);
-          //                     GeoFirePoint myLocation = geo.point(
-          //                         latitude: 12.960632, longitude: 77.641603);
+                              int age = calculateAge(_selectedDate!);
+                              GeoFirePoint myLocation = geo.point(
+                                  latitude: 12.960632, longitude: 77.641603);
 
-          //                     UserModel user = UserModel(
-          //                       nickname: "udesh",
+                              UserModel user = UserModel(
+                                nickname: "udesh",
 
-          //                       aboutMe: _bioController.text,
-          //                       age: age,
-          //                       avatarUrl: await ref
-          //                           .read(ProfileController
-          //                               .userControllerProvider)
-          //                           .uploadImage(),
-          //                       birthday: _dobController.text,
-          //                       // userBasicModel: UserBasicModel(
-          //                       //   dob: _dobController.text,
-          //                       // ),
-          //                     );
+                                aboutMe: _bioController.text,
+                                age: age,
+                                avatarUrl: await ref
+                                    .read(ProfileController
+                                        .userControllerProvider)
+                                    .uploadImage(),
+                                birthday: _dobController.text,
+                                // userBasicModel: UserBasicModel(
+                                //   dob: _dobController.text,
+                                // ),
+                              );
 
-          //                     logger.w(user.position?.toJson());
-          //                     await ref
-          //                         .read(Dependency.profileProvider)
-          //                         .createUserDoc(user);
+                              logger.w(user.position?.toJson());
+                              await ref
+                                  .read(Dependency.profileProvider)
+                                  .createUserDoc(user);
 
-          //                     await ref
-          //                         .read(Dependency.profileProvider)
-          //                         .addLocation(GeoPointData(
-          //                             geopoint: myLocation.geoPoint,
-          //                             geohash: myLocation.hash));
-          //                   }
-          //                 }
-          //               },
-          //               child: Text(widget.isEditProfile ? "Update" : "Save"),
-          //             ),
-          //           ),
-          //         ],
-          //       ).p16(),
-          //     ),
-          //   ),
-          // ),
+                              await ref
+                                  .read(Dependency.profileProvider)
+                                  .addLocation(GeoPointData(
+                                      geopoint: myLocation.geoPoint,
+                                      geohash: myLocation.hash));
+                            }
+                          }
+                        },
+                        child: Text(widget.isEditProfile ? "Update" : "Save"),
+                      ),
+                    ),
+                  ],
+                ).p16(),
+              ),
+            ),
+          ),
         ],
       ),
     );

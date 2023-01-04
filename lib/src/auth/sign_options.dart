@@ -18,12 +18,16 @@ class SignOptionsView extends ConsumerWidget {
       auth: FirebaseAuth.instance,
       providerConfigs: const [
         EmailProviderConfiguration(),
-        // GoogleProviderConfiguration(
-        //     clientId:
-        //         '546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com'),
-        // PhoneProviderConfiguration()
+        GoogleProviderConfiguration(
+            clientId:
+                '546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com'),
+        PhoneProviderConfiguration()
       ],
-      actions: [],
+      actions: [
+        AuthStateChangeAction(
+          (context, AuthState state) {},
+        )
+      ],
       showAuthActionSwitch: true,
     );
   }

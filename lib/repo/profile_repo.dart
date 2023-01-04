@@ -57,7 +57,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     final data = await ref
         .read(Dependency.firebaseStoreProvider)
         .collection("users")
-        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser?.uid)
         .get();
 
     if (data.exists) {

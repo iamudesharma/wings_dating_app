@@ -47,7 +47,6 @@ class AuthGuard extends AutoRouteGuard {
       //  customerController.getCustomerData();
     } else {
       resolver.next(false);
-      ref.read(profileRepoProvider).checkUserDocExist();
 
       router.push(const SignOptionsRoute());
     }
