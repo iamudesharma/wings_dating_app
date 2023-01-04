@@ -77,3 +77,33 @@ class ProfileController extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+
+final roleProvider = StateProvider<Role>((ref) {
+  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
+  return userdata!.role;
+});
+
+final bodyTypeProvider = StateProvider<BodyType>((ref) {
+  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
+  return userdata!.bodyType;
+});
+
+final relationshipStatusProvider = StateProvider<RelationshipStatus>((ref) {
+  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
+  return userdata!.relationshipStatus;
+});
+
+final ethnicityProvider = StateProvider<Ethnicity>((ref) {
+  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
+  return userdata!.ethnicity;
+});
+final lookingForProvider = StateProvider<LookingFor>((ref) {
+  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
+  return userdata!.lookingFor ?? LookingFor.doNotShow;
+});
+
+final whereToMeetProvider = StateProvider<WhereToMeet>((ref) {
+  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
+  return userdata!.whereToMeet ?? WhereToMeet.doNotShow;
+});
