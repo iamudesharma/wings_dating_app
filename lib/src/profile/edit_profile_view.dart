@@ -22,7 +22,6 @@ import 'package:wings_dating_app/src/profile/controller/profile_controller.dart'
 import '../model/geo_point_data.dart';
 import '../model/user_basic_model.dart';
 
-
 class EditProfileView extends ConsumerStatefulWidget {
   const EditProfileView({
     super.key,
@@ -247,16 +246,19 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: TextButton.icon(
-                          icon: const Icon(Icons.add),
-                          onPressed: () async {
-                            context.router
-                                .push(const AddAdditionalInformationRoute());
-                          },
-                          label: const Text("Add Additional Information")),
-                    ),
+                    widget.isEditProfile
+                        ? Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton.icon(
+                                icon: const Icon(Icons.add),
+                                onPressed: () async {
+                                  context.router.push(
+                                      const AddAdditionalInformationRoute());
+                                },
+                                label:
+                                    const Text("Add Additional Information")),
+                          )
+                        : const SizedBox.shrink(),
                     const SizedBox(
                       height: 20,
                     ),
@@ -303,16 +305,21 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 // ),
                               );
 
-                              logger.w(user.position?.toJson());
+                              logger.w(myLocation.data);
+                              logger.w(user.toJson());
+
                               await ref
                                   .read(Dependency.profileProvider)
                                   .createUserDoc(user);
 
                               await ref
                                   .read(Dependency.profileProvider)
-                                  .addLocation(GeoPointData(
+                                  .addLocation(
+                                    GeoPointData(
                                       geopoint: myLocation.geoPoint,
-                                      geohash: myLocation.hash));
+                                      geohash: myLocation.hash,
+                                    ),
+                                  );
                             }
                           }
                         },
@@ -361,4 +368,3 @@ class ImagePickerWidget extends StatelessWidget {
     );
   }
 }
-

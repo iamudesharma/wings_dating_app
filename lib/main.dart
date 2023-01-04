@@ -16,6 +16,8 @@ void main() async {
   );
 
   await FirebaseStorage.instance.app.setAutomaticDataCollectionEnabled(true);
+  await FirebaseStorage.instance.app.setAutomaticResourceManagementEnabled(true);
+
 
   runApp(const ProviderScope(child: MyApp()));
 }

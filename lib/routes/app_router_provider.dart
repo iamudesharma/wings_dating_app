@@ -35,6 +35,9 @@ class AuthGuard extends AutoRouteGuard {
       if (await ref.read(profileRepoProvider).checkUserDocExist()) {
         print('user doc exist');
 
+        await ref
+            .read(ProfileController.userControllerProvider)
+            .getCurrentUser();
         resolver.next(true);
         // customerController.getCustomerData();
       } else {

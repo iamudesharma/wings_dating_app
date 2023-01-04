@@ -32,7 +32,7 @@ class ProfileView extends ConsumerWidget {
                 ),
               ),
               background: Image.network(
-                "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&h=350",
+                userData!.avatarUrl!,
                 fit: BoxFit.cover,
               )),
           pinned: true,
@@ -51,7 +51,7 @@ class ProfileView extends ConsumerWidget {
             ),
           ],
           // centerTitle: true,
-          title: Text(userData?.nickname ?? ""),
+          title: Text(userData.nickname ?? ""),
         ),
         SliverToBoxAdapter(
           child: Row(
@@ -62,9 +62,9 @@ class ProfileView extends ConsumerWidget {
               10.widthBox,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text("username"),
-                  Text("bio"),
+                children: [
+                  Text(userData.nickname ?? ""),
+                  Text(userData.aboutMe ?? ""),
                 ],
               ),
               Spacer(),
