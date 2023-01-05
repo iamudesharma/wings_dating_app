@@ -24,6 +24,10 @@ final heightProvider = StateProvider<String>((ref) {
   return "Do not show";
 });
 
+final albumListProvider = StateProvider<List<String>?>((ref) {
+  return [];
+});
+
 class AddAdditionalInformationView extends ConsumerStatefulWidget {
   const AddAdditionalInformationView({super.key});
 
@@ -51,6 +55,7 @@ class _AddAdditionalInformationViewState
     final whereTomeet = ref.watch(whereToMeetProvider);
     final weight = ref.watch(weightProvider);
     final height = ref.watch(heightProvider);
+    final albumList = ref.watch(albumListProvider);
 
     logger.i(profiledata?.role.index);
     return Scaffold(
@@ -63,12 +68,13 @@ class _AddAdditionalInformationViewState
               crossAxisCount: 4,
               mainAxisSpacing: 4,
               crossAxisSpacing: 4,
-              children: const [
+              children: [
                 StaggeredGridTile.count(
                   crossAxisCellCount: 2,
                   mainAxisCellCount: 2,
                   child: AlbumWidgetPicker(
                     index: 0,
+                    path: albumList?[0],
                   ),
                 ),
                 StaggeredGridTile.count(
@@ -76,6 +82,7 @@ class _AddAdditionalInformationViewState
                   mainAxisCellCount: 1,
                   child: AlbumWidgetPicker(
                     index: 1,
+                    path: albumList?[1] ?? "",
                     // path: ,
                   ),
                 ),
@@ -84,6 +91,7 @@ class _AddAdditionalInformationViewState
                   mainAxisCellCount: 1,
                   child: AlbumWidgetPicker(
                     index: 2,
+                    path: albumList?[2],
                   ),
                 ),
                 StaggeredGridTile.count(
@@ -91,6 +99,7 @@ class _AddAdditionalInformationViewState
                   mainAxisCellCount: 1,
                   child: AlbumWidgetPicker(
                     index: 3,
+                    path: albumList?[3],
                   ),
                 ),
                 // StaggeredGridTile.count(
@@ -467,16 +476,17 @@ class _AdditionalDataWidgetState extends State<AdditionalDataWidget> {
       children: List.generate(
         widget.value.length,
         (index) => ListWheelItemWidget(
-            onTap: () async {
-              print("tapped");
-              widget.onChanged(widget.value[index]);
-            },
-            color: widget.selected == widget.value[index]
-                ? Theme.of(context).primaryColor
-                : Theme.of(context).primaryColor.withOpacity(0.2),
-            role: widget.isString!
-                ? widget.value[index]
-                : "${widget.value[index].value}"),
+          onTap: () async {
+            print("tapped");
+            widget.onChanged(widget.value[index]);
+          },
+          color: widget.selected == widget.value[index]
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).primaryColor.withOpacity(0.2),
+          role: widget.isString!
+              ? widget.value[index]
+              : "${widget.value[index].value}",
+        ),
       ),
     );
   }
@@ -509,7 +519,7 @@ class ListWheelItemWidget extends StatelessWidget {
   }
 }
 
-class AlbumWidgetPicker extends ConsumerWidget {
+class AlbumWidgetPicker extends ConsumerStatefulWidget {
   const AlbumWidgetPicker({
     Key? key,
     this.path,
@@ -520,8 +530,16 @@ class AlbumWidgetPicker extends ConsumerWidget {
   final int index;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AlbumWidgetPicker> createState() => _AlbumWidgetPickerState();
+}
+
+class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
+  // final int index;
+  @override
+  Widget build(BuildContext context) {
     final userController = ref.watch(ProfileController.userControllerProvider);
+    final albumList = ref.watch(albumListProvider);
+
     return InkWell(
       onTap: () async {
         await showModalBottomSheet(
@@ -534,20 +552,30 @@ class AlbumWidgetPicker extends ConsumerWidget {
               builder: (context) {
                 return ImagePickerWidget(
                   camera: () async {
-                    await ref
+                    final data = await ref
                         .read(ProfileController.userControllerProvider)
                         .pickImageFromAlbum(
-                          index,
                           ImageSource.camera,
                         );
+
+                    if (data != null) {
+// albumList.update((state) => state[widget.index] = data);
+
+                      albumList![widget.index] = data;
+                      setState(() {});
+                    }
                   },
                   gallery: () async {
-                    await ref
+                    final data = await ref
                         .read(ProfileController.userControllerProvider)
                         .pickImageFromAlbum(
-                          index,
                           ImageSource.gallery,
                         );
+
+                    if (data != null) {
+                      albumList![widget.index] = data;
+                      setState(() {});
+                    }
                   },
                 );
               },
@@ -564,11 +592,15 @@ class AlbumWidgetPicker extends ConsumerWidget {
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: userController.albumImages.isEmpty
+        child: albumList!.isEmpty
             ? const Icon(Icons.add)
-            : userController.albumImages[index].isEmpty
+            : userController.albumImages.isEmpty
                 ? Image(
-                    image: FileImage(File(userController.albumImages[index])),
+                    image: FileImage(
+                      File(
+                        userController.albumImages[widget.index],
+                      ),
+                    ),
                     fit: BoxFit.cover,
                   )
                 : const Icon(Icons.add),

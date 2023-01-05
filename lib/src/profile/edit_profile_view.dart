@@ -2,10 +2,8 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -19,8 +17,6 @@ import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
-import '../model/geo_point_data.dart';
-import '../model/user_basic_model.dart';
 
 class EditProfileView extends ConsumerStatefulWidget {
   const EditProfileView({

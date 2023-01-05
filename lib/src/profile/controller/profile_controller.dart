@@ -70,12 +70,11 @@ class ProfileController extends ChangeNotifier {
     }
   }
 
-  pickImageFromAlbum(int index, ImageSource source) async {
+  Future<String?> pickImageFromAlbum(ImageSource source) async {
     final image = await pickImageForm(source);
+    ImagePicker().pickMultiImage();
 
-    albumImages.add(image!);
-
-    notifyListeners();
+    return image;
   }
 
   double getDistance(Coordinates coordinates) {

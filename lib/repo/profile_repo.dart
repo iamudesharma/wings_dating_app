@@ -107,9 +107,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     final _firestore = FirebaseFirestore.instance;
     // usercollection.snapshots().where((event) => event.);
     final data = geo
-        .collection(
-          collectionRef: _firestore.collection("users"),
-        )
+        .collection(collectionRef: _firestore.collection("users").limit(10))
         .within(
           center: center,
           radius: 10000,

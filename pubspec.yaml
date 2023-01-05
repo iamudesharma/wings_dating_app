@@ -64,6 +64,7 @@ dependencies:
   freezed: ^2.3.2
   geoflutterfire2: ^2.3.14
   google_fonts: ^3.0.1
+  chat_bubbles: ^1.4.0
 
 
 dev_dependencies:
