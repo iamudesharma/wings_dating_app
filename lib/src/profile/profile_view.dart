@@ -51,23 +51,23 @@ class ProfileView extends ConsumerWidget {
             ),
           ],
           // centerTitle: true,
-          title: Text(userData.name ?? ""),
+          title: Text(userData.name),
         ),
         SliverToBoxAdapter(
           child: Row(
             children: [
               CircleAvatar(
-                backgroundImage: NetworkImage(userData?.profileUrl ?? ""),
+                backgroundImage: NetworkImage(userData.profileUrl ?? ""),
               ),
               10.widthBox,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(userData.name ?? ""),
+                  Text(userData.name),
                   Text(userData.bio ?? ""),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               ElevatedButton.icon(
                   onPressed: () async {
                     // await ref.read(profileRepoProvider).getUserList();

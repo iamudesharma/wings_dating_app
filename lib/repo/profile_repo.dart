@@ -74,9 +74,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     await exceptionHandler<void>(
       usercollection
           .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-          .update(
-            userModel.toJson(),
-          )
+          .update(userModel.toJson())
           .onError((error, stackTrace) => logger.e(error)),
     );
   }
