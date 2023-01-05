@@ -68,8 +68,8 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'profileUrl': instance.profileUrl,
       'birthday': instance.birthday,
       'age': instance.age,
-      'position': instance.position,
-      'userBasicModel': instance.userBasicModel,
+      'position': instance.position?.toJson(),
+      'userBasicModel': instance.userBasicModel?.toJson(),
       'role': _$RoleEnumMap[instance.role]!,
       'bodyType': _$BodyTypeEnumMap[instance.bodyType]!,
       'relationshipStatus':

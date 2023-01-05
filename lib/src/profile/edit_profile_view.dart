@@ -312,7 +312,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               UserModel user = UserModel(
                                 name: "udesh",
                                 username: _usernameController.text,
-
                                 bio: _bioController.text,
                                 age: age,
                                 profileUrl: await ref
@@ -320,9 +319,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                         .userControllerProvider)
                                     .uploadImage(),
                                 birthday: _dobController.text,
-                                // userBasicModel: UserBasicModel(
-                                //   dob: _dobController.text,
-                                // ),
+                                userBasicModel: UserBasicModel(
+                                    dob: _dobController.text,
+                                    height: "5.7",
+                                    lived: "New Delhi",
+                                    weight: "80 kg"),
                               );
 
                               logger.w(myLocation.data);
@@ -331,15 +332,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               await ref
                                   .read(Dependency.profileProvider)
                                   .createUserDoc(user);
-
-                              await ref
-                                  .read(Dependency.profileProvider)
-                                  .addLocation(
-                                    GeoPointData(
-                                      geopoint: myLocation.geoPoint,
-                                      geohash: myLocation.hash,
-                                    ),
-                                  );
 
                               route.replace(DashboardRoute());
                             }
