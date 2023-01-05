@@ -56,8 +56,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
       _nicknameController = TextEditingController(
         text: userdata?.name,
       );
-      _nicknameController =
-          TextEditingController(text: userdata?.name ?? "");
+      _usernameController =
+          TextEditingController(text: userdata?.username ?? "");
 // _phoneController = TextEditingController();
       _dobController = TextEditingController(
         text: userdata?.birthday,
@@ -181,7 +181,24 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                     TextFormField(
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Please enter a nickname";
+                          return "Please enter a Username";
+                        } else {
+                          return null;
+                        }
+                      },
+                      controller: _usernameController,
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        hintText: "Username",
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter a Name";
                         } else {
                           return null;
                         }
@@ -189,7 +206,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       controller: _nicknameController,
                       decoration: const InputDecoration(
                         isDense: true,
-                        hintText: "Nickname",
+                        hintText: "Name",
                       ),
                     ),
                     const SizedBox(
@@ -267,12 +284,14 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       curve: Curves.easeInOut,
                       child: ElevatedButton(
                         onPressed: () async {
+                          final route = AutoRouter.of(context);
                           if (_formKey.currentState!.validate()) {
                             if (widget.isEditProfile) {
                               UserModel? user = profile.userModel?.copyWith(
                                 position: profile.userModel!.position,
                                 name: _nicknameController.text,
                                 bio: _bioController.text,
+                                username: _usernameController.text,
                                 profileUrl: await ref
                                     .read(ProfileController
                                         .userControllerProvider)
@@ -292,7 +311,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
                               UserModel user = UserModel(
                                 name: "udesh",
-                                username: "",
+                                username: _usernameController.text,
 
                                 bio: _bioController.text,
                                 age: age,
@@ -321,6 +340,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       geohash: myLocation.hash,
                                     ),
                                   );
+
+                              route.replace(DashboardRoute());
                             }
                           }
                         },
