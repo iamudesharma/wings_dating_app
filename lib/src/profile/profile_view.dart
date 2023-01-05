@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
-import 'package:wings_dating_app/repo/profile_repo.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import '../../routes/app_router.dart';
@@ -25,7 +24,7 @@ class ProfileView extends ConsumerWidget {
           flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               title: Text(
-                userData?.name ?? "",
+                userData?.username ?? "",
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
@@ -51,7 +50,7 @@ class ProfileView extends ConsumerWidget {
             ),
           ],
           // centerTitle: true,
-          title: Text(userData.name),
+          title: Text(userData.username),
         ),
         SliverToBoxAdapter(
           child: Row(
@@ -63,7 +62,7 @@ class ProfileView extends ConsumerWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(userData.name),
+                  Text(userData.username),
                   Text(userData.bio ?? ""),
                 ],
               ),

@@ -23,7 +23,6 @@ part 'user_models.g.dart';
 // @JsonSerializable(anyMap: true, explicitToJson: false)
 class UserModel with _$UserModel {
   factory UserModel({
-    required String name,
     required String username,
     String? bio,
     List<String>? albumUrl,

@@ -32,7 +32,7 @@ class UsersView extends ConsumerWidget {
                 backgroundImage: NetworkImage(userData!.profileUrl!),
               ),
             ),
-            title: Text(userData.name),
+            title: Text(userData.username),
             actions: [
               IconButton(
                 icon: const Icon(Icons.search),

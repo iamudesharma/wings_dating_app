@@ -36,7 +36,7 @@ class EditProfileView extends ConsumerStatefulWidget {
 
 class _EditProfileViewState extends ConsumerState<EditProfileView> {
   late TextEditingController _usernameController;
-  late TextEditingController _nicknameController;
+  // late TextEditingController _nicknameController;
   // TextEditingController _phoneController ;
   late TextEditingController _dobController;
   late TextEditingController _bioController;
@@ -53,9 +53,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
           ref.read(ProfileController.userControllerProvider).userModel;
 
       logger.i(userdata);
-      _nicknameController = TextEditingController(
-        text: userdata?.name,
-      );
+
       _usernameController =
           TextEditingController(text: userdata?.username ?? "");
 // _phoneController = TextEditingController();
@@ -67,7 +65,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
       );
     } else {
       _usernameController = TextEditingController();
-      _nicknameController = TextEditingController();
+      // _nicknameController = TextEditingController();
 // _phoneController = TextEditingController();
       _dobController = TextEditingController();
       _bioController = TextEditingController();
@@ -97,7 +95,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   @override
   void dispose() {
     _usernameController.dispose();
-    _nicknameController.dispose();
+    // _nicknameController.dispose();
     // _phoneController.dispose();
     _dobController.dispose();
     _bioController.dispose();
@@ -195,20 +193,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                     const SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Please enter a Name";
-                        } else {
-                          return null;
-                        }
-                      },
-                      controller: _nicknameController,
-                      decoration: const InputDecoration(
-                        isDense: true,
-                        hintText: "Name",
-                      ),
-                    ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -291,25 +275,21 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                           final route = AutoRouter.of(context);
                           if (_formKey.currentState!.validate()) {
                             if (widget.isEditProfile) {
-                              // UserModel? user = profile.userModel?.copyWith(
-                              //   position: myLocation.data,
-                              //   name: _nicknameController.text,
-                              //   bio: _bioController.text,
-                              //   username: _usernameController.text,
-                              //   profileUrl: await ref
-                              //       .read(ProfileController
-                              //           .userControllerProvider)
-                              //       .uploadImage(),
-                              //   birthday: _dobController.text,
-                              // );
-                              // logger.i(user?.toJson());
-                              // await ref
-                              //     .read(Dependency.profileProvider)
-                              //     .updateUserDoc(user!);
-
+                              UserModel? user = profile.userModel?.copyWith(
+                                position: myLocation.data,
+                                bio: _bioController.text,
+                                username: _usernameController.text,
+                                profileUrl: await ref
+                                    .read(ProfileController
+                                        .userControllerProvider)
+                                    .uploadImage(),
+                                birthday: _dobController.text,
+                              );
+                              logger.i(user?.toJson());
                               await ref
                                   .read(Dependency.profileProvider)
-                                  .addLocation(myLocation.data);
+                                  .updateUserDoc(user!);
+
                               route.pop();
                             } else {
                               final data = await location.getLocation();
@@ -319,10 +299,10 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   latitude: 12.960632, longitude: 77.641603);
 
                               UserModel user = UserModel(
-                                name: "udesh",
                                 username: _usernameController.text,
                                 bio: _bioController.text,
                                 age: age,
+                                position: myLocation.data,
                                 profileUrl: await ref
                                     .read(ProfileController
                                         .userControllerProvider)
