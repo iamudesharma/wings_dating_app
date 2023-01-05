@@ -284,24 +284,33 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       curve: Curves.easeInOut,
                       child: ElevatedButton(
                         onPressed: () async {
+                          int age = calculateAge(_selectedDate!);
+                          GeoFirePoint myLocation = geo.point(
+                              latitude: 12.960632, longitude: 77.641603);
+
                           final route = AutoRouter.of(context);
                           if (_formKey.currentState!.validate()) {
                             if (widget.isEditProfile) {
-                              UserModel? user = profile.userModel?.copyWith(
-                                position: profile.userModel!.position,
-                                name: _nicknameController.text,
-                                bio: _bioController.text,
-                                username: _usernameController.text,
-                                profileUrl: await ref
-                                    .read(ProfileController
-                                        .userControllerProvider)
-                                    .uploadImage(),
-                                birthday: _dobController.text,
-                              );
-                              logger.i(user?.toJson());
+                              // UserModel? user = profile.userModel?.copyWith(
+                              //   position: myLocation.data,
+                              //   name: _nicknameController.text,
+                              //   bio: _bioController.text,
+                              //   username: _usernameController.text,
+                              //   profileUrl: await ref
+                              //       .read(ProfileController
+                              //           .userControllerProvider)
+                              //       .uploadImage(),
+                              //   birthday: _dobController.text,
+                              // );
+                              // logger.i(user?.toJson());
+                              // await ref
+                              //     .read(Dependency.profileProvider)
+                              //     .updateUserDoc(user!);
+
                               await ref
                                   .read(Dependency.profileProvider)
-                                  .updateUserDoc(user!);
+                                  .addLocation(myLocation.data);
+                              route.pop();
                             } else {
                               final data = await location.getLocation();
 

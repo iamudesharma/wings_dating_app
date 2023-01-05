@@ -113,23 +113,12 @@ class ProfileRepo with RepositoryExceptionMixin {
           strictMode: true,
         );
 
-    data.listen((event) {
-      logger.i(event.length);
-      logger.i(event.first.exists);
-      logger.i(event.first.data());
-      logger.i(event.first.exists);
-      logger.i(event[0].data());
-      // logger.i(event[2].data());
-      // logger.i(event[3].data());
-    });
+    final userListRaw = await data.first;
+    print(userListRaw.length);
 
-    await data.first.then((value) {
-      value.forEach((element) {
-        logger.i(element.data);
-      });
-    }).catchError((e) {
-      logger.e(e);
-    });
+    return userListRaw
+        .map((e) => UserModel.fromJson(e.data() as dynamic))
+        .toList();
   }
 
   Future<void> saveUserLocationData(
