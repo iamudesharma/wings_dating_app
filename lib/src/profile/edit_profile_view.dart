@@ -54,16 +54,16 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
       logger.i(userdata);
       _nicknameController = TextEditingController(
-        text: userdata?.nickname,
+        text: userdata?.name,
       );
       _nicknameController =
-          TextEditingController(text: userdata?.nickname ?? "");
+          TextEditingController(text: userdata?.name ?? "");
 // _phoneController = TextEditingController();
       _dobController = TextEditingController(
         text: userdata?.birthday,
       );
       _bioController = TextEditingController(
-        text: userdata?.aboutMe,
+        text: userdata?.bio,
       );
     } else {
       _usernameController = TextEditingController();
@@ -271,9 +271,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                             if (widget.isEditProfile) {
                               UserModel? user = profile.userModel?.copyWith(
                                 position: profile.userModel!.position,
-                                nickname: _nicknameController.text,
-                                aboutMe: _bioController.text,
-                                avatarUrl: await ref
+                                name: _nicknameController.text,
+                                bio: _bioController.text,
+                                profileUrl: await ref
                                     .read(ProfileController
                                         .userControllerProvider)
                                     .uploadImage(),
@@ -291,11 +291,12 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   latitude: 12.960632, longitude: 77.641603);
 
                               UserModel user = UserModel(
-                                nickname: "udesh",
+                                name: "udesh",
+                                username: "",
 
-                                aboutMe: _bioController.text,
+                                bio: _bioController.text,
                                 age: age,
-                                avatarUrl: await ref
+                                profileUrl: await ref
                                     .read(ProfileController
                                         .userControllerProvider)
                                     .uploadImage(),

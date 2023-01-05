@@ -20,10 +20,11 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserModel {
-  String get nickname => throw _privateConstructorUsedError;
-  String? get aboutMe => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  String get username => throw _privateConstructorUsedError;
+  String? get bio => throw _privateConstructorUsedError;
   List<String>? get albumUrl => throw _privateConstructorUsedError;
-  String? get avatarUrl => throw _privateConstructorUsedError;
+  String? get profileUrl => throw _privateConstructorUsedError;
   String? get birthday => throw _privateConstructorUsedError;
   int? get age => throw _privateConstructorUsedError;
   @JsonKey(name: "position")
@@ -68,10 +69,11 @@ abstract class $UserModelCopyWith<$Res> {
       _$UserModelCopyWithImpl<$Res, UserModel>;
   @useResult
   $Res call(
-      {String nickname,
-      String? aboutMe,
+      {String name,
+      String username,
+      String? bio,
       List<String>? albumUrl,
-      String? avatarUrl,
+      String? profileUrl,
       String? birthday,
       int? age,
       @JsonKey(name: "position") GeoPointData? position,
@@ -103,10 +105,11 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? nickname = null,
-    Object? aboutMe = freezed,
+    Object? name = null,
+    Object? username = null,
+    Object? bio = freezed,
     Object? albumUrl = freezed,
-    Object? avatarUrl = freezed,
+    Object? profileUrl = freezed,
     Object? birthday = freezed,
     Object? age = freezed,
     Object? position = freezed,
@@ -122,21 +125,25 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? isBlocked = null,
   }) {
     return _then(_value.copyWith(
-      nickname: null == nickname
-          ? _value.nickname
-          : nickname // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
-      aboutMe: freezed == aboutMe
-          ? _value.aboutMe
-          : aboutMe // ignore: cast_nullable_to_non_nullable
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      bio: freezed == bio
+          ? _value.bio
+          : bio // ignore: cast_nullable_to_non_nullable
               as String?,
       albumUrl: freezed == albumUrl
           ? _value.albumUrl
           : albumUrl // ignore: cast_nullable_to_non_nullable
               as List<String>?,
-      avatarUrl: freezed == avatarUrl
-          ? _value.avatarUrl
-          : avatarUrl // ignore: cast_nullable_to_non_nullable
+      profileUrl: freezed == profileUrl
+          ? _value.profileUrl
+          : profileUrl // ignore: cast_nullable_to_non_nullable
               as String?,
       birthday: freezed == birthday
           ? _value.birthday
@@ -226,10 +233,11 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String nickname,
-      String? aboutMe,
+      {String name,
+      String username,
+      String? bio,
       List<String>? albumUrl,
-      String? avatarUrl,
+      String? profileUrl,
       String? birthday,
       int? age,
       @JsonKey(name: "position") GeoPointData? position,
@@ -261,10 +269,11 @@ class __$$_UserModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? nickname = null,
-    Object? aboutMe = freezed,
+    Object? name = null,
+    Object? username = null,
+    Object? bio = freezed,
     Object? albumUrl = freezed,
-    Object? avatarUrl = freezed,
+    Object? profileUrl = freezed,
     Object? birthday = freezed,
     Object? age = freezed,
     Object? position = freezed,
@@ -280,21 +289,25 @@ class __$$_UserModelCopyWithImpl<$Res>
     Object? isBlocked = null,
   }) {
     return _then(_$_UserModel(
-      nickname: null == nickname
-          ? _value.nickname
-          : nickname // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
-      aboutMe: freezed == aboutMe
-          ? _value.aboutMe
-          : aboutMe // ignore: cast_nullable_to_non_nullable
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      bio: freezed == bio
+          ? _value.bio
+          : bio // ignore: cast_nullable_to_non_nullable
               as String?,
       albumUrl: freezed == albumUrl
           ? _value._albumUrl
           : albumUrl // ignore: cast_nullable_to_non_nullable
               as List<String>?,
-      avatarUrl: freezed == avatarUrl
-          ? _value.avatarUrl
-          : avatarUrl // ignore: cast_nullable_to_non_nullable
+      profileUrl: freezed == profileUrl
+          ? _value.profileUrl
+          : profileUrl // ignore: cast_nullable_to_non_nullable
               as String?,
       birthday: freezed == birthday
           ? _value.birthday
@@ -356,10 +369,11 @@ class __$$_UserModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_UserModel implements _UserModel {
   _$_UserModel(
-      {required this.nickname,
-      this.aboutMe,
+      {required this.name,
+      required this.username,
+      this.bio,
       final List<String>? albumUrl,
-      this.avatarUrl,
+      this.profileUrl,
       this.birthday,
       this.age,
       @JsonKey(name: "position") this.position,
@@ -379,9 +393,11 @@ class _$_UserModel implements _UserModel {
       _$$_UserModelFromJson(json);
 
   @override
-  final String nickname;
+  final String name;
   @override
-  final String? aboutMe;
+  final String username;
+  @override
+  final String? bio;
   final List<String>? _albumUrl;
   @override
   List<String>? get albumUrl {
@@ -393,7 +409,7 @@ class _$_UserModel implements _UserModel {
   }
 
   @override
-  final String? avatarUrl;
+  final String? profileUrl;
   @override
   final String? birthday;
   @override
@@ -431,7 +447,7 @@ class _$_UserModel implements _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(nickname: $nickname, aboutMe: $aboutMe, albumUrl: $albumUrl, avatarUrl: $avatarUrl, birthday: $birthday, age: $age, position: $position, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked)';
+    return 'UserModel(name: $name, username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked)';
   }
 
   @override
@@ -439,12 +455,13 @@ class _$_UserModel implements _UserModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_UserModel &&
-            (identical(other.nickname, nickname) ||
-                other.nickname == nickname) &&
-            (identical(other.aboutMe, aboutMe) || other.aboutMe == aboutMe) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.username, username) ||
+                other.username == username) &&
+            (identical(other.bio, bio) || other.bio == bio) &&
             const DeepCollectionEquality().equals(other._albumUrl, _albumUrl) &&
-            (identical(other.avatarUrl, avatarUrl) ||
-                other.avatarUrl == avatarUrl) &&
+            (identical(other.profileUrl, profileUrl) ||
+                other.profileUrl == profileUrl) &&
             (identical(other.birthday, birthday) ||
                 other.birthday == birthday) &&
             (identical(other.age, age) || other.age == age) &&
@@ -475,10 +492,11 @@ class _$_UserModel implements _UserModel {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      nickname,
-      aboutMe,
+      name,
+      username,
+      bio,
       const DeepCollectionEquality().hash(_albumUrl),
-      avatarUrl,
+      profileUrl,
       birthday,
       age,
       position,
@@ -537,10 +555,11 @@ class _$_UserModel implements _UserModel {
 
 abstract class _UserModel implements UserModel {
   factory _UserModel(
-      {required final String nickname,
-      final String? aboutMe,
+      {required final String name,
+      required final String username,
+      final String? bio,
       final List<String>? albumUrl,
-      final String? avatarUrl,
+      final String? profileUrl,
       final String? birthday,
       final int? age,
       @JsonKey(name: "position") final GeoPointData? position,
@@ -559,13 +578,15 @@ abstract class _UserModel implements UserModel {
       _$_UserModel.fromJson;
 
   @override
-  String get nickname;
+  String get name;
   @override
-  String? get aboutMe;
+  String get username;
+  @override
+  String? get bio;
   @override
   List<String>? get albumUrl;
   @override
-  String? get avatarUrl;
+  String? get profileUrl;
   @override
   String? get birthday;
   @override

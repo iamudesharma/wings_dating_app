@@ -17,7 +17,7 @@ class ProfileView extends ConsumerWidget {
     final userData =
         ref.watch(ProfileController.userControllerProvider).userModel;
 
-    logger.i(userData?.avatarUrl);
+    logger.i(userData?.profileUrl);
 
     return CustomScrollView(
       slivers: [
@@ -25,14 +25,14 @@ class ProfileView extends ConsumerWidget {
           flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               title: Text(
-                userData?.nickname ?? "",
+                userData?.name ?? "",
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
                 ),
               ),
               background: Image.network(
-                userData!.avatarUrl!,
+                userData!.profileUrl!,
                 fit: BoxFit.cover,
               )),
           pinned: true,
@@ -51,20 +51,20 @@ class ProfileView extends ConsumerWidget {
             ),
           ],
           // centerTitle: true,
-          title: Text(userData.nickname ?? ""),
+          title: Text(userData.name ?? ""),
         ),
         SliverToBoxAdapter(
           child: Row(
             children: [
               CircleAvatar(
-                backgroundImage: NetworkImage(userData?.avatarUrl ?? ""),
+                backgroundImage: NetworkImage(userData?.profileUrl ?? ""),
               ),
               10.widthBox,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(userData.nickname ?? ""),
-                  Text(userData.aboutMe ?? ""),
+                  Text(userData.name ?? ""),
+                  Text(userData.bio ?? ""),
                 ],
               ),
               Spacer(),

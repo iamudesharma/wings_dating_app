@@ -23,10 +23,11 @@ part 'user_models.g.dart';
 // @JsonSerializable(anyMap: true, explicitToJson: false)
 class UserModel with _$UserModel {
   factory UserModel({
-    required String nickname,
-    String? aboutMe,
+    required String name,
+    required String username,
+    String? bio,
     List<String>? albumUrl,
-    String? avatarUrl,
+    String? profileUrl,
     String? birthday,
     int? age,
     @JsonKey(name: "position") GeoPointData? position,
@@ -68,7 +69,6 @@ class GeoPointConverter implements JsonConverter<GeoPoint, GeoPoint> {
 }
 // @Collection<UserModel>("users", prefix: 'User')
 // final usersRef = UserModelCollectionReference();
-
 
 // // final personRef = UserModel();
 

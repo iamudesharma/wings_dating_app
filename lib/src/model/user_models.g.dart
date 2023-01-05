@@ -27,12 +27,13 @@ Map<String, dynamic> _$GeoPointQueryToJson(GeoPointQuery instance) =>
     };
 
 _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
-      nickname: json['nickname'] as String,
-      aboutMe: json['aboutMe'] as String?,
+      name: json['name'] as String,
+      username: json['username'] as String,
+      bio: json['bio'] as String?,
       albumUrl: (json['albumUrl'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      avatarUrl: json['avatarUrl'] as String?,
+      profileUrl: json['profileUrl'] as String?,
       birthday: json['birthday'] as String?,
       age: json['age'] as int?,
       position: json['position'] == null
@@ -60,10 +61,11 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
 
 Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
     <String, dynamic>{
-      'nickname': instance.nickname,
-      'aboutMe': instance.aboutMe,
+      'name': instance.name,
+      'username': instance.username,
+      'bio': instance.bio,
       'albumUrl': instance.albumUrl,
-      'avatarUrl': instance.avatarUrl,
+      'profileUrl': instance.profileUrl,
       'birthday': instance.birthday,
       'age': instance.age,
       'position': instance.position,
