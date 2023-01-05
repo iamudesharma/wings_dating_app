@@ -3,8 +3,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:wings_dating_app/helpers/logger.dart';
-import 'package:wings_dating_app/src/model/user_models.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import '../../routes/app_router.dart';
@@ -25,26 +23,20 @@ class ProfileView extends ConsumerWidget {
       slivers: [
         SliverAppBar.medium(
           flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              title: Text(
-                userData?.username ?? "",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                ),
+            centerTitle: true,
+            title: Text(
+              userData?.username ?? "",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
               ),
-              background: Image.network(
-                userData!.profileUrl ?? "",
-                fit: BoxFit.cover,
-              )),
+            ),
+            background: Image.network(
+              userData!.profileUrl ?? "",
+              fit: BoxFit.cover,
+            ),
+          ),
           pinned: true,
-          // leading: IconButton(
-          //   icon: const Icon(Icons.menu),
-          //   onPressed: () {
-          //     AutoRouter.of(context)
-          //         .push(EditProfileRoute(isEditProfile: false));
-          //   },
-          // ),
 
           actions: [
             IconButton(
@@ -79,10 +71,10 @@ class ProfileView extends ConsumerWidget {
                       EditProfileRoute(isEditProfile: true),
                     );
                   },
-                  icon: Icon(Icons.edit, size: 10),
+                  icon: const Icon(Icons.edit, size: 10),
                   label: Text(
                     "Edit Profile",
-                    style: Theme.of(context).textTheme.caption,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
               ],

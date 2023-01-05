@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
@@ -6,12 +7,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:velocity_x/velocity_x.dart';
+
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/edit_profile_view.dart';
+import 'package:wings_dating_app/src/users/users_view.dart';
 
 import '../../dependency/dependenies.dart';
 import '../../helpers/extra_data.dart';
 import '../../helpers/logger.dart';
+
+final weightProvider = StateProvider<String>((ref) {
+  return "Do not show";
+});
+
+final heightProvider = StateProvider<String>((ref) {
+  return "Do not show";
+});
 
 class AddAdditionalInformationView extends ConsumerStatefulWidget {
   const AddAdditionalInformationView({super.key});
@@ -36,7 +47,10 @@ class _AddAdditionalInformationViewState
     final relationshipStatus = ref.watch(relationshipStatusProvider);
     final ethnicity = ref.watch(ethnicityProvider);
     final lookingFor = ref.watch(lookingForProvider);
+
     final whereTomeet = ref.watch(whereToMeetProvider);
+    final weight = ref.watch(weightProvider);
+    final height = ref.watch(heightProvider);
 
     logger.i(profiledata?.role.index);
     return Scaffold(
@@ -165,6 +179,30 @@ class _AddAdditionalInformationViewState
                     trailing: const Icon(Icons.arrow_forward_ios),
                   ),
                   const Divider(),
+                  ListTile(
+                    selected: true,
+                    style: ListTileStyle.list,
+                    onTap: () {
+                      _showHeight(context);
+                    },
+                    title: const Text("Height"),
+                    subtitle: Text(height),
+                    enabled: true,
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    selected: true,
+                    style: ListTileStyle.list,
+                    onTap: () {
+                      _showWeight(context);
+                    },
+                    title: const Text("Weight"),
+                    subtitle: Text(weight),
+                    enabled: true,
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                  ),
+                  const Divider(),
                   20.heightBox,
                   ElevatedButton(
                     onPressed: () async {
@@ -239,6 +277,56 @@ class _AddAdditionalInformationViewState
                       context.router.pop();
                     },
                     value: BodyType.values,
+                  ));
+            });
+          });
+        });
+  }
+
+  void _showWeight(context) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        builder: (BuildContext bc) {
+          return StatefulBuilder(builder: (context, setState) {
+            return Consumer(builder: (context, ref, child) {
+              final weight = ref.watch(weightProvider);
+              return SizedBox(
+                  height: 200,
+                  child: AdditionalDataWidget<String>(
+                    isString: true,
+                    selected: weight,
+                    onChanged: <String>(value) {
+                      logger.i(value);
+                      ref.read(weightProvider.notifier).update((sate) => value);
+                      context.router.pop();
+                    },
+                    value: weightList,
+                  ));
+            });
+          });
+        });
+  }
+
+  void _showHeight(context) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        builder: (BuildContext bc) {
+          return StatefulBuilder(builder: (context, setState) {
+            return Consumer(builder: (context, ref, child) {
+              final height = ref.watch(heightProvider);
+              return SizedBox(
+                  height: 200,
+                  child: AdditionalDataWidget<String>(
+                    isString: true,
+                    selected: height,
+                    onChanged: <String>(value) {
+                      logger.i(value);
+                      ref.read(heightProvider.notifier).update((sate) => value);
+                      context.router.pop();
+                    },
+                    value: heightList,
                   ));
             });
           });
@@ -358,12 +446,14 @@ class AdditionalDataWidget<TValue> extends StatefulWidget {
     required this.value,
     required this.onChanged,
     required this.selected,
+    this.isString = false,
   }) : super(key: key);
 
   final List<TValue> value;
   final Function(TValue?) onChanged;
 
   final TValue selected;
+  final bool? isString;
 
   @override
   State<AdditionalDataWidget> createState() => _AdditionalDataWidgetState();
@@ -375,7 +465,7 @@ class _AdditionalDataWidgetState extends State<AdditionalDataWidget> {
     return ListView(
       itemExtent: 50,
       children: List.generate(
-        Role.values.length,
+        widget.value.length,
         (index) => ListWheelItemWidget(
             onTap: () async {
               print("tapped");
@@ -384,7 +474,9 @@ class _AdditionalDataWidgetState extends State<AdditionalDataWidget> {
             color: widget.selected == widget.value[index]
                 ? Theme.of(context).primaryColor
                 : Theme.of(context).primaryColor.withOpacity(0.2),
-            role: "${widget.value[index].value}"),
+            role: widget.isString!
+                ? widget.value[index]
+                : "${widget.value[index].value}"),
       ),
     );
   }
