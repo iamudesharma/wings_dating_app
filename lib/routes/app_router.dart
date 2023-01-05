@@ -40,6 +40,9 @@ part 'app_router.gr.dart';
       ],
     ),
     AutoRoute(
+      page: ChatView,
+    ),
+    AutoRoute(
       page: AddAdditionalInformationView,
     ),
 

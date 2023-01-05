@@ -19,7 +19,7 @@ class ProfileView extends ConsumerWidget {
     final userData =
         ref.watch(ProfileController.userControllerProvider).userModel;
 
-    logger.i(userData?.profileUrl);
+    // logger.i(userData?.profileUrl);
 
     return CustomScrollView(
       slivers: [
@@ -34,7 +34,7 @@ class ProfileView extends ConsumerWidget {
                 ),
               ),
               background: Image.network(
-                userData!.profileUrl!,
+                userData!.profileUrl ?? "",
                 fit: BoxFit.cover,
               )),
           pinned: true,

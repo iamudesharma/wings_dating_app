@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
-import '../../dependency/dependenies.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
 
@@ -19,19 +18,6 @@ class UsersView extends ConsumerStatefulWidget {
 }
 
 class _UsersViewState extends ConsumerState<UsersView> {
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    final geo = GeoFlutterFire();
-
-    GeoFirePoint myLocation = geo.point(
-      latitude: 12.960632,
-      longitude: 77.641603,
-    );
-
-    await ref.read(Dependency.profileProvider).addLocation(myLocation.data);
-  }
-
   @override
   Widget build(BuildContext context) {
     final userData =
@@ -52,7 +38,7 @@ class _UsersViewState extends ConsumerState<UsersView> {
                 padding: const EdgeInsets.all(8.0),
                 child: CircleAvatar(
                   // radius: 2,
-                  backgroundImage: NetworkImage(userData!.profileUrl!),
+                  backgroundImage: NetworkImage(userData!.profileUrl ?? ""),
                 ),
               ),
               title: Text(userData.username),
@@ -92,11 +78,11 @@ class _UsersViewState extends ConsumerState<UsersView> {
                     ),
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        final users = data![0];
+                        final users = data![index];
                         return Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: NetworkImage(users.profileUrl!),
+                              image: NetworkImage(users.profileUrl ?? ""),
                               fit: BoxFit.cover,
                             ),
                             borderRadius:
@@ -138,16 +124,16 @@ class _UsersViewState extends ConsumerState<UsersView> {
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: const [
+                                    children: [
                                       Text(
-                                        "Username",
+                                        users.username,
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 10,
                                         ),
                                       ),
                                       Text(
-                                        "Age",
+                                        users.age.toString(),
                                         style: TextStyle(
                                           fontWeight: FontWeight.normal,
                                           fontSize: 10,
@@ -180,7 +166,7 @@ class _UsersViewState extends ConsumerState<UsersView> {
                           ]),
                         );
                       },
-                      childCount: 20,
+                      childCount: data!.length,
                     ),
                   ),
                 )),

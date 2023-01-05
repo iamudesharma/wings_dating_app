@@ -34,6 +34,12 @@ class _$AppRouter extends RootStackRouter {
         child: const DashboardView(),
       );
     },
+    ChatRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const ChatView(),
+      );
+    },
     AddAdditionalInformationRoute.name: (routeData) {
       return MaterialPageX<dynamic>(
         routeData: routeData,
@@ -99,6 +105,10 @@ class _$AppRouter extends RootStackRouter {
           ],
         ),
         RouteConfig(
+          ChatRoute.name,
+          path: '/chat-view',
+        ),
+        RouteConfig(
           AddAdditionalInformationRoute.name,
           path: '/add-additional-information-view',
         ),
@@ -132,6 +142,18 @@ class DashboardRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'DashboardRoute';
+}
+
+/// generated route for
+/// [ChatView]
+class ChatRoute extends PageRouteInfo<void> {
+  const ChatRoute()
+      : super(
+          ChatRoute.name,
+          path: '/chat-view',
+        );
+
+  static const String name = 'ChatRoute';
 }
 
 /// generated route for
