@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:wings_dating_app/src/model/user_models.dart';
@@ -76,8 +77,23 @@ class ProfileController extends ChangeNotifier {
 
     notifyListeners();
   }
-}
 
+  double getDistance(Coordinates coordinates) {
+    final data = GeoFirePoint.distanceBetween(
+      from: Coordinates(
+        userModel!.position!.geopoint.latitude,
+        userModel!.position!.geopoint.latitude,
+      ),
+      to: coordinates,
+    );
+
+    if (data < 1000.00) {
+      return data;
+    } else {
+      return data / 1000.00;
+    }
+  }
+}
 
 final roleProvider = StateProvider<Role>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;

@@ -79,13 +79,17 @@ class ProfileRepo with RepositoryExceptionMixin {
     );
   }
 
-  Future<void> addLocation(GeoPointData pointData) async {
+  Future<void> addLocation(dynamic pointData) async {
+    logger.e(pointData);
     final usercollection = userCollection();
+
     await exceptionHandler<void>(
       usercollection
           .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
           .update(
-        {"position": pointData.toJson()},
+        {
+          "position": pointData,
+        },
       ),
     );
   }

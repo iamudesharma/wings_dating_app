@@ -193,9 +193,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     TextFormField(
                       validator: ((value) {
                         if (value!.isEmpty) {
@@ -268,15 +265,13 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       curve: Curves.easeInOut,
                       child: ElevatedButton(
                         onPressed: () async {
-                          int age = calculateAge(_selectedDate!);
-                          GeoFirePoint myLocation = geo.point(
-                              latitude: 12.960632, longitude: 77.641603);
+                          // int age = calculateAge(_selectedDate!);
 
                           final route = AutoRouter.of(context);
+
                           if (_formKey.currentState!.validate()) {
                             if (widget.isEditProfile) {
                               UserModel? user = profile.userModel?.copyWith(
-                                position: myLocation.data,
                                 bio: _bioController.text,
                                 username: _usernameController.text,
                                 profileUrl: await ref
@@ -292,27 +287,23 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
                               route.pop();
                             } else {
-                              final data = await location.getLocation();
+                              // final data = await location.getLocation();
 
                               int age = calculateAge(_selectedDate!);
                               GeoFirePoint myLocation = geo.point(
-                                  latitude: 12.960632, longitude: 77.641603);
+                                latitude: 12.960632,
+                                longitude: 77.641603,
+                              );
 
                               UserModel user = UserModel(
                                 username: _usernameController.text,
                                 bio: _bioController.text,
                                 age: age,
-                                position: myLocation.data,
                                 profileUrl: await ref
                                     .read(ProfileController
                                         .userControllerProvider)
                                     .uploadImage(),
                                 birthday: _dobController.text,
-                                userBasicModel: UserBasicModel(
-                                    dob: _dobController.text,
-                                    height: "5.7",
-                                    lived: "New Delhi",
-                                    weight: "80 kg"),
                               );
 
                               logger.w(myLocation.data);
@@ -322,7 +313,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   .read(Dependency.profileProvider)
                                   .createUserDoc(user);
 
-                              route.replace(DashboardRoute());
+                              await ref
+                                  .read(Dependency.profileProvider)
+                                  .addLocation(myLocation.data);
+
+                              route.replace(const DashboardRoute());
                             }
                           }
                         },
