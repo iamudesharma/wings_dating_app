@@ -21,12 +21,23 @@ class DashboardView extends ConsumerWidget {
             selectedIndex: tabsRouter.activeIndex,
             onDestinationSelected: tabsRouter.setActiveIndex,
             destinations: const [
-              NavigationDestination(label: 'Users', icon: Icon(Icons.people)),
               NavigationDestination(
-                  label: 'Posts', icon: Icon(Icons.abc_outlined)),
+                label: 'Users',
+                icon: Icon(
+                  Icons.people,
+                ),
+              ),
+              NavigationDestination(
+                label: 'Chat',
+                icon: Icon(
+                  Icons.chat_bubble,
+                ),
+              ),
               NavigationDestination(
                 label: 'Profile',
-                icon: Icon(Icons.play_circle_filled),
+                icon: Icon(
+                  Icons.person,
+                ),
               ),
             ],
           );

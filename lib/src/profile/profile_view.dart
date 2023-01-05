@@ -1,7 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:wings_dating_app/helpers/logger.dart';
+import 'package:wings_dating_app/src/model/user_models.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import '../../routes/app_router.dart';
@@ -53,21 +56,22 @@ class ProfileView extends ConsumerWidget {
           title: Text(userData.username),
         ),
         SliverToBoxAdapter(
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(userData.profileUrl ?? ""),
-              ),
-              10.widthBox,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(userData.username),
-                  Text(userData.bio ?? ""),
-                ],
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(userData.profileUrl ?? ""),
+                ),
+                10.widthBox,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(userData.username),
+                  ],
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
                   onPressed: () async {
                     // await ref.read(profileRepoProvider).getUserList();
 
@@ -79,10 +83,118 @@ class ProfileView extends ConsumerWidget {
                   label: Text(
                     "Edit Profile",
                     style: Theme.of(context).textTheme.caption,
-                  ))
-            ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        )
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "About",
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                10.heightBox,
+                Text(
+                  userData.bio ?? "",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                20.heightBox,
+                Row(
+                  children: [
+                    ProfileInputCard(
+                      title: "Role",
+                      value: userData.role.value,
+                    ),
+                    const Spacer(),
+                    ProfileInputCard(
+                      title: "Body Type",
+                      value: userData.bodyType.value,
+                    ),
+                  ],
+                ),
+                10.heightBox,
+                Row(
+                  children: [
+                    ProfileInputCard(
+                      title: "Looking For",
+                      value: userData.lookingFor?.value ?? "",
+                    ),
+                    const Spacer(),
+                    ProfileInputCard(
+                      title: "Body Type",
+                      value: userData.bodyType.value,
+                    ),
+                  ],
+                ),
+                10.heightBox,
+                Row(
+                  children: [
+                    ProfileInputCard(
+                      title: "Role",
+                      value: userData.role.value,
+                    ),
+                    const Spacer(),
+                    ProfileInputCard(
+                      title: "Body Type",
+                      value: userData.bodyType.value,
+                    ),
+                  ],
+                ),
+                10.heightBox,
+                Row(
+                  children: [
+                    ProfileInputCard(
+                      title: "Role",
+                      value: userData.role.value,
+                    ),
+                    const Spacer(),
+                    ProfileInputCard(
+                      title: "Body Type",
+                      value: userData.bodyType.value,
+                    ),
+                  ],
+                ),
+                10.heightBox,
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ProfileInputCard extends StatelessWidget {
+  const ProfileInputCard({
+    Key? key,
+    required this.title,
+    required this.value,
+  }) : super(key: key);
+
+  // final UserModel? userData;
+  final String title;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        10.heightBox,
+        Text(
+          value,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
       ],
     );
   }
