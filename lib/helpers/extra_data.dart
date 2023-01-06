@@ -78,7 +78,7 @@ enum LookingFor {
   longTerm("Long Term"),
   shortTerm("Short Term"),
   casual("Casual"),
-  ightNow("Right Now");
+  rightNow("Right Now");
 
   final String value;
 

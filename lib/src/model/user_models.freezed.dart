@@ -28,14 +28,17 @@ mixin _$UserModel {
   int? get age => throw _privateConstructorUsedError;
   @JsonKey(name: "position")
   GeoPointData? get position => throw _privateConstructorUsedError;
-  UserBasicModel? get userBasicModel => throw _privateConstructorUsedError;
+  String? get dob => throw _privateConstructorUsedError;
+  String? get height => throw _privateConstructorUsedError;
+  String? get weight => throw _privateConstructorUsedError;
+  String? get lived => throw _privateConstructorUsedError;
   Role get role => throw _privateConstructorUsedError;
   BodyType get bodyType => throw _privateConstructorUsedError;
   RelationshipStatus get relationshipStatus =>
       throw _privateConstructorUsedError;
   Ethnicity get ethnicity => throw _privateConstructorUsedError;
-  LookingFor? get lookingFor => throw _privateConstructorUsedError;
-  WhereToMeet? get whereToMeet => throw _privateConstructorUsedError;
+  LookingFor get lookingFor => throw _privateConstructorUsedError;
+  WhereToMeet get whereToMeet => throw _privateConstructorUsedError;
   bool get isOnline => throw _privateConstructorUsedError;
   bool get isVerified => throw _privateConstructorUsedError;
   bool get isBlocked => throw _privateConstructorUsedError;
@@ -77,13 +80,16 @@ abstract class $UserModelCopyWith<$Res> {
       String? birthday,
       int? age,
       @JsonKey(name: "position") GeoPointData? position,
-      UserBasicModel? userBasicModel,
+      String? dob,
+      String? height,
+      String? weight,
+      String? lived,
       Role role,
       BodyType bodyType,
       RelationshipStatus relationshipStatus,
       Ethnicity ethnicity,
-      LookingFor? lookingFor,
-      WhereToMeet? whereToMeet,
+      LookingFor lookingFor,
+      WhereToMeet whereToMeet,
       bool isOnline,
       bool isVerified,
       bool isBlocked,
@@ -91,7 +97,6 @@ abstract class $UserModelCopyWith<$Res> {
       String fcmToken});
 
   $GeoPointDataCopyWith<$Res>? get position;
-  $UserBasicModelCopyWith<$Res>? get userBasicModel;
 }
 
 /// @nodoc
@@ -114,13 +119,16 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? birthday = freezed,
     Object? age = freezed,
     Object? position = freezed,
-    Object? userBasicModel = freezed,
+    Object? dob = freezed,
+    Object? height = freezed,
+    Object? weight = freezed,
+    Object? lived = freezed,
     Object? role = null,
     Object? bodyType = null,
     Object? relationshipStatus = null,
     Object? ethnicity = null,
-    Object? lookingFor = freezed,
-    Object? whereToMeet = freezed,
+    Object? lookingFor = null,
+    Object? whereToMeet = null,
     Object? isOnline = null,
     Object? isVerified = null,
     Object? isBlocked = null,
@@ -156,10 +164,22 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.position
           : position // ignore: cast_nullable_to_non_nullable
               as GeoPointData?,
-      userBasicModel: freezed == userBasicModel
-          ? _value.userBasicModel
-          : userBasicModel // ignore: cast_nullable_to_non_nullable
-              as UserBasicModel?,
+      dob: freezed == dob
+          ? _value.dob
+          : dob // ignore: cast_nullable_to_non_nullable
+              as String?,
+      height: freezed == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as String?,
+      weight: freezed == weight
+          ? _value.weight
+          : weight // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lived: freezed == lived
+          ? _value.lived
+          : lived // ignore: cast_nullable_to_non_nullable
+              as String?,
       role: null == role
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
@@ -176,14 +196,14 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.ethnicity
           : ethnicity // ignore: cast_nullable_to_non_nullable
               as Ethnicity,
-      lookingFor: freezed == lookingFor
+      lookingFor: null == lookingFor
           ? _value.lookingFor
           : lookingFor // ignore: cast_nullable_to_non_nullable
-              as LookingFor?,
-      whereToMeet: freezed == whereToMeet
+              as LookingFor,
+      whereToMeet: null == whereToMeet
           ? _value.whereToMeet
           : whereToMeet // ignore: cast_nullable_to_non_nullable
-              as WhereToMeet?,
+              as WhereToMeet,
       isOnline: null == isOnline
           ? _value.isOnline
           : isOnline // ignore: cast_nullable_to_non_nullable
@@ -218,18 +238,6 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
       return _then(_value.copyWith(position: value) as $Val);
     });
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $UserBasicModelCopyWith<$Res>? get userBasicModel {
-    if (_value.userBasicModel == null) {
-      return null;
-    }
-
-    return $UserBasicModelCopyWith<$Res>(_value.userBasicModel!, (value) {
-      return _then(_value.copyWith(userBasicModel: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -247,13 +255,16 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       String? birthday,
       int? age,
       @JsonKey(name: "position") GeoPointData? position,
-      UserBasicModel? userBasicModel,
+      String? dob,
+      String? height,
+      String? weight,
+      String? lived,
       Role role,
       BodyType bodyType,
       RelationshipStatus relationshipStatus,
       Ethnicity ethnicity,
-      LookingFor? lookingFor,
-      WhereToMeet? whereToMeet,
+      LookingFor lookingFor,
+      WhereToMeet whereToMeet,
       bool isOnline,
       bool isVerified,
       bool isBlocked,
@@ -262,8 +273,6 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
 
   @override
   $GeoPointDataCopyWith<$Res>? get position;
-  @override
-  $UserBasicModelCopyWith<$Res>? get userBasicModel;
 }
 
 /// @nodoc
@@ -284,13 +293,16 @@ class __$$_UserModelCopyWithImpl<$Res>
     Object? birthday = freezed,
     Object? age = freezed,
     Object? position = freezed,
-    Object? userBasicModel = freezed,
+    Object? dob = freezed,
+    Object? height = freezed,
+    Object? weight = freezed,
+    Object? lived = freezed,
     Object? role = null,
     Object? bodyType = null,
     Object? relationshipStatus = null,
     Object? ethnicity = null,
-    Object? lookingFor = freezed,
-    Object? whereToMeet = freezed,
+    Object? lookingFor = null,
+    Object? whereToMeet = null,
     Object? isOnline = null,
     Object? isVerified = null,
     Object? isBlocked = null,
@@ -326,10 +338,22 @@ class __$$_UserModelCopyWithImpl<$Res>
           ? _value.position
           : position // ignore: cast_nullable_to_non_nullable
               as GeoPointData?,
-      userBasicModel: freezed == userBasicModel
-          ? _value.userBasicModel
-          : userBasicModel // ignore: cast_nullable_to_non_nullable
-              as UserBasicModel?,
+      dob: freezed == dob
+          ? _value.dob
+          : dob // ignore: cast_nullable_to_non_nullable
+              as String?,
+      height: freezed == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as String?,
+      weight: freezed == weight
+          ? _value.weight
+          : weight // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lived: freezed == lived
+          ? _value.lived
+          : lived // ignore: cast_nullable_to_non_nullable
+              as String?,
       role: null == role
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
@@ -346,14 +370,14 @@ class __$$_UserModelCopyWithImpl<$Res>
           ? _value.ethnicity
           : ethnicity // ignore: cast_nullable_to_non_nullable
               as Ethnicity,
-      lookingFor: freezed == lookingFor
+      lookingFor: null == lookingFor
           ? _value.lookingFor
           : lookingFor // ignore: cast_nullable_to_non_nullable
-              as LookingFor?,
-      whereToMeet: freezed == whereToMeet
+              as LookingFor,
+      whereToMeet: null == whereToMeet
           ? _value.whereToMeet
           : whereToMeet // ignore: cast_nullable_to_non_nullable
-              as WhereToMeet?,
+              as WhereToMeet,
       isOnline: null == isOnline
           ? _value.isOnline
           : isOnline // ignore: cast_nullable_to_non_nullable
@@ -389,13 +413,16 @@ class _$_UserModel implements _UserModel {
       this.birthday,
       this.age,
       @JsonKey(name: "position") this.position,
-      this.userBasicModel,
+      this.dob,
+      this.height,
+      this.weight,
+      this.lived,
       this.role = Role.doNotShow,
       this.bodyType = BodyType.doNotShow,
       this.relationshipStatus = RelationshipStatus.doNotShow,
       this.ethnicity = Ethnicity.doNotShow,
-      this.lookingFor,
-      this.whereToMeet,
+      this.lookingFor = LookingFor.doNotShow,
+      this.whereToMeet = WhereToMeet.doNotShow,
       this.isOnline = false,
       this.isVerified = false,
       this.isBlocked = false,
@@ -430,7 +457,13 @@ class _$_UserModel implements _UserModel {
   @JsonKey(name: "position")
   final GeoPointData? position;
   @override
-  final UserBasicModel? userBasicModel;
+  final String? dob;
+  @override
+  final String? height;
+  @override
+  final String? weight;
+  @override
+  final String? lived;
   @override
   @JsonKey()
   final Role role;
@@ -444,9 +477,11 @@ class _$_UserModel implements _UserModel {
   @JsonKey()
   final Ethnicity ethnicity;
   @override
-  final LookingFor? lookingFor;
+  @JsonKey()
+  final LookingFor lookingFor;
   @override
-  final WhereToMeet? whereToMeet;
+  @JsonKey()
+  final WhereToMeet whereToMeet;
   @override
   @JsonKey()
   final bool isOnline;
@@ -463,7 +498,7 @@ class _$_UserModel implements _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, id: $id, fcmToken: $fcmToken)';
+    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, id: $id, fcmToken: $fcmToken)';
   }
 
   @override
@@ -482,8 +517,10 @@ class _$_UserModel implements _UserModel {
             (identical(other.age, age) || other.age == age) &&
             (identical(other.position, position) ||
                 other.position == position) &&
-            (identical(other.userBasicModel, userBasicModel) ||
-                other.userBasicModel == userBasicModel) &&
+            (identical(other.dob, dob) || other.dob == dob) &&
+            (identical(other.height, height) || other.height == height) &&
+            (identical(other.weight, weight) || other.weight == weight) &&
+            (identical(other.lived, lived) || other.lived == lived) &&
             (identical(other.role, role) || other.role == role) &&
             (identical(other.bodyType, bodyType) ||
                 other.bodyType == bodyType) &&
@@ -517,7 +554,10 @@ class _$_UserModel implements _UserModel {
         birthday,
         age,
         position,
-        userBasicModel,
+        dob,
+        height,
+        weight,
+        lived,
         role,
         bodyType,
         relationshipStatus,
@@ -582,13 +622,16 @@ abstract class _UserModel implements UserModel {
       final String? birthday,
       final int? age,
       @JsonKey(name: "position") final GeoPointData? position,
-      final UserBasicModel? userBasicModel,
+      final String? dob,
+      final String? height,
+      final String? weight,
+      final String? lived,
       final Role role,
       final BodyType bodyType,
       final RelationshipStatus relationshipStatus,
       final Ethnicity ethnicity,
-      final LookingFor? lookingFor,
-      final WhereToMeet? whereToMeet,
+      final LookingFor lookingFor,
+      final WhereToMeet whereToMeet,
       final bool isOnline,
       final bool isVerified,
       final bool isBlocked,
@@ -614,7 +657,13 @@ abstract class _UserModel implements UserModel {
   @JsonKey(name: "position")
   GeoPointData? get position;
   @override
-  UserBasicModel? get userBasicModel;
+  String? get dob;
+  @override
+  String? get height;
+  @override
+  String? get weight;
+  @override
+  String? get lived;
   @override
   Role get role;
   @override
@@ -624,9 +673,9 @@ abstract class _UserModel implements UserModel {
   @override
   Ethnicity get ethnicity;
   @override
-  LookingFor? get lookingFor;
+  LookingFor get lookingFor;
   @override
-  WhereToMeet? get whereToMeet;
+  WhereToMeet get whereToMeet;
   @override
   bool get isOnline;
   @override

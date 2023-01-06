@@ -10,7 +10,7 @@ import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wings_dating_app/helpers/extra_data.dart';
-import 'package:wings_dating_app/src/model/user_basic_model.dart';
+// import 'package:wings_dating_app/src/model/user_basic_model.dart';
 
 import 'geo_point_data.dart';
 
@@ -31,14 +31,17 @@ class UserModel with _$UserModel {
     String? birthday,
     int? age,
     @JsonKey(name: "position") GeoPointData? position,
-    UserBasicModel? userBasicModel,
+    String? dob,
+    String? height,
+    String? weight,
+    String? lived,
     @Default(Role.doNotShow) Role role,
     @Default(BodyType.doNotShow) BodyType bodyType,
     @Default(RelationshipStatus.doNotShow)
         RelationshipStatus relationshipStatus,
     @Default(Ethnicity.doNotShow) Ethnicity ethnicity,
-    LookingFor? lookingFor,
-    WhereToMeet? whereToMeet,
+    @Default(LookingFor.doNotShow) LookingFor lookingFor,
+    @Default(WhereToMeet.doNotShow) WhereToMeet whereToMeet,
     @Default(false) bool isOnline,
     @Default(false) bool isVerified,
     @Default(false) bool isBlocked,

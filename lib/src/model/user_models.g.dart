@@ -38,10 +38,10 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       position: json['position'] == null
           ? null
           : GeoPointData.fromJson(json['position'] as Map<String, dynamic>),
-      userBasicModel: json['userBasicModel'] == null
-          ? null
-          : UserBasicModel.fromJson(
-              json['userBasicModel'] as Map<String, dynamic>),
+      dob: json['dob'] as String?,
+      height: json['height'] as String?,
+      weight: json['weight'] as String?,
+      lived: json['lived'] as String?,
       role: $enumDecodeNullable(_$RoleEnumMap, json['role']) ?? Role.doNotShow,
       bodyType: $enumDecodeNullable(_$BodyTypeEnumMap, json['bodyType']) ??
           BodyType.doNotShow,
@@ -50,9 +50,12 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
           RelationshipStatus.doNotShow,
       ethnicity: $enumDecodeNullable(_$EthnicityEnumMap, json['ethnicity']) ??
           Ethnicity.doNotShow,
-      lookingFor: $enumDecodeNullable(_$LookingForEnumMap, json['lookingFor']),
+      lookingFor:
+          $enumDecodeNullable(_$LookingForEnumMap, json['lookingFor']) ??
+              LookingFor.doNotShow,
       whereToMeet:
-          $enumDecodeNullable(_$WhereToMeetEnumMap, json['whereToMeet']),
+          $enumDecodeNullable(_$WhereToMeetEnumMap, json['whereToMeet']) ??
+              WhereToMeet.doNotShow,
       isOnline: json['isOnline'] as bool? ?? false,
       isVerified: json['isVerified'] as bool? ?? false,
       isBlocked: json['isBlocked'] as bool? ?? false,
@@ -69,14 +72,17 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'birthday': instance.birthday,
       'age': instance.age,
       'position': instance.position,
-      'userBasicModel': instance.userBasicModel,
+      'dob': instance.dob,
+      'height': instance.height,
+      'weight': instance.weight,
+      'lived': instance.lived,
       'role': _$RoleEnumMap[instance.role]!,
       'bodyType': _$BodyTypeEnumMap[instance.bodyType]!,
       'relationshipStatus':
           _$RelationshipStatusEnumMap[instance.relationshipStatus]!,
       'ethnicity': _$EthnicityEnumMap[instance.ethnicity]!,
-      'lookingFor': _$LookingForEnumMap[instance.lookingFor],
-      'whereToMeet': _$WhereToMeetEnumMap[instance.whereToMeet],
+      'lookingFor': _$LookingForEnumMap[instance.lookingFor]!,
+      'whereToMeet': _$WhereToMeetEnumMap[instance.whereToMeet]!,
       'isOnline': instance.isOnline,
       'isVerified': instance.isVerified,
       'isBlocked': instance.isBlocked,
@@ -143,7 +149,7 @@ const _$LookingForEnumMap = {
   LookingFor.longTerm: 'longTerm',
   LookingFor.shortTerm: 'shortTerm',
   LookingFor.casual: 'casual',
-  LookingFor.ightNow: 'ightNow',
+  LookingFor.rightNow: 'rightNow',
 };
 
 const _$WhereToMeetEnumMap = {

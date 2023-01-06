@@ -99,60 +99,23 @@ class ProfileView extends ConsumerWidget {
                 20.heightBox,
                 Row(
                   children: [
-                    ProfileInputCard(
-                      title: "Role",
-                      value: userData.role.value,
-                    ),
-                    const Spacer(),
-                    ProfileInputCard(
-                      title: "Body Type",
-                      value: userData.bodyType.value,
-                    ),
-                  ],
-                ),
-                10.heightBox,
-                Row(
-                  children: [
-                    ProfileInputCard(
-                      title: "Looking For",
-                      value: userData.lookingFor?.value ?? "",
-                    ),
-                    const Spacer(),
-                    ProfileInputCard(
-                      title: "Body Type",
-                      value: userData.bodyType.value,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ProfileInputCard(
+                            title: "Role", value: userData.role.value),
+                        ProfileInputCard(
+                            title: "Body Type", value: userData.bodyType.value),
+                        ProfileInputCard(
+                            title: "Ethnicity",
+                            value: userData.ethnicity.value),
+                        ProfileInputCard(
+                            title: "Relationship Status",
+                            value: userData.relationshipStatus.value),
+                      ],
                     ),
                   ],
                 ),
-                10.heightBox,
-                Row(
-                  children: [
-                    ProfileInputCard(
-                      title: "Role",
-                      value: userData.role.value,
-                    ),
-                    const Spacer(),
-                    ProfileInputCard(
-                      title: "Body Type",
-                      value: userData.bodyType.value,
-                    ),
-                  ],
-                ),
-                10.heightBox,
-                Row(
-                  children: [
-                    ProfileInputCard(
-                      title: "Role",
-                      value: userData.role.value,
-                    ),
-                    const Spacer(),
-                    ProfileInputCard(
-                      title: "Body Type",
-                      value: userData.bodyType.value,
-                    ),
-                  ],
-                ),
-                10.heightBox,
               ],
             ),
           ),
@@ -180,7 +143,7 @@ class ProfileInputCard extends StatelessWidget {
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.titleLarge,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         10.heightBox,
         Text(
