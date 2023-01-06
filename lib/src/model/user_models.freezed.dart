@@ -40,6 +40,7 @@ mixin _$UserModel {
   bool get isVerified => throw _privateConstructorUsedError;
   bool get isBlocked => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
+  String get fcmToken => throw _privateConstructorUsedError;
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
@@ -86,7 +87,8 @@ abstract class $UserModelCopyWith<$Res> {
       bool isOnline,
       bool isVerified,
       bool isBlocked,
-      String id});
+      String id,
+      String fcmToken});
 
   $GeoPointDataCopyWith<$Res>? get position;
   $UserBasicModelCopyWith<$Res>? get userBasicModel;
@@ -123,6 +125,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? isVerified = null,
     Object? isBlocked = null,
     Object? id = null,
+    Object? fcmToken = null,
   }) {
     return _then(_value.copyWith(
       username: null == username
@@ -197,6 +200,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      fcmToken: null == fcmToken
+          ? _value.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -250,7 +257,8 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       bool isOnline,
       bool isVerified,
       bool isBlocked,
-      String id});
+      String id,
+      String fcmToken});
 
   @override
   $GeoPointDataCopyWith<$Res>? get position;
@@ -287,6 +295,7 @@ class __$$_UserModelCopyWithImpl<$Res>
     Object? isVerified = null,
     Object? isBlocked = null,
     Object? id = null,
+    Object? fcmToken = null,
   }) {
     return _then(_$_UserModel(
       username: null == username
@@ -361,6 +370,10 @@ class __$$_UserModelCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      fcmToken: null == fcmToken
+          ? _value.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -386,7 +399,8 @@ class _$_UserModel implements _UserModel {
       this.isOnline = false,
       this.isVerified = false,
       this.isBlocked = false,
-      required this.id})
+      required this.id,
+      required this.fcmToken})
       : _albumUrl = albumUrl;
 
   factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
@@ -444,10 +458,12 @@ class _$_UserModel implements _UserModel {
   final bool isBlocked;
   @override
   final String id;
+  @override
+  final String fcmToken;
 
   @override
   String toString() {
-    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, id: $id)';
+    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, id: $id, fcmToken: $fcmToken)';
   }
 
   @override
@@ -485,31 +501,35 @@ class _$_UserModel implements _UserModel {
                 other.isVerified == isVerified) &&
             (identical(other.isBlocked, isBlocked) ||
                 other.isBlocked == isBlocked) &&
-            (identical(other.id, id) || other.id == id));
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.fcmToken, fcmToken) ||
+                other.fcmToken == fcmToken));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      username,
-      bio,
-      const DeepCollectionEquality().hash(_albumUrl),
-      profileUrl,
-      birthday,
-      age,
-      position,
-      userBasicModel,
-      role,
-      bodyType,
-      relationshipStatus,
-      ethnicity,
-      lookingFor,
-      whereToMeet,
-      isOnline,
-      isVerified,
-      isBlocked,
-      id);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        username,
+        bio,
+        const DeepCollectionEquality().hash(_albumUrl),
+        profileUrl,
+        birthday,
+        age,
+        position,
+        userBasicModel,
+        role,
+        bodyType,
+        relationshipStatus,
+        ethnicity,
+        lookingFor,
+        whereToMeet,
+        isOnline,
+        isVerified,
+        isBlocked,
+        id,
+        fcmToken
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -572,7 +592,8 @@ abstract class _UserModel implements UserModel {
       final bool isOnline,
       final bool isVerified,
       final bool isBlocked,
-      required final String id}) = _$_UserModel;
+      required final String id,
+      required final String fcmToken}) = _$_UserModel;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$_UserModel.fromJson;
@@ -614,6 +635,8 @@ abstract class _UserModel implements UserModel {
   bool get isBlocked;
   @override
   String get id;
+  @override
+  String get fcmToken;
   @override
   @JsonKey(ignore: true)
   _$$_UserModelCopyWith<_$_UserModel> get copyWith =>

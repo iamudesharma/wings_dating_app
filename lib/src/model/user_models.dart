@@ -23,33 +23,28 @@ part 'user_models.g.dart';
 )
 // @JsonSerializable(anyMap: true, explicitToJson: false)
 class UserModel with _$UserModel {
-  factory UserModel(
-      {required String username,
-      String? bio,
-      List<String>? albumUrl,
-      String? profileUrl,
-      String? birthday,
-      int? age,
-      @JsonKey(name: "position")
-          GeoPointData? position,
-      UserBasicModel? userBasicModel,
-      @Default(Role.doNotShow)
-          Role role,
-      @Default(BodyType.doNotShow)
-          BodyType bodyType,
-      @Default(RelationshipStatus.doNotShow)
-          RelationshipStatus relationshipStatus,
-      @Default(Ethnicity.doNotShow)
-          Ethnicity ethnicity,
-      LookingFor? lookingFor,
-      WhereToMeet? whereToMeet,
-      @Default(false)
-          bool isOnline,
-      @Default(false)
-          bool isVerified,
-      @Default(false)
-          bool isBlocked,
-      required String id}) = _UserModel;
+  factory UserModel({
+    required String username,
+    String? bio,
+    List<String>? albumUrl,
+    String? profileUrl,
+    String? birthday,
+    int? age,
+    @JsonKey(name: "position") GeoPointData? position,
+    UserBasicModel? userBasicModel,
+    @Default(Role.doNotShow) Role role,
+    @Default(BodyType.doNotShow) BodyType bodyType,
+    @Default(RelationshipStatus.doNotShow)
+        RelationshipStatus relationshipStatus,
+    @Default(Ethnicity.doNotShow) Ethnicity ethnicity,
+    LookingFor? lookingFor,
+    WhereToMeet? whereToMeet,
+    @Default(false) bool isOnline,
+    @Default(false) bool isVerified,
+    @Default(false) bool isBlocked,
+    required String id,
+    required String fcmToken,
+  }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, Object?> json) =>
       _$UserModelFromJson(json);

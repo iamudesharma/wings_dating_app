@@ -57,6 +57,7 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       isVerified: json['isVerified'] as bool? ?? false,
       isBlocked: json['isBlocked'] as bool? ?? false,
       id: json['id'] as String,
+      fcmToken: json['fcmToken'] as String,
     );
 
 Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
@@ -80,6 +81,7 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'isVerified': instance.isVerified,
       'isBlocked': instance.isBlocked,
       'id': instance.id,
+      'fcmToken': instance.fcmToken,
     };
 
 const _$RoleEnumMap = {
