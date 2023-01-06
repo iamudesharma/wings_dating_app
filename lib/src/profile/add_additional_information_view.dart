@@ -561,7 +561,7 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
                     if (data != null) {
 // albumList.update((state) => state[widget.index] = data);
 
-                      albumList![widget.index] = data;
+                      albumList[widget.index] = data;
                       setState(() {});
                     }
                   },
@@ -573,7 +573,7 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
                         );
 
                     if (data != null) {
-                      albumList![widget.index] = data;
+                      albumList[widget.index] = data;
                       setState(() {});
                     }
                   },

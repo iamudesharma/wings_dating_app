@@ -39,6 +39,7 @@ mixin _$UserModel {
   bool get isOnline => throw _privateConstructorUsedError;
   bool get isVerified => throw _privateConstructorUsedError;
   bool get isBlocked => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
@@ -84,7 +85,8 @@ abstract class $UserModelCopyWith<$Res> {
       WhereToMeet? whereToMeet,
       bool isOnline,
       bool isVerified,
-      bool isBlocked});
+      bool isBlocked,
+      String id});
 
   $GeoPointDataCopyWith<$Res>? get position;
   $UserBasicModelCopyWith<$Res>? get userBasicModel;
@@ -120,6 +122,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? isOnline = null,
     Object? isVerified = null,
     Object? isBlocked = null,
+    Object? id = null,
   }) {
     return _then(_value.copyWith(
       username: null == username
@@ -190,6 +193,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.isBlocked
           : isBlocked // ignore: cast_nullable_to_non_nullable
               as bool,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -242,7 +249,8 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       WhereToMeet? whereToMeet,
       bool isOnline,
       bool isVerified,
-      bool isBlocked});
+      bool isBlocked,
+      String id});
 
   @override
   $GeoPointDataCopyWith<$Res>? get position;
@@ -278,6 +286,7 @@ class __$$_UserModelCopyWithImpl<$Res>
     Object? isOnline = null,
     Object? isVerified = null,
     Object? isBlocked = null,
+    Object? id = null,
   }) {
     return _then(_$_UserModel(
       username: null == username
@@ -348,6 +357,10 @@ class __$$_UserModelCopyWithImpl<$Res>
           ? _value.isBlocked
           : isBlocked // ignore: cast_nullable_to_non_nullable
               as bool,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -372,7 +385,8 @@ class _$_UserModel implements _UserModel {
       this.whereToMeet,
       this.isOnline = false,
       this.isVerified = false,
-      this.isBlocked = false})
+      this.isBlocked = false,
+      required this.id})
       : _albumUrl = albumUrl;
 
   factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
@@ -428,10 +442,12 @@ class _$_UserModel implements _UserModel {
   @override
   @JsonKey()
   final bool isBlocked;
+  @override
+  final String id;
 
   @override
   String toString() {
-    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked)';
+    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, userBasicModel: $userBasicModel, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, id: $id)';
   }
 
   @override
@@ -468,7 +484,8 @@ class _$_UserModel implements _UserModel {
             (identical(other.isVerified, isVerified) ||
                 other.isVerified == isVerified) &&
             (identical(other.isBlocked, isBlocked) ||
-                other.isBlocked == isBlocked));
+                other.isBlocked == isBlocked) &&
+            (identical(other.id, id) || other.id == id));
   }
 
   @JsonKey(ignore: true)
@@ -491,7 +508,8 @@ class _$_UserModel implements _UserModel {
       whereToMeet,
       isOnline,
       isVerified,
-      isBlocked);
+      isBlocked,
+      id);
 
   @JsonKey(ignore: true)
   @override
@@ -553,7 +571,8 @@ abstract class _UserModel implements UserModel {
       final WhereToMeet? whereToMeet,
       final bool isOnline,
       final bool isVerified,
-      final bool isBlocked}) = _$_UserModel;
+      final bool isBlocked,
+      required final String id}) = _$_UserModel;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$_UserModel.fromJson;
@@ -593,6 +612,8 @@ abstract class _UserModel implements UserModel {
   bool get isVerified;
   @override
   bool get isBlocked;
+  @override
+  String get id;
   @override
   @JsonKey(ignore: true)
   _$$_UserModelCopyWith<_$_UserModel> get copyWith =>

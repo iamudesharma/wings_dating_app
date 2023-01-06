@@ -56,6 +56,7 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       isOnline: json['isOnline'] as bool? ?? false,
       isVerified: json['isVerified'] as bool? ?? false,
       isBlocked: json['isBlocked'] as bool? ?? false,
+      id: json['id'] as String,
     );
 
 Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
@@ -78,6 +79,7 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'isOnline': instance.isOnline,
       'isVerified': instance.isVerified,
       'isBlocked': instance.isBlocked,
+      'id': instance.id,
     };
 
 const _$RoleEnumMap = {
