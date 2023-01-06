@@ -78,9 +78,10 @@ class ChatView extends StatelessWidget {
                       keyboardDismissBehavior:
                           ScrollViewKeyboardDismissBehavior.onDrag,
                       itemBuilder: (context, index) {
-                        return BubbleSpecialThree(
+                        return BubbleNormal(
                           text: "bubble special three with tail",
                           color: const Color(0xFFE8E8EE),
+                          
                           tail: true,
                           isSender: index.isEven ? true : false,
                         );
@@ -95,7 +96,7 @@ class ChatView extends StatelessWidget {
                     onSend: (_) => print(_),
                     actions: [
                       InkWell(
-                        child: Icon(
+                        child: const Icon(
                           Icons.add,
                           color: Colors.black,
                           size: 24,
@@ -103,9 +104,9 @@ class ChatView extends StatelessWidget {
                         onTap: () {},
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 8, right: 8),
+                        padding: const EdgeInsets.only(left: 8, right: 8),
                         child: InkWell(
-                          child: Icon(
+                          child: const Icon(
                             Icons.camera_alt,
                             color: Colors.green,
                             size: 24,

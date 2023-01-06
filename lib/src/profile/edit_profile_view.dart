@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
@@ -261,11 +262,14 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       curve: Curves.easeInOut,
                       child: ElevatedButton(
                         onPressed: () async {
-                          // int age = calculateAge(_selectedDate!);
-
                           final route = AutoRouter.of(context);
 
+                          // int age = calculateAge(_selectedDate!);
+
                           if (_formKey.currentState!.validate()) {
+                            final token =
+                                await FirebaseMessaging.instance.getToken();
+
                             if (widget.isEditProfile) {
                               UserModel? user = profile.userModel?.copyWith(
                                 bio: _bioController.text,
@@ -292,6 +296,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               );
 
                               UserModel user = UserModel(
+                                fcmToken: token!,
                                 id: const Uuid().v4(),
                                 username: _usernameController.text,
                                 bio: _bioController.text,

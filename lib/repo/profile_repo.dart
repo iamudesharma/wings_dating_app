@@ -1,15 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/dependency/dependenies.dart';
-import 'package:wings_dating_app/helpers/firebase_constants.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/repo/repo_exception.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
-
-import '../src/model/geo_point_data.dart';
 
 part 'profile_repo.g.dart';
 
@@ -125,4 +121,12 @@ class ProfileRepo with RepositoryExceptionMixin {
 
   Future<void> saveUserLocationData(
       String UserId, String Username, String imgae) async {}
+
+  Future makeOnline(String userId, bool isOnline) async {
+    final usercollection = userCollection();
+
+    usercollection.doc(userId).update({
+      "isOnline": isOnline,
+    });
+  }
 }
