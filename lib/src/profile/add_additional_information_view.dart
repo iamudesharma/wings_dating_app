@@ -63,53 +63,53 @@ class _AddAdditionalInformationViewState
         slivers: [
           SliverAppBar.medium(
               title: const Text("Additional Information"), floating: false),
-          SliverToBoxAdapter(
-            child: StaggeredGrid.count(
-              crossAxisCount: 4,
-              mainAxisSpacing: 4,
-              crossAxisSpacing: 4,
-              children: [
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 2,
-                  mainAxisCellCount: 2,
-                  child: AlbumWidgetPicker(
-                    index: 0,
-                    path: albumList?[0],
-                  ),
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 2,
-                  mainAxisCellCount: 1,
-                  child: AlbumWidgetPicker(
-                    index: 1,
-                    path: albumList?[1] ?? "",
-                    // path: ,
-                  ),
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 1,
-                  mainAxisCellCount: 1,
-                  child: AlbumWidgetPicker(
-                    index: 2,
-                    path: albumList?[2],
-                  ),
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 1,
-                  mainAxisCellCount: 1,
-                  child: AlbumWidgetPicker(
-                    index: 3,
-                    path: albumList?[3],
-                  ),
-                ),
-                // StaggeredGridTile.count(
-                //   crossAxisCellCount: 4,
-                //   mainAxisCellCount: 2,
-                //   child: Text("hello"),
-                // ),
-              ],
-            ),
-          ),
+          // SliverToBoxAdapter(
+          //   child: StaggeredGrid.count(
+          //     crossAxisCount: 4,
+          //     mainAxisSpacing: 4,
+          //     crossAxisSpacing: 4,
+          //     children: [
+          //       StaggeredGridTile.count(
+          //         crossAxisCellCount: 2,
+          //         mainAxisCellCount: 2,
+          //         child: AlbumWidgetPicker(
+          //           index: 0,
+          //           path: albumList?[0],
+          //         ),
+          //       ),
+          //       StaggeredGridTile.count(
+          //         crossAxisCellCount: 2,
+          //         mainAxisCellCount: 1,
+          //         child: AlbumWidgetPicker(
+          //           index: 1,
+          //           path: albumList?[1] ?? "",
+          //           // path: ,
+          //         ),
+          //       ),
+          //       StaggeredGridTile.count(
+          //         crossAxisCellCount: 1,
+          //         mainAxisCellCount: 1,
+          //         child: AlbumWidgetPicker(
+          //           index: 2,
+          //           path: albumList?[2],
+          //         ),
+          //       ),
+          //       StaggeredGridTile.count(
+          //         crossAxisCellCount: 1,
+          //         mainAxisCellCount: 1,
+          //         child: AlbumWidgetPicker(
+          //           index: 3,
+          //           path: albumList?[3],
+          //         ),
+          //       ),
+          //       // StaggeredGridTile.count(
+          //       //   crossAxisCellCount: 4,
+          //       //   mainAxisCellCount: 2,
+          //       //   child: Text("hello"),
+          //       // ),
+          //     ],
+          //   ),
+          // ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(15.0),

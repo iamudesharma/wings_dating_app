@@ -79,92 +79,94 @@ class _UsersViewState extends ConsumerState<UsersView> {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final users = data[index];
-                        return Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(users.profileUrl ?? ""),
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            color: Colors.blueGrey.shade300,
-                          ),
-                          // ignore: prefer_const_literals_to_create_immutables
-                          child: Column(children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "${ref.read(ProfileController.userControllerProvider).getDistance(Coordinates(users.position!.geopoint.latitude, users.position!.geopoint.longitude)).toStringAsFixed(0)} km",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 10,
+                        return userData.id == users.id
+                            ? const SizedBox.shrink()
+                            : Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(users.profileUrl ?? ""),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  color: Colors.blueGrey.shade300,
+                                ),
+                                // ignore: prefer_const_literals_to_create_immutables
+                                child: Column(children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "${ref.read(ProfileController.userControllerProvider).getDistance(Coordinates(users.position!.geopoint.latitude, users.position!.geopoint.longitude)).toStringAsFixed(0)} km",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        const Align(
+                                          alignment: Alignment.topRight,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: CircleAvatar(
+                                              radius: 5,
+                                              backgroundColor: Colors.green,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   const Spacer(),
-                                  const Align(
-                                    alignment: Alignment.topRight,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: CircleAvatar(
-                                        radius: 5,
-                                        backgroundColor: Colors.green,
-                                      ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              users.username,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                            Text(
+                                              users.age.toString(),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const Spacer(),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: const [
+                                            Text(
+                                              "170 cm",
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                            Text(
+                                              "55 kg",
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        users.username,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                      Text(
-                                        users.age.toString(),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: const [
-                                      Text(
-                                        "170 cm",
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                      Text(
-                                        "55 kg",
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )
-                          ]),
-                        );
+                                  )
+                                ]),
+                              );
                       },
                       childCount: data!.length,
                     ),
@@ -269,6 +271,17 @@ List<String> weightList = [
   "128 kg",
   "129 kg",
   "130 kg",
+  "140 kg",
+  "141 kg",
+  "142 kg",
+  "143 kg",
+  "144 kg",
+  "145 kg",
+  "146 kg",
+  "147 kg",
+  "148 kg",
+  "149 kg",
+  "150 kg",
 ];
 
 List<String> heightList = [
@@ -334,4 +347,14 @@ List<String> heightList = [
   "198 cm",
   "199 cm",
   "200 cm",
+  "201 cm",
+  "202 cm",
+  "203 cm",
+  "204 cm",
+  "205 cm",
+  "206 cm",
+  "207 cm",
+  "208 cm",
+  "209 cm",
+  "210 cm",
 ];

@@ -263,6 +263,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       child: ElevatedButton(
                         onPressed: () async {
                           final route = AutoRouter.of(context);
+                              final data = await location.getLocation();
+
 
                           // int age = calculateAge(_selectedDate!);
 
@@ -285,14 +287,13 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   .read(Dependency.profileProvider)
                                   .updateUserDoc(user!);
 
-                              route.pop();
+                              await route.pop();
                             } else {
-                              // final data = await location.getLocation();
 
                               int age = calculateAge(_selectedDate!);
                               GeoFirePoint myLocation = geo.point(
-                                latitude: 12.960632,
-                                longitude: 77.641603,
+                                latitude: data.latitude!,
+                                longitude: data.longitude!,
                               );
 
                               UserModel user = UserModel(
@@ -319,7 +320,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   .read(Dependency.profileProvider)
                                   .addLocation(myLocation.data);
 
-                              route.replace(const DashboardRoute());
+                              await route.replace(const DashboardRoute());
                             }
                           }
                         },
