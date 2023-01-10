@@ -135,4 +135,20 @@ class ProfileRepo with RepositoryExceptionMixin {
       "isOnline": isOnline,
     });
   }
+
+  Future<UserModel?> getUserById(String id) async {
+    final usercollection = userCollection();
+
+    final data = await usercollection
+        .where(
+          "id",
+          isEqualTo: id,
+        )
+        .get();
+
+    final users = data.docs.first.data();
+
+    logger.w(users);
+    return users;
+  }
 }
