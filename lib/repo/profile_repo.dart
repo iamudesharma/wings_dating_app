@@ -6,6 +6,7 @@ import 'package:wings_dating_app/dependency/dependenies.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/repo/repo_exception.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
+import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
 part 'profile_repo.g.dart';
 
@@ -93,7 +94,12 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<List<UserModel>?>? getUserList() async {
     final geo = GeoFlutterFire();
 
-    GeoFirePoint center = geo.point(latitude: 19.9132, longitude: 72.623603);
+    final position =
+        ref.read(ProfileController.userControllerProvider).userModel!.position;
+
+    GeoFirePoint center = geo.point(
+        latitude: position!.geopoint.latitude,
+        longitude: position.geopoint.longitude);
     // GeoFirePoint center = geo.point(latitude: 19.075983, longitude: 72.877678);
 
     logger.w(center.geoPoint);
@@ -106,7 +112,7 @@ class ProfileRepo with RepositoryExceptionMixin {
         .collection(collectionRef: _firestore.collection("users").limit(10))
         .within(
           center: center,
-          radius: 10000,
+          radius: 100000,
           field: "position",
           strictMode: true,
         );

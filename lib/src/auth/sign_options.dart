@@ -23,7 +23,7 @@ class SignOptionsView extends ConsumerWidget {
       data: (data) {
         if (data != null) {
           AutoRouter.of(context).popAndPush(const DashboardRoute());
-          return Container();
+          return const Scaffold();
         }
         return SignInScreen(
           auth: FirebaseAuth.instance,
@@ -36,10 +36,7 @@ class SignOptionsView extends ConsumerWidget {
           ],
           actions: [
             AuthStateChangeAction(
-              (context, AuthState state) {
-               
-              
-              },
+              (context, AuthState state) {},
             )
           ],
           showAuthActionSwitch: true,
