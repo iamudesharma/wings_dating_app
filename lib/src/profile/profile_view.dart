@@ -3,18 +3,33 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:wings_dating_app/src/model/user_models.dart';
+
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
+import '../../repo/profile_repo.dart';
 import '../../routes/app_router.dart';
 
 import 'package:velocity_x/velocity_x.dart';
 
-class ProfileView extends ConsumerWidget {
-  const ProfileView({super.key});
+final getUserByIdProvider =
+    FutureProvider.family<UserModel?, String>((ref, id) async {
+  return ref.read(profileRepoProvider).getUserById(id);
+});
+
+class ProfileView extends ConsumerStatefulWidget {
+  const ProfileView({
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context, ref) {
-    final userData =
+  ConsumerState<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends ConsumerState<ProfileView> {
+  @override
+  Widget build(BuildContext context) {
+    var userData =
         ref.watch(ProfileController.userControllerProvider).userModel;
 
     // logger.i(userData?.profileUrl);
@@ -154,3 +169,4 @@ class ProfileInputCard extends StatelessWidget {
     );
   }
 }
+

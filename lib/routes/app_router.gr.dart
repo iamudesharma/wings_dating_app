@@ -40,6 +40,18 @@ class _$AppRouter extends RootStackRouter {
         child: const ChatView(),
       );
     },
+    OtherUserProfileRoute.name: (routeData) {
+      final args = routeData.argsAs<OtherUserProfileRouteArgs>(
+          orElse: () => const OtherUserProfileRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: OtherUserProfileView(
+          key: args.key,
+          id: args.id,
+          isCurrentUser: args.isCurrentUser,
+        ),
+      );
+    },
     AddAdditionalInformationRoute.name: (routeData) {
       return MaterialPageX<dynamic>(
         routeData: routeData,
@@ -109,6 +121,10 @@ class _$AppRouter extends RootStackRouter {
           path: '/chat-view',
         ),
         RouteConfig(
+          OtherUserProfileRoute.name,
+          path: '/other-user-profile-view',
+        ),
+        RouteConfig(
           AddAdditionalInformationRoute.name,
           path: '/add-additional-information-view',
         ),
@@ -154,6 +170,45 @@ class ChatRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ChatRoute';
+}
+
+/// generated route for
+/// [OtherUserProfileView]
+class OtherUserProfileRoute extends PageRouteInfo<OtherUserProfileRouteArgs> {
+  OtherUserProfileRoute({
+    Key? key,
+    String? id,
+    bool? isCurrentUser = true,
+  }) : super(
+          OtherUserProfileRoute.name,
+          path: '/other-user-profile-view',
+          args: OtherUserProfileRouteArgs(
+            key: key,
+            id: id,
+            isCurrentUser: isCurrentUser,
+          ),
+        );
+
+  static const String name = 'OtherUserProfileRoute';
+}
+
+class OtherUserProfileRouteArgs {
+  const OtherUserProfileRouteArgs({
+    this.key,
+    this.id,
+    this.isCurrentUser = true,
+  });
+
+  final Key? key;
+
+  final String? id;
+
+  final bool? isCurrentUser;
+
+  @override
+  String toString() {
+    return 'OtherUserProfileRouteArgs{key: $key, id: $id, isCurrentUser: $isCurrentUser}';
+  }
 }
 
 /// generated route for
