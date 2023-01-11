@@ -35,9 +35,13 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     ChatRoute.name: (routeData) {
+      final args = routeData.argsAs<ChatRouteArgs>();
       return MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const ChatView(),
+        child: ChatView(
+          key: args.key,
+          id: args.id,
+        ),
       );
     },
     OtherUserProfileRoute.name: (routeData) {
@@ -162,14 +166,36 @@ class DashboardRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ChatView]
-class ChatRoute extends PageRouteInfo<void> {
-  const ChatRoute()
-      : super(
+class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
+  ChatRoute({
+    Key? key,
+    required String id,
+  }) : super(
           ChatRoute.name,
           path: '/chat-view',
+          args: ChatRouteArgs(
+            key: key,
+            id: id,
+          ),
         );
 
   static const String name = 'ChatRoute';
+}
+
+class ChatRouteArgs {
+  const ChatRouteArgs({
+    this.key,
+    required this.id,
+  });
+
+  final Key? key;
+
+  final String id;
+
+  @override
+  String toString() {
+    return 'ChatRouteArgs{key: $key, id: $id}';
+  }
 }
 
 /// generated route for

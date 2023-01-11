@@ -1,7 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
+
+import '../../routes/app_router.dart';
 
 class OtherUserProfileView extends ConsumerStatefulWidget {
   const OtherUserProfileView({
@@ -137,7 +140,11 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
         child: ElevatedButton.icon(
           icon: Icon(Icons.chat_bubble),
           label: Text("Message"),
-          onPressed: () {},
+          onPressed: () async {
+            AutoRouter.of(context).push(
+              ChatRoute(id: widget.id!),
+            );
+          },
         ),
       ),
     );
