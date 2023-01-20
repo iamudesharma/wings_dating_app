@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +18,16 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await FirebaseStorage.instance.app.setAutomaticDataCollectionEnabled(true);
-  await FirebaseStorage.instance.app.setAutomaticResourceManagementEnabled(true);
+  await FirebaseAuth.instance.useAuthEmulator("localhost", 9099);
+  FirebaseFirestore.instance.useFirestoreEmulator("localhost", 8080);
+  await FirebaseStorage.instance.useStorageEmulator("localhost", 9199);
+  await FirebaseFirestore.instance.app.setAutomaticDataCollectionEnabled(true);
+  await FirebaseFirestore.instance.app
+      .setAutomaticResourceManagementEnabled(true);
 
+  await FirebaseStorage.instance.app.setAutomaticDataCollectionEnabled(true);
+  await FirebaseStorage.instance.app
+      .setAutomaticResourceManagementEnabled(true);
 
   runApp(const ProviderScope(child: MyApp()));
 }

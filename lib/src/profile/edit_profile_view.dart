@@ -263,15 +263,15 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       child: ElevatedButton(
                         onPressed: () async {
                           final route = AutoRouter.of(context);
-                              final data = await location.getLocation();
-
-
-                          // int age = calculateAge(_selectedDate!);
+                          final data = await location.getLocation();
+                          GeoFirePoint myLocation = geo.point(
+                            latitude: data.latitude!,
+                            longitude: data.longitude!,
+                          );
+                          final token =
+                              await FirebaseMessaging.instance.getToken();
 
                           if (_formKey.currentState!.validate()) {
-                            final token =
-                                await FirebaseMessaging.instance.getToken();
-
                             if (widget.isEditProfile) {
                               UserModel? user = profile.userModel?.copyWith(
                                 bio: _bioController.text,
@@ -289,36 +289,29 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
                               await route.pop();
                             } else {
-
                               int age = calculateAge(_selectedDate!);
-                              GeoFirePoint myLocation = geo.point(
-                                latitude: data.latitude!,
-                                longitude: data.longitude!,
-                              );
 
                               UserModel user = UserModel(
-                                fcmToken: token!,
-                                id: const Uuid().v4(),
-                                username: _usernameController.text,
-                                bio: _bioController.text,
+                                fcmToken: "",
+                                id: " nsx kjxwbnxw ",
+                                username: "Udesh  ",
+                                bio: " zjxwwxj",
                                 age: age,
-                                profileUrl: await ref
-                                    .read(ProfileController
-                                        .userControllerProvider)
-                                    .uploadImage(),
-                                birthday: _dobController.text,
+                                // profileUrl: await ref
+                                //     .read(ProfileController
+                                //         .userControllerProvider)
+                                //     .uploadImage(),
+                                birthday: "17/12/2004",
+                                position: myLocation.data,
                               );
 
-                              logger.w(myLocation.data);
-                              logger.w(user.toJson());
-
-                              await ref
+                              ref
                                   .read(Dependency.profileProvider)
                                   .createUserDoc(user);
 
-                              await ref
-                                  .read(Dependency.profileProvider)
-                                  .addLocation(myLocation.data);
+                              // await ref
+                              //     .read(Dependency.profileProvider)
+                              //     .addLocation(myLocation.data);
 
                               await route.replace(const DashboardRoute());
                             }

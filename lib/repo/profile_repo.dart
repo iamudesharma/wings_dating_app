@@ -32,7 +32,7 @@ class ProfileRepo with RepositoryExceptionMixin {
 
   Future<void> createUserDoc(UserModel userModel) async {
     final usercollection = userCollection();
-    usercollection
+    await usercollection
         .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
         .set(userModel);
   }
