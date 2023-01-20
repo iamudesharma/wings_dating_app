@@ -138,8 +138,8 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton.icon(
-          icon: Icon(Icons.chat_bubble),
-          label: Text("Message"),
+          icon: const Icon(Icons.chat_bubble),
+          label: const Text("Message"),
           onPressed: () async {
             AutoRouter.of(context).push(
               ChatRoute(id: widget.id!),

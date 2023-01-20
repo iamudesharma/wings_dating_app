@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
-import 'package:chat_bubbles/message_bars/message_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -134,6 +133,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
                         .withOpacity(0.2),
                     onSend: (value) {
                       ref.read(chatRepositoryProvider).sendTextMessage(
+                          // recieverUserData:.
                           context: context,
                           messageReply: null,
                           recieverUserId: widget.id,

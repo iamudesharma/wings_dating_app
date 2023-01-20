@@ -176,12 +176,12 @@ class ChatRepository {
     required String text,
     required String recieverUserId,
     required UserModel senderUser,
+     UserModel? recieverUserData,
     required MessageReply? messageReply,
     // required bool isGroupChat,
   }) async {
     try {
       var timeSent = DateTime.now();
-      UserModel? recieverUserData;
 
       var messageId = const Uuid().v1();
 
