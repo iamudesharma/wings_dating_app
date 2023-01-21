@@ -302,16 +302,18 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 //         .userControllerProvider)
                                 //     .uploadImage(),
                                 birthday: "17/12/2004",
-                                position: myLocation.data,
+                                // position: myLocation.data,
                               );
 
+                              logger.i(user.toJson());
+                              logger.i(myLocation.data);
                               ref
                                   .read(Dependency.profileProvider)
                                   .createUserDoc(user);
 
-                              // await ref
-                              //     .read(Dependency.profileProvider)
-                              //     .addLocation(myLocation.data);
+                              await ref
+                                  .read(Dependency.profileProvider)
+                                  .addLocation(myLocation.data);
 
                               await route.replace(const DashboardRoute());
                             }

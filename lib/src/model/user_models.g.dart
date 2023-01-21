@@ -71,7 +71,7 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'profileUrl': instance.profileUrl,
       'birthday': instance.birthday,
       'age': instance.age,
-      'position': instance.position?.toJson(),
+      'position': instance.position,
       'dob': instance.dob,
       'height': instance.height,
       'weight': instance.weight,

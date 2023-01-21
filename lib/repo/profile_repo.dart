@@ -97,13 +97,17 @@ class ProfileRepo with RepositoryExceptionMixin {
     final position =
         ref.read(ProfileController.userControllerProvider).userModel!.position;
 
+    logger.i(position);
     GeoFirePoint center = geo.point(
-        latitude: position!.geopoint.latitude,
-        longitude: position.geopoint.longitude);
-    // GeoFirePoint center = geo.point(latitude: 19.075983, longitude: 72.877678);
+      latitude: position!.geopoint.latitude,
+      longitude: position.geopoint.longitude,
+    );
+    // GeoFi
+    //rePoint center = geo.point(latitude: 19.075983, longitude: 72.877678);
 
-    logger.w(center.geoPoint);
-    logger.w(center.data);
+    // GeoFirePoint center = geo.point(latitude: 12.960632, longitude: 77.641603);
+    // logger.w(center.geoPoint);
+    // logger.w(center.data);
 
     // final usercollection = userCollection();
     final _firestore = FirebaseFirestore.instance;
@@ -112,13 +116,16 @@ class ProfileRepo with RepositoryExceptionMixin {
         .collection(collectionRef: _firestore.collection("users").limit(10))
         .within(
           center: center,
-          radius: 100000,
+          radius: 1000000,
           field: "position",
+          // strictMode: true,
           strictMode: true,
         );
 
     final userListRaw = await data.first;
     print(userListRaw.length);
+
+    logger.i(userListRaw[0].data());
 
     return userListRaw
         .map((e) => UserModel.fromJson(e.data() as dynamic))

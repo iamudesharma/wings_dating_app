@@ -117,7 +117,7 @@ class _UsersViewState extends ConsumerState<UsersView> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      "${ref.read(ProfileController.userControllerProvider).getDistance(Coordinates(users.position!.geopoint.latitude, users.position!.geopoint.longitude)).toStringAsFixed(0)} km",
+                                      ref.read(ProfileController.userControllerProvider).getDistance(Coordinates(users.position!.geopoint.latitude, users.position!.geopoint.longitude)),
                                       style: const TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 10,

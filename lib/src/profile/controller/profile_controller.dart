@@ -77,19 +77,19 @@ class ProfileController extends ChangeNotifier {
     return image;
   }
 
-  double getDistance(Coordinates coordinates) {
+  String getDistance(Coordinates coordinates) {
     final data = GeoFirePoint.distanceBetween(
       from: Coordinates(
         userModel!.position!.geopoint.latitude,
-        userModel!.position!.geopoint.latitude,
+        userModel!.position!.geopoint.longitude,
       ),
       to: coordinates,
     );
 
     if (data < 1000.00) {
-      return data;
+      return "${data.toStringAsFixed(0)}  meter";
     } else {
-      return data / 1000.00;
+      return "${data / 1000.00} km";
     }
   }
 }
