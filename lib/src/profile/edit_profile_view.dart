@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
@@ -205,19 +206,61 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       ),
                       readOnly: true,
                       onTap: () async {
-                        showDatePicker(
-                          context: context,
-                          initialDate: DateTime(2004),
-                          firstDate: DateTime(1960),
-                          lastDate: DateTime(2004),
-                        ).then((value) {
-                          logger.i(value);
+                        if (Platform.isIOS) {
+                          await showCupertinoModalPopup(
+                              context: context,
+                              builder: (_) => Builder(builder: (context) {
+                                    return Container(
+                                      height: 190,
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            height: 180,
+                                            child: CupertinoDatePicker(
+                                              dateOrder:
+                                                  DatePickerDateOrder.dmy,
+                                              backgroundColor: Theme.of(context)
+                                                  .scaffoldBackgroundColor,
+                                              onDateTimeChanged: (value) {
+                                                _dobController.text =
+                                                    DateFormat.yMd()
+                                                        .format(value);
 
-                          _dobController.text = DateFormat.yMd().format(value!);
+                                                _selectedDate = value;
 
-                          _selectedDate = value;
-                          setState(() {});
-                        });
+                                                setState(() {});
+                                              },
+                                              initialDateTime: DateTime(
+                                                  DateTime.now().year - 18),
+                                              // maximumYear: ,
+                                              maximumYear:
+                                                  DateTime.now().year - 18,
+                                              minimumYear: 1960,
+                                              mode:
+                                                  CupertinoDatePickerMode.date,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }));
+                        } else {
+                          await showDatePicker(
+                            context: context,
+                            initialDate: DateTime(2004),
+                            firstDate: DateTime(1960),
+                            lastDate: DateTime(2004),
+                          ).then((value) {
+                            logger.i(value);
+
+                            _dobController.text =
+                                DateFormat.yMd().format(value!);
+
+                            _selectedDate = value;
+                            setState(() {});
+                          });
+                        }
                       },
                     ),
                     const SizedBox(
@@ -292,17 +335,19 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               int age = calculateAge(_selectedDate!);
 
                               UserModel user = UserModel(
-                                fcmToken: "",
-                                id: " nsx kjxwbnxw ",
+                                fcmToken: token ?? "",
+                                dob: _dobController.text,
+                                isOnline: true,
+                                isVerified: false,
+                                id: const Uuid().v4(),
                                 username: "Udesh  ",
                                 bio: " zjxwwxj",
                                 age: age,
-                                // profileUrl: await ref
-                                //     .read(ProfileController
-                                //         .userControllerProvider)
-                                //     .uploadImage(),
-                                birthday: "17/12/2004",
-                                // position: myLocation.data,
+                                profileUrl: await ref
+                                    .read(ProfileController
+                                        .userControllerProvider)
+                                    .uploadImage(),
+                                birthday: _dobController.text,
                               );
 
                               logger.i(user.toJson());
@@ -313,13 +358,15 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
                               await ref
                                   .read(Dependency.profileProvider)
-                                  .addLocation(myLocation.data);
+                                  .updateLocation(myLocation.data);
 
                               await route.replace(const DashboardRoute());
                             }
                           }
                         },
-                        child: Text(widget.isEditProfile ? "Update" : "Save"),
+                        child: Text(
+                          widget.isEditProfile ? "Update" : "Save",
+                        ),
                       ),
                     ),
                   ],

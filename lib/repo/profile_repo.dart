@@ -76,7 +76,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     );
   }
 
-  Future<void> addLocation(dynamic pointData) async {
+  Future<void> updateLocation(dynamic pointData) async {
     logger.e(pointData);
     final usercollection = userCollection();
 
@@ -116,14 +116,14 @@ class ProfileRepo with RepositoryExceptionMixin {
         .collection(collectionRef: _firestore.collection("users").limit(10))
         .within(
           center: center,
-          radius: 1000000,
+          radius: 10000000,
           field: "position",
           // strictMode: true,
           strictMode: true,
         );
 
     final userListRaw = await data.first;
-    print(userListRaw.length);
+    logger.i(userListRaw.length);
 
     logger.i(userListRaw[0].data());
 
