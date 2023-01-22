@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +5,6 @@ import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:location/location.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
-import 'package:wings_dating_app/src/profile/profile_view.dart';
 
 import '../../routes/app_router.dart';
 import '../model/user_models.dart';
@@ -37,13 +35,14 @@ class _UsersViewState extends ConsumerState<UsersView> {
 
     // location.
 
-    LocationData _locationData = await location.getLocation();
-    logger.e(_locationData.latitude);
-    final geoData = geo.point(
-      latitude: _locationData.latitude!,
-      longitude: _locationData.longitude!,
-    );
+    // LocationData _locationData = await location.getLocation();
+    // logger.e(_locationData.latitude);
+    // final geoData = geo.point(
+    //   latitude: _locationData.latitude!,
+    //   longitude: _locationData.longitude!,
+    // );
 
+    // await ref.read(profileRepoProvider).updateLocation(geoData);
     super.didChangeDependencies();
   }
 
@@ -109,7 +108,7 @@ class _UsersViewState extends ConsumerState<UsersView> {
                       (context, index) {
                         final users = data[index];
                         return userData.id == users.id
-                            ? Container()
+                            ? const SizedBox.shrink()
                             : InkWell(
                                 onTap: () {
                                   // if (userData.id != users.id) {

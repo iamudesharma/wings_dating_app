@@ -38,6 +38,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   // TextEditingController _phoneController ;
   late TextEditingController _dobController;
   late TextEditingController _bioController;
+  bool _loading = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -90,6 +91,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   }
 
   DateTime? _selectedDate;
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -303,69 +305,85 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                     AnimatedContainer(
                       duration: const Duration(seconds: 1),
                       curve: Curves.easeInOut,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          final route = AutoRouter.of(context);
-                          final data = await location.getLocation();
-                          GeoFirePoint myLocation = geo.point(
-                            latitude: data.latitude!,
-                            longitude: data.longitude!,
-                          );
-                          final token =
-                              await FirebaseMessaging.instance.getToken();
+                      child: Visibility(
+                        visible: _loading,
+                        replacement: ElevatedButton(
+                          onPressed: () async {
+                            final route = AutoRouter.of(context);
+                            final data = await location.getLocation();
 
-                          if (_formKey.currentState!.validate()) {
-                            if (widget.isEditProfile) {
-                              UserModel? user = profile.userModel?.copyWith(
-                                bio: _bioController.text,
-                                username: _usernameController.text,
-                                profileUrl: await ref
-                                    .read(ProfileController
-                                        .userControllerProvider)
-                                    .uploadImage(),
-                                birthday: _dobController.text,
-                              );
-                              logger.i(user?.toJson());
-                              await ref
-                                  .read(Dependency.profileProvider)
-                                  .updateUserDoc(user!);
+                            setState(() {
+                              _loading = true;
+                            });
+                            GeoFirePoint myLocation = geo.point(
+                              latitude: data.latitude!,
+                              longitude: data.longitude!,
+                            );
+                            final token =
+                                await FirebaseMessaging.instance.getToken();
 
-                              await route.pop();
-                            } else {
-                              int age = calculateAge(_selectedDate!);
+                            if (_formKey.currentState!.validate()) {
+                              if (widget.isEditProfile) {
+                                UserModel? user = profile.userModel?.copyWith(
+                                  bio: _bioController.text,
+                                  username: _usernameController.text,
+                                  profileUrl: await ref
+                                      .read(ProfileController
+                                          .userControllerProvider)
+                                      .uploadImage(),
+                                  birthday: _dobController.text,
+                                );
+                                logger.i(user?.toJson());
+                                await ref
+                                    .read(Dependency.profileProvider)
+                                    .updateUserDoc(user!);
 
-                              UserModel user = UserModel(
-                                fcmToken: token ?? "",
-                                dob: _dobController.text,
-                                isOnline: true,
-                                isVerified: false,
-                                id: const Uuid().v4(),
-                                username: "Udesh  ",
-                                bio: " zjxwwxj",
-                                age: age,
-                                profileUrl: await ref
-                                    .read(ProfileController
-                                        .userControllerProvider)
-                                    .uploadImage(),
-                                birthday: _dobController.text,
-                              );
+                                setState(() {
+                                  _loading = false;
+                                });
+                                await route.pop();
+                              } else {
+                                int age = calculateAge(_selectedDate!);
 
-                              logger.i(user.toJson());
-                              logger.i(myLocation.data);
-                              ref
-                                  .read(Dependency.profileProvider)
-                                  .createUserDoc(user);
+                                UserModel user = UserModel(
+                                  fcmToken: token ?? "",
+                                  dob: _dobController.text,
+                                  isOnline: true,
+                                  isVerified: false,
+                                  id: const Uuid().v4(),
+                                  username: "Udesh  ",
+                                  bio: " zjxwwxj",
+                                  age: age,
+                                  profileUrl: await ref
+                                      .read(ProfileController
+                                          .userControllerProvider)
+                                      .uploadImage(),
+                                  birthday: _dobController.text,
+                                );
 
-                              await ref
-                                  .read(Dependency.profileProvider)
-                                  .updateLocation(myLocation.data);
+                                logger.i(user.toJson());
+                                logger.i(myLocation.data);
+                                ref
+                                    .read(Dependency.profileProvider)
+                                    .createUserDoc(user);
 
-                              await route.replace(const DashboardRoute());
+                                await ref
+                                    .read(Dependency.profileProvider)
+                                    .updateLocation(myLocation.data);
+
+                                setState(() {
+                                  _loading = false;
+                                });
+                                await route.replace(const DashboardRoute());
+                              }
                             }
-                          }
-                        },
-                        child: Text(
-                          widget.isEditProfile ? "Update" : "Save",
+                          },
+                          child: Text(
+                            widget.isEditProfile ? "Update" : "Save",
+                          ),
+                        ),
+                        child: const Center(
+                          child: CircularProgressIndicator(),
                         ),
                       ),
                     ),
