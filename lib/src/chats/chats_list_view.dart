@@ -48,8 +48,9 @@ class ChatListView extends ConsumerWidget {
                     )
                   : SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        childCount: 10,
+                        childCount: data.length,
                         (context, index) {
+                          final _userChatList = data[index];
                           return ListTile(
                             onTap: () async {
                               await AutoRouter.of(context)
@@ -58,9 +59,9 @@ class ChatListView extends ConsumerWidget {
                             leading: const CircleAvatar(
                               backgroundColor: Colors.green,
                             ),
-                            title: const Text("Chat Title"),
-                            subtitle: const Text("Chat Subtitle"),
-                            trailing: const Text("online"),
+                            title: Text(_userChatList.name),
+                            subtitle: Text(_userChatList.lastMessage),
+                            // trailing: const Text(_userChatList.contactId),
                           );
                         },
                       ),
@@ -68,105 +69,6 @@ class ChatListView extends ConsumerWidget {
             )
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ChatView extends ConsumerStatefulWidget {
-  const ChatView({
-    Key? key,
-    required this.id,
-  }) : super(key: key);
-
-  final String id;
-
-  @override
-  ConsumerState<ChatView> createState() => _ChatViewState();
-}
-
-class _ChatViewState extends ConsumerState<ChatView> {
-  // final String profilePic;
-  @override
-  Widget build(BuildContext context) {
-    final UserModel? currentUser =
-        ref.watch(ProfileController.userControllerProvider).userModel;
-
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar.medium(
-            title: Text(widget.id),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.more_vert_outlined),
-                onPressed: () {},
-              ),
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              height: MediaQuery.of(context).size.height - kToolbarHeight - 80,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: 10,
-                      reverse: true,
-                      shrinkWrap: true,
-                      keyboardDismissBehavior:
-                          ScrollViewKeyboardDismissBehavior.onDrag,
-                      itemBuilder: (context, index) {
-                        return BubbleNormal(
-                          text: "bubble special three with tail",
-                          color: const Color(0xFFE8E8EE),
-                          tail: true,
-                          isSender: index.isEven ? true : false,
-                        );
-                      },
-                    ),
-                  ),
-                  MessageBar(
-                    messageBarColor: Theme.of(context)
-                        .appBarTheme
-                        .backgroundColor!
-                        .withOpacity(0.2),
-                    onSend: (value) {
-                      ref.read(chatRepositoryProvider).sendTextMessage(
-                          // recieverUserData:.
-                          context: context,
-                          messageReply: null,
-                          recieverUserId: widget.id,
-                          senderUser: currentUser!,
-                          text: value);
-                    },
-                    actions: [
-                      InkWell(
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.black,
-                          size: 24,
-                        ),
-                        onTap: () {},
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        child: InkWell(
-                          child: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.green,
-                            size: 24,
-                          ),
-                          onTap: () {},
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

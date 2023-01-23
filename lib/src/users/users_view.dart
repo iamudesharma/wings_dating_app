@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
@@ -107,7 +108,8 @@ class _UsersViewState extends ConsumerState<UsersView> {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final users = data[index];
-                        return userData.id == users.id
+                        return users.id ==
+                                FirebaseAuth.instance.currentUser!.uid
                             ? const SizedBox.shrink()
                             : InkWell(
                                 onTap: () {

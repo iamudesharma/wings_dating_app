@@ -146,13 +146,16 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<UserModel?> getUserById(String id) async {
     final usercollection = userCollection();
 
+    logger.w(id);
+
     final data = await usercollection
         .where(
-          "id",
+          "username",
           isEqualTo: id,
         )
         .get();
 
+    logger.e(data.docs.length);
     final users = data.docs.first.data();
 
     logger.w(users);

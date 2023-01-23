@@ -7,6 +7,7 @@ import 'package:wings_dating_app/src/profile/add_additional_information_view.dar
 
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
+import '../src/chats/pages/chat_view.dart';
 import '../src/dashboard.dart';
 import '../src/profile/other_user_profile_view.dart';
 import 'app_router_provider.dart';

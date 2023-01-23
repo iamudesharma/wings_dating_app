@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -350,7 +351,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   dob: _dobController.text,
                                   isOnline: true,
                                   isVerified: false,
-                                  id: const Uuid().v4(),
+                                  id: FirebaseAuth.instance.currentUser!.uid,
                                   username: "Udesh  ",
                                   bio: " zjxwwxj",
                                   age: age,

@@ -3,8 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wings_dating_app/helpers/common_firebase_storage_repository.dart';
+import 'package:wings_dating_app/helpers/helpers.dart';
 
 import '../helpers/message_enum.dart';
 import '../helpers/message_reply_provider.dart';
@@ -69,6 +71,8 @@ class ChatRepository {
         .snapshots()
         .map((event) {
       List<Message> messages = [];
+
+      logger.i('event ${event.docs.length}');
       for (var document in event.docs) {
         messages.add(Message.fromJson(document.data()));
       }
@@ -99,6 +103,9 @@ class ChatRepository {
         .set(
           recieverChatContact.toJson(),
         );
+
+    logger.i('sender chat contact $recieverChatContact');
+
     // users -> current user id  => chats -> reciever user id -> set data
     var senderChatContact = ChatContact(
       fcmToken: "",
@@ -108,6 +115,8 @@ class ChatRepository {
       timeSent: timeSent,
       lastMessage: text,
     );
+
+    logger.i('sender chat contact $senderChatContact');
     await firestore
         .collection('users')
         .doc(auth.currentUser!.uid)
@@ -176,7 +185,7 @@ class ChatRepository {
     required String text,
     required String recieverUserId,
     required UserModel senderUser,
-     UserModel? recieverUserData,
+    UserModel? recieverUserData,
     required MessageReply? messageReply,
     // required bool isGroupChat,
   }) async {

@@ -144,6 +144,8 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
             AutoRouter.of(context).push(
               ChatRoute(id: widget.id!),
             );
+
+            
           },
         ),
       ),
