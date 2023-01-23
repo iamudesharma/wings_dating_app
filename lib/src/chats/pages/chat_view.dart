@@ -87,8 +87,9 @@ class _ChatViewState extends ConsumerState<ChatView> {
                     Expanded(
                       child: ListView.builder(
                         itemCount: data.length,
+
                         reverse: true,
-                        shrinkWrap: true,
+                        // shrinkWrap: true,
                         keyboardDismissBehavior:
                             ScrollViewKeyboardDismissBehavior.onDrag,
                         itemBuilder: (context, index) {

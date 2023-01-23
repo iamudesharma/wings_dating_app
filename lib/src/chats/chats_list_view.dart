@@ -54,7 +54,7 @@ class ChatListView extends ConsumerWidget {
                           return ListTile(
                             onTap: () async {
                               await AutoRouter.of(context)
-                                  .push(ChatRoute(id: data[index].name));
+                                  .push(ChatRoute(id: data[index].contactId));
                             },
                             leading: const CircleAvatar(
                               backgroundColor: Colors.green,

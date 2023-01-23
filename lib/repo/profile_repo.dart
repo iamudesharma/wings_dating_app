@@ -150,7 +150,7 @@ class ProfileRepo with RepositoryExceptionMixin {
 
     final data = await usercollection
         .where(
-          "username",
+          "id",
           isEqualTo: id,
         )
         .get();

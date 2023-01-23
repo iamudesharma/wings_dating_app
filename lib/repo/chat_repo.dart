@@ -76,7 +76,7 @@ class ChatRepository {
       for (var document in event.docs) {
         messages.add(Message.fromJson(document.data()));
       }
-      return messages;
+      return messages.reversed.toList();
     });
   }
 
