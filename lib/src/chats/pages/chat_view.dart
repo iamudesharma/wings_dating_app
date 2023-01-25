@@ -1,12 +1,21 @@
+import 'dart:io';
+
 import 'package:chat_bubbles/bubbles/bubble_normal.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:chat_bubbles/message_bars/message_bar.dart';
+import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:wings_dating_app/helpers/message_enum.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
+import '../../../helpers/common_firebase_storage_repository.dart';
 import '../../../repo/chat_repo.dart';
 import '../../model/user_models.dart';
 import '../../profile/controller/profile_controller.dart';
+import '../../profile/edit_profile_view.dart';
+import '../controller/chat_controller.dart';
 import '../model/message.dart';
 
 final getUserChatSteamProvider =
@@ -27,7 +36,7 @@ class ChatView extends ConsumerStatefulWidget {
 }
 
 class _ChatViewState extends ConsumerState<ChatView> {
-  UserModel? reciverUser;
+  UserModel? receiverUser;
 
   @override
   void initState() {
@@ -38,12 +47,13 @@ class _ChatViewState extends ConsumerState<ChatView> {
             await ref.read(profileRepoProvider).getUserById(widget.id);
 
         setState(() {
-          reciverUser = users;
+          receiverUser = users;
         });
       },
     );
   }
 
+  String? selectedImage;
   // final String profilePic;
   @override
   Widget build(BuildContext context) {
@@ -64,7 +74,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
           slivers: [
             SliverAppBar.medium(
               title: Text(
-                reciverUser?.username ?? "Loading...",
+                receiverUser?.username ?? "Loading...",
                 style: const TextStyle(
                   // color: Colors.black,
                   fontSize: 18,
@@ -94,28 +104,20 @@ class _ChatViewState extends ConsumerState<ChatView> {
                             ScrollViewKeyboardDismissBehavior.onDrag,
                         itemBuilder: (context, index) {
                           final message = data[index];
-                          return BubbleNormal(
-                            text: message.text,
-                            color: const Color(0xFFE8E8EE),
-                            tail: true,
-                            isSender: message.senderId == currentUser!.id
-                                ? true
-                                : false,
-                          );
+                          return chatType(message.type, message,
+                              currentUser!.id); // return BubbleNormal(
                         },
                       ),
                     ),
                     MessageBar(
-                      messageBarColor: Theme.of(context)
-                          .appBarTheme
-                          .backgroundColor!
-                          .withOpacity(0.2),
+                      messageBarColor:
+                          Theme.of(context).appBarTheme.backgroundColor!,
                       onSend: (value) async {
                         ref.read(chatRepositoryProvider).sendTextMessage(
-                              recieverUserData: reciverUser!,
+                              receiverUserData: receiverUser!,
                               context: context,
                               messageReply: null,
-                              recieverUserId: widget.id,
+                              receiverUserId: widget.id,
                               senderUser: currentUser!,
                               text: value,
                             );
@@ -124,10 +126,73 @@ class _ChatViewState extends ConsumerState<ChatView> {
                         InkWell(
                           child: const Icon(
                             Icons.add,
-                            color: Colors.black,
+                            color: Colors.blue,
                             size: 24,
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return BottomSheet(onClosing: () {
+                                    Navigator.pop(context);
+                                  }, builder: (context) {
+                                    return ImagePickerWidget(
+                                      camera: () async {
+                                        final image = await ref
+                                            .read(ChatController.provider)
+                                            .pickImage(
+                                                imageSource:
+                                                    ImageSource.camera);
+
+                                        if (image != null) {
+                                          ref
+                                              .read(chatRepositoryProvider)
+                                              .sendFileMessage(
+                                                  ref: ref,
+                                                  file: File(image),
+                                                  context: context,
+                                                  messageReply: null,
+                                                  isGroupChat: false,
+                                                  messageEnum:
+                                                      MessageEnum.image,
+// ref: ref.read(),
+                                                  receiverUserId:
+                                                      receiverUser!.id,
+                                                  senderUserData: currentUser!);
+                                        }
+                                      },
+                                      gallery: () async {
+                                        final image = await ref
+                                            .read(ChatController.provider)
+                                            .pickImage(
+                                                imageSource:
+                                                    ImageSource.gallery);
+
+                                        if (image != null) {
+                                          // setState(() {
+                                          //   selectedImage = image;
+                                          // });
+
+                                          ref
+                                              .read(chatRepositoryProvider)
+                                              .sendFileMessage(
+                                                  ref: ref,
+                                                  file: File(image),
+                                                  context: context,
+                                                  messageReply: null,
+                                                  isGroupChat: false,
+                                                  messageEnum:
+                                                      MessageEnum.image,
+// ref: ref.read(),
+                                                  receiverUserId:
+                                                      receiverUser!.id,
+                                                  senderUserData: currentUser!);
+                                        }
+                                      },
+                                    );
+                                  });
+                                });
+                          },
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 8, right: 8),
@@ -150,5 +215,38 @@ class _ChatViewState extends ConsumerState<ChatView> {
         ),
       ),
     );
+  }
+
+  Widget chatType(MessageEnum radians, Message message, String id) {
+    switch (radians) {
+      case MessageEnum.audio:
+        return BubbleNormalAudio(
+          onPlayPauseButtonClick: () {},
+          onSeekChanged: (double value) {},
+        );
+
+      case MessageEnum.image:
+        return BubbleNormalImage(
+          image: Image.network(message.text),
+          isSender: message.senderId == id ? true : false,
+          id: message.messageId,
+          seen: message.isSeen,
+        );
+
+      case MessageEnum.gif:
+        return const Text("");
+
+      case MessageEnum.video:
+        return Container();
+
+      case MessageEnum.text:
+        return BubbleNormal(
+          seen: message.isSeen,
+          text: message.text,
+          color: const Color(0xFFE8E8EE),
+          tail: true,
+          isSender: message.senderId == id ? true : false,
+        );
+    }
   }
 }
