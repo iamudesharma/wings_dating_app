@@ -107,119 +107,114 @@ class _UsersViewState extends ConsumerState<UsersView> {
                     ),
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
+                        data.removeWhere((element) =>
+                            element.id ==
+                            FirebaseAuth.instance.currentUser!.uid);
                         final users = data[index];
-                        return users.id ==
-                                FirebaseAuth.instance.currentUser!.uid
-                            ? const SizedBox.shrink()
-                            : InkWell(
-                                onTap: () {
-                                  // if (userData.id != users.id) {
-// AutoRouter.of(context).push(const ProfileView());
-                                  AutoRouter.of(context)
-                                      .push(OtherUserProfileRoute(
-                                    id: users.id,
-                                  ));
 
-                                  //   print(users.id);
-                                  // } else {}
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image:
-                                          NetworkImage(users.profileUrl ?? ""),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(10)),
-                                    color: Colors.blueGrey.shade300,
-                                  ),
-                                  // ignore: prefer_const_literals_to_create_immutables
-                                  child: Column(children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            ref
-                                                .read(ProfileController
-                                                    .userControllerProvider)
-                                                .getDistance(Coordinates(
-                                                    users.position!.geopoint
-                                                        .latitude,
-                                                    users.position!.geopoint
-                                                        .longitude)),
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: 10,
-                                            ),
-                                          ),
-                                          const Spacer(),
-                                          const Align(
-                                            alignment: Alignment.topRight,
-                                            child: Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: CircleAvatar(
-                                                radius: 5,
-                                                backgroundColor: Colors.green,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                        return InkWell(
+                          onTap: () {
+                            // if (userData.id != users.id) {
+// AutoRouter.of(context).push(const ProfileView());
+                            AutoRouter.of(context).push(OtherUserProfileRoute(
+                              id: users.id,
+                            ));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(users.profileUrl ?? ""),
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              color: Colors.blueGrey.shade300,
+                            ),
+                            // ignore: prefer_const_literals_to_create_immutables
+                            child: Column(children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      ref
+                                          .read(ProfileController
+                                              .userControllerProvider)
+                                          .getDistance(Coordinates(
+                                              users.position!.geopoint.latitude,
+                                              users.position!.geopoint
+                                                  .longitude)),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 10,
                                       ),
                                     ),
                                     const Spacer(),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                users.username,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10,
-                                                ),
-                                              ),
-                                              Text(
-                                                users.age.toString(),
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 10,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const Spacer(),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: const [
-                                              Text(
-                                                "170 cm",
-                                                style: TextStyle(
-                                                  fontSize: 10,
-                                                ),
-                                              ),
-                                              Text(
-                                                "55 kg",
-                                                style: TextStyle(
-                                                  fontSize: 10,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                    const Align(
+                                      alignment: Alignment.topRight,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: CircleAvatar(
+                                          radius: 5,
+                                          backgroundColor: Colors.green,
+                                        ),
                                       ),
-                                    )
-                                  ]),
+                                    ),
+                                  ],
                                 ),
-                              );
+                              ),
+                              const Spacer(),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          users.username,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                        Text(
+                                          users.age.toString(),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Spacer(),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: const [
+                                        Text(
+                                          "170 cm",
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                        Text(
+                                          "55 kg",
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ]),
+                          ),
+                        );
                       },
-                      childCount: data!.length,
+                      childCount: data!.length - 1,
                     ),
                   ),
                 )),
