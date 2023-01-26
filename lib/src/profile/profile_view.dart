@@ -36,21 +36,21 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
 
     return CustomScrollView(
       slivers: [
-        SliverAppBar.medium(
-          flexibleSpace: FlexibleSpaceBar(
-            centerTitle: true,
-            title: Text(
-              userData?.username ?? "",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-              ),
-            ),
-            background: Image.network(
-              userData!.profileUrl ?? "",
-              fit: BoxFit.cover,
-            ),
-          ),
+        SliverAppBar(
+          // flexibleSpace: FlexibleSpaceBar(
+          //   centerTitle: true,
+          //   title: Text(
+          //     userData?.username ?? "",
+          //     style: const TextStyle(
+          //       color: Colors.white,
+          //       fontSize: 16.0,
+          //     ),
+          //   ),
+          //   background: Image.network(
+          //     userData!.profileUrl ?? "",
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
           pinned: true,
 
           actions: [
@@ -60,37 +60,42 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
             ),
           ],
           // centerTitle: true,
-          title: Text(userData.username),
+          title: Text(userData!.username),
         ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
+            child: Column(
               children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(userData.profileUrl ?? ""),
-                ),
-                10.widthBox,
-                Column(
+                20.heightBox,
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(userData.username),
-                  ],
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: () async {
-                    // await ref.read(profileRepoProvider).getUserList();
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(userData.profileUrl ?? ""),
+                    ),
+                    10.widthBox,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [],
+                    ),
+                    const Spacer(),
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        // await ref.read(profileRepoProvider).getUserList();
 
-                    context.router.push(
-                      EditProfileRoute(isEditProfile: true),
-                    );
-                  },
-                  icon: const Icon(Icons.edit, size: 10),
-                  label: Text(
-                    "Edit Profile",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+                        context.router.push(
+                          EditProfileRoute(isEditProfile: true),
+                        );
+                      },
+                      icon: const Icon(Icons.edit, size: 10),
+                      label: Text(
+                        "Edit Profile",
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -153,20 +158,32 @@ class ProfileInputCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        10.heightBox,
-        Text(
-          value,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ],
-    );
+    return value == "Do not Show"
+        ? const SizedBox.shrink()
+        : SizedBox(
+            height: 50,
+            width: context.screenWidth - 20,
+            child: Column(
+              children: [
+                Divider(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // mainAxisSize: MainAxisSize.min,
+                  // mainAxisSize,
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      value,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
   }
 }
-
