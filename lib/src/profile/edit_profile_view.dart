@@ -404,14 +404,16 @@ class ImagePickerWidget extends StatelessWidget {
     Key? key,
     required this.camera,
     required this.gallery,
+    this.isCallEnabled = false,
   }) : super(key: key);
 
   final VoidCallback camera;
   final VoidCallback gallery;
+  final bool? isCallEnabled;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 120,
+      height: isCallEnabled! ? 180 : 120,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -425,6 +427,8 @@ class ImagePickerWidget extends StatelessWidget {
             title: const Text("Gallery"),
             onTap: gallery,
           ),
+       
+           
         ],
       ),
     );
