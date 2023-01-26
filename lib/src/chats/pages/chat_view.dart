@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_bubbles/bubbles/bubble_normal.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:chat_bubbles/message_bars/message_bar.dart';
@@ -227,7 +228,13 @@ class _ChatViewState extends ConsumerState<ChatView> {
 
       case MessageEnum.image:
         return BubbleNormalImage(
-          image: Image.network(message.text),
+          image: CachedNetworkImage(
+            imageUrl: message.text,
+            placeholder: (context, url) => const Center(
+              child: CircularProgressIndicator(),
+            ),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
           isSender: message.senderId == id ? true : false,
           id: message.messageId,
           seen: message.isSeen,

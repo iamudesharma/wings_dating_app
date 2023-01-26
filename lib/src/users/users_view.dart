@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:location/location.dart';
-import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
 import '../../routes/app_router.dart';
@@ -37,7 +36,7 @@ class _UsersViewState extends ConsumerState<UsersView> {
     // location.
 
     // LocationData _locationData = await location.getLocation();
-    // logger.e(_locationData.latitude);
+    // // logger.e(_locationData.latitude);
     // final geoData = geo.point(
     //   latitude: _locationData.latitude!,
     //   longitude: _locationData.longitude!,
@@ -90,7 +89,7 @@ class _UsersViewState extends ConsumerState<UsersView> {
                   error: (error, stackTrace) => (error is Exception)
                       ? SliverToBoxAdapter(
                           child: Center(
-                            child: Text(error.toString()),
+                          child: Text(error.toString()),
                           ),
                         )
                       : SliverToBoxAdapter(
