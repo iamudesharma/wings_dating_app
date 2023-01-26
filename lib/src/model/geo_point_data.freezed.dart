@@ -26,6 +26,22 @@ mixin _$GeoPointData {
   @JsonKey(name: "geohash")
   String get geohash => throw _privateConstructorUsedError;
 
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_GeoPointData value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_GeoPointData value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_GeoPointData value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $GeoPointDataCopyWith<GeoPointData> get copyWith =>
@@ -154,6 +170,34 @@ class _$_GeoPointData implements _GeoPointData {
   @pragma('vm:prefer-inline')
   _$$_GeoPointDataCopyWith<_$_GeoPointData> get copyWith =>
       __$$_GeoPointDataCopyWithImpl<_$_GeoPointData>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_GeoPointData value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_GeoPointData value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_GeoPointData value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 
   @override
   Map<String, dynamic> toJson() {

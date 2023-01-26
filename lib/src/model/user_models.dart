@@ -19,9 +19,10 @@ part 'user_models.freezed.dart';
 part 'user_models.g.dart';
 
 @Freezed(
-  map: FreezedMapOptions.all,
-  toStringOverride: true,
-)
+    map: FreezedMapOptions.all,
+    toStringOverride: true,
+    toJson: true,
+    fromJson: true)
 // @JsonSerializable(anyMap: true, explicitToJson: false)
 class UserModel with _$UserModel {
   factory UserModel({
