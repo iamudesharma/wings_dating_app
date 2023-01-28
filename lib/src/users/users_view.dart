@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
@@ -28,25 +27,6 @@ class _UsersViewState extends ConsumerState<UsersView> {
   }
 
   @override
-  void didChangeDependencies() async {
-    GeoFlutterFire geo = GeoFlutterFire();
-
-    Location location = Location();
-
-    // location.
-
-    // LocationData _locationData = await location.getLocation();
-    // // logger.e(_locationData.latitude);
-    // final geoData = geo.point(
-    //   latitude: _locationData.latitude!,
-    //   longitude: _locationData.longitude!,
-    // );
-
-    // await ref.read(profileRepoProvider).updateLocation(geoData);
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final userData =
         ref.watch(ProfileController.userControllerProvider).userModel;
@@ -56,7 +36,7 @@ class _UsersViewState extends ConsumerState<UsersView> {
         onRefresh: () async => ref.refresh(userListProvider),
         child: CustomScrollView(
           slivers: [
-            SliverAppBar.medium(
+            SliverAppBar(
               centerTitle: true,
               pinned: true,
               // floating: false,
@@ -106,16 +86,19 @@ class _UsersViewState extends ConsumerState<UsersView> {
                     ),
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        data.removeWhere((element) =>
-                            element.id ==
-                            FirebaseAuth.instance.currentUser!.uid);
+                        // data.removeWhere((element) =>
+                        //     element.id ==
+                        //     FirebaseAuth.instance.currentUser!.uid);
                         final users = data[index];
 
-                        return UserGridItem(
-                          users: users,
+                        return Visibility(
+                          visible: users.id == userData.id ? false : true,
+                          child: UserGridItem(
+                            users: users,
+                          ),
                         );
                       },
-                      childCount: data!.length - 1,
+                      childCount: data!.length,
                     ),
                   ),
                 )),
