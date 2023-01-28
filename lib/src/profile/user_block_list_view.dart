@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 
+import '../users/users_view.dart';
+
 final getUserBlockListProvider = FutureProvider<List<UserModel?>>((ref) async {
   return await ref.read(profileRepoProvider).getBlockList();
 });
@@ -24,13 +26,20 @@ class UserBlockListView extends ConsumerWidget {
         loading: () => const Center(
           child: CircularProgressIndicator(),
         ),
-        data: (data) => GridView.builder(
-          itemCount: data.length ?? 0,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-          ),
-          itemBuilder: (context, index) => Container(
-            color: Colors.red,
+        data: (data) => Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: GridView.builder(
+            itemCount: data.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+            ),
+            itemBuilder: (context, index) {
+              return UserGridItem(
+                users: data[index]!,
+              );
+            },
           ),
         ),
       ),

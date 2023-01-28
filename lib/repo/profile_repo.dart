@@ -189,11 +189,11 @@ class ProfileRepo with RepositoryExceptionMixin {
 
     final userList = data.get("blockList");
 
-    final id = await usercollection
-        .where("id", arrayContains: userList)
-        .get(const GetOptions(
-          source: Source.serverAndCache,
-        ));
+    logger.w(userList);
+
+    final id = await usercollection.where("id", whereIn: userList).get();
+
+    logger.w(id.docs.length);
     final users = id.docs.map((e) => e.data()).toList();
     logger.w(users);
 
