@@ -1,10 +1,11 @@
-import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 
-import '../../routes/app_router.dart';
+import '../../api/client.dart';
+import '../../api/server_api.dart';
 
 class OtherUserProfileView extends ConsumerStatefulWidget {
   const OtherUserProfileView({
@@ -141,14 +142,25 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
           icon: const Icon(Icons.chat_bubble),
           label: const Text("Message"),
           onPressed: () async {
-            AutoRouter.of(context).push(
-              ChatRoute(id: widget.id!),
-            );
+            // AutoRouter.of(context).push(
+            //   ChatRoute(id: widget.id!),
+            // );
 
-            
+            final id = await ref.watch(serverProvider).createConversation(
+                FirebaseAuth.instance.currentUser!.uid, widget.id!);
+            // Navigator.of(context).push(MaterialPageRoute(
+            //     builder: (context) => ChatPage(
+            //           collectionId: id!,
+            //           chatUser: user,
+            //         )));
           },
         ),
       ),
     );
   }
 }
+
+/// Provider for accessing [ServerApi] functions
+final serverProvider = Provider<ServerApi>((ref) {
+  return ServerApi(ref.watch(dartclientProvider));
+});

@@ -8,11 +8,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
 import 'package:wings_dating_app/routes/navigation_observers.dart';
+  import 'package:appwrite/appwrite.dart';
 
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+
+
+Client client = Client();
+client
+    .setEndpoint('http://localhost/v1')
+    .setProject('634406d334549be5ac18')
+    .setSelfSigned(status: true);
+     // For self signed certificates, only use for development
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

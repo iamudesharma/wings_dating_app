@@ -70,6 +70,8 @@ dependencies:
   cached_network_image: ^3.2.3
   agora_uikit: ^1.1.2
   appwrite: ^8.2.0
+  dart_appwrite: ^7.2.0
+  flutter_chat_bubble: ^2.0.0
 
 
 dev_dependencies:
