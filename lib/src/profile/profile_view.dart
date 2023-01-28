@@ -56,7 +56,11 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
           actions: [
             IconButton(
               icon: const Icon(Icons.more_vert_outlined),
-              onPressed: () {},
+              onPressed: () {
+                context.router.push(
+                  UserBlockListRoute(),
+                );
+              },
             ),
           ],
           // centerTitle: true,
@@ -129,6 +133,15 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                         ProfileInputCard(
                             title: "Ethnicity",
                             value: userData.ethnicity.value),
+                        ProfileInputCard(
+                            title: "Relationship Status",
+                            value: userData.relationshipStatus.value),
+                        ProfileInputCard(
+                            title: "Relationship Status",
+                            value: userData.relationshipStatus.value),
+                        ProfileInputCard(
+                            title: "Relationship Status",
+                            value: userData.relationshipStatus.value),
                         ProfileInputCard(
                             title: "Relationship Status",
                             value: userData.relationshipStatus.value),

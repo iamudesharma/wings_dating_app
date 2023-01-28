@@ -72,6 +72,12 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    UserBlockListRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const UserBlockListView(),
+      );
+    },
     UsersRoute.name: (routeData) {
       return MaterialPageX<dynamic>(
         routeData: routeData,
@@ -135,6 +141,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           EditProfileRoute.name,
           path: '/edit-profile-view',
+        ),
+        RouteConfig(
+          UserBlockListRoute.name,
+          path: '/user-block-list-view',
         ),
       ];
 }
@@ -281,6 +291,18 @@ class EditProfileRouteArgs {
   String toString() {
     return 'EditProfileRouteArgs{key: $key, isEditProfile: $isEditProfile}';
   }
+}
+
+/// generated route for
+/// [UserBlockListView]
+class UserBlockListRoute extends PageRouteInfo<void> {
+  const UserBlockListRoute()
+      : super(
+          UserBlockListRoute.name,
+          path: '/user-block-list-view',
+        );
+
+  static const String name = 'UserBlockListRoute';
 }
 
 /// generated route for

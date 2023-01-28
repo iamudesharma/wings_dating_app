@@ -10,6 +10,7 @@ import 'package:wings_dating_app/src/users/users_view.dart';
 import '../src/chats/pages/chat_view.dart';
 import '../src/dashboard.dart';
 import '../src/profile/other_user_profile_view.dart';
+import '../src/profile/user_block_list_view.dart';
 import 'app_router_provider.dart';
 
 part 'app_router.gr.dart';
@@ -52,6 +53,7 @@ part 'app_router.gr.dart';
     ),
 
     AutoRoute(page: EditProfileView),
+    AutoRoute(page: UserBlockListView),
   ],
 )
 // extend the generated private router

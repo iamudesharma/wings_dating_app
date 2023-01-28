@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:wings_dating_app/repo/profile_repo.dart';
+import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 
 import '../../routes/app_router.dart';
@@ -26,13 +28,16 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
   Widget build(BuildContext context) {
     // var userData;
     // if (widget.isCurrentUser!) {
-    //   userData = ref.watch(ProfileController.userControllerProvider).userModel;
+    var currentUser =
+        ref.watch(ProfileController.userControllerProvider).userModel;
     // } else {
     var otherUser = ref.watch(getUserByIdProvider(widget.id!));
     // }
 
     // logger.i(userData?.profileUrl);
-
+    void _showPop() {
+      // return VxPopupMenu();
+    }
     return Scaffold(
       body: otherUser.when(
         loading: () => const Center(
@@ -47,31 +52,54 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
               ),
         data: (userData) => CustomScrollView(
           slivers: [
-            SliverAppBar.medium(
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                title: Text(
-                  userData?.username ?? "",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
-                  ),
-                ),
-                background: Image.network(
-                  userData!.profileUrl ?? "",
-                  fit: BoxFit.cover,
-                ),
-              ),
+            SliverAppBar(
               pinned: true,
 
               actions: [
-                IconButton(
-                  icon: const Icon(Icons.more_vert_outlined),
-                  onPressed: () {},
+                PopupMenuButton<int>(
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      onTap: () async {
+                        ref
+                            .read(profileRepoProvider)
+                            .addToBlockList(id: userData!.id);
+                      },
+                      value: 1,
+                      // row has two child icon and text.
+                      child: Row(
+                        children: const [
+                          Icon(Icons.block),
+                          SizedBox(
+                            // sized box with width 10
+                            width: 10,
+                          ),
+                          Text("Block")
+                        ],
+                      ),
+                    ),
+                    // popupmenu item 2
+                    PopupMenuItem(
+                      value: 2,
+                      // row has two child icon and text
+                      child: Row(
+                        children: const [
+                          Icon(Icons.chrome_reader_mode),
+                          SizedBox(
+                            // sized box with width 10
+                            width: 10,
+                          ),
+                          Text("About")
+                        ],
+                      ),
+                    ),
+                  ],
+                  offset: const Offset(0, 100),
+                  color: Colors.grey,
+                  elevation: 2,
                 ),
               ],
               // centerTitle: true,
-              title: Text(userData.username),
+              title: Text(userData!.username),
             ),
             SliverToBoxAdapter(
               child: Padding(
@@ -139,13 +167,19 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton.icon(
           icon: const Icon(Icons.chat_bubble),
-          label: const Text("Message"),
+          label: currentUser!.blockList.contains(otherUser.value?.id)
+              ? const Text("Unblock")
+              : const Text("Message"),
           onPressed: () async {
-            AutoRouter.of(context).push(
-              ChatRoute(id: widget.id!),
-            );
-
-            
+            if (currentUser.blockList.contains(otherUser.value?.id)) {
+              ref
+                  .read(profileRepoProvider)
+                  .removeToBlockList(id: [otherUser.value!.id]);
+            } else {
+              await AutoRouter.of(context).push(
+                ChatRoute(id: widget.id!),
+              );
+            }
           },
         ),
       ),

@@ -162,7 +162,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     return users;
   }
 
-  void addToBlockList({required String id}) async {
+  Future<void> addToBlockList({required String id}) async {
     final usercollection = userCollection();
 
     await usercollection
@@ -172,23 +172,34 @@ class ProfileRepo with RepositoryExceptionMixin {
     });
   }
 
-  void removeToBlockList({required String id}) async {
+  void removeToBlockList({required List<String> id}) async {
     final usercollection = userCollection();
 
     await usercollection
         .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-        .update({
-      "blockList": FieldValue.arrayUnion([id])
-    });
+        .update({"blockList": FieldValue.arrayRemove(id)});
   }
 
-  Future<List<String>> getBlockList() async {
+  Future<List<UserModel?>> getBlockList() async {
     final usercollection = userCollection();
 
     final data = await usercollection
         .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
         .get();
 
-    return data.get("blockList");
+    final userList = data.get("blockList");
+
+    final id = await usercollection
+        .where("id", arrayContains: userList)
+        .get(const GetOptions(
+          source: Source.serverAndCache,
+        ));
+    final users = id.docs.map((e) => e.data()).toList();
+    logger.w(users);
+
+    if (users.isEmpty) {
+      return [];
+    }
+    return users;
   }
 }
