@@ -59,6 +59,10 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       isOnline: json['isOnline'] as bool? ?? false,
       isVerified: json['isVerified'] as bool? ?? false,
       isBlocked: json['isBlocked'] as bool? ?? false,
+      blockList: (json['blockList'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       id: json['id'] as String,
       fcmToken: json['fcmToken'] as String,
     );
@@ -86,6 +90,7 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'isOnline': instance.isOnline,
       'isVerified': instance.isVerified,
       'isBlocked': instance.isBlocked,
+      'blockList': instance.blockList,
       'id': instance.id,
       'fcmToken': instance.fcmToken,
     };

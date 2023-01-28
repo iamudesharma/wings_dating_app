@@ -42,6 +42,7 @@ mixin _$UserModel {
   bool get isOnline => throw _privateConstructorUsedError;
   bool get isVerified => throw _privateConstructorUsedError;
   bool get isBlocked => throw _privateConstructorUsedError;
+  List<String> get blockList => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
   String get fcmToken => throw _privateConstructorUsedError;
 
@@ -93,6 +94,7 @@ abstract class $UserModelCopyWith<$Res> {
       bool isOnline,
       bool isVerified,
       bool isBlocked,
+      List<String> blockList,
       String id,
       String fcmToken});
 
@@ -132,6 +134,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? isOnline = null,
     Object? isVerified = null,
     Object? isBlocked = null,
+    Object? blockList = null,
     Object? id = null,
     Object? fcmToken = null,
   }) {
@@ -216,6 +219,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.isBlocked
           : isBlocked // ignore: cast_nullable_to_non_nullable
               as bool,
+      blockList: null == blockList
+          ? _value.blockList
+          : blockList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -268,6 +275,7 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       bool isOnline,
       bool isVerified,
       bool isBlocked,
+      List<String> blockList,
       String id,
       String fcmToken});
 
@@ -306,6 +314,7 @@ class __$$_UserModelCopyWithImpl<$Res>
     Object? isOnline = null,
     Object? isVerified = null,
     Object? isBlocked = null,
+    Object? blockList = null,
     Object? id = null,
     Object? fcmToken = null,
   }) {
@@ -390,6 +399,10 @@ class __$$_UserModelCopyWithImpl<$Res>
           ? _value.isBlocked
           : isBlocked // ignore: cast_nullable_to_non_nullable
               as bool,
+      blockList: null == blockList
+          ? _value._blockList
+          : blockList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -426,9 +439,11 @@ class _$_UserModel implements _UserModel {
       this.isOnline = false,
       this.isVerified = false,
       this.isBlocked = false,
+      final List<String> blockList = const [],
       required this.id,
       required this.fcmToken})
-      : _albumUrl = albumUrl;
+      : _albumUrl = albumUrl,
+        _blockList = blockList;
 
   factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
       _$$_UserModelFromJson(json);
@@ -491,6 +506,15 @@ class _$_UserModel implements _UserModel {
   @override
   @JsonKey()
   final bool isBlocked;
+  final List<String> _blockList;
+  @override
+  @JsonKey()
+  List<String> get blockList {
+    if (_blockList is EqualUnmodifiableListView) return _blockList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_blockList);
+  }
+
   @override
   final String id;
   @override
@@ -498,7 +522,7 @@ class _$_UserModel implements _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, id: $id, fcmToken: $fcmToken)';
+    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, id: $id, fcmToken: $fcmToken)';
   }
 
   @override
@@ -538,6 +562,8 @@ class _$_UserModel implements _UserModel {
                 other.isVerified == isVerified) &&
             (identical(other.isBlocked, isBlocked) ||
                 other.isBlocked == isBlocked) &&
+            const DeepCollectionEquality()
+                .equals(other._blockList, _blockList) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.fcmToken, fcmToken) ||
                 other.fcmToken == fcmToken));
@@ -567,6 +593,7 @@ class _$_UserModel implements _UserModel {
         isOnline,
         isVerified,
         isBlocked,
+        const DeepCollectionEquality().hash(_blockList),
         id,
         fcmToken
       ]);
@@ -635,6 +662,7 @@ abstract class _UserModel implements UserModel {
       final bool isOnline,
       final bool isVerified,
       final bool isBlocked,
+      final List<String> blockList,
       required final String id,
       required final String fcmToken}) = _$_UserModel;
 
@@ -682,6 +710,8 @@ abstract class _UserModel implements UserModel {
   bool get isVerified;
   @override
   bool get isBlocked;
+  @override
+  List<String> get blockList;
   @override
   String get id;
   @override

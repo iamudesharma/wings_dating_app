@@ -161,4 +161,34 @@ class ProfileRepo with RepositoryExceptionMixin {
     logger.w(users);
     return users;
   }
+
+  void addToBlockList({required String id}) async {
+    final usercollection = userCollection();
+
+    await usercollection
+        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+        .update({
+      "blockList": FieldValue.arrayUnion([id])
+    });
+  }
+
+  void removeToBlockList({required String id}) async {
+    final usercollection = userCollection();
+
+    await usercollection
+        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+        .update({
+      "blockList": FieldValue.arrayUnion([id])
+    });
+  }
+
+  Future<List<String>> getBlockList() async {
+    final usercollection = userCollection();
+
+    final data = await usercollection
+        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+        .get();
+
+    return data.get("blockList");
+  }
 }

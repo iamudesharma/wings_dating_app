@@ -47,6 +47,7 @@ class UserModel with _$UserModel {
     @Default(false) bool isOnline,
     @Default(false) bool isVerified,
     @Default(false) bool isBlocked,
+    @Default([]) List<String> blockList,
     required String id,
     required String fcmToken,
   }) = _UserModel;
