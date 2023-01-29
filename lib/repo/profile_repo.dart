@@ -170,6 +170,12 @@ class ProfileRepo with RepositoryExceptionMixin {
         .update({
       "blockList": FieldValue.arrayUnion([id])
     });
+
+
+
+
+
+
   }
 
   void removeToBlockList({required List<String> id}) async {

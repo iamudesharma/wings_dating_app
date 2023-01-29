@@ -51,6 +51,7 @@ class ChatListView extends ConsumerWidget {
                         childCount: data.length,
                         (context, index) {
                           final _userChatList = data[index];
+
                           return ListTile(
                             onTap: () async {
                               await AutoRouter.of(context)

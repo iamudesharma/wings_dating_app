@@ -71,6 +71,7 @@ dependencies:
   agora_uikit: ^1.1.2
   # agora_rtc_engine: ^6.1.0
   appwrite: ^8.2.0
+  rxdart: ^0.27.7
 
 
 dev_dependencies:
