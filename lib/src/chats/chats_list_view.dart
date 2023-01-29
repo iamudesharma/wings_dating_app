@@ -1,16 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
-import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:wings_dating_app/helpers/message_reply_provider.dart';
-import 'package:wings_dating_app/repo/chat_repo.dart';
 
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/chats/providers/get_chat_contact_provider.dart';
-import 'package:wings_dating_app/src/model/user_models.dart';
-import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
 class ChatListView extends ConsumerWidget {
   const ChatListView({super.key});

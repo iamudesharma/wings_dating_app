@@ -374,15 +374,15 @@ class UserGridItem extends ConsumerWidget {
                 const Spacer(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      "170 cm",
+                      users.height ?? "170 cm",
                       style: TextStyle(
                         fontSize: 10,
                       ),
                     ),
                     Text(
-                      "55 kg",
+                      users.weight ?? "70 kg",
                       style: TextStyle(
                         fontSize: 10,
                       ),
