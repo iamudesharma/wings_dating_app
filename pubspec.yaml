@@ -69,6 +69,7 @@ dependencies:
   firebase_messaging: ^14.2.1
   cached_network_image: ^3.2.3
   agora_uikit: ^1.1.2
+  # agora_rtc_engine: ^6.1.0
   appwrite: ^8.2.0
 
 

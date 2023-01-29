@@ -219,7 +219,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const VideoCallPage(),
+                                                        const VideoCallView(),
                                                   ),
                                                 );
                                               },
@@ -315,27 +315,28 @@ class _ChatViewState extends ConsumerState<ChatView> {
   }
 }
 
-class VideoCallPage extends StatefulWidget {
-  const VideoCallPage({super.key});
+class VideoCallView extends StatefulWidget {
+  const VideoCallView({super.key});
 
   @override
-  State<VideoCallPage> createState() => _VideoCallPageState();
+  State<VideoCallView> createState() => _VideoCallViewState();
 }
 
-class _VideoCallPageState extends State<VideoCallPage> {
+class _VideoCallViewState extends State<VideoCallView> {
   // Instantiate the client
   final AgoraClient client = AgoraClient(
-    
-    agoraChannelData: AgoraChannelData(
-      
-    ),
+    agoraChannelData: AgoraChannelData(),
     agoraConnectionData: AgoraConnectionData(
+      // tempToken: ,
       appId: AppConfig.appId,
       channelName: "test",
       username: "test",
-      rtmEnabled: true,
-      tempRtmToken:
-          "007eJxTYHjZvW/SPZ7Ia5zXQw9ulHzezbqkfY0e65GO0682xtp+rN+pwGCZaGloYGCQYmmRbGJiapJsaWicmmpkbJSalJJmYWSStH3mpeSGQEYG9huPGBihEMRnYShJLS5hYAAA9QUiFQ==",
+      // rtmEnabled: true,
+
+      // tempToken: ,
+      tokenUrl: "http://10.0.2.2:8080",
+      // "007eJxTYKg30a8zM6h4Ol3/ogfLjo9OJhe091+J/TnR2PTSvuMWs4sUGCwTLQ0NDAxSLC2STUxMTZItDY1TU42MjVKTUtIsjEyS3ppcS24IZGRYs/cwIyMDBIL4LAwlqcUlDAwAResgYQ=="
+      // "007eJxTYHjZvW/SPZ7Ia5zXQw9ulHzezbqkfY0e65GO0682xtp+rN+pwGCZaGloYGCQYmmRbGJiapJsaWicmmpkbJSalJJmYWSStH3mpeSGQEYG9huPGBihEMRnYShJLS5hYAAA9QUiFQ==",
     ),
   );
 
@@ -344,6 +345,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
   void initState() {
     super.initState();
     initAgora();
+    // client.sessionController.value.
   }
 
   void initAgora() async {
@@ -356,7 +358,10 @@ class _VideoCallPageState extends State<VideoCallPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            AgoraVideoViewer(client: client),
+            AgoraVideoViewer(
+              client: client,
+              layoutType: Layout.floating,
+            ),
             AgoraVideoButtons(client: client),
           ],
         ),
