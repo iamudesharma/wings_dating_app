@@ -11,7 +11,6 @@ import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
-import 'package:uuid/uuid.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:wings_dating_app/dependency/dependenies.dart';
@@ -215,10 +214,10 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               builder: (_) => Builder(builder: (context) {
                                     return Container(
                                       height: 190,
-                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      color: const Color.fromARGB(255, 255, 255, 255),
                                       child: Column(
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             height: 180,
                                             child: CupertinoDatePicker(
                                               dateOrder:

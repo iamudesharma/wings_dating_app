@@ -3,11 +3,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:wings_dating_app/helpers/helpers.dart';
 
 import 'package:wings_dating_app/routes/app_router.dart';
 
-import '../dependency/dependenies.dart';
 import '../repo/profile_repo.dart';
 import '../src/profile/controller/profile_controller.dart';
 

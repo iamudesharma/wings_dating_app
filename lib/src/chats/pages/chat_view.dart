@@ -1,12 +1,10 @@
 import 'dart:io';
 
-import 'package:agora_uikit/agora_uikit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wings_dating_app/config/app_config.dart';
 import 'package:wings_dating_app/helpers/message_enum.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 

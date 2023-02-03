@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
-import 'package:location/location.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
 import '../../routes/app_router.dart';
@@ -377,13 +376,13 @@ class UserGridItem extends ConsumerWidget {
                   children: [
                     Text(
                       users.height ?? "170 cm",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 10,
                       ),
                     ),
                     Text(
                       users.weight ?? "70 kg",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 10,
                       ),
                     ),

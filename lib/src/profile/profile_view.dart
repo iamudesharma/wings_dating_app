@@ -58,7 +58,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
               icon: const Icon(Icons.more_vert_outlined),
               onPressed: () {
                 context.router.push(
-                  UserBlockListRoute(),
+                  const UserBlockListRoute(),
                 );
               },
             ),
@@ -82,7 +82,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                     10.widthBox,
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [],
+                      children: const [],
                     ),
                     const Spacer(),
                     ElevatedButton.icon(
@@ -178,7 +178,7 @@ class ProfileInputCard extends StatelessWidget {
             width: context.screenWidth - 20,
             child: Column(
               children: [
-                Divider(),
+                const Divider(),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

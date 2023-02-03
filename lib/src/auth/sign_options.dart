@@ -3,12 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutterfire_ui/auth.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/auth/provider/auth_provider.dart';
-import 'package:wings_dating_app/src/dashboard.dart';
 
-import '../../routes/app_router_provider.dart';
 
 class SignOptionsView extends ConsumerWidget {
   const SignOptionsView({super.key});

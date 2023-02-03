@@ -45,7 +45,7 @@ class ChatListView extends ConsumerWidget {
                       delegate: SliverChildBuilderDelegate(
                         childCount: data.length,
                         (context, index) {
-                          final _userChatList = data[index];
+                          final userChatList = data[index];
 
                           return ListTile(
                             onTap: () async {
@@ -55,8 +55,8 @@ class ChatListView extends ConsumerWidget {
                             leading: const CircleAvatar(
                               backgroundColor: Colors.green,
                             ),
-                            title: Text(_userChatList.name),
-                            subtitle: Text(_userChatList.lastMessage),
+                            title: Text(userChatList.name),
+                            subtitle: Text(userChatList.lastMessage),
                             // trailing: const Text(_userChatList.contactId),
                           );
                         },

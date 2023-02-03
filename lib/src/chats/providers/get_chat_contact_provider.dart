@@ -6,6 +6,6 @@ import '../model/chat_contact.dart';
 
 final getChatContactProvider = StreamProvider<List<ChatContact>>((ref) {
   return ref.read(chatRepositoryProvider).getChatContacts().throttleTime(
-        Duration(milliseconds: 500),
+        const Duration(milliseconds: 500),
       );
 });

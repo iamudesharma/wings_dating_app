@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 
-import '../dependency/dependenies.dart';
 
 class DashboardView extends ConsumerWidget {
   const DashboardView({super.key});
