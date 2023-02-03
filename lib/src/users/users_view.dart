@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
@@ -19,10 +20,37 @@ class UsersView extends ConsumerStatefulWidget {
   ConsumerState<UsersView> createState() => _UsersViewState();
 }
 
-class _UsersViewState extends ConsumerState<UsersView> {
+class _UsersViewState extends ConsumerState<UsersView>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.inactive:
+        print('appLifeCycleState inactive');
+
+        ref.read(profileRepoProvider).isUserOnline(false);
+        break;
+      case AppLifecycleState.resumed:
+        // print('appLifeCycleState resumed');
+        ref.read(profileRepoProvider).isUserOnline(true);
+
+        break;
+      case AppLifecycleState.paused:
+        // print('appLifeCycleState paused');
+        ref.read(profileRepoProvider).isUserOnline(false);
+
+        break;
+      case AppLifecycleState.detached:
+        ref.read(profileRepoProvider).isUserOnline(true);
+
+        break;
+    }
   }
 
   @override
@@ -85,9 +113,9 @@ class _UsersViewState extends ConsumerState<UsersView> {
                     ),
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        // data.removeWhere((element) =>
-                        //     element.id ==
-                        //     FirebaseAuth.instance.currentUser!.uid);
+                        data.removeWhere((element) =>
+                            element.id ==
+                            FirebaseAuth.instance.currentUser!.uid);
                         final users = data[index];
 
                         return Visibility(
@@ -97,7 +125,7 @@ class _UsersViewState extends ConsumerState<UsersView> {
                           ),
                         );
                       },
-                      childCount: data!.length,
+                      childCount: data!.length - 1,
                     ),
                   ),
                 )),
@@ -333,13 +361,14 @@ class UserGridItem extends ConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                const Align(
+                Align(
                   alignment: Alignment.topRight,
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: CircleAvatar(
                       radius: 5,
-                      backgroundColor: Colors.green,
+                      backgroundColor:
+                          users.isOnline ? Colors.green : Colors.amber,
                     ),
                   ),
                 ),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -201,5 +202,13 @@ class ProfileRepo with RepositoryExceptionMixin {
       return [];
     }
     return users;
+  }
+
+  isUserOnline(bool isOnline) async {
+    final usercollection = userCollection();
+
+    await usercollection.doc(FirebaseAuth.instance.currentUser?.uid).update({
+      "isOnline": isOnline,
+    });
   }
 }
