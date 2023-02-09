@@ -364,7 +364,7 @@ class UserGridItem extends ConsumerWidget {
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: CircleAvatar(
                       radius: 5,
                       backgroundColor:
