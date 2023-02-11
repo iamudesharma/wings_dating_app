@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +10,10 @@ import '../../routes/app_router.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
 
-final userListProvider = FutureProvider<List<UserModel>?>((ref) async {
+final userListProvider =
+    FutureProvider.autoDispose<List<UserModel>?>((ref) async {
+  ref.keepAlive();
+
   return ref.read(profileRepoProvider).getUserList();
 });
 
@@ -73,7 +77,9 @@ class _UsersViewState extends ConsumerState<UsersView>
                 padding: const EdgeInsets.all(8.0),
                 child: CircleAvatar(
                   // radius: 2,
-                  backgroundImage: NetworkImage(userData!.profileUrl ?? ""),
+                  backgroundImage: CachedNetworkImageProvider(userData!
+                          .profileUrl ??
+                      "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                 ),
               ),
               title: Text(userData.username),
@@ -92,7 +98,6 @@ class _UsersViewState extends ConsumerState<UsersView>
                       child: CircularProgressIndicator(),
                     ),
                   ),
-                  skipLoadingOnRefresh: true,
                   error: (error, stackTrace) => (error is Exception)
                       ? SliverToBoxAdapter(
                           child: Center(
@@ -334,11 +339,12 @@ class UserGridItem extends ConsumerWidget {
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(users.profileUrl ?? ""),
+            image: CachedNetworkImageProvider(users.profileUrl ??
+                "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
             fit: BoxFit.cover,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: Colors.blueGrey.shade300,
+          color: Colors.blueGrey.shade400,
         ),
         // ignore: prefer_const_literals_to_create_immutables
         child: Column(children: [

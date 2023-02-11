@@ -137,14 +137,17 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                             title: "Relationship Status",
                             value: userData.relationshipStatus.value),
                         ProfileInputCard(
-                            title: "Relationship Status",
-                            value: userData.relationshipStatus.value),
+                            title: "Looking for",
+                            value: userData.lookingFor.value),
                         ProfileInputCard(
-                            title: "Relationship Status",
-                            value: userData.relationshipStatus.value),
+                            title: "Where to meet",
+                            value: userData.whereToMeet.value),
                         ProfileInputCard(
-                            title: "Relationship Status",
-                            value: userData.relationshipStatus.value),
+                            title: "Height",
+                            value: userData.height ?? "Do not Show"),
+                        ProfileInputCard(
+                            title: "Weight",
+                            value: userData.weight ?? "Do not Show"),
                       ],
                     ),
                   ],

@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -134,7 +135,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                           )
                         : CircleAvatar(
                             radius: 35,
-                            backgroundImage: NetworkImage(
+                            backgroundImage: CachedNetworkImageProvider(
                                 profile.userModel?.profileUrl! ?? ""),
                           ),
                     const SizedBox(

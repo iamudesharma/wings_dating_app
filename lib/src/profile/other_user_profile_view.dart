@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -104,19 +105,12 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(userData.profileUrl ?? ""),
-                    ),
-                    10.widthBox,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(userData.username),
-                      ],
-                    ),
-                  ],
+                child: Container(
+                  height: 300,
+                  child: CachedNetworkImage(
+                    imageUrl: (userData.profileUrl ??
+                        "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+                  ),
                 ),
               ),
             ),
@@ -152,6 +146,18 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                             ProfileInputCard(
                                 title: "Relationship Status",
                                 value: userData.relationshipStatus.value),
+                            ProfileInputCard(
+                                title: "Looking for",
+                                value: userData.lookingFor.value),
+                            ProfileInputCard(
+                                title: "Where to meet",
+                                value: userData.whereToMeet.value),
+                            ProfileInputCard(
+                                title: "Height",
+                                value: userData.height ?? "Do not Show"),
+                            ProfileInputCard(
+                                title: "Weight",
+                                value: userData.weight ?? "Do not Show"),
                           ],
                         ),
                       ],
