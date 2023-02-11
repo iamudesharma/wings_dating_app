@@ -15,6 +15,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import 'package:wings_dating_app/dependency/dependenies.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
+import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 // / / /  / / import 'package:wings_dating_app/src/model/geo_point.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
@@ -131,8 +132,10 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               File(profile.profileImage!),
                             ),
                           )
-                        : const CircleAvatar(
+                        : CircleAvatar(
                             radius: 35,
+                            backgroundImage: NetworkImage(
+                                profile.userModel?.profileUrl! ?? ""),
                           ),
                     const SizedBox(
                       height: 20,
@@ -153,13 +156,22 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                               .userControllerProvider)
                                           .pickImage(
                                               imageSource: ImageSource.camera);
+
+                                      await ref
+                                          .read(profileRepoProvider)
+                                          .updateImage(profile.profileImage!);
                                     },
                                     gallery: () async {
                                       await ref
                                           .read(ProfileController
                                               .userControllerProvider)
                                           .pickImage(
-                                              imageSource: ImageSource.gallery);
+                                            imageSource: ImageSource.gallery,
+                                          );
+
+                                      await ref
+                                          .read(profileRepoProvider)
+                                          .updateImage(profile.profileImage!);
                                     },
                                   );
                                 });
@@ -214,7 +226,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               builder: (_) => Builder(builder: (context) {
                                     return Container(
                                       height: 190,
-                                      color: const Color.fromARGB(255, 255, 255, 255),
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
                                       child: Column(
                                         children: [
                                           SizedBox(
@@ -426,8 +439,6 @@ class ImagePickerWidget extends StatelessWidget {
             title: const Text("Gallery"),
             onTap: gallery,
           ),
-       
-           
         ],
       ),
     );

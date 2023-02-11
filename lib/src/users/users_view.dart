@@ -34,20 +34,20 @@ class _UsersViewState extends ConsumerState<UsersView>
       case AppLifecycleState.inactive:
         print('appLifeCycleState inactive');
 
-        ref.read(profileRepoProvider).isUserOnline(false);
+        await ref.read(profileRepoProvider).isUserOnline(false);
         break;
       case AppLifecycleState.resumed:
         // print('appLifeCycleState resumed');
-        ref.read(profileRepoProvider).isUserOnline(true);
+        await ref.read(profileRepoProvider).isUserOnline(true);
 
         break;
       case AppLifecycleState.paused:
         // print('appLifeCycleState paused');
-        ref.read(profileRepoProvider).isUserOnline(false);
+        await ref.read(profileRepoProvider).isUserOnline(false);
 
         break;
       case AppLifecycleState.detached:
-        ref.read(profileRepoProvider).isUserOnline(true);
+        await ref.read(profileRepoProvider).isUserOnline(true);
 
         break;
     }

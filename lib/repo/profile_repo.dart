@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -209,6 +211,21 @@ class ProfileRepo with RepositoryExceptionMixin {
 
     await usercollection.doc(FirebaseAuth.instance.currentUser?.uid).update({
       "isOnline": isOnline,
+    });
+  }
+
+  Future updateImage(String path) async {
+    final usercollection = userCollection();
+
+    await ref
+        .read(Dependency.firebaseStorageProvider)
+        .ref("image")
+        .child(DateTime.now().microsecondsSinceEpoch.toString())
+        .putFile(File(path))
+        .then((value) async {
+      usercollection
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .update({"profileUrl": await value.ref.getDownloadURL()});
     });
   }
 }
