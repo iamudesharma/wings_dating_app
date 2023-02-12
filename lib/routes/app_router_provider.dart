@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:wings_dating_app/routes/app_router.dart';
 
+import '../helpers/app_notification.dart';
 import '../repo/profile_repo.dart';
 import '../src/profile/controller/profile_controller.dart';
 
@@ -33,10 +34,24 @@ class AuthGuard extends AutoRouteGuard {
       if (await ref.read(profileRepoProvider).checkUserDocExist()) {
         print('user doc exist');
 
-        await ref
-            .read(ProfileController.userControllerProvider)
-            .getCurrentUser();
-        resolver.next(true);
+        // String initialRoute =
+
+        //   ? PAGE_HOME
+        //   : PAGE_PHONE_CALL;
+
+        if (NotificationsController.initialCallAction == null) {
+          await ref
+              .read(ProfileController.userControllerProvider)
+              .getCurrentUser();
+          resolver.next(true);
+        } else {
+          resolver.next(false);
+
+          router.push(CallRoute(
+            receivedAction: NotificationsController.initialCallAction,
+          ));
+        }
+
         // customerController.getCustomerData();
       } else {
         resolver.next(false);

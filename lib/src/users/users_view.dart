@@ -1,14 +1,20 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
+import 'package:vibration/vibration.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
+import '../../helpers/app_notification.dart';
+import '../../helpers/notifications_util.dart';
 import '../../routes/app_router.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 final userListProvider =
     FutureProvider.autoDispose<List<UserModel>?>((ref) async {
@@ -29,6 +35,34 @@ class _UsersViewState extends ConsumerState<UsersView>
   @override
   void initState() {
     super.initState();
+
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        // This is just a basic example. For real apps, you must show some
+        // friendly dialog box before call the request method.
+        // This is very important to not harm the user experience
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+
+    Timer.periodic(Duration(minutes: 1), (timer) {
+      print('timer');
+      create();
+    });
+  }
+
+  create() async {
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+      id: 10,
+      channelKey: 'basic_channel',
+      title: 'Simple Notification',
+      body: 'Simple body',
+      actionType: ActionType.Default,
+      fullScreenIntent: true,
+      notificationLayout: NotificationLayout.Inbox,
+      category: NotificationCategory.Call,
+    ));
   }
 
   @override
@@ -330,11 +364,14 @@ class UserGridItem extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return InkWell(
       onTap: () {
-        AutoRouter.of(context).push(
-          OtherUserProfileRoute(
-            id: users.id,
-          ),
-        );
+        Vibration.vibrate(duration: 100);
+        // AutoRouter.of(context).push(
+        //   OtherUserProfileRoute(
+        //     id: users.id,
+        //   ),
+        // );
+
+        NotificationUtils.showCallNotification(42, 15);
       },
       child: Container(
         decoration: BoxDecoration(

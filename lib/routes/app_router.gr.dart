@@ -62,6 +62,14 @@ class _$AppRouter extends RootStackRouter {
         child: const AddAdditionalInformationView(),
       );
     },
+    CallRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CallRouteArgs>(orElse: () => const CallRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: CallView(receivedAction: args.receivedAction),
+      );
+    },
     EditProfileRoute.name: (routeData) {
       final args = routeData.argsAs<EditProfileRouteArgs>();
       return MaterialPageX<dynamic>(
@@ -76,6 +84,17 @@ class _$AppRouter extends RootStackRouter {
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: const UserBlockListView(),
+      );
+    },
+    VideoCallRoute.name: (routeData) {
+      final args = routeData.argsAs<VideoCallRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: VideoCallView(
+          key: args.key,
+          channelId: args.channelId,
+          userName: args.userName,
+        ),
       );
     },
     UsersRoute.name: (routeData) {
@@ -139,12 +158,20 @@ class _$AppRouter extends RootStackRouter {
           path: '/add-additional-information-view',
         ),
         RouteConfig(
+          CallRoute.name,
+          path: '/call-view',
+        ),
+        RouteConfig(
           EditProfileRoute.name,
           path: '/edit-profile-view',
         ),
         RouteConfig(
           UserBlockListRoute.name,
           path: '/user-block-list-view',
+        ),
+        RouteConfig(
+          VideoCallRoute.name,
+          path: '/video-call-view',
         ),
       ];
 }
@@ -260,6 +287,30 @@ class AddAdditionalInformationRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [CallView]
+class CallRoute extends PageRouteInfo<CallRouteArgs> {
+  CallRoute({ReceivedAction? receivedAction})
+      : super(
+          CallRoute.name,
+          path: '/call-view',
+          args: CallRouteArgs(receivedAction: receivedAction),
+        );
+
+  static const String name = 'CallRoute';
+}
+
+class CallRouteArgs {
+  const CallRouteArgs({this.receivedAction});
+
+  final ReceivedAction? receivedAction;
+
+  @override
+  String toString() {
+    return 'CallRouteArgs{receivedAction: $receivedAction}';
+  }
+}
+
+/// generated route for
 /// [EditProfileView]
 class EditProfileRoute extends PageRouteInfo<EditProfileRouteArgs> {
   EditProfileRoute({
@@ -303,6 +354,45 @@ class UserBlockListRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'UserBlockListRoute';
+}
+
+/// generated route for
+/// [VideoCallView]
+class VideoCallRoute extends PageRouteInfo<VideoCallRouteArgs> {
+  VideoCallRoute({
+    Key? key,
+    required String channelId,
+    String? userName,
+  }) : super(
+          VideoCallRoute.name,
+          path: '/video-call-view',
+          args: VideoCallRouteArgs(
+            key: key,
+            channelId: channelId,
+            userName: userName,
+          ),
+        );
+
+  static const String name = 'VideoCallRoute';
+}
+
+class VideoCallRouteArgs {
+  const VideoCallRouteArgs({
+    this.key,
+    required this.channelId,
+    this.userName,
+  });
+
+  final Key? key;
+
+  final String channelId;
+
+  final String? userName;
+
+  @override
+  String toString() {
+    return 'VideoCallRouteArgs{key: $key, channelId: $channelId, userName: $userName}';
+  }
 }
 
 /// generated route for

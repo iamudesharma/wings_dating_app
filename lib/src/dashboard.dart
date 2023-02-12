@@ -2,13 +2,30 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:wings_dating_app/routes/app_router_provider.dart';
 
+import '../helpers/app_notification.dart';
 
-class DashboardView extends ConsumerWidget {
+class DashboardView extends ConsumerStatefulWidget {
   const DashboardView({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends ConsumerState<DashboardView> {
+  @override
+  void initState() {
+    NotificationsController.initializeNotificationsEventListeners(ref);
+
+    // ref.read(appRouteProvider).addListener(() {
+
+    // });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AutoTabsScaffold(
         routes: const [
           UsersRoute(),

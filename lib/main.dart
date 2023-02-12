@@ -1,14 +1,18 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
 import 'package:wings_dating_app/routes/navigation_observers.dart';
 
 import 'firebase_options.dart';
+import 'helpers/app_notification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,8 +28,16 @@ void main() async {
   await FirebaseStorage.instance.app
       .setAutomaticResourceManagementEnabled(true);
 
+  await NotificationsController.initializeLocalNotifications();
+  await NotificationsController.interceptInitialCallActionRequest();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
   runApp(const ProviderScope(child: MyApp()));
 }
+
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
