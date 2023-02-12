@@ -72,6 +72,8 @@ dependencies:
   # agora_rtc_engine: ^6.1.0
   appwrite: ^8.2.0
   rxdart: ^0.27.7
+  awesome_notifications: ^0.7.4+1
+  vibration: ^1.7.6
 
 
 dev_dependencies:
