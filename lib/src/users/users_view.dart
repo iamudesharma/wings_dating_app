@@ -44,25 +44,6 @@ class _UsersViewState extends ConsumerState<UsersView>
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
-
-    Timer.periodic(Duration(minutes: 1), (timer) {
-      print('timer');
-      create();
-    });
-  }
-
-  create() async {
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-      id: 10,
-      channelKey: 'basic_channel',
-      title: 'Simple Notification',
-      body: 'Simple body',
-      actionType: ActionType.Default,
-      fullScreenIntent: true,
-      notificationLayout: NotificationLayout.Inbox,
-      category: NotificationCategory.Call,
-    ));
   }
 
   @override

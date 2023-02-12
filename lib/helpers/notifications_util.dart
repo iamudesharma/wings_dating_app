@@ -307,20 +307,20 @@ class NotificationUtils {
       BASIC NOTIFICATIONS
   ************************************************ */
 
-  static Future<void> showBasicNotification(int id) async {
-    try {
-      bool success = await AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: id,
-              channelKey: 'basic_channel',
-              title: 'Simple Notification',
-              body: 'Simple body'));
+  // static Future<void> showBasicNotification(int id) async {
+  //   try {
+  //     bool success = await AwesomeNotifications().createNotification(
+  //         content: NotificationContent(
+  //             id: id,
+  //             channelKey: 'basic_channel',
+  //             title: 'Simple Notification',
+  //             body: 'Simple body'));
 
-      debugPrint(success ? 'Notification created successfully' : '');
-    } on PlatformException catch (exception) {
-      debugPrint('$exception');
-    }
-  }
+  //     debugPrint(success ? 'Notification created successfully' : '');
+  //   } on PlatformException catch (exception) {
+  //     debugPrint('$exception');
+  //   }
+  // }
 
   static Future<void> showNotificationFromJson(
       Map<String, Object> jsonData) async {
