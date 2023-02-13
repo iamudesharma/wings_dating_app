@@ -39,18 +39,20 @@ class AuthGuard extends AutoRouteGuard {
         //   ? PAGE_HOME
         //   : PAGE_PHONE_CALL;
 
-        if (NotificationsController.initialCallAction == null) {
-          await ref
-              .read(ProfileController.userControllerProvider)
-              .getCurrentUser();
-          resolver.next(true);
-        } else {
-          resolver.next(false);
+        // if (NotificationsController.initialCallAction == null) {
 
-          router.push(CallRoute(
-            receivedAction: NotificationsController.initialCallAction,
-          ));
-        }
+        // } else {
+        //   resolver.next(false);
+
+        //   router.push(CallRoute(
+        //     receivedAction: NotificationsController.initialCallAction,
+        //   ));
+        // }
+
+        await ref
+            .read(ProfileController.userControllerProvider)
+            .getCurrentUser();
+        resolver.next(true);
 
         // customerController.getCustomerData();
       } else {

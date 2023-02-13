@@ -1,4 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,8 +9,22 @@ import 'package:http/http.dart' as http;
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
 
-class NotificationsController {
+class NotificationsController with ChangeNotifier {
+  String _firebaseToken = '';
+  String get firebaseToken => _firebaseToken;
+
+  String _nativeToken = '';
+  String get nativeToken => _nativeToken;
   static ReceivedAction? initialCallAction;
+
+  static final NotificationsController _instance =
+      NotificationsController._internal();
+
+  factory NotificationsController() {
+    return _instance;
+  }
+
+  NotificationsController._internal();
 
   // ***************************************************************
   //    INITIALIZATIONS
@@ -69,6 +85,7 @@ class NotificationsController {
       WidgetRef ref) async {
     // Only after at least the action method is set, the notification events are delivered
     AwesomeNotifications().setListeners(
+      
         onActionReceivedMethod: (re) async {
           return NotificationsController.onActionReceivedMethod(re, ref);
         },
@@ -176,9 +193,9 @@ class NotificationsController {
           break;
         }
         if (!AwesomeStringUtils.isNullOrEmpty(receivedAction.buttonKeyInput)) {
-          //   receiveButtonInputText(receivedAction);
-          // } else {
-          //   receiveStandardNotificationAction(receivedAction);
+          receiveButtonInputText(receivedAction);
+        } else {
+          receiveStandardNotificationAction(receivedAction);
         }
         break;
     }
@@ -188,20 +205,20 @@ class NotificationsController {
   //    NOTIFICATIONS HANDLING METHODS
   // ***************************************************************
 
-  // static Future<void> receiveButtonInputText(
-  //     ReceivedAction receivedAction) async {
-  //   debugPrint('Input Button Message: "${receivedAction.buttonKeyInput}"');
-  //   Fluttertoast.showToast(
-  //       msg: 'Msg: ${receivedAction.buttonKeyInput}',
-  //       backgroundColor: App.mainColor,
-  //       textColor: Colors.white);
-  // }
+  static Future<void> receiveButtonInputText(
+      ReceivedAction receivedAction) async {
+    debugPrint('Input Button Message: "${receivedAction.buttonKeyInput}"');
+    Fluttertoast.showToast(
+        msg: 'Msg: ${receivedAction.buttonKeyInput}',
+        backgroundColor: Colors.accents[0],
+        textColor: Colors.white);
+  }
 
-  // static Future<void> receiveStandardNotificationAction(
-  //     ReceivedAction receivedAction) async {
-  //   loadSingletonPage(App.navigatorKey.currentState,
-  //       targetPage: PAGE_NOTIFICATION_DETAILS, receivedAction: receivedAction);
-  // }
+  static Future<void> receiveStandardNotificationAction(
+      ReceivedAction receivedAction) async {
+    // loadSingletonPage(App.navigatorKey.currentState,
+    //     targetPage: PAGE_NOTIFICATION_DETAILS, receivedAction: receivedAction);
+  }
 
   // static Future<void> receiveMediaNotificationAction(
   //     ReceivedAction receivedAction) async {
@@ -277,13 +294,103 @@ class NotificationsController {
     }
   }
 
-  static Future<void> interceptInitialCallActionRequest() async {
-    ReceivedAction? receivedAction =
-        await AwesomeNotifications().getInitialNotificationAction();
+  // static Future<void> interceptInitialCallActionRequest() async {
+  //   ReceivedAction? receivedAction =
+  //       await AwesomeNotifications().getInitialNotificationAction();
 
-    if (receivedAction?.channelKey == 'call_channel') {
-      initialCallAction = receivedAction;
+  //   if (receivedAction?.channelKey == 'call_channel') {
+  //     initialCallAction = receivedAction;
+  //   }
+  // }
+
+  static Future<void> getInitialNotificationAction() async {
+    ReceivedAction? receivedAction = await AwesomeNotifications()
+        .getInitialNotificationAction(removeFromActionEvents: true);
+    if (receivedAction == null) return;
+    Fluttertoast.showToast(
+        msg: 'Notification action launched app: $receivedAction',
+        backgroundColor: Colors.deepPurple);
+    print('Notification action launched app: $receivedAction');
+  }
+
+  /// Use this method to execute on background when a silent data arrives
+  /// (even while terminated)
+  @pragma("vm:entry-point")
+  static Future<void> mySilentDataHandle(FcmSilentData silentData) async {
+    Fluttertoast.showToast(
+        msg: 'Silent data received',
+        backgroundColor: Colors.blueAccent,
+        textColor: Colors.white,
+        fontSize: 16);
+
+    print('"SilentData": ${silentData.toString()}');
+
+    if (silentData.createdLifeCycle != NotificationLifeCycle.Foreground) {
+      print("bg");
+    } else {
+      print("FOREGROUND");
     }
+
+    print('mySilentDataHandle received a FcmSilentData execution');
+    await executeLongTaskTest();
+  }
+
+  static Future<void> executeLongTaskTest() async {
+    print("starting long task");
+    await Future.delayed(Duration(seconds: 4));
+    final url = Uri.parse("http://google.com");
+    final re = await http.get(url);
+    print(re.body);
+    print("long task done");
+  }
+
+  /// Use this method to detect when a new fcm token is received
+  @pragma("vm:entry-point")
+  static Future<void> myFcmTokenHandle(String token) async {
+    Fluttertoast.showToast(
+        msg: 'Fcm token received',
+        backgroundColor: Colors.blueAccent,
+        textColor: Colors.white,
+        fontSize: 16);
+    debugPrint('Firebase Token:"$token"');
+
+    _instance._firebaseToken = token;
+    _instance.notifyListeners();
+  }
+
+  /// Use this method to detect when a new native token is received
+  @pragma("vm:entry-point")
+  static Future<void> myNativeTokenHandle(String token) async {
+    Fluttertoast.showToast(
+        msg: 'Native token received',
+        backgroundColor: Colors.blueAccent,
+        textColor: Colors.white,
+        fontSize: 16);
+    debugPrint('Native Token:"$token"');
+  }
+
+  static Future<void> initializeRemoteNotifications(
+      {required bool debug}) async {
+    await Firebase.initializeApp();
+    await AwesomeNotificationsFcm().initialize(
+        onFcmSilentDataHandle: NotificationsController.mySilentDataHandle,
+        onFcmTokenHandle: NotificationsController.myFcmTokenHandle,
+        onNativeTokenHandle: NotificationsController.myNativeTokenHandle,
+        licenseKeys:
+            // On this example app, the app ID / Bundle Id are different
+            // for each platform, so was used the main Bundle ID + 1 variation
+            [
+          // me.carda.awesome-notifications-fcm.example
+          'B3J3yxQbzzyz0KmkQR6rDlWB5N68sTWTEMV7k9HcPBroUh4RZ/Og2Fv6Wc/lE'
+              '2YaKuVY4FUERlDaSN4WJ0lMiiVoYIRtrwJBX6/fpPCbGNkSGuhrx0Rekk'
+              '+yUTQU3C3WCVf2D534rNF3OnYKUjshNgQN8do0KAihTK7n83eUD60=',
+
+          // me.carda.awesome_notifications_fcm.example
+          'UzRlt+SJ7XyVgmD1WV+7dDMaRitmKCKOivKaVsNkfAQfQfechRveuKblFnCp4'
+              'zifTPgRUGdFmJDiw1R/rfEtTIlZCBgK3Wa8MzUV4dypZZc5wQIIVsiqi0Zhaq'
+              'YtTevjLl3/wKvK8fWaEmUxdOJfFihY8FnlrSA48FW94XWIcFY=',
+        ],
+        debug: debug);
   }
 }
 

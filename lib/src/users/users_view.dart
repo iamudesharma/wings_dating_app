@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:wings_dating_app/repo/profile_repo.dart';
 
 import '../../helpers/app_notification.dart';
 import '../../helpers/notifications_util.dart';
+import '../../helpers/send_notification.dart';
 import '../../routes/app_router.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
@@ -32,9 +34,43 @@ class UsersView extends ConsumerStatefulWidget {
 
 class _UsersViewState extends ConsumerState<UsersView>
     with WidgetsBindingObserver {
+  String _firebaseAppToken = '';
+
+  Future<void> getFirebaseMessagingToken() async {
+    if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
+      NotificationsController().addListener(() {
+        setSafeState(() {
+          _firebaseAppToken = NotificationsController().firebaseToken;
+        });
+      });
+      try {
+        await AwesomeNotificationsFcm().requestFirebaseAppToken();
+      } catch (exception) {
+        debugPrint('$exception');
+      }
+    } else {
+      setSafeState(() {
+        _firebaseAppToken = '';
+      });
+      debugPrint('Firebase is not available on this project');
+    }
+  }
+
+  setSafeState(Function execution) {
+    if (!mounted) {
+      execution();
+    } else {
+      setState(() {
+        execution();
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
+    getFirebaseMessagingToken();
 
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
@@ -352,7 +388,9 @@ class UserGridItem extends ConsumerWidget {
         //   ),
         // );
 
-        NotificationUtils.showCallNotification(42, 15);
+        NotificationUtils.showEmojiNotification(
+          35,
+        );
       },
       child: Container(
         decoration: BoxDecoration(

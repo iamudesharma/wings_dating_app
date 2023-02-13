@@ -564,6 +564,7 @@ class NotificationUtils {
             fullScreenIntent: true,
             autoDismissible: false,
             backgroundColor: Colors.green,
+
             // backgroundColor: (platformVersion == 'Android-31')
             //     ? const Color(0xFF00796a)
             //     : Colors.white,

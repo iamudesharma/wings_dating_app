@@ -29,7 +29,8 @@ void main() async {
       .setAutomaticResourceManagementEnabled(true);
 
   await NotificationsController.initializeLocalNotifications();
-  await NotificationsController.interceptInitialCallActionRequest();
+  await NotificationsController.initializeRemoteNotifications(debug: true);
+  await NotificationsController.getInitialNotificationAction();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -37,7 +38,6 @@ void main() async {
 
   runApp(const ProviderScope(child: MyApp()));
 }
-
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
