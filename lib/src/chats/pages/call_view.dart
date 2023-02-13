@@ -32,7 +32,7 @@ class _CallViewState extends ConsumerState<CallView> {
 
   void startCallingTimer() {
     const oneSec = Duration(seconds: 1);
-    NotificationUtils.cancelNotification(widget.receivedAction!.id!);
+    // NotificationUtils.cancelNotification(widget.receivedAction!.id!);
     AndroidForegroundService.stopForeground(widget.receivedAction!.id!);
 
     _timer = Timer.periodic(
@@ -47,7 +47,7 @@ class _CallViewState extends ConsumerState<CallView> {
 
   void finishCall() {
     Vibration.vibrate(duration: 100);
-    NotificationUtils.cancelNotification(widget.receivedAction!.id!);
+    // NotificationUtils.cancelNotification(widget.receivedAction!.id!);
     AndroidForegroundService.stopForeground(widget.receivedAction!.id!);
     Navigator.pop(context);
   }
@@ -65,7 +65,7 @@ class _CallViewState extends ConsumerState<CallView> {
   void dispose() {
     _timer?.cancel();
     unlockScreenPortrait();
-    NotificationUtils.cancelNotification(widget.receivedAction!.id!);
+    // NotificationUtils.cancelNotification(widget.receivedAction!.id!);
     AndroidForegroundService.stopForeground(widget.receivedAction!.id!);
     super.dispose();
   }

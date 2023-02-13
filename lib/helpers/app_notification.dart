@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
 
@@ -42,15 +43,6 @@ class NotificationsController with ChangeNotifier {
               ledColor: Colors.white,
               importance: NotificationImportance.High),
           NotificationChannel(
-              channelGroupKey: 'basic_tests',
-              channelKey: 'badge_channel',
-              channelName: 'Badge indicator notifications',
-              channelDescription:
-                  'Notification channel to activate badge indicator',
-              channelShowBadge: true,
-              defaultColor: const Color(0xFF9D50DD),
-              ledColor: Colors.yellow),
-          NotificationChannel(
               channelGroupKey: 'category_tests',
               channelKey: 'call_channel',
               channelName: 'Calls Channel',
@@ -73,21 +65,14 @@ class NotificationsController with ChangeNotifier {
             defaultColor: const Color(0xFF9D50DD),
           ),
         ],
-        channelGroups: [
-          NotificationChannelGroup(
-              channelGroupKey: 'category_tests',
-              channelGroupName: 'Category tests'),
-        ],
         debug: true);
   }
 
   static Future<void> initializeNotificationsEventListeners(
       WidgetRef ref) async {
-    // Only after at least the action method is set, the notification events are delivered
     AwesomeNotifications().setListeners(
-      
         onActionReceivedMethod: (re) async {
-          return NotificationsController.onActionReceivedMethod(re, ref);
+          NotificationsController.onActionReceivedMethod(re, ref);
         },
         onNotificationCreatedMethod:
             NotificationsController.onNotificationCreatedMethod,
@@ -162,6 +147,7 @@ class NotificationsController with ChangeNotifier {
           gravity: ToastGravity.BOTTOM);
     }
 
+    logger.e(receivedAction.toString() + " ReceivedAction ");
     switch (receivedAction.channelKey) {
       case 'call_channel':
         if (receivedAction.actionLifeCycle != NotificationLifeCycle.AppKilled) {

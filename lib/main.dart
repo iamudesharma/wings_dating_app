@@ -27,9 +27,9 @@ void main() async {
   await FirebaseStorage.instance.app.setAutomaticDataCollectionEnabled(true);
   await FirebaseStorage.instance.app
       .setAutomaticResourceManagementEnabled(true);
+  await NotificationsController.initializeRemoteNotifications(debug: true);
 
   await NotificationsController.initializeLocalNotifications();
-  await NotificationsController.initializeRemoteNotifications(debug: true);
   await NotificationsController.getInitialNotificationAction();
 
   await SystemChrome.setPreferredOrientations([
