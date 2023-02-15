@@ -1,11 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
+import '../../main.dart';
 import '../../routes/app_router.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
@@ -28,7 +33,37 @@ class _UsersViewState extends ConsumerState<UsersView>
     with WidgetsBindingObserver {
   @override
   void initState() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+
+        flutterLocalNotificationsPlugin.show(
+          message.notification.hashCode,
+          message.notification!.title,
+          message.notification!.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(channel.id, channel.name,
+                fullScreenIntent: true),
+          ),
+        );
+      }
+    });
+    // printToken();
+
     super.initState();
+  }
+
+  sendMessage() async {
+    var token =
+        "cAFhGg9eQu2-c-ThAD26qj:APA91bFrjsYtL4SioPw8ZWNFjxjLdKYSMWeHWqIrrQo5DhDEf3rYDcjaecV7fUTOW7kzkqZGvkABaaEMjRDW8S1MlUg8tiIYQeB1N9tjBxZefih3npTdzhfYI8UP2Kjphoi3F9hHAiRG";
+    await Firebase.initializeApp();
+    await FirebaseMessaging.instance.sendMessage(
+      to: token,
+      ttl: 29,
+    );
   }
 
   @override
@@ -86,7 +121,9 @@ class _UsersViewState extends ConsumerState<UsersView>
               actions: [
                 IconButton(
                   icon: const Icon(Icons.search),
-                  onPressed: () {},
+                  onPressed: () async {
+                    await sendMessage();
+                  },
                 ),
               ],
             ),
