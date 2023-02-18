@@ -41,24 +41,24 @@ dependencies:
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.0
   # get: ^4.6.5
-  firebase_auth: ^4.2.6
-  cloud_firestore: ^4.4.0
-  firebase_storage: ^11.0.11
+  firebase_auth: ^4.2.8
+  cloud_firestore: ^4.4.2
+  firebase_storage: ^11.0.13
   # c: ^1.0.0-dev.45
-  cloud_firestore_odm: ^1.0.0-dev.45
+  cloud_firestore_odm: ^1.0.0-dev.49
   # json_annotation: ^4.7.0
   auto_route: ^5.0.4
   flutterfire_ui: ^0.4.3+20
   riverpod_annotation: ^1.1.1
   logger: ^1.1.0
-  firebase_core: ^2.5.0
+  firebase_core: ^2.6.1
   flex_color_scheme: ^6.1.2
   # screen_utils: ^0.0.1
   # flutter_screenutil: ^5.6.0
   intl: ^0.17.0
   velocity_x: ^3.6.0
   fluttertoast: any
-  image_picker: ^0.8.6+1
+  image_picker: ^0.8.6+2
   location: ^4.4.0
   flutter_staggered_grid_view: ^0.6.2
   freezed: ^2.3.2
@@ -66,11 +66,11 @@ dependencies:
   google_fonts: ^3.0.1
   chat_bubbles: ^1.4.0
   uuid: ^3.0.7
-  firebase_messaging: ^14.2.2
+  firebase_messaging: ^14.2.4
   cached_network_image: ^3.2.3
   agora_uikit: ^1.1.2
   # agora_rtc_engine: ^6.1.0
-  appwrite: ^8.2.0
+  appwrite: ^8.2.2
   rxdart: ^0.27.7
   flutter_local_notifications: ^14.0.0-dev.1
   isolate_flutter: ^3.0.0

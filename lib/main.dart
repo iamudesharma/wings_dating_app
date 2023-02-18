@@ -28,7 +28,6 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
   'High Importance Notifications', // title
   description: 'This channel is used for important notifications.',
   enableVibration: true,
-  
 
   // description
   importance: Importance.max,
