@@ -51,7 +51,7 @@ class _UsersViewState extends ConsumerState<UsersView>
         );
       }
     });
-    // printToken();
+    printToken();
 
     super.initState();
   }
