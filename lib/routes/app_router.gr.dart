@@ -78,6 +78,17 @@ class _$AppRouter extends RootStackRouter {
         child: const UserBlockListView(),
       );
     },
+    VideoCallRoute.name: (routeData) {
+      final args = routeData.argsAs<VideoCallRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: VideoCallView(
+          key: args.key,
+          channelId: args.channelId,
+          userName: args.userName,
+        ),
+      );
+    },
     UsersRoute.name: (routeData) {
       return MaterialPageX<dynamic>(
         routeData: routeData,
@@ -145,6 +156,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           UserBlockListRoute.name,
           path: '/user-block-list-view',
+        ),
+        RouteConfig(
+          VideoCallRoute.name,
+          path: '/video-call-view',
         ),
       ];
 }
@@ -303,6 +318,45 @@ class UserBlockListRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'UserBlockListRoute';
+}
+
+/// generated route for
+/// [VideoCallView]
+class VideoCallRoute extends PageRouteInfo<VideoCallRouteArgs> {
+  VideoCallRoute({
+    Key? key,
+    required String channelId,
+    String? userName,
+  }) : super(
+          VideoCallRoute.name,
+          path: '/video-call-view',
+          args: VideoCallRouteArgs(
+            key: key,
+            channelId: channelId,
+            userName: userName,
+          ),
+        );
+
+  static const String name = 'VideoCallRoute';
+}
+
+class VideoCallRouteArgs {
+  const VideoCallRouteArgs({
+    this.key,
+    required this.channelId,
+    this.userName,
+  });
+
+  final Key? key;
+
+  final String channelId;
+
+  final String? userName;
+
+  @override
+  String toString() {
+    return 'VideoCallRouteArgs{key: $key, channelId: $channelId, userName: $userName}';
+  }
 }
 
 /// generated route for

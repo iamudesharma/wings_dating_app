@@ -63,210 +63,231 @@ class _ChatViewState extends ConsumerState<ChatView> {
 
     final messageProvider = ref.watch(getUserChatSteamProvider(widget.id));
 
-    return Scaffold(
-      body: messageProvider.when(
-        error: (error, stackTrace) => Center(
-          child: Text("Error $error"),
-        ),
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        data: (data) => CustomScrollView(
-          slivers: [
-            SliverAppBar.medium(
-              title: Text(
-                receiverUser?.username ?? "Loading...",
-                style: const TextStyle(
-                  // color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.video_call),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(Icons.more_vert_outlined),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height:
-                    MediaQuery.of(context).size.height - kToolbarHeight - 120,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: data.length,
-
-                        reverse: true,
-                        // shrinkWrap: true,
-                        keyboardDismissBehavior:
-                            ScrollViewKeyboardDismissBehavior.onDrag,
-                        itemBuilder: (context, index) {
-                          final message = data[index];
-                          return chatType(message.type, message,
-                              currentUser!.id); // return BubbleNormal(
-                        },
-                      ),
+    return SafeArea(
+      maintainBottomViewPadding: true,
+      child: Scaffold(
+        body: messageProvider.when(
+          error: (error, stackTrace) => Center(
+            child: Text("Error $error"),
+          ),
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          data: (data) => SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  title: Text(
+                    receiverUser?.username ?? "Loading...",
+                    style: const TextStyle(
+                      // color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
                     ),
-                    KeyboardListener(
-                      focusNode: FocusNode(),
-                      onKeyEvent: (value) => print(value),
-                      child: MessageBar(
-                        messageBarColor:
-                            Theme.of(context).appBarTheme.backgroundColor!,
-                        onSend: (value) async {
-                          ref.read(chatRepositoryProvider).sendTextMessage(
-                                receiverUserData: receiverUser!,
-                                context: context,
-                                messageReply: null,
-                                receiverUserId: widget.id,
-                                senderUser: currentUser!,
-                                text: value,
-                              );
-                        },
-                        actions: [
-                          InkWell(
-                            child: const Icon(
-                              Icons.add,
-                              color: Colors.blue,
-                              size: 24,
-                            ),
-                            onTap: () {
-                              showModalBottomSheet(
-                                  context: context,
-                                  builder: (context) {
-                                    return BottomSheet(onClosing: () {
-                                      Navigator.pop(context);
-                                    }, builder: (context) {
-                                      return SizedBox(
-                                        height: 200,
-                                        child: Column(
-                                          children: [
-                                            ImagePickerWidget(
-                                              // isCallEnabled: true,
-                                              camera: () async {
-                                                final image = await ref
-                                                    .read(
-                                                        ChatController.provider)
-                                                    .pickImage(
-                                                        imageSource:
-                                                            ImageSource.camera);
-
-                                                if (image != null) {
-                                                  ref
-                                                      .read(
-                                                          chatRepositoryProvider)
-                                                      .sendFileMessage(
-                                                          ref: ref,
-                                                          file: File(image),
-                                                          context: context,
-                                                          messageReply: null,
-                                                          isGroupChat: false,
-                                                          messageEnum:
-                                                              MessageEnum.image,
-                                                          // ref: ref.read(),
-                                                          receiverUserId:
-                                                              receiverUser!.id,
-                                                          senderUserData:
-                                                              currentUser!);
-                                                }
-                                              },
-                                              gallery: () async {
-                                                final image = await ref
-                                                    .read(
-                                                        ChatController.provider)
-                                                    .pickImage(
-                                                        imageSource: ImageSource
-                                                            .gallery);
-
-                                                if (image != null) {
-                                                  // setState(() {
-                                                  //   selectedImage = image;
-                                                  // });
-
-                                                  ref
-                                                      .read(
-                                                          chatRepositoryProvider)
-                                                      .sendFileMessage(
-                                                          ref: ref,
-                                                          file: File(image),
-                                                          context: context,
-                                                          messageReply: null,
-                                                          isGroupChat: false,
-                                                          messageEnum:
-                                                              MessageEnum.image,
-                                                          // ref: ref.read(),
-                                                          receiverUserId:
-                                                              receiverUser!.id,
-                                                          senderUserData:
-                                                              currentUser!);
-                                                }
-                                              },
-                                            ),
-                                            ListTile(
-                                              leading: const Icon(Icons.call),
-                                              title: const Text("Call"),
-                                              onTap: () async {
-                                                // await Navigator.push(
-                                                //   context,
-                                                //   MaterialPageRoute(
-                                                //     builder: (context) =>
-                                                //         const VideoCallView(),
-                                                //   ),
-                                                // );
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    });
-                                  });
-                            },
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8, right: 8),
-                            child: InkWell(
-                              child: const Icon(
-                                Icons.camera_alt,
-                                color: Colors.green,
-                                size: 24,
-                              ),
-                              onTap: () async {
-                                final image = await ref
-                                    .read(ChatController.provider)
-                                    .pickImage(imageSource: ImageSource.camera);
-
-                                if (image != null) {
-                                  ref
-                                      .read(chatRepositoryProvider)
-                                      .sendFileMessage(
-                                          ref: ref,
-                                          file: File(image),
-                                          context: context,
-                                          messageReply: null,
-                                          isGroupChat: false,
-                                          messageEnum: MessageEnum.image,
-                                          // ref: ref.read(),
-                                          receiverUserId: receiverUser!.id,
-                                          senderUserData: currentUser!);
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
+                  ),
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.video_call),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.more_vert_outlined),
+                      onPressed: () {},
                     ),
                   ],
                 ),
-              ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height -
+                        kToolbarHeight * 1.3,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: data.length,
+
+                            reverse: true,
+                            // shrinkWrap: true,
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
+                            itemBuilder: (context, index) {
+                              final message = data[index];
+                              return chatType(message.type, message,
+                                  currentUser!.id); // return BubbleNormal(
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        KeyboardListener(
+                          focusNode: FocusNode(),
+                          onKeyEvent: (value) => print(value),
+                          child: MessageBar(
+                            messageBarColor:
+                                Theme.of(context).appBarTheme.backgroundColor!,
+                            onSend: (value) async {
+                              ref.read(chatRepositoryProvider).sendTextMessage(
+                                    receiverUserData: receiverUser!,
+                                    context: context,
+                                    messageReply: null,
+                                    receiverUserId: widget.id,
+                                    senderUser: currentUser!,
+                                    text: value,
+                                  );
+                            },
+                            actions: [
+                              InkWell(
+                                child: const Icon(
+                                  Icons.add,
+                                  color: Colors.blue,
+                                  size: 24,
+                                ),
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) {
+                                        return BottomSheet(onClosing: () {
+                                          Navigator.pop(context);
+                                        }, builder: (context) {
+                                          return SizedBox(
+                                            height: 200,
+                                            child: Column(
+                                              children: [
+                                                ImagePickerWidget(
+                                                  // isCallEnabled: true,
+                                                  camera: () async {
+                                                    final image = await ref
+                                                        .read(ChatController
+                                                            .provider)
+                                                        .pickImage(
+                                                            imageSource:
+                                                                ImageSource
+                                                                    .camera);
+
+                                                    if (image != null) {
+                                                      ref
+                                                          .read(
+                                                              chatRepositoryProvider)
+                                                          .sendFileMessage(
+                                                              ref: ref,
+                                                              file: File(image),
+                                                              context: context,
+                                                              messageReply:
+                                                                  null,
+                                                              isGroupChat:
+                                                                  false,
+                                                              messageEnum:
+                                                                  MessageEnum
+                                                                      .image,
+                                                              // ref: ref.read(),
+                                                              receiverUserId:
+                                                                  receiverUser!
+                                                                      .id,
+                                                              senderUserData:
+                                                                  currentUser!);
+                                                    }
+                                                  },
+                                                  gallery: () async {
+                                                    final image = await ref
+                                                        .read(ChatController
+                                                            .provider)
+                                                        .pickImage(
+                                                            imageSource:
+                                                                ImageSource
+                                                                    .gallery);
+
+                                                    if (image != null) {
+                                                      // setState(() {
+                                                      //   selectedImage = image;
+                                                      // });
+
+                                                      ref
+                                                          .read(
+                                                              chatRepositoryProvider)
+                                                          .sendFileMessage(
+                                                              ref: ref,
+                                                              file: File(image),
+                                                              context: context,
+                                                              messageReply:
+                                                                  null,
+                                                              isGroupChat:
+                                                                  false,
+                                                              messageEnum:
+                                                                  MessageEnum
+                                                                      .image,
+                                                              // ref: ref.read(),
+                                                              receiverUserId:
+                                                                  receiverUser!
+                                                                      .id,
+                                                              senderUserData:
+                                                                  currentUser!);
+                                                    }
+                                                  },
+                                                ),
+                                                ListTile(
+                                                  leading:
+                                                      const Icon(Icons.call),
+                                                  title: const Text("Call"),
+                                                  onTap: () async {
+                                                    // await Navigator.push(
+                                                    //   context,
+                                                    //   MaterialPageRoute(
+                                                    //     builder: (context) =>
+                                                    //         const VideoCallView(),
+                                                    //   ),
+                                                    // );
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        });
+                                      });
+                                },
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8, right: 8),
+                                child: InkWell(
+                                  child: const Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.green,
+                                    size: 24,
+                                  ),
+                                  onTap: () async {
+                                    final image = await ref
+                                        .read(ChatController.provider)
+                                        .pickImage(
+                                            imageSource: ImageSource.camera);
+
+                                    if (image != null) {
+                                      ref
+                                          .read(chatRepositoryProvider)
+                                          .sendFileMessage(
+                                              ref: ref,
+                                              file: File(image),
+                                              context: context,
+                                              messageReply: null,
+                                              isGroupChat: false,
+                                              messageEnum: MessageEnum.image,
+                                              // ref: ref.read(),
+                                              receiverUserId: receiverUser!.id,
+                                              senderUserData: currentUser!);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -282,9 +303,11 @@ class _ChatViewState extends ConsumerState<ChatView> {
 
       case MessageEnum.image:
         return BubbleNormalImage(
-          // sent: message.isSeen,
+          delivered: message.isSeen,
+          sent: message.isSeen,
           image: CachedNetworkImage(
             imageUrl: message.text,
+            fit: BoxFit.contain,
             placeholder: (context, url) => const Center(
               child: CircularProgressIndicator(),
             ),
@@ -302,14 +325,18 @@ class _ChatViewState extends ConsumerState<ChatView> {
         return Container();
 
       case MessageEnum.text:
-        return BubbleNormal(
-          seen: message.isSeen,
-          text: message.text,
-          color: const Color(0xFFE8E8EE),
-          tail: true,
-          isSender: message.senderId == id ? true : false,
+        return Column(
+          children: [
+            BubbleSpecialThree(
+              delivered: message.isSeen,
+              seen: message.isSeen,
+              text: message.text,
+              color: const Color(0xFFE8E8EE),
+              tail: true,
+              isSender: message.senderId == id ? true : false,
+            ),
+          ],
         );
     }
   }
 }
-

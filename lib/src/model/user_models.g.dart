@@ -32,7 +32,8 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       albumUrl: (json['albumUrl'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      profileUrl: json['profileUrl'] as String?,
+      profileUrl: json['profileUrl'] as String? ??
+          "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
       birthday: json['birthday'] as String?,
       age: json['age'] as int?,
       position: json['position'] == null
@@ -75,7 +76,7 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'profileUrl': instance.profileUrl,
       'birthday': instance.birthday,
       'age': instance.age,
-      'position': instance.position?.toJson(),
+      'position': instance.position,
       'dob': instance.dob,
       'height': instance.height,
       'weight': instance.weight,

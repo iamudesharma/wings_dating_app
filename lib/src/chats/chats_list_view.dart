@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -52,10 +53,13 @@ class ChatListView extends ConsumerWidget {
                               await AutoRouter.of(context)
                                   .push(ChatRoute(id: data[index].contactId));
                             },
-                            leading: const CircleAvatar(
-                              backgroundColor: Colors.green,
+                            leading: CircleAvatar(
+                              backgroundImage: CachedNetworkImageProvider(
+                                  userChatList.profilePic ??
+                                      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"),
                             ),
                             title: Text(userChatList.name),
+
                             subtitle: Text(userChatList.lastMessage),
                             // trailing: const Text(_userChatList.contactId),
                           );

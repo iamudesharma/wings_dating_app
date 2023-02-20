@@ -136,7 +136,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         : CircleAvatar(
                             radius: 35,
                             backgroundImage: CachedNetworkImageProvider(
-                                profile.userModel?.profileUrl! ?? ""),
+                                profile.userModel?.profileUrl ?? ""),
                           ),
                     const SizedBox(
                       height: 20,

@@ -66,7 +66,8 @@ class ChatRepository {
         .collection('chats')
         .doc(recieverUserId)
         .collection('messages')
-        .orderBy('timeSent')
+        .orderBy('timeSent', descending: true)
+        .limit(10)
         .snapshots()
         .map((event) {
       List<Message> messages = [];
@@ -75,7 +76,7 @@ class ChatRepository {
       for (var document in event.docs) {
         messages.add(Message.fromJson(document.data()));
       }
-      return messages.reversed.toList();
+      return messages;
     });
   }
 
