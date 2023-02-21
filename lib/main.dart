@@ -194,7 +194,7 @@ void main() async {
     // The following lines are the same as previously explained in "Handling uncaught errors"
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
-    runApp(MyApp());
+    runApp(ProviderScope(child: MyApp()));
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
   // runZonedGuarded( ProviderScope(child: MyApp()),((error, stack) => FirebaseCrashlytics.instance.recordError(error, stack)));
 }
@@ -207,6 +207,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final appRouter = ref.watch(appRouteProvider);
     return MaterialApp.router(
+    
       theme: FlexThemeData.light(
         scheme: FlexScheme.aquaBlue,
         surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
@@ -240,7 +241,7 @@ class MyApp extends ConsumerWidget {
       routerDelegate:
           appRouter.delegate(navigatorObservers: () => [MyObserver()]),
       routeInformationParser: appRouter.defaultRouteParser(),
-      title: 'Flutter Demo',
+      title: 'Wings',
     );
   }
 }

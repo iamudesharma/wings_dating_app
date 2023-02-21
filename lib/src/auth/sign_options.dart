@@ -6,7 +6,6 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/auth/provider/auth_provider.dart';
 
-
 class SignOptionsView extends ConsumerWidget {
   const SignOptionsView({super.key});
 
@@ -34,7 +33,7 @@ class SignOptionsView extends ConsumerWidget {
           actions: [
             AuthStateChangeAction(
               (context, AuthState state) {},
-            )
+            ),
           ],
           showAuthActionSwitch: true,
         );
