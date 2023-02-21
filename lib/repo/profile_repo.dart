@@ -115,15 +115,14 @@ class ProfileRepo with RepositoryExceptionMixin {
     // final usercollection = userCollection();
     final firestore = FirebaseFirestore.instance;
     // usercollection.snapshots().where((event) => event.);
-    final data = geo
-        .collection(collectionRef: firestore.collection("users").limit(10))
-        .within(
-          center: center,
-          radius: 10000000,
-          field: "position",
-          // strictMode: true,
-          strictMode: true,
-        );
+    final data =
+        geo.collection(collectionRef: firestore.collection("users")).within(
+              center: center,
+              radius: 100,
+              field: "position",
+              // strictMode: true,
+              strictMode: true,
+            );
 
     final userListRaw = await data.first;
     logger.i(userListRaw.length);
@@ -227,5 +226,17 @@ class ProfileRepo with RepositoryExceptionMixin {
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .update({"profileUrl": await value.ref.getDownloadURL()});
     });
+  }
+
+  Future<List<UserModel?>?> searchUser(String query) async {
+    final usercollection = userCollection();
+
+    final docs = usercollection.where("username", isEqualTo: query).get();
+
+    final data =
+        await docs.then((value) => value.docs.map((e) => e.data()).toList());
+
+    logger.i(data.length);
+    return data;
   }
 }

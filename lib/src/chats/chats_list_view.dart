@@ -19,7 +19,7 @@ class ChatListView extends ConsumerWidget {
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
-            SliverAppBar.medium(
+            SliverAppBar(
               title: const Text("Chats"),
               actions: [
                 IconButton(

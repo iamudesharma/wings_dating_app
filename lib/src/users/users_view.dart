@@ -58,12 +58,12 @@ class _UsersViewState extends ConsumerState<UsersView>
 
   sendMessage() async {
     var token =
-        "cAFhGg9eQu2-c-ThAD26qj:APA91bFrjsYtL4SioPw8ZWNFjxjLdKYSMWeHWqIrrQo5DhDEf3rYDcjaecV7fUTOW7kzkqZGvkABaaEMjRDW8S1MlUg8tiIYQeB1N9tjBxZefih3npTdzhfYI8UP2Kjphoi3F9hHAiRG";
+        "cgORXx_oQOqbpyi4HI-ct0:APA91bG-Ty5rQ3FKMXiPfKYyRSvcZ4Yr7wKiWqjBy0Bx5BDweldHkVqwV87i33R-9D403qhk1sI2d0Ohj54vEL2OF-cZ3zzfZheVDnllvujURHRnv60rT71DbV6AC0e2HcE8B-6TUhF5";
+    // "cAFhGg9eQu2-c-ThAD26qj:APA91bFrjsYtL4SioPw8ZWNFjxjLdKYSMWeHWqIrrQo5DhDEf3rYDcjaecV7fUTOW7kzkqZGvkABaaEMjRDW8S1MlUg8tiIYQeB1N9tjBxZefih3npTdzhfYI8UP2Kjphoi3F9hHAiRG";
     await Firebase.initializeApp();
-    await FirebaseMessaging.instance.sendMessage(
-      to: token,
-      ttl: 29,
-    );
+
+    final messgae = FirebaseMessaging.instance;
+    await messgae.sendMessage();
   }
 
   @override
@@ -122,7 +122,10 @@ class _UsersViewState extends ConsumerState<UsersView>
                 IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () async {
-                    await sendMessage();
+                    showSearch(
+                      context: context,
+                      delegate: UsersSearchDelegate(ref),
+                    );
                   },
                 ),
               ],
@@ -173,6 +176,119 @@ class _UsersViewState extends ConsumerState<UsersView>
                 )),
           ],
         ),
+      ),
+    );
+  }
+}
+
+final searchUsersProvider =
+    FutureProvider.family<List<UserModel?>?, String>((ref, query) async {
+  return await ref.read(profileRepoProvider).searchUser(query);
+});
+
+class UsersSearchDelegate extends SearchDelegate {
+  final WidgetRef ref;
+
+  UsersSearchDelegate(this.ref);
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = "";
+        },
+      )
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final userList = ref.watch(searchUsersProvider(query));
+
+    return userList.when(
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stackTrace) => (error is Exception)
+          ? Center(
+              child: Text(error.toString()),
+            )
+          : Center(
+              child: Text(error.toString()),
+            ),
+      data: (data) => ListView.builder(
+        itemCount: data!.length,
+        itemBuilder: (context, index) {
+          final users = data[index];
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(users!.profileUrl!),
+            ),
+            title: Text(users.username),
+            onTap: () {
+              // // Navigator.push(
+              // //   context,
+              // //   MaterialPageRoute(
+              // //     builder: (context) => ProfileScreen(
+              // //       userId: users.id,
+              // //     ),
+              // //   ),
+              // );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final userList = ref.watch(searchUsersProvider(query));
+
+    return userList.when(
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stackTrace) => (error is Exception)
+          ? Center(
+              child: Text(error.toString()),
+            )
+          : Center(
+              child: Text(error.toString()),
+            ),
+      data: (data) => ListView.builder(
+        itemCount: data!.length,
+        itemBuilder: (context, index) {
+          final users = data[index];
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(users!.profileUrl!),
+            ),
+            title: Text(users.username),
+            onTap: () {
+              // // Navigator.push(
+              // //   context,
+              // //   MaterialPageRoute(
+              // //     builder: (context) => ProfileScreen(
+              // //       userId: users.id,
+              // //     ),
+              // //   ),
+              // );
+            },
+          );
+        },
       ),
     );
   }
