@@ -76,6 +76,8 @@ dependencies:
   isolate_flutter: ^3.0.0
   flutter_callkit_incoming: ^1.0.3+3
   firebase_crashlytics: ^3.0.14
+  firebase_analytics: ^10.1.3
+ 
 
 
 dev_dependencies:
