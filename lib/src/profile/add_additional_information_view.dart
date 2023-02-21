@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
 
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/edit_profile_view.dart';
@@ -214,6 +215,7 @@ class _AddAdditionalInformationViewState
                   20.heightBox,
                   ElevatedButton(
                     onPressed: () async {
+                      final router = AutoRouter.of(context);
                       final data = profiledata?.copyWith(
                         bodyType: bodyType,
                         lookingFor: lookingFor,
@@ -221,12 +223,16 @@ class _AddAdditionalInformationViewState
                         relationshipStatus: relationshipStatus,
                         whereToMeet: whereTomeet,
                         role: role,
+                        height: height,
+                        weight: weight,
                       );
 
                       logger.i(data?.toJson());
                       await ref
                           .read(ProfileController.userControllerProvider)
                           .updateUserData(data!);
+
+                      router.replace(const DashboardRoute());
                     },
                     style: ElevatedButton.styleFrom(
                         fixedSize: Size(MediaQuery.of(context).size.width, 35)),

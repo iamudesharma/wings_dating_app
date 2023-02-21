@@ -22,6 +22,8 @@ import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
+import '../model/geo_point_data.dart';
+
 class EditProfileView extends ConsumerStatefulWidget {
   const EditProfileView({
     super.key,
@@ -113,7 +115,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
       // ),
       body: CustomScrollView(
         slivers: [
-          SliverAppBar.medium(
+          SliverAppBar(
             title: Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
           ),
           SliverToBoxAdapter(
@@ -333,13 +335,18 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               latitude: data.latitude!,
                               longitude: data.longitude!,
                             );
+
                             final token =
                                 await FirebaseMessaging.instance.getToken();
 
                             if (_formKey.currentState!.validate()) {
                               if (widget.isEditProfile) {
                                 UserModel? user = profile.userModel?.copyWith(
+                                  position: GeoPointData(
+                                      geohash: myLocation.hash,
+                                      geopoint: myLocation.geoPoint),
                                   bio: _bioController.text,
+                                  fcmToken: token ?? "",
                                   username: _usernameController.text,
                                   profileUrl: await ref
                                       .read(ProfileController

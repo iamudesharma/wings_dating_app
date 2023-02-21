@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
@@ -158,19 +159,17 @@ class _UsersViewState extends ConsumerState<UsersView>
                     ),
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        data.removeWhere((element) =>
-                            element.id ==
-                            FirebaseAuth.instance.currentUser!.uid);
                         final users = data[index];
 
-                        return Visibility(
-                          visible: users.id == userData.id ? false : true,
-                          child: UserGridItem(
-                            users: users,
-                          ),
-                        );
+                        return UserGridItem(
+                          onTapEditProfile: () {
+                            AutoTabsRouter.of(context).setActiveIndex(2);
+                          },
+                          isCurrentUser: users.id == userData.id ? true : false,
+                          users: users,
+                        ).animate().shake();
                       },
-                      childCount: data!.length - 1,
+                      childCount: data!.length,
                     ),
                   ),
                 )),
@@ -237,16 +236,7 @@ class UsersSearchDelegate extends SearchDelegate {
               backgroundImage: CachedNetworkImageProvider(users!.profileUrl!),
             ),
             title: Text(users.username),
-            onTap: () {
-              // // Navigator.push(
-              // //   context,
-              // //   MaterialPageRoute(
-              // //     builder: (context) => ProfileScreen(
-              // //       userId: users.id,
-              // //     ),
-              // //   ),
-              // );
-            },
+            onTap: () {},
           );
         },
       ),
@@ -475,19 +465,31 @@ List<String> heightList = [
 ];
 
 class UserGridItem extends ConsumerWidget {
-  const UserGridItem({super.key, required this.users});
+  const UserGridItem(
+      {super.key,
+      required this.users,
+      this.isCurrentUser,
+      this.onTapEditProfile});
 
   final UserModel users;
+
+  final bool? isCurrentUser;
+
+  final VoidCallback? onTapEditProfile;
 
   @override
   Widget build(BuildContext context, ref) {
     return InkWell(
       onTap: () {
-        AutoRouter.of(context).push(
-          OtherUserProfileRoute(
-            id: users.id,
-          ),
-        );
+        if (isCurrentUser!) {
+          AutoTabsRouter.of(context).setActiveIndex(2);
+        } else {
+          AutoRouter.of(context).push(
+            OtherUserProfileRoute(
+              id: users.id,
+            ),
+          );
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -520,17 +522,19 @@ class UserGridItem extends ConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircleAvatar(
-                      radius: 5,
-                      backgroundColor:
-                          users.isOnline ? Colors.green : Colors.amber,
-                    ),
-                  ),
-                ),
+                isCurrentUser!
+                    ? InkWell(onTap: onTapEditProfile, child: Icon(Icons.edit))
+                    : Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            radius: 5,
+                            backgroundColor:
+                                users.isOnline ? Colors.green : Colors.amber,
+                          ),
+                        ),
+                      ),
               ],
             ),
           ),
@@ -562,18 +566,22 @@ class UserGridItem extends ConsumerWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      users.height ?? "170 cm",
-                      style: const TextStyle(
-                        fontSize: 10,
-                      ),
-                    ),
-                    Text(
-                      users.weight ?? "70 kg",
-                      style: const TextStyle(
-                        fontSize: 10,
-                      ),
-                    ),
+                    users.height == "Do not show"
+                        ? const SizedBox.shrink()
+                        : Text(
+                            users.height ?? "170 cm",
+                            style: const TextStyle(
+                              fontSize: 10,
+                            ),
+                          ),
+                    users.weight == "Do not show"
+                        ? const SizedBox.shrink()
+                        : Text(
+                            users.weight ?? "70 kg",
+                            style: const TextStyle(
+                              fontSize: 10,
+                            ),
+                          ),
                   ],
                 ),
               ],

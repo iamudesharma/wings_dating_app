@@ -118,7 +118,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     final data =
         geo.collection(collectionRef: firestore.collection("users")).within(
               center: center,
-              radius: 100,
+              radius: 150,
               field: "position",
               // strictMode: true,
               strictMode: true,

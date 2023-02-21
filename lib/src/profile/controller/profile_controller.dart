@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:wings_dating_app/src/model/user_models.dart';
@@ -78,19 +79,30 @@ class ProfileController extends ChangeNotifier {
   }
 
   String getDistance(Coordinates coordinates) {
-    final data = GeoFirePoint.distanceBetween(
-      from: Coordinates(
-        userModel!.position!.geopoint.latitude,
-        userModel!.position!.geopoint.longitude,
-      ),
-      to: coordinates,
+    final data = Geolocator.distanceBetween(
+      userModel!.position!.geopoint.latitude,
+      userModel!.position!.geopoint.longitude,
+      coordinates.latitude,
+      coordinates.longitude,
     );
+    // final data = GeoFirePoint.distanceBetween(
+    //   from: Coordinates(
+    //     userModel!.position!.geopoint.latitude,
+    //     userModel!.position!.geopoint.longitude,
+    //   ),
+    //   to: coordinates,
+    // );
 
-    if (data < 1000.00) {
-      return "${data.toStringAsFixed(0)}  meter";
-    } else {
-      return "${data / 1000.00} km";
-    }
+    return meterToKm(data);
+  }
+}
+
+String meterToKm(double meter) {
+  // change metre to km if greater than 1000 meters
+  if (meter > 1000) {
+    return '${(meter / 1000).toStringAsFixed(0)} Kms';
+  } else {
+    return "${meter.toStringAsFixed(0)} meters";
   }
 }
 
