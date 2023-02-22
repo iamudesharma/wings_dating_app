@@ -125,23 +125,23 @@ class ProfileRepo with RepositoryExceptionMixin {
               strictMode: true,
             );
 
-    final userListRaw = data.asyncMap((event) {
-      return event.map((e) => UserModel.fromJson(e.data() as dynamic)).toList();
-    });
+    final userListRaw = await data.first;
+    //   return event.map((e) => UserModel.fromJson(e.data() as dynamic)).toList();
+    // });
     logger.i(userListRaw.length);
 
-    // logger.i(userListRaw[0].data());
+    logger.i(userListRaw[0].data());
 
-    // final users = userListRaw.first.
-    //     .map((e) => UserModel.fromJson(e.data() as dynamic))
-    //     .toList();
+    final users = userListRaw
+        .map((e) => UserModel.fromJson(e.data() as dynamic))
+        .toList();
 
-    // users.removeWhere((element) {
-    //   return userModel.blockList.contains(element.id) ||
-    //       element.id == userModel.id;
-    // });
+    users.removeWhere((element) {
+      return userModel.blockList.contains(element.id) ||
+          element.id == userModel.id;
+    });
 
-    // return users;
+    return users;
   }
 
   Future<void> saveUserLocationData(
@@ -219,12 +219,14 @@ class ProfileRepo with RepositoryExceptionMixin {
     }
   }
 
-  isUserOnline(bool isOnline) async {
+  Future<bool> isUserOnline(bool isOnline) async {
     final usercollection = userCollection();
 
     await usercollection.doc(FirebaseAuth.instance.currentUser?.uid).update({
       "isOnline": isOnline,
     });
+
+    return isOnline;
   }
 
   Future updateImage(String path) async {

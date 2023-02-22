@@ -21,6 +21,10 @@ import '../profile/controller/profile_controller.dart';
 //   return ref.read(profileRepoProvider).getUserList();
 // });
 
+final isUserOnlineProvider = FutureProvider.family<bool, bool>(
+  (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
+);
+
 final userListProvider =
     AsyncNotifierProvider<UserListNotifier, List<UserModel?>?>(
         () => UserListNotifier());
@@ -65,7 +69,8 @@ class _UsersViewState extends ConsumerState<UsersView>
         );
       }
     });
-    printToken();
+    // printToken();
+    ref.read(isUserOnlineProvider(true));
 
     super.initState();
   }
@@ -80,37 +85,14 @@ class _UsersViewState extends ConsumerState<UsersView>
     await messgae.sendMessage();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-    switch (state) {
-      case AppLifecycleState.inactive:
-        print('appLifeCycleState inactive');
-
-        await ref.read(profileRepoProvider).isUserOnline(false);
-        break;
-      case AppLifecycleState.resumed:
-        // print('appLifeCycleState resumed');
-        await ref.read(profileRepoProvider).isUserOnline(true);
-
-        break;
-      case AppLifecycleState.paused:
-        // print('appLifeCycleState paused');
-        await ref.read(profileRepoProvider).isUserOnline(false);
-
-        break;
-      case AppLifecycleState.detached:
-        await ref.read(profileRepoProvider).isUserOnline(true);
-
-        break;
-    }
-  }
+  bool? isOnline = false;
 
   @override
   Widget build(BuildContext context) {
     final userData =
         ref.watch(ProfileController.userControllerProvider).userModel;
     final userList = ref.watch(userListProvider);
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async => ref.refresh(userListProvider),
@@ -131,7 +113,7 @@ class _UsersViewState extends ConsumerState<UsersView>
                       "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                 ),
               ),
-              title: Text(userData.username),
+              title: Text(userData!.username),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.search),
@@ -145,48 +127,47 @@ class _UsersViewState extends ConsumerState<UsersView>
               ],
             ),
             SliverPadding(
-                padding: const EdgeInsets.all(10),
-                sliver: userList.when(
-                  loading: () => const SliverToBoxAdapter(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+              padding: const EdgeInsets.all(10),
+              sliver: userList.when(
+                loading: () => const SliverToBoxAdapter(
+                  child: Center(
+                    child: CircularProgressIndicator(),
                   ),
-                  error: (error, stackTrace) => (error is Exception)
-                      ? SliverToBoxAdapter(
-                          child: Center(
-                            child: Text(error.toString()),
-                          ),
-                        )
-                      : SliverToBoxAdapter(
-                          child: Center(
-                            child: Text(error.toString()),
-                          ),
+                ),
+                error: (error, stackTrace) => (error is Exception)
+                    ? SliverToBoxAdapter(
+                        child: Center(
+                          child: Text(error.toString()),
                         ),
-                  data: (data) => SliverGrid(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final users = data[index];
-
-                        return UserGridItem(
-                          onTapEditProfile: () {
-                            AutoTabsRouter.of(context).setActiveIndex(2);
-                          },
-                          isCurrentUser:
-                              users!.id == userData.id ? true : false,
-                          users: users,
-                        ).animate().shake();
-                      },
-                      childCount: data!.length,
-                    ),
+                      )
+                    : SliverToBoxAdapter(
+                        child: Center(
+                          child: Text(error.toString()),
+                        ),
+                      ),
+                data: (data) => SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
                   ),
-                )),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final users = data[index];
+
+                      return UserGridItem(
+                        onTapEditProfile: () {
+                          AutoTabsRouter.of(context).setActiveIndex(2);
+                        },
+                        isCurrentUser: users!.id == userData.id ? true : false,
+                        users: users,
+                      ).animate().shake();
+                    },
+                    childCount: data!.length,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
