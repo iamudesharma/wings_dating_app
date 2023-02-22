@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -97,13 +98,13 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<List<UserModel>?>? getUserList() async {
     final geo = GeoFlutterFire();
 
-    final position =
-        ref.read(ProfileController.userControllerProvider).userModel!.position;
+    final userModel =
+        ref.read(ProfileController.userControllerProvider).userModel!;
 
-    logger.i(position);
+    logger.i(userModel.position);
     GeoFirePoint center = geo.point(
-      latitude: position!.geopoint.latitude,
-      longitude: position.geopoint.longitude,
+      latitude: userModel.position!.geopoint.latitude,
+      longitude: userModel.position!.geopoint.longitude,
     );
     // GeoFi
     //rePoint center = geo.point(latitude: 19.075983, longitude: 72.877678);
@@ -129,9 +130,16 @@ class ProfileRepo with RepositoryExceptionMixin {
 
     logger.i(userListRaw[0].data());
 
-    return userListRaw
+    final users = userListRaw
         .map((e) => UserModel.fromJson(e.data() as dynamic))
         .toList();
+
+    users.removeWhere((element) {
+      return userModel.blockList.contains(element.id) ||
+          element.id == userModel.id;
+    });
+
+    return users;
   }
 
   Future<void> saveUserLocationData(
@@ -189,20 +197,24 @@ class ProfileRepo with RepositoryExceptionMixin {
         .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
         .get();
 
-    final userList = data.get("blockList");
+    final userList = await data.get("blockList");
 
     logger.w(userList);
 
-    final id = await usercollection.where("id", whereIn: userList).get();
-
-    logger.w(id.docs.length);
-    final users = id.docs.map((e) => e.data()).toList();
-    logger.w(users);
-
-    if (users.isEmpty) {
+    if (userList.isEmpty) {
       return [];
+    } else {
+      final id = await usercollection.where("id", whereIn: userList).get();
+
+      logger.w(id.docs.length);
+      final users = id.docs.map((e) => e.data()).toList();
+      logger.w(users);
+
+      if (users.isEmpty) {
+        return [];
+      }
+      return users;
     }
-    return users;
   }
 
   isUserOnline(bool isOnline) async {

@@ -468,7 +468,7 @@ class UserGridItem extends ConsumerWidget {
   const UserGridItem(
       {super.key,
       required this.users,
-      this.isCurrentUser,
+      this.isCurrentUser = false,
       this.onTapEditProfile});
 
   final UserModel users;
