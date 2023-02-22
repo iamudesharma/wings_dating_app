@@ -70,7 +70,7 @@ class _UsersViewState extends ConsumerState<UsersView>
       }
     });
     // printToken();
-    ref.read(isUserOnlineProvider(true));
+    WidgetsBinding.instance.addObserver(this);
 
     super.initState();
   }
@@ -83,6 +83,27 @@ class _UsersViewState extends ConsumerState<UsersView>
 
     final messgae = FirebaseMessaging.instance;
     await messgae.sendMessage();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        ref.read(isUserOnlineProvider(true));
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.detached:
+      case AppLifecycleState.paused:
+        ref.read(isUserOnlineProvider(false));
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   bool? isOnline = false;

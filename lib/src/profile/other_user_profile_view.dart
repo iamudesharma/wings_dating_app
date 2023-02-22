@@ -36,10 +36,6 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
     var otherUser = ref.watch(getUserByIdProvider(widget.id!));
     // }
 
-    // logger.i(userData?.profileUrl);
-    void _showPop() {
-      // return VxPopupMenu();
-    }
     return Scaffold(
       body: otherUser.when(
         loading: () => const Center(
@@ -59,6 +55,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
 
               actions: [
                 PopupMenuButton<int>(
+                  padding: EdgeInsets.zero,
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       onTap: () async {
@@ -66,6 +63,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                             .read(userListProvider.notifier)
                             .addToBlockList(userData!.id);
 
+                        // ignore: use_build_context_synchronously
                         Navigator.of(context).pop();
                         // AutoRouter.of(context).replace(const DashboardRoute());
                       },
@@ -111,9 +109,11 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   height: 300,
+                  width: MediaQuery.of(context).size.width,
                   child: CachedNetworkImage(
                     imageUrl: (userData.profileUrl ??
                         "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),

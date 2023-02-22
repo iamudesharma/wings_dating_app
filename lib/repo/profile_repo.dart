@@ -155,22 +155,22 @@ class ProfileRepo with RepositoryExceptionMixin {
     });
   }
 
-  Future<UserModel?> getUserById(String id) async {
+  Stream<UserModel?> getUserById(String id) {
     final usercollection = userCollection();
 
     logger.w(id);
 
-    final data = await usercollection
+    final data = usercollection
         .where(
           "id",
           isEqualTo: id,
         )
-        .get();
+        .limit(1)
+        .snapshots();
 
-    logger.e(data.docs.length);
-    final users = data.docs.first.data();
+    final users = data.map((event) => event.docs[0].data());
+    
 
-    logger.w(users);
     return users;
   }
 
