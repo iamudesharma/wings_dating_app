@@ -16,9 +16,9 @@ class DashboardView extends ConsumerStatefulWidget {
 class _DashboardViewState extends ConsumerState<DashboardView> {
   @override
   void initState() {
-    NotificationsController.initializeNotificationsEventListeners(ref);
+    // NotificationsController.initializeNotificationsEventListeners(ref);
 
-    // ref.read(appRouteProvider).addListener(() {
+    // // ref.read(appRouteProvider).addListener(() {
 
     // });
     super.initState();

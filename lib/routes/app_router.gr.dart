@@ -62,14 +62,6 @@ class _$AppRouter extends RootStackRouter {
         child: const AddAdditionalInformationView(),
       );
     },
-    CallRoute.name: (routeData) {
-      final args =
-          routeData.argsAs<CallRouteArgs>(orElse: () => const CallRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: CallView(receivedAction: args.receivedAction),
-      );
-    },
     EditProfileRoute.name: (routeData) {
       final args = routeData.argsAs<EditProfileRouteArgs>();
       return MaterialPageX<dynamic>(
@@ -156,10 +148,6 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           AddAdditionalInformationRoute.name,
           path: '/add-additional-information-view',
-        ),
-        RouteConfig(
-          CallRoute.name,
-          path: '/call-view',
         ),
         RouteConfig(
           EditProfileRoute.name,
@@ -284,30 +272,6 @@ class AddAdditionalInformationRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AddAdditionalInformationRoute';
-}
-
-/// generated route for
-/// [CallView]
-class CallRoute extends PageRouteInfo<CallRouteArgs> {
-  CallRoute({ReceivedAction? receivedAction})
-      : super(
-          CallRoute.name,
-          path: '/call-view',
-          args: CallRouteArgs(receivedAction: receivedAction),
-        );
-
-  static const String name = 'CallRoute';
-}
-
-class CallRouteArgs {
-  const CallRouteArgs({this.receivedAction});
-
-  final ReceivedAction? receivedAction;
-
-  @override
-  String toString() {
-    return 'CallRouteArgs{receivedAction: $receivedAction}';
-  }
 }
 
 /// generated route for

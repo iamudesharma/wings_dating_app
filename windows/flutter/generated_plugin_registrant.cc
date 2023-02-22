@@ -7,7 +7,6 @@
 #include "generated_plugin_registrant.h"
 
 #include <agora_rtc_engine/agora_rtc_engine_plugin.h>
-#include <awesome_notifications/awesome_notifications_plugin_c_api.h>
 #include <desktop_webview_auth/desktop_webview_auth_plugin.h>
 #include <geolocator_windows/geolocator_windows.h>
 #include <iris_event/iris_event_plugin.h>
@@ -17,8 +16,6 @@
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   AgoraRtcEnginePluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("AgoraRtcEnginePlugin"));
-  AwesomeNotificationsPluginCApiRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("AwesomeNotificationsPluginCApi"));
   DesktopWebviewAuthPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("DesktopWebviewAuthPlugin"));
   GeolocatorWindowsRegisterWithRegistrar(

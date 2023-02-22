@@ -4,7 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   agora_rtc_engine
-  awesome_notifications
   desktop_webview_auth
   geolocator_windows
   iris_event
