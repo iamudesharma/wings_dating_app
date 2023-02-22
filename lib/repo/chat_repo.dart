@@ -51,7 +51,7 @@ class ChatRepository {
             contactId: chatContact.contactId,
             timeSent: chatContact.timeSent,
             lastMessage: chatContact.lastMessage,
-            fcmToken: '',
+            fcmToken: chatContact.fcmToken,
           ),
         );
       }

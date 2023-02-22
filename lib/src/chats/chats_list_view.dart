@@ -64,6 +64,9 @@ class ChatListView extends ConsumerWidget {
                             title: Text(userChatList.name),
 
                             subtitle: Text(userChatList.lastMessage),
+                            trailing: Text(
+                              userChatList.timeSent.timeAgo(useShortForm: true),
+                            ),
                             // trailing: const Text(_userChatList.contactId),
                           ).animate().fadeIn();
                         },

@@ -6,6 +6,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
+import 'package:wings_dating_app/src/users/users_view.dart';
 
 import '../../routes/app_router.dart';
 
@@ -61,9 +62,12 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       onTap: () async {
-                        ref
-                            .read(profileRepoProvider)
-                            .addToBlockList(id: userData!.id);
+                        await ref
+                            .read(userListProvider.notifier)
+                            .addToBlockList(userData!.id);
+
+                        Navigator.of(context).pop();
+                        // AutoRouter.of(context).replace(const DashboardRoute());
                       },
                       value: 1,
                       // row has two child icon and text.

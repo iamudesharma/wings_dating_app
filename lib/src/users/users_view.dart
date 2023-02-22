@@ -8,6 +8,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
@@ -16,12 +17,24 @@ import '../../routes/app_router.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
 
-final userListProvider =
-    FutureProvider.autoDispose<List<UserModel>?>((ref) async {
-  ref.keepAlive();
+// final userListProvider = FutureProvider<List<UserModel>?>((ref) async {
+//   return ref.read(profileRepoProvider).getUserList();
+// });
 
-  return ref.read(profileRepoProvider).getUserList();
-});
+final userListProvider =
+    AsyncNotifierProvider<UserListNotifier, List<UserModel?>?>(
+        () => UserListNotifier());
+
+class UserListNotifier extends AsyncNotifier<List<UserModel?>?> {
+  @override
+  FutureOr<List<UserModel?>?> build() {
+    return ref.read(profileRepoProvider).getUserList();
+  }
+
+  addToBlockList(String id) async {
+    await ref.read(profileRepoProvider).addToBlockList(id: id);
+  }
+}
 
 class UsersView extends ConsumerStatefulWidget {
   const UsersView({super.key});
@@ -165,7 +178,8 @@ class _UsersViewState extends ConsumerState<UsersView>
                           onTapEditProfile: () {
                             AutoTabsRouter.of(context).setActiveIndex(2);
                           },
-                          isCurrentUser: users.id == userData.id ? true : false,
+                          isCurrentUser:
+                              users!.id == userData.id ? true : false,
                           users: users,
                         ).animate().shake();
                       },
