@@ -84,6 +84,7 @@ class _ChatViewState extends ConsumerState<ChatView>
                   ))
                 : Scaffold(
                     body: messageProvider.when(
+                      skipLoadingOnReload: true,
                       error: (error, stackTrace) => Center(
                         child: Text("Error $error"),
                       ),
@@ -95,6 +96,7 @@ class _ChatViewState extends ConsumerState<ChatView>
                           slivers: [
                             SliverAppBar(
                               title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     " ${receiverUser?.username}",

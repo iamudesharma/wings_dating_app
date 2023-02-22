@@ -114,20 +114,17 @@ class ProfileRepo with RepositoryExceptionMixin {
     // logger.w(center.data);
 
     // final usercollection = userCollection();
-    final firestore = FirebaseFirestore.instance;
-    // usercollection.snapshots().where((event) => event.);
-    final data =
-        geo.collection(collectionRef: firestore.collection("users")).within(
-              center: center,
-              radius: 150,
-              field: "position",
-              // strictMode: true,
-              strictMode: true,
-            );
+    final firestore = FirebaseFirestore.instance.collection("users").limit(10);
 
-    final userListRaw = await data.first;
-    //   return event.map((e) => UserModel.fromJson(e.data() as dynamic)).toList();
-    // });
+    final data = geo.collection(collectionRef: firestore).within(
+          center: center,
+          radius: 150,
+          field: "position",
+          strictMode: false,
+        );
+
+    final userListRaw = await data.asBroadcastStream().first;
+
     logger.i(userListRaw.length);
 
     logger.i(userListRaw[0].data());
@@ -169,7 +166,6 @@ class ProfileRepo with RepositoryExceptionMixin {
         .snapshots();
 
     final users = data.map((event) => event.docs[0].data());
-    
 
     return users;
   }
