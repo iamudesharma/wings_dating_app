@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -18,7 +20,7 @@ class ChatListView extends ConsumerWidget {
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
-            SliverAppBar.medium(
+            SliverAppBar(
               title: const Text("Chats"),
               actions: [
                 IconButton(
@@ -38,8 +40,10 @@ class ChatListView extends ConsumerWidget {
                 child: ListTile(),
               )),
               data: (data) => data.isEmpty
-                  ? const SliverToBoxAdapter(
-                      child: Text("No User"),
+                  ? SliverToBoxAdapter(
+                      child: Center(
+                        child: const Text("No User").animate().fadeIn(),
+                      ),
                     )
                   : SliverList(
                       delegate: SliverChildBuilderDelegate(
@@ -52,13 +56,18 @@ class ChatListView extends ConsumerWidget {
                               await AutoRouter.of(context)
                                   .push(ChatRoute(id: data[index].contactId));
                             },
-                            leading: const CircleAvatar(
-                              backgroundColor: Colors.green,
+                            leading: CircleAvatar(
+                              backgroundImage: CachedNetworkImageProvider(
+                                  userChatList.profilePic),
                             ),
                             title: Text(userChatList.name),
+
                             subtitle: Text(userChatList.lastMessage),
+                            trailing: Text(
+                              userChatList.timeSent.timeAgo(useShortForm: true),
+                            ),
                             // trailing: const Text(_userChatList.contactId),
-                          );
+                          ).animate().fadeIn();
                         },
                       ),
                     ),

@@ -1,29 +1,47 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
-import 'package:vibration/vibration.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
-import '../../helpers/app_notification.dart';
-import '../../helpers/notifications_util.dart';
-import '../../helpers/send_notification.dart';
+import '../../main.dart';
 import '../../routes/app_router.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
+
+// final userListProvider = FutureProvider<List<UserModel>?>((ref) async {
+//   return ref.read(profileRepoProvider).getUserList();
+// });
+
+final isUserOnlineProvider = FutureProvider.family<bool, bool>(
+  (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
+);
 
 final userListProvider =
-    FutureProvider.autoDispose<List<UserModel>?>((ref) async {
-  ref.keepAlive();
+    AsyncNotifierProvider<UserListNotifier, List<UserModel?>?>(
+        () => UserListNotifier());
 
-  return ref.read(profileRepoProvider).getUserList();
-});
+class UserListNotifier extends AsyncNotifier<List<UserModel?>?> {
+  @override
+  FutureOr<List<UserModel?>?> build() {
+    return ref.read(profileRepoProvider).getUserList();
+  }
+
+  addToBlockList(String id) async {
+    await ref.read(profileRepoProvider).addToBlockList(id: id);
+  }
+}
 
 class UsersView extends ConsumerStatefulWidget {
   const UsersView({super.key});
@@ -35,26 +53,6 @@ class UsersView extends ConsumerStatefulWidget {
 class _UsersViewState extends ConsumerState<UsersView>
     with WidgetsBindingObserver {
   String _firebaseAppToken = '';
-
-  Future<void> getFirebaseMessagingToken() async {
-    if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
-      NotificationsController().addListener(() {
-        setSafeState(() {
-          _firebaseAppToken = NotificationsController().firebaseToken;
-        });
-      });
-      try {
-        await AwesomeNotificationsFcm().requestFirebaseAppToken();
-      } catch (exception) {
-        debugPrint('$exception');
-      }
-    } else {
-      setSafeState(() {
-        _firebaseAppToken = '';
-      });
-      debugPrint('Firebase is not available on this project');
-    }
-  }
 
   setSafeState(Function execution) {
     if (!mounted) {
@@ -68,51 +66,69 @@ class _UsersViewState extends ConsumerState<UsersView>
 
   @override
   void initState() {
-    super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
 
-    getFirebaseMessagingToken();
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
 
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        // This is just a basic example. For real apps, you must show some
-        // friendly dialog box before call the request method.
-        // This is very important to not harm the user experience
-        AwesomeNotifications().requestPermissionToSendNotifications();
+        flutterLocalNotificationsPlugin.show(
+          message.notification.hashCode,
+          message.notification!.title,
+          message.notification!.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(channel.id, channel.name,
+                fullScreenIntent: true),
+          ),
+        );
       }
     });
+    // printToken();
+    WidgetsBinding.instance.addObserver(this);
+
+    super.initState();
+  }
+
+  sendMessage() async {
+    var token =
+        "cgORXx_oQOqbpyi4HI-ct0:APA91bG-Ty5rQ3FKMXiPfKYyRSvcZ4Yr7wKiWqjBy0Bx5BDweldHkVqwV87i33R-9D403qhk1sI2d0Ohj54vEL2OF-cZ3zzfZheVDnllvujURHRnv60rT71DbV6AC0e2HcE8B-6TUhF5";
+    // "cAFhGg9eQu2-c-ThAD26qj:APA91bFrjsYtL4SioPw8ZWNFjxjLdKYSMWeHWqIrrQo5DhDEf3rYDcjaecV7fUTOW7kzkqZGvkABaaEMjRDW8S1MlUg8tiIYQeB1N9tjBxZefih3npTdzhfYI8UP2Kjphoi3F9hHAiRG";
+    await Firebase.initializeApp();
+
+    final messgae = FirebaseMessaging.instance;
+    await messgae.sendMessage();
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     switch (state) {
-      case AppLifecycleState.inactive:
-        print('appLifeCycleState inactive');
-
-        await ref.read(profileRepoProvider).isUserOnline(false);
-        break;
       case AppLifecycleState.resumed:
-        // print('appLifeCycleState resumed');
-        await ref.read(profileRepoProvider).isUserOnline(true);
-
+        ref.read(isUserOnlineProvider(true));
         break;
-      case AppLifecycleState.paused:
-        // print('appLifeCycleState paused');
-        await ref.read(profileRepoProvider).isUserOnline(false);
-
-        break;
+      case AppLifecycleState.inactive:
       case AppLifecycleState.detached:
-        await ref.read(profileRepoProvider).isUserOnline(true);
-
+      case AppLifecycleState.paused:
+        ref.read(isUserOnlineProvider(false));
         break;
     }
   }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  bool? isOnline = false;
 
   @override
   Widget build(BuildContext context) {
     final userData =
         ref.watch(ProfileController.userControllerProvider).userModel;
     final userList = ref.watch(userListProvider);
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async => ref.refresh(userListProvider),
@@ -133,60 +149,167 @@ class _UsersViewState extends ConsumerState<UsersView>
                       "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                 ),
               ),
-              title: Text(userData.username),
+              title: Text(userData!.username),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.search),
-                  onPressed: () {},
+                  onPressed: () async {
+                    showSearch(
+                      context: context,
+                      delegate: UsersSearchDelegate(ref),
+                    );
+                  },
                 ),
               ],
             ),
             SliverPadding(
-                padding: const EdgeInsets.all(10),
-                sliver: userList.when(
-                  loading: () => const SliverToBoxAdapter(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+              padding: const EdgeInsets.all(10),
+              sliver: userList.when(
+                loading: () => const SliverToBoxAdapter(
+                  child: Center(
+                    child: CircularProgressIndicator(),
                   ),
-                  error: (error, stackTrace) => (error is Exception)
-                      ? SliverToBoxAdapter(
-                          child: Center(
-                            child: Text(error.toString()),
-                          ),
-                        )
-                      : SliverToBoxAdapter(
-                          child: Center(
-                            child: Text(error.toString()),
-                          ),
+                ),
+                error: (error, stackTrace) => (error is Exception)
+                    ? SliverToBoxAdapter(
+                        child: Center(
+                          child: Text(error.toString()),
                         ),
-                  data: (data) => SliverGrid(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        data.removeWhere((element) =>
-                            element.id ==
-                            FirebaseAuth.instance.currentUser!.uid);
-                        final users = data[index];
-
-                        return Visibility(
-                          visible: users.id == userData.id ? false : true,
-                          child: UserGridItem(
-                            users: users,
-                          ),
-                        );
-                      },
-                      childCount: data!.length - 1,
-                    ),
+                      )
+                    : SliverToBoxAdapter(
+                        child: Center(
+                          child: Text(error.toString()),
+                        ),
+                      ),
+                data: (data) => SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
                   ),
-                )),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final users = data[index];
+
+                      return UserGridItem(
+                        onTapEditProfile: () {
+                          AutoTabsRouter.of(context).setActiveIndex(2);
+                        },
+                        isCurrentUser: users!.id == userData.id ? true : false,
+                        users: users,
+                      ).animate().shake();
+                    },
+                    childCount: data!.length,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+final searchUsersProvider =
+    FutureProvider.family<List<UserModel?>?, String>((ref, query) async {
+  return await ref.read(profileRepoProvider).searchUser(query);
+});
+
+class UsersSearchDelegate extends SearchDelegate {
+  final WidgetRef ref;
+
+  UsersSearchDelegate(this.ref);
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = "";
+        },
+      )
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final userList = ref.watch(searchUsersProvider(query));
+
+    return userList.when(
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stackTrace) => (error is Exception)
+          ? Center(
+              child: Text(error.toString()),
+            )
+          : Center(
+              child: Text(error.toString()),
+            ),
+      data: (data) => ListView.builder(
+        itemCount: data!.length,
+        itemBuilder: (context, index) {
+          final users = data[index];
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(users!.profileUrl!),
+            ),
+            title: Text(users.username),
+            onTap: () {},
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final userList = ref.watch(searchUsersProvider(query));
+
+    return userList.when(
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stackTrace) => (error is Exception)
+          ? Center(
+              child: Text(error.toString()),
+            )
+          : Center(
+              child: Text(error.toString()),
+            ),
+      data: (data) => ListView.builder(
+        itemCount: data!.length,
+        itemBuilder: (context, index) {
+          final users = data[index];
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(users!.profileUrl!),
+            ),
+            title: Text(users.username),
+            onTap: () {
+              // // Navigator.push(
+              // //   context,
+              // //   MaterialPageRoute(
+              // //     builder: (context) => ProfileScreen(
+              // //       userId: users.id,
+              // //     ),
+              // //   ),
+              // );
+            },
+          );
+        },
       ),
     );
   }
@@ -373,24 +496,31 @@ List<String> heightList = [
 ];
 
 class UserGridItem extends ConsumerWidget {
-  const UserGridItem({super.key, required this.users});
+  const UserGridItem(
+      {super.key,
+      required this.users,
+      this.isCurrentUser = false,
+      this.onTapEditProfile});
 
   final UserModel users;
+
+  final bool? isCurrentUser;
+
+  final VoidCallback? onTapEditProfile;
 
   @override
   Widget build(BuildContext context, ref) {
     return InkWell(
       onTap: () {
-        Vibration.vibrate(duration: 100);
-        // AutoRouter.of(context).push(
-        //   OtherUserProfileRoute(
-        //     id: users.id,
-        //   ),
-        // );
-
-        NotificationUtils.showEmojiNotification(
-          35,
-        );
+        if (isCurrentUser!) {
+          AutoTabsRouter.of(context).setActiveIndex(2);
+        } else {
+          AutoRouter.of(context).push(
+            OtherUserProfileRoute(
+              id: users.id,
+            ),
+          );
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -423,17 +553,19 @@ class UserGridItem extends ConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircleAvatar(
-                      radius: 5,
-                      backgroundColor:
-                          users.isOnline ? Colors.green : Colors.amber,
-                    ),
-                  ),
-                ),
+                isCurrentUser!
+                    ? InkWell(onTap: onTapEditProfile, child: Icon(Icons.edit))
+                    : Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            radius: 5,
+                            backgroundColor:
+                                users.isOnline ? Colors.green : Colors.amber,
+                          ),
+                        ),
+                      ),
               ],
             ),
           ),
@@ -445,11 +577,16 @@ class UserGridItem extends ConsumerWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      users.username,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 10,
+                    SizedBox(
+                      width: 50,
+                      child: Text(
+                        users.username,
+                        maxLines: 2,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                     Text(
@@ -465,18 +602,22 @@ class UserGridItem extends ConsumerWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      users.height ?? "170 cm",
-                      style: const TextStyle(
-                        fontSize: 10,
-                      ),
-                    ),
-                    Text(
-                      users.weight ?? "70 kg",
-                      style: const TextStyle(
-                        fontSize: 10,
-                      ),
-                    ),
+                    users.height == "Do not show"
+                        ? const SizedBox.shrink()
+                        : Text(
+                            users.height ?? "170 cm",
+                            style: const TextStyle(
+                              fontSize: 10,
+                            ),
+                          ),
+                    users.weight == "Do not show"
+                        ? const SizedBox.shrink()
+                        : Text(
+                            users.weight ?? "70 kg",
+                            style: const TextStyle(
+                              fontSize: 10,
+                            ),
+                          ),
                   ],
                 ),
               ],

@@ -6,6 +6,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
+import 'package:wings_dating_app/src/users/users_view.dart';
 
 import '../../routes/app_router.dart';
 
@@ -35,10 +36,6 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
     var otherUser = ref.watch(getUserByIdProvider(widget.id!));
     // }
 
-    // logger.i(userData?.profileUrl);
-    void _showPop() {
-      // return VxPopupMenu();
-    }
     return Scaffold(
       body: otherUser.when(
         loading: () => const Center(
@@ -58,12 +55,17 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
 
               actions: [
                 PopupMenuButton<int>(
+                  padding: EdgeInsets.zero,
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       onTap: () async {
-                        ref
-                            .read(profileRepoProvider)
-                            .addToBlockList(id: userData!.id);
+                        await ref
+                            .read(userListProvider.notifier)
+                            .addToBlockList(userData!.id);
+
+                        // ignore: use_build_context_synchronously
+                        Navigator.of(context).pop();
+                        // AutoRouter.of(context).replace(const DashboardRoute());
                       },
                       value: 1,
                       // row has two child icon and text.
@@ -107,9 +109,11 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   height: 300,
+                  width: MediaQuery.of(context).size.width,
                   child: CachedNetworkImage(
                     imageUrl: (userData.profileUrl ??
                         "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),

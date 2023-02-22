@@ -1,7 +1,7 @@
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:flutter/material.dart';
 
-import '../../../config/app_config.dart';
+// import '../../../config/app_config.dart';
 
 class VideoCallView extends StatefulWidget {
   final String channelId;
@@ -29,7 +29,7 @@ class _VideoCallViewState extends State<VideoCallView> {
       agoraChannelData: AgoraChannelData(),
       agoraConnectionData: AgoraConnectionData(
         channelName: channelName,
-        appId: AppConfig.appId,
+        appId: "",
         username: name,
         tokenUrl: "http://10.0.2.2:8080",
       ),

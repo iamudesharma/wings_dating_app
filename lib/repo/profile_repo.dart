@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -97,13 +98,13 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<List<UserModel>?>? getUserList() async {
     final geo = GeoFlutterFire();
 
-    final position =
-        ref.read(ProfileController.userControllerProvider).userModel!.position;
+    final userModel =
+        ref.read(ProfileController.userControllerProvider).userModel!;
 
-    logger.i(position);
+    logger.i(userModel.position);
     GeoFirePoint center = geo.point(
-      latitude: position!.geopoint.latitude,
-      longitude: position.geopoint.longitude,
+      latitude: userModel.position!.geopoint.latitude,
+      longitude: userModel.position!.geopoint.longitude,
     );
     // GeoFi
     //rePoint center = geo.point(latitude: 19.075983, longitude: 72.877678);
@@ -113,26 +114,31 @@ class ProfileRepo with RepositoryExceptionMixin {
     // logger.w(center.data);
 
     // final usercollection = userCollection();
-    final firestore = FirebaseFirestore.instance;
-    // usercollection.snapshots().where((event) => event.);
-    final data = geo
-        .collection(collectionRef: firestore.collection("users").limit(10))
-        .within(
+    final firestore = FirebaseFirestore.instance.collection("users").limit(10);
+
+    final data = geo.collection(collectionRef: firestore).within(
           center: center,
-          radius: 10000000,
+          radius: 150,
           field: "position",
-          // strictMode: true,
-          strictMode: true,
+          strictMode: false,
         );
 
-    final userListRaw = await data.first;
+    final userListRaw = await data.asBroadcastStream().first;
+
     logger.i(userListRaw.length);
 
     logger.i(userListRaw[0].data());
 
-    return userListRaw
+    final users = userListRaw
         .map((e) => UserModel.fromJson(e.data() as dynamic))
         .toList();
+
+    users.removeWhere((element) {
+      return userModel.blockList.contains(element.id) ||
+          element.id == userModel.id;
+    });
+
+    return users;
   }
 
   Future<void> saveUserLocationData(
@@ -146,22 +152,21 @@ class ProfileRepo with RepositoryExceptionMixin {
     });
   }
 
-  Future<UserModel?> getUserById(String id) async {
+  Stream<UserModel?> getUserById(String id) {
     final usercollection = userCollection();
 
     logger.w(id);
 
-    final data = await usercollection
+    final data = usercollection
         .where(
           "id",
           isEqualTo: id,
         )
-        .get();
+        .limit(1)
+        .snapshots();
 
-    logger.e(data.docs.length);
-    final users = data.docs.first.data();
+    final users = data.map((event) => event.docs[0].data());
 
-    logger.w(users);
     return users;
   }
 
@@ -190,28 +195,34 @@ class ProfileRepo with RepositoryExceptionMixin {
         .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
         .get();
 
-    final userList = data.get("blockList");
+    final userList = await data.get("blockList");
 
     logger.w(userList);
 
-    final id = await usercollection.where("id", whereIn: userList).get();
-
-    logger.w(id.docs.length);
-    final users = id.docs.map((e) => e.data()).toList();
-    logger.w(users);
-
-    if (users.isEmpty) {
+    if (userList.isEmpty) {
       return [];
+    } else {
+      final id = await usercollection.where("id", whereIn: userList).get();
+
+      logger.w(id.docs.length);
+      final users = id.docs.map((e) => e.data()).toList();
+      logger.w(users);
+
+      if (users.isEmpty) {
+        return [];
+      }
+      return users;
     }
-    return users;
   }
 
-  isUserOnline(bool isOnline) async {
+  Future<bool> isUserOnline(bool isOnline) async {
     final usercollection = userCollection();
 
     await usercollection.doc(FirebaseAuth.instance.currentUser?.uid).update({
       "isOnline": isOnline,
     });
+
+    return isOnline;
   }
 
   Future updateImage(String path) async {
@@ -227,5 +238,17 @@ class ProfileRepo with RepositoryExceptionMixin {
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .update({"profileUrl": await value.ref.getDownloadURL()});
     });
+  }
+
+  Future<List<UserModel?>?> searchUser(String query) async {
+    final usercollection = userCollection();
+
+    final docs = usercollection.where("username", isEqualTo: query).get();
+
+    final data =
+        await docs.then((value) => value.docs.map((e) => e.data()).toList());
+
+    logger.i(data.length);
+    return data;
   }
 }

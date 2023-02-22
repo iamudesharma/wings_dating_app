@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
@@ -28,19 +29,24 @@ class UserBlockListView extends ConsumerWidget {
         ),
         data: (data) => Padding(
           padding: const EdgeInsets.all(15.0),
-          child: GridView.builder(
-            itemCount: data.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
-            itemBuilder: (context, index) {
-              return UserGridItem(
-                users: data[index]!,
-              );
-            },
-          ),
+          child: data.isEmpty
+              ? Center(
+                  child:
+                      const Text("No Users In Block List").animate().fadeIn(),
+                )
+              : GridView.builder(
+                  itemCount: data.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemBuilder: (context, index) {
+                    return UserGridItem(
+                      users: data[index]!,
+                    ).animate().shake();
+                  },
+                ),
         ),
       ),
     );

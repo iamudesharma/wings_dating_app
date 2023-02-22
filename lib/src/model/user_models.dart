@@ -27,7 +27,8 @@ class UserModel with _$UserModel {
     required String username,
     String? bio,
     List<String>? albumUrl,
-    String? profileUrl,
+    @Default("https://img.icons8.com/ios/500/null/user-male-circle--v1.png")
+        String? profileUrl,
     String? birthday,
     int? age,
     @JsonKey(name: "position") GeoPointData? position,

@@ -422,7 +422,8 @@ class _$_UserModel implements _UserModel {
       {required this.username,
       this.bio,
       final List<String>? albumUrl,
-      this.profileUrl,
+      this.profileUrl =
+          "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
       this.birthday,
       this.age,
       @JsonKey(name: "position") this.position,
@@ -463,6 +464,7 @@ class _$_UserModel implements _UserModel {
   }
 
   @override
+  @JsonKey()
   final String? profileUrl;
   @override
   final String? birthday;

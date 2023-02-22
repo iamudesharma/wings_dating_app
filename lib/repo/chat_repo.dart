@@ -51,7 +51,7 @@ class ChatRepository {
             contactId: chatContact.contactId,
             timeSent: chatContact.timeSent,
             lastMessage: chatContact.lastMessage,
-            fcmToken: '',
+            fcmToken: chatContact.fcmToken,
           ),
         );
       }
@@ -66,7 +66,8 @@ class ChatRepository {
         .collection('chats')
         .doc(recieverUserId)
         .collection('messages')
-        .orderBy('timeSent')
+        .orderBy('timeSent', descending: true)
+        .limit(10)
         .snapshots()
         .map((event) {
       List<Message> messages = [];
@@ -75,7 +76,7 @@ class ChatRepository {
       for (var document in event.docs) {
         messages.add(Message.fromJson(document.data()));
       }
-      return messages.reversed.toList();
+      return messages;
     });
   }
 
@@ -357,5 +358,30 @@ class ChatRepository {
     } catch (e) {
       // showSnackBar(context: context, content: e.toString());
     }
+  }
+
+  AddNewChatContacts(
+      {required UserModel currentUser, required UserModel receiverUser}) async {
+    final chatId = getConversationID(currentUser.id, receiverUser.id);
+
+    final _firestore = FirebaseFirestore.instance.collection("chats");
+
+    await _firestore.doc(chatId).set({
+      "users": [currentUser.id, receiverUser.id],
+      "lastMessage": {
+        "senderId": currentUser.id,
+        "receiverId": receiverUser.id,
+        "message": "Hello",
+        "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
+        "type": "text",
+        "read": false,
+      }
+    });
+  }
+
+  String getConversationID(String userID, String peerID) {
+    return userID.hashCode <= peerID.hashCode
+        ? userID + '_' + peerID
+        : peerID + '_' + userID;
   }
 }
