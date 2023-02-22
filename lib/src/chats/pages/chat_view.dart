@@ -5,8 +5,10 @@ import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/helpers/message_enum.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
+import 'package:wings_dating_app/src/users/users_view.dart';
 
 import '../../../repo/chat_repo.dart';
 import '../../model/user_models.dart';
@@ -32,8 +34,23 @@ class ChatView extends ConsumerStatefulWidget {
   ConsumerState<ChatView> createState() => _ChatViewState();
 }
 
-class _ChatViewState extends ConsumerState<ChatView> {
+class _ChatViewState extends ConsumerState<ChatView>
+    with WidgetsBindingObserver {
   UserModel? receiverUser;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      logger.i("App is resumed");
+      ref.read(isUserOnlineProvider(true));
+    } else {
+      logger.i("App is paused");
+
+      ref.read(isUserOnlineProvider(false));
+    }
+  }
 
   @override
   void initState() {
@@ -52,6 +69,13 @@ class _ChatViewState extends ConsumerState<ChatView> {
             ref.read(ProfileController.userControllerProvider).userModel!.id);
       },
     );
+    ref.read(isUserOnlineProvider(true));
+  }
+
+  @override
+  void dispose() {
+    ref.read(isUserOnlineProvider(false));
+    super.dispose();
   }
 
   String? selectedImage;
@@ -78,7 +102,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
               slivers: [
                 SliverAppBar(
                   title: Text(
-                    receiverUser?.username ?? "Loading...",
+                    " ${receiverUser?.username}",
                     style: const TextStyle(
                       // color: Colors.black,
                       fontSize: 18,
