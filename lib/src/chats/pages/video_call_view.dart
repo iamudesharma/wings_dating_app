@@ -1,6 +1,5 @@
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:flutter/material.dart';
-
 import '../../../const/app_const.dart';
 
 // import '../../../config/app_config.dart';
@@ -30,7 +29,7 @@ class _VideoCallViewState extends State<VideoCallView> {
     client = AgoraClient(
       agoraChannelData: AgoraChannelData(),
       agoraConnectionData: AgoraConnectionData(
-        channelName: channelName,
+        channelName: "test",
         appId: AppConst.appId,
         username: name,
         tokenUrl: "https://agora-token-service-production-a13d.up.railway.app",

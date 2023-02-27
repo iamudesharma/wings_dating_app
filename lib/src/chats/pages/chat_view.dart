@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/helpers/message_enum.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
+import 'package:wings_dating_app/src/chats/pages/video_call_view.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
 
 import '../../../repo/chat_repo.dart';
@@ -265,13 +266,18 @@ class _ChatViewState extends ConsumerState<ChatView>
                                                               title: const Text(
                                                                   "Call"),
                                                               onTap: () async {
-                                                                // await Navigator.push(
-                                                                //   context,
-                                                                //   MaterialPageRoute(
-                                                                //     builder: (context) =>
-                                                                //         const VideoCallView(),
-                                                                //   ),
-                                                                // );
+                                                                await Navigator
+                                                                    .push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) => VideoCallView(
+                                                                        userName:
+                                                                            currentUser?.username ??
+                                                                                "",
+                                                                        channelId:
+                                                                            ""),
+                                                                  ),
+                                                                );
                                                               },
                                                             ),
                                                           ],
