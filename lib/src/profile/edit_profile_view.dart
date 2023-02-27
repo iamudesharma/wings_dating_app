@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +12,7 @@ import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:wings_dating_app/dependency/dependenies.dart';
@@ -48,7 +49,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
   Location location = Location();
   final geo = GeoFlutterFire();
-
+// c6044647-dfb9-46eb-ad67-628cbb0b60dc
   @override
   void initState() {
     if (widget.isEditProfile) {
@@ -336,8 +337,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               longitude: data.longitude!,
                             );
 
-                            final token =
-                                await FirebaseMessaging.instance.getToken();
+                            final token = await OneSignal().getDeviceState();
+
+                            logger.e(token!.userId!+"token Id userId");
 
                             if (_formKey.currentState!.validate()) {
                               if (widget.isEditProfile) {
@@ -346,7 +348,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       geohash: myLocation.hash,
                                       geopoint: myLocation.geoPoint),
                                   bio: _bioController.text,
-                                  fcmToken: token ?? "",
+                                  fcmToken: token!.userId!,
                                   username: _usernameController.text,
                                   profileUrl: await ref
                                       .read(ProfileController
@@ -367,7 +369,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 int age = calculateAge(_selectedDate!);
 
                                 UserModel user = UserModel(
-                                  fcmToken: token ?? "",
+                                  fcmToken: token!.userId!,
                                   dob: _dobController.text,
                                   isOnline: true,
                                   isVerified: false,
