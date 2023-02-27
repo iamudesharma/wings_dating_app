@@ -305,6 +305,7 @@ class _ChatViewState extends ConsumerState<ChatView>
                                                             ImageSource.camera);
 
                                                 if (image != null) {
+                                                  // ignore: use_build_context_synchronously
                                                   ref
                                                       .read(
                                                           chatRepositoryProvider)

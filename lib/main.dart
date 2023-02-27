@@ -79,53 +79,55 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   FirebaseMessaging.instance.app.setAutomaticDataCollectionEnabled(true);
 
-  print("Handling a background message: ${message.messageId}");
-  var _currentUuid = Uuid().v4();
-  CallKitParams callKitParams = CallKitParams(
-    id: _currentUuid,
+  // print("Handling a background message: ${message.messageId}");
+  // var _currentUuid = Uuid().v4();
 
-    nameCaller: 'Hien Nguyen',
-    appName: 'Callkit',
-    avatar: 'https://i.pravatar.cc/100',
-    handle: '0123456789',
-    type: 0,
-    textAccept: 'Accept',
-    textDecline: 'Decline',
-    textMissedCall: 'Missed call',
-    textCallback: 'Call back',
-    duration: 30000,
-    extra: <String, dynamic>{'userId': '1a2b3c4d'},
-    headers: <String, dynamic>{'apiKey': 'Abc@123!', 'platform': 'flutter'},
-    android: const AndroidParams(
-      isCustomNotification: true,
-      isShowLogo: false,
-      isShowCallback: false,
-      isShowMissedCallNotification: true,
-      ringtonePath: 'system_ringtone_default',
-      backgroundColor: '#0955fa',
-      backgroundUrl: 'https://i.pravatar.cc/500',
-      actionColor: '#4CAF50',
-      incomingCallNotificationChannelName: "Incoming Call",
-      missedCallNotificationChannelName: "Missed Call",
-    ),
-    // ios: IOSParams(
-    //   iconName: 'CallKitLogo',
-    //   handleType: 'generic',
-    //   supportsVideo: true,
-    //   maximumCallGroups: 2,
-    //   maximumCallsPerCallGroup: 1,
-    //   audioSessionMode: 'default',
-    //   audioSessionActive: true,
-    //   audioSessionPreferredSampleRate: 44100.0,
-    //   audioSessionPreferredIOBufferDuration: 0.005,
-    //   supportsDTMF: true,
-    //   supportsHolding: true,
-    //   supportsGrouping: false,
-    //   supportsUngrouping: false,
-    //   ringtonePath: 'system_ringtone_default',
-    // ),
-  );
-  await FlutterCallkitIncoming.showCallkitIncoming(callKitParams);
+  // // if(message.messageType)
+  // CallKitParams callKitParams = CallKitParams(
+  //   id: _currentUuid,
+
+  //   nameCaller: 'Hien Nguyen',
+  //   appName: 'Callkit',
+  //   avatar: 'https://i.pravatar.cc/100',
+  //   handle: '0123456789',
+  //   type: 0,
+  //   textAccept: 'Accept',
+  //   textDecline: 'Decline',
+  //   textMissedCall: 'Missed call',
+  //   textCallback: 'Call back',
+  //   duration: 30000,
+  //   extra: <String, dynamic>{'userId': '1a2b3c4d'},
+  //   headers: <String, dynamic>{'apiKey': 'Abc@123!', 'platform': 'flutter'},
+  //   android: const AndroidParams(
+  //     isCustomNotification: true,
+  //     isShowLogo: false,
+  //     isShowCallback: false,
+  //     isShowMissedCallNotification: true,
+  //     ringtonePath: 'system_ringtone_default',
+  //     backgroundColor: '#0955fa',
+  //     backgroundUrl: 'https://i.pravatar.cc/500',
+  //     actionColor: '#4CAF50',
+  //     incomingCallNotificationChannelName: "Incoming Call",
+  //     missedCallNotificationChannelName: "Missed Call",
+  //   ),
+  //   // ios: IOSParams(
+  //   //   iconName: 'CallKitLogo',
+  //   //   handleType: 'generic',
+  //   //   supportsVideo: true,
+  //   //   maximumCallGroups: 2,
+  //   //   maximumCallsPerCallGroup: 1,
+  //   //   audioSessionMode: 'default',
+  //   //   audioSessionActive: true,
+  //   //   audioSessionPreferredSampleRate: 44100.0,
+  //   //   audioSessionPreferredIOBufferDuration: 0.005,
+  //   //   supportsDTMF: true,
+  //   //   supportsHolding: true,
+  //   //   supportsGrouping: false,
+  //   //   supportsUngrouping: false,
+  //   //   ringtonePath: 'system_ringtone_default',
+  //   // ),
+  // );
+  // await FlutterCallkitIncoming.showCallkitIncoming(callKitParams);
 
   // flutterLocalNotificationsPlugin.show(
   //   message.notification.hashCode,
@@ -208,7 +210,6 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final appRouter = ref.watch(appRouteProvider);
     return MaterialApp.router(
-    
       theme: FlexThemeData.light(
         scheme: FlexScheme.aquaBlue,
         surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
