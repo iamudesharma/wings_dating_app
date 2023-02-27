@@ -1,6 +1,8 @@
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:flutter/material.dart';
 
+import '../../../const/app_const.dart';
+
 // import '../../../config/app_config.dart';
 
 class VideoCallView extends StatefulWidget {
@@ -29,9 +31,9 @@ class _VideoCallViewState extends State<VideoCallView> {
       agoraChannelData: AgoraChannelData(),
       agoraConnectionData: AgoraConnectionData(
         channelName: channelName,
-        appId: "",
+        appId: AppConst.appId,
         username: name,
-        tokenUrl: "http://10.0.2.2:8080",
+        tokenUrl: "https://agora-token-service-production-a13d.up.railway.app",
       ),
     );
     await client.initialize();
@@ -48,10 +50,11 @@ class _VideoCallViewState extends State<VideoCallView> {
               layoutType: Layout.floating,
             ),
             AgoraVideoButtons(
-                client: client,
-                onDisconnect: () {
-                  Navigator.pop(context);
-                }),
+              client: client,
+              onDisconnect: () {
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),
