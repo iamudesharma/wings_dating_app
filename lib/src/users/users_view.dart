@@ -78,8 +78,12 @@ class _UsersViewState extends ConsumerState<UsersView>
           message.notification!.title,
           message.notification!.body,
           NotificationDetails(
-            android: AndroidNotificationDetails(channel.id, channel.name,
-                fullScreenIntent: true),
+            android: AndroidNotificationDetails(
+              message.notification!.android!.channelId!,
+              "call-channel",
+              fullScreenIntent: true,
+              category: AndroidNotificationCategory.call,
+            ),
           ),
         );
       }

@@ -77,6 +77,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
 
+// message.messageType
   FirebaseMessaging.instance.app.setAutomaticDataCollectionEnabled(true);
 
   // print("Handling a background message: ${message.messageId}");
@@ -165,7 +166,7 @@ void main() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  final InitializationSettings initializationSettings = InitializationSettings(
+  const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
   );
   await flutterLocalNotificationsPlugin.initialize(
@@ -174,16 +175,12 @@ void main() async {
         (NotificationResponse notificationResponse) {
       switch (notificationResponse.notificationResponseType) {
         case NotificationResponseType.selectedNotification:
-          // selectNotificationStream.add(notificationResponse.payload);
           break;
         case NotificationResponseType.selectedNotificationAction:
-          // if (notificationResponse.actionId == navigationActionId) {
-          //   // selectNotificationStream.add(notificationResponse.payload);
-          // }
           break;
       }
     },
-    onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+    // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
   );
 
   await flutterLocalNotificationsPlugin
