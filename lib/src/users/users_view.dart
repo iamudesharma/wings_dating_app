@@ -82,7 +82,7 @@ class _UsersViewState extends ConsumerState<UsersView>
     logger.e(token!.userId! + "token Id userId");
 
     final userModel =
-        ref.read(ProfileController.userControllerProvider).userModel.copyWith(
+        ref.read(ProfileController.userControllerProvider).userModel!.copyWith(
               fcmToken: token.userId!,
             );
     userModel.fcmToken != token.userId;
