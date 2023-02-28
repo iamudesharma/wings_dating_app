@@ -387,3 +387,23 @@
 
 //   ref.read(appRouteProvider).push(CallRoute(receivedAction: receivedAction));
 // }
+
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+
+sendChat({
+  Map<String, dynamic>? additionalData,
+  required String fcm,
+}) async {
+  OneSignal.shared.postNotification(OSCreateNotification(
+      playerIds: [fcm],
+      additionalData: additionalData,
+      content: "New message",
+      sendAfter: DateTime.now(),
+      buttons: [
+        OSActionButton(
+          text: "Accept",
+          id: "accept",
+        ),
+        OSActionButton(text: "Reject", id: "reject"),
+      ]));
+}

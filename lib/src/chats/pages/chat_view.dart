@@ -12,6 +12,7 @@ import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/chats/pages/video_call_view.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
 
+import '../../../helpers/app_notification.dart';
 import '../../../repo/chat_repo.dart';
 import '../../model/user_models.dart';
 import '../../profile/controller/profile_controller.dart';
@@ -185,7 +186,17 @@ class _ChatViewState extends ConsumerState<ChatView>
                                                 receiverUserId: widget.id,
                                                 senderUser: currentUser!,
                                                 text: value,
+                                                
                                               );
+
+                                          sendChat(
+                                              fcm: currentUser.fcmToken,
+                                              additionalData: {
+                                                "type": "chat",
+                                                "senderId": currentUser.id,
+                                                "receiverId": receiverUser.id,
+                                                "message": value,
+                                              });
                                         },
                                         actions: [
                                           InkWell(
