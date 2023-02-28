@@ -180,23 +180,27 @@ class _ChatViewState extends ConsumerState<ChatView>
                                           ref
                                               .read(chatRepositoryProvider)
                                               .sendTextMessage(
-                                                receiverUserData: receiverUser!,
+                                                receiverUserData: receiverUser,
                                                 context: context,
                                                 messageReply: null,
                                                 receiverUserId: widget.id,
                                                 senderUser: currentUser!,
                                                 text: value,
-                                                
                                               );
 
-                                          sendChat(
-                                              fcm: currentUser.fcmToken,
+                                          await sendChat(
+                                              fcm: receiverUser.fcmToken,
+                                              content:
+                                                  "${currentUser.username} send you a message",
                                               additionalData: {
                                                 "type": "chat",
                                                 "senderId": currentUser.id,
                                                 "receiverId": receiverUser.id,
                                                 "message": value,
                                               });
+
+                                          logger.e(
+                                              "Chat sent ${receiverUser.fcmToken}");
                                         },
                                         actions: [
                                           InkWell(
@@ -229,6 +233,7 @@ class _ChatViewState extends ConsumerState<ChatView>
 
                                                                 if (image !=
                                                                     null) {
+                                                                  // ignore: use_build_context_synchronously
                                                                   ref.read(chatRepositoryProvider).sendFileMessage(
                                                                       ref: ref,
                                                                       file: File(image),
@@ -237,8 +242,22 @@ class _ChatViewState extends ConsumerState<ChatView>
                                                                       isGroupChat: false,
                                                                       messageEnum: MessageEnum.image,
                                                                       // ref: ref.read(),
-                                                                      receiverUserId: receiverUser!.id,
+                                                                      receiverUserId: receiverUser.id,
                                                                       senderUserData: currentUser!);
+
+                                                                  await sendChat(
+                                                                      fcm: receiverUser
+                                                                          .fcmToken,
+                                                                      content:
+                                                                          "${currentUser.username} send you a photo",
+                                                                      additionalData: {
+                                                                        "type":
+                                                                            "chat",
+                                                                        "senderId":
+                                                                            currentUser.id,
+                                                                        "receiverId":
+                                                                            receiverUser.id,
+                                                                      });
                                                                 }
                                                               },
                                                               gallery:
@@ -256,6 +275,7 @@ class _ChatViewState extends ConsumerState<ChatView>
                                                                   //   selectedImage = image;
                                                                   // });
 
+                                                                  // ignore: use_build_context_synchronously
                                                                   ref.read(chatRepositoryProvider).sendFileMessage(
                                                                       ref: ref,
                                                                       file: File(image),
@@ -264,8 +284,22 @@ class _ChatViewState extends ConsumerState<ChatView>
                                                                       isGroupChat: false,
                                                                       messageEnum: MessageEnum.image,
                                                                       // ref: ref.read(),
-                                                                      receiverUserId: receiverUser!.id,
+                                                                      receiverUserId: receiverUser.id,
                                                                       senderUserData: currentUser!);
+
+                                                                  await sendChat(
+                                                                      fcm: receiverUser
+                                                                          .fcmToken,
+                                                                      content:
+                                                                          "${currentUser.username} send you a photo",
+                                                                      additionalData: {
+                                                                        "type":
+                                                                            "chat",
+                                                                        "senderId":
+                                                                            currentUser.id,
+                                                                        "receiverId":
+                                                                            receiverUser.id,
+                                                                      });
                                                                 }
                                                               },
                                                             ),

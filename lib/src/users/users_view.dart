@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 
@@ -79,15 +80,34 @@ class _UsersViewState extends ConsumerState<UsersView>
   void didChangeDependencies() async {
     final token = await OneSignal().getDeviceState();
 
-    logger.e(token!.userId! + "token Id userId");
+    // logger.e(token!.userId! + "token Id userId");
 
-    final userModel =
-        ref.read(ProfileController.userControllerProvider).userModel!.copyWith(
-              fcmToken: token.userId!,
-            );
-    userModel.fcmToken != token.userId;
+    // final userModel =
+    //     ref.read(ProfileController.userControllerProvider).userModel!.copyWith(
+    //           fcmToken: token.userId!,
+    //         );
+    // userModel.fcmToken != token.userId;
 
-    await ref.read(profileRepoProvider).updateUserDoc(userModel);
+    // await ref.read(profileRepoProvider).updateUserDoc(userModel);
+
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      print('NOTIFICATION OPENED HANDLER CALLED WITH: ${result}');
+
+      logger.i(
+          "Opened notification: \n${result.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+    });
+
+    OneSignal.shared.setNotificationWillShowInForegroundHandler(
+        (OSNotificationReceivedEvent event) {
+      print('FOREGROUND HANDLER CALLED WITH: ${event}');
+
+      /// Display Notification, send null to not display
+      event.complete(null);
+
+      logger.i(
+          "Notification received in foreground notification: \n${event.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
+    });
 
     super.didChangeDependencies();
   }

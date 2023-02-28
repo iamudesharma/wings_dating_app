@@ -9,9 +9,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
+// import 'package:location/location.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -47,11 +48,13 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Location location = Location();
+  Geolocator location = Geolocator();
   final geo = GeoFlutterFire();
 // c6044647-dfb9-46eb-ad67-628cbb0b60dc
   @override
   void initState() {
+    OneSignal.shared.requiresUserPrivacyConsent();
+
     if (widget.isEditProfile) {
       final userdata =
           ref.read(ProfileController.userControllerProvider).userModel;
@@ -82,14 +85,15 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
   @override
   void didChangeDependencies() async {
-    if (await location.serviceEnabled()) {
-      if (await location.hasPermission() == PermissionStatus.granted) {
-        logger.i('Permission granted');
-      } else {
-        location.requestPermission();
-      }
+    if (await Geolocator.isLocationServiceEnabled()) {
+      Geolocator.requestPermission();
+      // if (await Geolocator.checkPermission() == LocationPermission.) {
+      //   logger.i('Permission granted');
+      // } else {
+      //   location.requestPermission();
+      // }
     } else {
-      location.requestService();
+      Geolocator.requestPermission();
     }
 
     super.didChangeDependencies();
@@ -327,19 +331,20 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         replacement: ElevatedButton(
                           onPressed: () async {
                             final route = AutoRouter.of(context);
-                            final data = await location.getLocation();
+                            final data = await Geolocator.getCurrentPosition(
+                                desiredAccuracy: LocationAccuracy.best);
 
                             setState(() {
                               _loading = true;
                             });
                             GeoFirePoint myLocation = geo.point(
-                              latitude: data.latitude!,
-                              longitude: data.longitude!,
+                              latitude: data.latitude,
+                              longitude: data.longitude,
                             );
 
                             final token = await OneSignal().getDeviceState();
 
-                            logger.e(token!.userId!+"token Id userId");
+                            logger.e(token!.userId! + "token Id userId");
 
                             if (_formKey.currentState!.validate()) {
                               if (widget.isEditProfile) {
@@ -369,30 +374,29 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 int age = calculateAge(_selectedDate!);
 
                                 UserModel user = UserModel(
-                                  fcmToken: token!.userId!,
-                                  dob: _dobController.text,
-                                  isOnline: true,
-                                  isVerified: false,
-                                  id: FirebaseAuth.instance.currentUser!.uid,
-                                  username: "Udesh  ",
-                                  bio: " zjxwwxj",
-                                  age: age,
-                                  profileUrl: await ref
-                                      .read(ProfileController
-                                          .userControllerProvider)
-                                      .uploadImage(),
-                                  birthday: _dobController.text,
-                                );
+                                    fcmToken: token.userId!,
+                                    dob: _dobController.text,
+                                    isOnline: true,
+                                    isVerified: false,
+                                    id: FirebaseAuth.instance.currentUser!.uid,
+                                    username: _usernameController.text,
+                                    bio: _bioController.text,
+                                    age: age,
+                                    profileUrl: await ref
+                                        .read(ProfileController
+                                            .userControllerProvider)
+                                        .uploadImage(),
+                                    birthday: _dobController.text,
+                                    position: GeoPointData(
+                                      geohash: myLocation.hash,
+                                      geopoint: myLocation.geoPoint,
+                                    ));
 
                                 logger.i(user.toJson());
                                 logger.i(myLocation.data);
                                 ref
                                     .read(Dependency.profileProvider)
                                     .createUserDoc(user);
-
-                                await ref
-                                    .read(Dependency.profileProvider)
-                                    .updateLocation(myLocation.data);
 
                                 setState(() {
                                   _loading = false;

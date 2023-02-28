@@ -389,21 +389,23 @@
 // }
 
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:wings_dating_app/helpers/helpers.dart';
 
 sendChat({
   Map<String, dynamic>? additionalData,
   required String fcm,
+  required String content,
 }) async {
-  OneSignal.shared.postNotification(OSCreateNotification(
+  var notification = OSCreateNotification(
       playerIds: [fcm],
+      content: content,
+      heading: "Chat",
       additionalData: additionalData,
-      content: "New message",
-      sendAfter: DateTime.now(),
-      buttons: [
-        OSActionButton(
-          text: "Accept",
-          id: "accept",
-        ),
-        OSActionButton(text: "Reject", id: "reject"),
-      ]));
+      
+      
+     );
+
+  await OneSignal.shared.postNotification(notification).then((value) {
+    logger.i(value);
+  });
 }
