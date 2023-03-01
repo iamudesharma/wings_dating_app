@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
+import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -371,6 +372,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               } else {
                                 int age = calculateAge(_selectedDate!);
 
+                                int id = Random().nextInt(8);
+
                                 UserModel user = UserModel(
                                   fcmToken: token ?? "",
                                   dob: _dobController.text,
@@ -385,9 +388,15 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                           .userControllerProvider)
                                       .uploadImage(),
                                   birthday: _dobController.text,
+                                  cubeUser: CubeUser(
+                                    id: id,
+                                    fullName: _usernameController.text,
+                                    password: "12345678",
+                                  ),
                                   position: GeoPointData(
-                                      geohash: myLocation.hash,
-                                      geopoint: myLocation.geoPoint),
+                                    geohash: myLocation.hash,
+                                    geopoint: myLocation.geoPoint,
+                                  ),
                                 );
 
                                 logger.i(user.toJson());
@@ -396,18 +405,10 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     .read(Dependency.profileProvider)
                                     .createUserDoc(user);
 
-                                CubeUser cubeUser = CubeUser(
-                                    phone: FirebaseAuth.instance.currentUser
-                                            ?.phoneNumber ??
-                                        "123456789",
-                                    fullName: _usernameController.text,
-                                    id: 123456,
-                                    password: "12345678");
-
                                 SharedPrefs sharedPrefs = SharedPrefs.instance;
 
-                                await sharedPrefs.saveNewUser(cubeUser);
-                                await createSession(cubeUser);
+                                await sharedPrefs.saveNewUser(user.cubeUser);
+                                await createSession(user.cubeUser);
                                 setState(() {
                                   _loading = false;
                                 });

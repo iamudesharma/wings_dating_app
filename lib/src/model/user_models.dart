@@ -7,6 +7,7 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:wings_dating_app/helpers/extra_data.dart';
 // import 'package:wings_dating_app/src/model/user_basic_model.dart';
@@ -49,8 +50,7 @@ class UserModel with _$UserModel {
     @Default([]) List<String> blockList,
     required String id,
     required String fcmToken,
-
-    
+    required CubeUser cubeUser,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, Object?> json) =>

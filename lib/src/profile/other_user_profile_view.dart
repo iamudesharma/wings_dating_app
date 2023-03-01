@@ -105,7 +105,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
+                child: SizedBox(
                   height: 300,
                   width: MediaQuery.of(context).size.width,
                   child: CachedNetworkImage(
