@@ -189,9 +189,8 @@ class _ChatViewState extends ConsumerState<ChatView>
                                               );
 
                                           await sendChat(
-                                              fcm: receiverUser.fcmToken,
-                                              content:
-                                                  "${currentUser.username} send you a message",
+                                              fcm: currentUser.fcmToken,
+                                              content: "hello",
                                               additionalData: {
                                                 "type": "chat",
                                                 "senderId": currentUser.id,

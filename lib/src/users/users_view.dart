@@ -72,23 +72,6 @@ class _UsersViewState extends ConsumerState<UsersView>
     WidgetsBinding.instance.addObserver(this);
 
     super.initState();
-  }
-
-  sendMessage() async {}
-
-  @override
-  void didChangeDependencies() async {
-    final token = await OneSignal().getDeviceState();
-
-    // logger.e(token!.userId! + "token Id userId");
-
-    // final userModel =
-    //     ref.read(ProfileController.userControllerProvider).userModel!.copyWith(
-    //           fcmToken: token.userId!,
-    //         );
-    // userModel.fcmToken != token.userId;
-
-    // await ref.read(profileRepoProvider).updateUserDoc(userModel);
 
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
@@ -108,6 +91,21 @@ class _UsersViewState extends ConsumerState<UsersView>
       logger.i(
           "Notification received in foreground notification: \n${event.notification.jsonRepresentation().replaceAll("\\n", "\n")}");
     });
+  }
+
+  @override
+  void didChangeDependencies() async {
+    final token = await OneSignal().getDeviceState();
+
+    // logger.e(token!.userId! + "token Id userId");
+
+    // final userModel =
+    //     ref.read(ProfileController.userControllerProvider).userModel!.copyWith(
+    //           fcmToken: token.userId!,
+    //         );
+    // userModel.fcmToken != token.userId;
+
+    // await ref.read(profileRepoProvider).updateUserDoc(userModel);
 
     super.didChangeDependencies();
   }

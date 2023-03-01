@@ -82,36 +82,68 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final appRouter = ref.watch(appRouteProvider);
     return MaterialApp.router(
+      // theme: FlexThemeData.light(
+      //   scheme: FlexScheme.aquaBlue,
+      //   surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+      //   blendLevel: 20,
+      //   appBarOpacity: 0.95,
+      //   subThemesData: const FlexSubThemesData(
+      //     blendOnLevel: 20,
+      //     blendOnColors: false,
+      //     inputDecoratorRadius: 12.0,
+      //   ),
+      //   visualDensity: FlexColorScheme.comfortablePlatformDensity,
+      //   useMaterial3: true,
+      //   // To use the playground font, add GoogleFonts package and uncomment
+      //   fontFamily: GoogleFonts.notoSans().fontFamily,
+      // ),
+      // darkTheme: FlexThemeData.dark(
+      //   scheme: FlexScheme.aquaBlue,
+      //   surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+      //   blendLevel: 15,
+      //   appBarOpacity: 0.90,
+      //   subThemesData: const FlexSubThemesData(
+      //     blendOnLevel: 30,
+      //     inputDecoratorRadius: 12.0,
+      //   ),
+      //   visualDensity: FlexColorScheme.comfortablePlatformDensity,
+      //   useMaterial3: true,
+      //   // To use the playground font, add GoogleFonts package and uncomment
+      //   fontFamily: GoogleFonts.notoSans().fontFamily,
+      // ),
+
+      // This theme was made for FlexColorScheme version 6.1.1. Make sure
+// you use same or higher version, but still same major version. If
+// you use a lower version, some properties may not be supported. In
+// that case you can also remove them after copying the theme to your app.
       theme: FlexThemeData.light(
-        scheme: FlexScheme.aquaBlue,
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 20,
-        appBarOpacity: 0.95,
+        scheme: FlexScheme.material,
+        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
+        blendLevel: 9,
         subThemesData: const FlexSubThemesData(
-          blendOnLevel: 20,
+          blendOnLevel: 10,
           blendOnColors: false,
-          inputDecoratorRadius: 12.0,
         ),
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
         // To use the playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts.notoSans().fontFamily,
+        // fontFamily: GoogleFonts.notoSans().fontFamily,
       ),
       darkTheme: FlexThemeData.dark(
-        scheme: FlexScheme.aquaBlue,
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+        scheme: FlexScheme.material,
+        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
         blendLevel: 15,
-        appBarOpacity: 0.90,
         subThemesData: const FlexSubThemesData(
-          blendOnLevel: 30,
-          inputDecoratorRadius: 12.0,
+          blendOnLevel: 20,
         ),
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        // To use the playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts.notoSans().fontFamily,
+        // To use the Playground font, add GoogleFonts package and uncomment
+        // fontFamily: GoogleFonts.notoSans().fontFamily,
       ),
-      themeMode: ThemeMode.dark,
+// If you do not have a themeMode switch, uncomment this line
+// to let the device system mode control the theme mode:
+// themeMode: ThemeMode.system,
+
+      themeMode: ThemeMode.light,
       routerDelegate:
           appRouter.delegate(navigatorObservers: () => [MyObserver()]),
       routeInformationParser: appRouter.defaultRouteParser(),

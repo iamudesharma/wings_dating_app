@@ -394,16 +394,14 @@ import 'package:wings_dating_app/helpers/helpers.dart';
 sendChat({
   Map<String, dynamic>? additionalData,
   required String fcm,
-  required String content,
+  required String? content,
 }) async {
   var notification = OSCreateNotification(
-      playerIds: [fcm],
-      content: content,
-      heading: "Chat",
-      additionalData: additionalData,
-      
-      
-     );
+    playerIds: [fcm],
+    content: content,
+    heading: "Chat",
+    additionalData: additionalData,
+  );
 
   await OneSignal.shared.postNotification(notification).then((value) {
     logger.i(value);
