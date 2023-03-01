@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -17,6 +18,8 @@ import 'package:uuid/uuid.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
+import '../../const/app_const.dart';
+import '../../const/pref_util.dart';
 import '../../main.dart';
 import '../../routes/app_router.dart';
 import '../model/user_models.dart';
@@ -94,16 +97,14 @@ class _UsersViewState extends ConsumerState<UsersView>
     WidgetsBinding.instance.addObserver(this);
 
     super.initState();
-  }
 
-  sendMessage() async {
-    var token =
-        "cgORXx_oQOqbpyi4HI-ct0:APA91bG-Ty5rQ3FKMXiPfKYyRSvcZ4Yr7wKiWqjBy0Bx5BDweldHkVqwV87i33R-9D403qhk1sI2d0Ohj54vEL2OF-cZ3zzfZheVDnllvujURHRnv60rT71DbV6AC0e2HcE8B-6TUhF5";
-    // "cAFhGg9eQu2-c-ThAD26qj:APA91bFrjsYtL4SioPw8ZWNFjxjLdKYSMWeHWqIrrQo5DhDEf3rYDcjaecV7fUTOW7kzkqZGvkABaaEMjRDW8S1MlUg8tiIYQeB1N9tjBxZefih3npTdzhfYI8UP2Kjphoi3F9hHAiRG";
-    await Firebase.initializeApp();
+    init(AppConst.cubeappId, AppConst.authKey, AppConst.authSecret,
+        onSessionRestore: () async {
+      SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
+      CubeUser? user = sharedPrefs.getUser();
 
-    final messgae = FirebaseMessaging.instance;
-    await messgae.sendMessage();
+      return createSession(user);
+    });
   }
 
   @override
