@@ -49,6 +49,8 @@ class UserModel with _$UserModel {
     @Default([]) List<String> blockList,
     required String id,
     required String fcmToken,
+
+    
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, Object?> json) =>

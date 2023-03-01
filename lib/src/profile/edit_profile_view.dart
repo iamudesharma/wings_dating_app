@@ -128,6 +128,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
               // autovalidateMode: AutovalidateMode.onUserInteraction,
               child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(
                       height: 20,
@@ -378,13 +379,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   id: FirebaseAuth.instance.currentUser!.uid,
                                   username: _usernameController.text,
                                   bio: _bioController.text,
-
                                   age: age,
-
-                                  // profileUrl: await ref
-                                  //     .read(ProfileController
-                                  //         .userControllerProvider)
-                                  //     .uploadImage(),
+                                  profileUrl: await ref
+                                      .read(ProfileController
+                                          .userControllerProvider)
+                                      .uploadImage(),
                                   birthday: _dobController.text,
                                   position: GeoPointData(
                                       geohash: myLocation.hash,

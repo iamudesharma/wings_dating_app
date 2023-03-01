@@ -1,5 +1,5 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -7,8 +7,6 @@ import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
-
-import '../../routes/app_router.dart';
 
 class OtherUserProfileView extends ConsumerStatefulWidget {
   const OtherUserProfileView({
@@ -186,13 +184,28 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                   .read(profileRepoProvider)
                   .removeToBlockList(id: [otherUser.value!.id]);
             } else {
-              await AutoRouter.of(context).push(
-                ChatRoute(id: widget.id!),
-              );
+              // await AutoRouter.of(context).push(
+              //   ChatRoute(id: widget.id!),
+              // );
             }
           },
         ),
       ),
     );
+  }
+
+  void _createDialog(BuildContext context, Set<int> users) async {
+    log("_createDialog with users= $users");
+
+    CubeDialog newDialog =
+        CubeDialog(CubeDialogType.PRIVATE, occupantsIds: users.toList());
+    createDialog(newDialog).then((createdDialog) {
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => ChatDialogScreen(currentUser, createdDialog),
+      //   ),
+      // );
+    }).catchError((error) {});
   }
 }
