@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
 import '../../main.dart';
@@ -117,6 +119,24 @@ class _UsersViewState extends ConsumerState<UsersView>
         ref.read(isUserOnlineProvider(false));
         break;
     }
+  }
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+
+    final token = await FirebaseMessaging.instance.getToken();
+
+    final userData = ref
+        .watch(ProfileController.userControllerProvider)
+        .userModel
+        ?.copyWith(fcmToken: token!);
+
+    logger.i("FCM TOKEN: $token");
+
+    await ref
+        .read(ProfileController.userControllerProvider)
+        .updateUserData(userData!);
   }
 
   @override

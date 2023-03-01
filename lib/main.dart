@@ -2,15 +2,16 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_callkit_incoming/entities/android_params.dart';
-import 'package:flutter_callkit_incoming/entities/call_kit_params.dart';
-import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
+// import 'package:flutter_callkit_incoming/entities/android_params.dart';
+// import 'package:flutter_callkit_incoming/entities/call_kit_params.dart';
+// import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -71,14 +72,43 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   }
 }
 
+Future<void> _onCallAccepted(CallEvent callEvent) async {
+  // the call was accepted
+
+  await ConnectycubeFlutterCallKit.clearCallData(
+      sessionId: callEvent.sessionId);
+}
+
+Future<void> _onCallRejected(CallEvent callEvent) async {
+  // the call was rejected
+
+  await ConnectycubeFlutterCallKit.clearCallData(
+      sessionId: callEvent.sessionId);
+}
+
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
+
   await Firebase.initializeApp();
 
 // message.messageType
   FirebaseMessaging.instance.app.setAutomaticDataCollectionEnabled(true);
+
+  CallEvent callEvent = CallEvent(
+      callerId: 1898209,
+      callType: 1,
+      sessionId: 'Session ID',
+      callerName: 'Caller Name',
+      opponentsIds: const {1, 3, 4},
+      userInfo: {'customParameter1': 'value1'});
+  ConnectycubeFlutterCallKit.showCallNotification(callEvent);
+
+  ConnectycubeFlutterCallKit.instance.init(
+    onCallAccepted: _onCallAccepted,
+    onCallRejected: _onCallRejected,
+  );
 
   // print("Handling a background message: ${message.messageId}");
   // var _currentUuid = Uuid().v4();

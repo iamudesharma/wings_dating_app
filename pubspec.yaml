@@ -74,11 +74,12 @@ dependencies:
   rxdart: ^0.27.7
   flutter_local_notifications: ^14.0.0-dev.1
   isolate_flutter: ^3.0.0
-  flutter_callkit_incoming: ^1.0.3+3
+  # flutter_callkit_incoming: ^1.0.3+3
   firebase_crashlytics: ^3.0.14
   firebase_analytics: ^10.1.3
   flutter_animate: ^4.1.0
   geolocator: ^9.0.2
+  connectycube_flutter_call_kit: ^2.2.2
  
 
 

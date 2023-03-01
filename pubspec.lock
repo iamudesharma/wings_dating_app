@@ -305,6 +305,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.0"
+  connectycube_flutter_call_kit:
+    dependency: "direct main"
+    description:
+      name: connectycube_flutter_call_kit
+      sha256: "9a2c43d102fdf0698de55c59c310714ed4a1ffcdb069198fb9f9d614d4a5fcb5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.2"
   convert:
     dependency: transitive
     description:
@@ -678,14 +686,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.0"
-  flutter_callkit_incoming:
-    dependency: "direct main"
-    description:
-      name: flutter_callkit_incoming
-      sha256: "8e76be35d86bce00c358fc083c6f6232a7630958616d3e49cbc89ef661a4a464"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3+3"
   flutter_facebook_auth:
     dependency: transitive
     description:
