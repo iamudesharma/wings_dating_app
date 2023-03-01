@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,7 +58,8 @@ class UsersView extends ConsumerStatefulWidget {
 
 class _UsersViewState extends ConsumerState<UsersView>
     with WidgetsBindingObserver {
-  String _firebaseAppToken = '';
+  late StreamSubscription<ConnectivityResult> connectivityStateSubscription;
+  AppLifecycleState? appState;
 
   setSafeState(Function execution) {
     if (!mounted) {
@@ -103,47 +105,68 @@ class _UsersViewState extends ConsumerState<UsersView>
       SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
       CubeUser? user = sharedPrefs.getUser();
 
-      return createSession(user);
+      return await createSession(user).then(
+        (value) {
+          log("Session restored");
+          return value;
+        },
+      );
     });
-  }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    switch (state) {
-      case AppLifecycleState.resumed:
-        ref.read(isUserOnlineProvider(true));
-        break;
-      case AppLifecycleState.inactive:
-      case AppLifecycleState.detached:
-      case AppLifecycleState.paused:
-        ref.read(isUserOnlineProvider(false));
-        break;
-    }
-  }
+    connectivityStateSubscription =
+        Connectivity().onConnectivityChanged.listen((connectivityType) {
+      if (AppLifecycleState.resumed != appState) return;
 
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
+      if (connectivityType != ConnectivityResult.none) {
+        log("chatConnectionState = ${CubeChatConnection.instance.chatConnectionState}");
+        bool isChatDisconnected =
+            CubeChatConnection.instance.chatConnectionState ==
+                    CubeChatConnectionState.Closed ||
+                CubeChatConnection.instance.chatConnectionState ==
+                    CubeChatConnectionState.ForceClosed;
 
-    final token = await FirebaseMessaging.instance.getToken();
+        if (isChatDisconnected &&
+            CubeChatConnection.instance.currentUser != null) {
+          CubeChatConnection.instance.relogin();
+        }
+      }
+    });
 
-    final userData = ref
-        .watch(ProfileController.userControllerProvider)
-        .userModel
-        ?.copyWith(fcmToken: token!);
-
-    logger.i("FCM TOKEN: $token");
-
-    await ref
-        .read(ProfileController.userControllerProvider)
-        .updateUserData(userData!);
+    appState = WidgetsBinding.instance.lifecycleState;
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
+    connectivityStateSubscription.cancel();
+
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    log("Current app state: $state");
+    appState = state;
+
+    if (AppLifecycleState.paused == state) {
+      if (CubeChatConnection.instance.isAuthenticated()) {
+        CubeChatConnection.instance.markInactive();
+      }
+    } else if (AppLifecycleState.resumed == state) {
+      // just for an example user was saved in the local storage
+      SharedPrefs.instance.init().then((sharedPrefs) {
+        CubeUser? user = sharedPrefs.getUser();
+
+        if (user != null) {
+          if (!CubeChatConnection.instance.isAuthenticated()) {
+            CubeChatConnection.instance.login(user);
+          } else {
+            CubeChatConnection.instance.markActive();
+          }
+        }
+      });
+    }
   }
 
   bool? isOnline = false;

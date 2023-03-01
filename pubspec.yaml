@@ -82,10 +82,10 @@ dependencies:
   connectycube_flutter_call_kit: ^2.2.2
   connectycube_sdk: ^2.4.0
   shared_preferences: ^2.0.18
-  platform_device_id: ^1.0.1
+  # platform_device_id: ^1.0.1
   connectivity_plus: ^3.0.3
-  package_info_plus: ^3.0.3
-  universal_io: ^2.2.0
+  # package_info_plus: ^3.0.3
+  # universal_io: ^2.2.0
  
 
 

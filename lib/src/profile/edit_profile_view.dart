@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -392,6 +393,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     .read(Dependency.profileProvider)
                                     .updateLocation(myLocation.data);
 
+                                CubeUser cubeUser = CubeUser(phone: FirebaseAuth.instance.currentUser?.phoneNumber,fullName: _usernameController.text,email: );
                                 setState(() {
                                   _loading = false;
                                 });
