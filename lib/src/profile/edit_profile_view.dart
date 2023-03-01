@@ -10,10 +10,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
+// import 'package:location/location.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:wings_dating_app/const/pref_util.dart';
 
 import 'package:wings_dating_app/dependency/dependenies.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
@@ -47,7 +49,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Location location = Location();
+  Geolocator location = Geolocator();
   final geo = GeoFlutterFire();
 
   @override
@@ -82,14 +84,15 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
   @override
   void didChangeDependencies() async {
-    if (await location.serviceEnabled()) {
-      if (await location.hasPermission() == PermissionStatus.granted) {
-        logger.i('Permission granted');
-      } else {
-        location.requestPermission();
-      }
+    if (await Geolocator.isLocationServiceEnabled()) {
+      Geolocator.requestPermission();
+      // if (await Geolocator.checkPermission() == LocationPermission.) {
+      //   logger.i('Permission granted');
+      // } else {
+      //   location.requestPermission();
+      // }
     } else {
-      location.requestService();
+      Geolocator.requestPermission();
     }
 
     super.didChangeDependencies();
@@ -327,14 +330,14 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         replacement: ElevatedButton(
                           onPressed: () async {
                             final route = AutoRouter.of(context);
-                            final data = await location.getLocation();
+                            final data = await Geolocator.getCurrentPosition();
 
                             setState(() {
                               _loading = true;
                             });
                             GeoFirePoint myLocation = geo.point(
-                              latitude: data.latitude!,
-                              longitude: data.longitude!,
+                              latitude: data.latitude,
+                              longitude: data.longitude,
                             );
 
                             final token =
@@ -373,27 +376,39 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   isOnline: true,
                                   isVerified: false,
                                   id: FirebaseAuth.instance.currentUser!.uid,
-                                  username: "Udesh  ",
-                                  bio: " zjxwwxj",
+                                  username: _usernameController.text,
+                                  bio: _bioController.text,
+
                                   age: age,
-                                  profileUrl: await ref
-                                      .read(ProfileController
-                                          .userControllerProvider)
-                                      .uploadImage(),
+
+                                  // profileUrl: await ref
+                                  //     .read(ProfileController
+                                  //         .userControllerProvider)
+                                  //     .uploadImage(),
                                   birthday: _dobController.text,
+                                  position: GeoPointData(
+                                      geohash: myLocation.hash,
+                                      geopoint: myLocation.geoPoint),
                                 );
 
                                 logger.i(user.toJson());
                                 logger.i(myLocation.data);
-                                ref
+                                await ref
                                     .read(Dependency.profileProvider)
                                     .createUserDoc(user);
 
-                                await ref
-                                    .read(Dependency.profileProvider)
-                                    .updateLocation(myLocation.data);
+                                CubeUser cubeUser = CubeUser(
+                                    phone: FirebaseAuth.instance.currentUser
+                                            ?.phoneNumber ??
+                                        "123456789",
+                                    fullName: _usernameController.text,
+                                    id: 123456,
+                                    password: "12345678");
 
-                                CubeUser cubeUser = CubeUser(phone: FirebaseAuth.instance.currentUser?.phoneNumber,fullName: _usernameController.text,email: );
+                                SharedPrefs sharedPrefs = SharedPrefs.instance;
+
+                                await sharedPrefs.saveNewUser(cubeUser);
+                                await createSession(cubeUser);
                                 setState(() {
                                   _loading = false;
                                 });
