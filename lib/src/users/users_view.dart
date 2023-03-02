@@ -16,6 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:wings_dating_app/dependency/dependenies.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
@@ -167,6 +168,11 @@ class _UsersViewState extends ConsumerState<UsersView>
 
     // final userModel =
     //     ref.read(ProfileController.userControllerProvider).userModel;
+
+    // final _user = userModel!.copyWith(cubeUser: sharedPrefs.getUser()!);
+
+    // await ref.read(Dependency.profileProvider).updateUserDoc(_user);
+
     // await createSession().then((value) async {
     //   log("value = $value");
     //   // await CubeChatConnection.instance.login();

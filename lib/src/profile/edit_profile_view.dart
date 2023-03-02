@@ -141,11 +141,15 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               File(profile.profileImage!),
                             ),
                           )
-                        : CircleAvatar(
-                            radius: 35,
-                            backgroundImage: CachedNetworkImageProvider(
-                                profile.userModel?.profileUrl ?? ""),
-                          ),
+                        : !widget.isEditProfile
+                            ? CircleAvatar(
+                                radius: 35,
+                              )
+                            : CircleAvatar(
+                                radius: 35,
+                                backgroundImage: CachedNetworkImageProvider(
+                                    profile.userModel?.profileUrl ?? ""),
+                              ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -410,18 +414,20 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
                                 await sharedPrefs.init();
 
-                                await _signInCC(CubeUser(
-                                  login:
-                                      "${_usernameController.text.trim()}-$age",
-                                  fullName: _usernameController.text,
-                                  password: "12345678",
-                                  phone: FirebaseAuth
-                                      .instance.currentUser?.phoneNumber,
-                                  avatar: await ref
-                                      .read(ProfileController
-                                          .userControllerProvider)
-                                      .uploadImage(),
-                                ));
+                                await _signInCC(
+                                    CubeUser(
+                                      login: _usernameController.text,
+                                      fullName: _usernameController.text,
+                                      password:
+                                          "${Random.secure().nextInt(100000000)}$age",
+                                      phone: FirebaseAuth
+                                          .instance.currentUser?.phoneNumber,
+                                      avatar: await ref
+                                          .read(ProfileController
+                                              .userControllerProvider)
+                                          .uploadImage(),
+                                    ),
+                                    ref);
                                 await route.replace(const DashboardRoute());
                               }
                             }
@@ -480,7 +486,7 @@ class ImagePickerWidget extends StatelessWidget {
   }
 }
 
-_signInCC(CubeUser user) async {
+_signInCC(CubeUser user, WidgetRef ref, {UserModel? userModel}) async {
   if (!CubeSessionManager.instance.isActiveSessionValid()) {
     try {
       await createSession();
@@ -488,17 +494,32 @@ _signInCC(CubeUser user) async {
       log("createSession error $error");
     }
   }
-  signUp(user).then((newUser) {
+  signUp(user).then((newUser) async {
     print("signUp newUser $newUser");
     user.id = newUser.id;
     SharedPrefs.instance.saveNewUser(user);
 
+    final _user = userModel!.copyWith(
+      cubeUser: user,
+    );
+
+    await ref.read(Dependency.profileProvider).updateUserDoc(_user);
+
     signIn(user).then((result) {
       log("signIn result $result");
-      // _loginToCubeChat(context, user);
+      _loginToCubeChat(user);
     });
   }).catchError((exception) {
     log("signUp exception $exception");
     // _processLoginError(exception);
   });
+}
+
+_loginToCubeChat(CubeUser user) {
+  print("_loginToCubeChat user $user");
+  CubeChatConnectionSettings.instance.totalReconnections = 0;
+  CubeChatConnection.instance
+      .login(user)
+      .then((cubeUser) {})
+      .catchError((error) {});
 }
