@@ -142,7 +142,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                             ),
                           )
                         : !widget.isEditProfile
-                            ? CircleAvatar(
+                            ? const CircleAvatar(
                                 radius: 35,
                               )
                             : CircleAvatar(

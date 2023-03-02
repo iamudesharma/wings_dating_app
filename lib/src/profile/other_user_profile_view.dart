@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
+
+import '../../routes/app_router.dart';
 
 class OtherUserProfileView extends ConsumerStatefulWidget {
   const OtherUserProfileView({
@@ -174,22 +177,27 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton.icon(
-          icon: const Icon(Icons.chat_bubble),
-          label: currentUser!.blockList.contains(otherUser.value?.id)
-              ? const Text("Unblock")
-              : const Text("Message"),
-          onPressed: () async {
-            if (currentUser.blockList.contains(otherUser.value?.id)) {
-              ref
-                  .read(profileRepoProvider)
-                  .removeToBlockList(id: [otherUser.value!.id]);
-            } else {
+            icon: const Icon(Icons.chat_bubble),
+            label: currentUser!.blockList.contains(otherUser.value?.id)
+                ? const Text("Unblock")
+                : const Text("Message"),
+            onPressed: () async {
+              // if (currentUser.blockList.contains(otherUser.value?.id)) {
+              //   ref
+              //       .read(profileRepoProvider)
+              //       .removeToBlockList(id: [otherUser.value!.id]);
+              // } else {
+              var users = Set<int>();
+
+              print("other user id ${otherUser.value!.cubeUser.id}");
+              _createDialog(context, {
+                currentUser.cubeUser.id ?? 00,
+                otherUser.value!.cubeUser.id ?? 00
+              });
               // await AutoRouter.of(context).push(
               //   ChatRoute(id: widget.id!),
               // );
-            }
-          },
-        ),
+            }),
       ),
     );
   }
@@ -199,7 +207,10 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
 
     CubeDialog newDialog =
         CubeDialog(CubeDialogType.PRIVATE, occupantsIds: users.toList());
-    createDialog(newDialog).then((createdDialog) {
+    createDialog(newDialog).then((createdDialog) async {
+      await AutoRouter.of(context).push(
+        ChatRoute(id: widget.id!),
+      );
       // Navigator.pushReplacement(
       //   context,
       //   MaterialPageRoute(
