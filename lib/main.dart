@@ -231,12 +231,34 @@ void main() async {
   // runZonedGuarded( ProviderScope(child: MyApp()),((error, stack) => FirebaseCrashlytics.instance.recordError(error, stack)));
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
+
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    init(
+      AppConst.cubeappId,
+      AppConst.authKey,
+      AppConst.authSecret,
+    );
+  }
+
+  @override
+  void didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context, ref) {
+  Widget build(BuildContext context) {
     final appRouter = ref.watch(appRouteProvider);
     return MaterialApp.router(
       theme: FlexThemeData.light(

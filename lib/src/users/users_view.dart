@@ -100,19 +100,6 @@ class _UsersViewState extends ConsumerState<UsersView>
 
     super.initState();
 
-    init(AppConst.cubeappId, AppConst.authKey, AppConst.authSecret,
-        onSessionRestore: () async {
-      SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
-      CubeUser? user = sharedPrefs.getUser();
-
-      return await createSession(user).then(
-        (value) {
-          log("Session restored");
-          return value;
-        },
-      );
-    });
-
     connectivityStateSubscription =
         Connectivity().onConnectivityChanged.listen((connectivityType) {
       if (AppLifecycleState.resumed != appState) return;
@@ -154,7 +141,7 @@ class _UsersViewState extends ConsumerState<UsersView>
         CubeChatConnection.instance.markInactive();
       }
     } else if (AppLifecycleState.resumed == state) {
-      // just for an example user was saved in the local storage
+      // // just for an example user was saved in the local storage
       SharedPrefs.instance.init().then((sharedPrefs) {
         CubeUser? user = sharedPrefs.getUser();
 
@@ -167,6 +154,73 @@ class _UsersViewState extends ConsumerState<UsersView>
         }
       });
     }
+  }
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+
+    SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
+
+    // // CubeUser user =
+    // //     CubeUser(login: "user_login", password: "super_sequre_password");
+
+    // final userModel =
+    //     ref.read(ProfileController.userControllerProvider).userModel;
+    // await createSession().then((value) async {
+    //   log("value = $value");
+    //   // await CubeChatConnection.instance.login();
+
+    //   // await signUp(userModel.cubeUser);
+    // }).catchError((er) {
+    //   log("er = $er");
+    // });
+
+    // await signInByLogin("udesh-19", "12345678").then((value) async {
+    //   log("value = $value");
+
+    //   await CubeChatConnection.instance.login(value);
+    // }).catchError((er) {
+    //   log("er = $er");
+    // });
+
+    // await _signInCC(CubeUser(
+    //     login: "${userModel!.username.trim()}-23",
+    //     password: "12345678",
+    //     fullName: "udesh"));
+
+    await init(
+      AppConst.cubeappId,
+      AppConst.authKey,
+      AppConst.authSecret,
+      onSessionRestore: () {
+        final user = sharedPrefs.getUser();
+        return createSession(user);
+      },
+    );
+  }
+
+  _signInCC(CubeUser user) async {
+    if (!CubeSessionManager.instance.isActiveSessionValid()) {
+      try {
+        await createSession();
+      } catch (error) {
+        log("createSession error $error");
+      }
+    }
+    signUp(user).then((newUser) async {
+      print("signUp newUser $newUser");
+      user.id = newUser.id;
+      SharedPrefs.instance.saveNewUser(user);
+
+      await signIn(user).then((result) {
+        log("signIn result $result");
+        // _loginToCubeChat(context, user);
+      });
+    }).catchError((exception) {
+      log("signUp exception $exception");
+      // _processLoginError(exception);
+    });
   }
 
   bool? isOnline = false;

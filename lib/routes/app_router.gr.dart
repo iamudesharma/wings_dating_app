@@ -89,6 +89,12 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    LoginRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const LoginView(),
+      );
+    },
     UsersRoute.name: (routeData) {
       return MaterialPageX<dynamic>(
         routeData: routeData,
@@ -160,6 +166,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           VideoCallRoute.name,
           path: '/video-call-view',
+        ),
+        RouteConfig(
+          LoginRoute.name,
+          path: '/login-view',
         ),
       ];
 }
@@ -357,6 +367,18 @@ class VideoCallRouteArgs {
   String toString() {
     return 'VideoCallRouteArgs{key: $key, channelId: $channelId, userName: $userName}';
   }
+}
+
+/// generated route for
+/// [LoginView]
+class LoginRoute extends PageRouteInfo<void> {
+  const LoginRoute()
+      : super(
+          LoginRoute.name,
+          path: '/login-view',
+        );
+
+  static const String name = 'LoginRoute';
 }
 
 /// generated route for

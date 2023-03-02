@@ -372,7 +372,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               } else {
                                 int age = calculateAge(_selectedDate!);
 
-                                int id = Random().nextInt(8);
+                                int id = Random().nextInt(1000000);
 
                                 UserModel user = UserModel(
                                   fcmToken: token ?? "",
@@ -389,7 +389,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       .uploadImage(),
                                   birthday: _dobController.text,
                                   cubeUser: CubeUser(
-                                    id: id,
+                                    login:
+                                        "${_usernameController.text.trim()}-$age",
                                     fullName: _usernameController.text,
                                     password: "12345678",
                                   ),
@@ -407,11 +408,20 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
                                 SharedPrefs sharedPrefs = SharedPrefs.instance;
 
-                                await sharedPrefs.saveNewUser(user.cubeUser);
-                                await createSession(user.cubeUser);
-                                setState(() {
-                                  _loading = false;
-                                });
+                                await sharedPrefs.init();
+
+                                await _signInCC(CubeUser(
+                                  login:
+                                      "${_usernameController.text.trim()}-$age",
+                                  fullName: _usernameController.text,
+                                  password: "12345678",
+                                  phone: FirebaseAuth
+                                      .instance.currentUser?.phoneNumber,
+                                  avatar: await ref
+                                      .read(ProfileController
+                                          .userControllerProvider)
+                                      .uploadImage(),
+                                ));
                                 await route.replace(const DashboardRoute());
                               }
                             }
@@ -468,4 +478,27 @@ class ImagePickerWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+_signInCC(CubeUser user) async {
+  if (!CubeSessionManager.instance.isActiveSessionValid()) {
+    try {
+      await createSession();
+    } catch (error) {
+      log("createSession error $error");
+    }
+  }
+  signUp(user).then((newUser) {
+    print("signUp newUser $newUser");
+    user.id = newUser.id;
+    SharedPrefs.instance.saveNewUser(user);
+
+    signIn(user).then((result) {
+      log("signIn result $result");
+      // _loginToCubeChat(context, user);
+    });
+  }).catchError((exception) {
+    log("signUp exception $exception");
+    // _processLoginError(exception);
+  });
 }

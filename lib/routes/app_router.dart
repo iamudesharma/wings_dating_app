@@ -12,6 +12,7 @@ import '../src/chats/pages/call_view.dart';
 import '../src/chats/pages/chat_view.dart';
 import '../src/chats/pages/video_call_view.dart';
 import '../src/dashboard.dart';
+import '../src/login.dart';
 import '../src/profile/other_user_profile_view.dart';
 import '../src/profile/user_block_list_view.dart';
 import 'app_router_provider.dart';
@@ -62,6 +63,10 @@ part 'app_router.gr.dart';
     AutoRoute(page: EditProfileView),
     AutoRoute(page: UserBlockListView),
     AutoRoute(page: VideoCallView),
+
+    AutoRoute(
+      page: LoginView,
+    ),
   ],
 )
 // extend the generated private router
