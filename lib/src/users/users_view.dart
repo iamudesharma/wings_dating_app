@@ -4,10 +4,7 @@ import 'package:auto_route/auto_route.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -15,9 +12,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uuid/uuid.dart';
-import 'package:wings_dating_app/dependency/dependenies.dart';
-import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
 import '../../const/app_const.dart';
@@ -163,38 +157,6 @@ class _UsersViewState extends ConsumerState<UsersView>
 
     SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
 
-    // // CubeUser user =
-    // //     CubeUser(login: "user_login", password: "super_sequre_password");
-
-    // final userModel =
-    //     ref.read(ProfileController.userControllerProvider).userModel;
-
-    // final _user = userModel!.copyWith(cubeUser: sharedPrefs.getUser()!);
-
-    // await ref.read(Dependency.profileProvider).updateUserDoc(_user);
-
-    // await createSession().then((value) async {
-    //   log("value = $value");
-    //   // await CubeChatConnection.instance.login();
-
-    //   // await signUp(userModel.cubeUser);
-    // }).catchError((er) {
-    //   log("er = $er");
-    // });
-
-    // await signInByLogin("udesh-19", "12345678").then((value) async {
-    //   log("value = $value");
-
-    //   await CubeChatConnection.instance.login(value);
-    // }).catchError((er) {
-    //   log("er = $er");
-    // });
-
-    // await _signInCC(CubeUser(
-    //     login: "${userModel!.username.trim()}-23",
-    //     password: "12345678",
-    //     fullName: "udesh"));
-
     await init(
       AppConst.cubeappId,
       AppConst.authKey,
@@ -204,6 +166,17 @@ class _UsersViewState extends ConsumerState<UsersView>
         return createSession(user);
       },
     );
+
+    _loginToCubeChat(sharedPrefs.getUser()!);
+  }
+
+  _loginToCubeChat(CubeUser user) {
+    print("_loginToCubeChat user $user");
+    CubeChatConnectionSettings.instance.totalReconnections = 0;
+    CubeChatConnection.instance
+        .login(user)
+        .then((cubeUser) {})
+        .catchError((error) {});
   }
 
   _signInCC(CubeUser user) async {
@@ -257,7 +230,7 @@ class _UsersViewState extends ConsumerState<UsersView>
                       "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                 ),
               ),
-              title: Text(userData!.username),
+              title: Text(userData.username),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.search),
@@ -662,7 +635,7 @@ class UserGridItem extends ConsumerWidget {
                 ),
                 const Spacer(),
                 isCurrentUser!
-                    ? InkWell(onTap: onTapEditProfile, child: Icon(Icons.edit))
+                    ? InkWell(onTap: onTapEditProfile, child: const Icon(Icons.edit))
                     : Align(
                         alignment: Alignment.topRight,
                         child: Padding(
