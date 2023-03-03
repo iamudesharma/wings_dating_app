@@ -11,6 +11,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
 import '../../const/app_const.dart';
@@ -74,7 +75,7 @@ class _UsersViewState extends ConsumerState<UsersView>
       if (message.notification != null) {
         print('Message also contained a notification: ${message.notification}');
 
-        
+        showNotification(message);
       }
     });
     printToken();
@@ -620,21 +621,21 @@ class UserGridItem extends ConsumerWidget {
                     fontSize: 10,
                   ),
                 ),
-                const Spacer(),
-                isCurrentUser!
-                    ? InkWell(
-                        onTap: onTapEditProfile, child: const Icon(Icons.edit))
-                    : Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            radius: 5,
-                            backgroundColor:
-                                users.isOnline ? Colors.green : Colors.amber,
-                          ),
-                        ),
-                      ),
+                // const Spacer(),
+                // isCurrentUser!
+                //     ? InkWell(
+                //         onTap: onTapEditProfile, child: const Icon(Icons.edit))
+                //     : Align(
+                //         alignment: Alignment.topRight,
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(8.0),
+                //           child: CircleAvatar(
+                //             radius: 5,
+                //             backgroundColor:
+                //                 users.isOnline ? Colors.green : Colors.amber,
+                //           ),
+                //         ),
+                //       ),
               ],
             ),
           ),
@@ -671,18 +672,18 @@ class UserGridItem extends ConsumerWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    users.height == "Do not show"
+                    users.height == null
                         ? const SizedBox.shrink()
                         : Text(
-                            users.height ?? "170 cm",
+                            users.height!,
                             style: const TextStyle(
                               fontSize: 10,
                             ),
                           ),
-                    users.weight == "Do not show"
+                    users.weight == null
                         ? const SizedBox.shrink()
                         : Text(
-                            users.weight ?? "70 kg",
+                            users.weight!,
                             style: const TextStyle(
                               fontSize: 10,
                             ),

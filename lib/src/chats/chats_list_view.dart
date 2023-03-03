@@ -48,25 +48,23 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
             data: (data) {
               final dialogList = data!.items;
 
-              if (dialogList.isEmpty) {
-                return const SizedBox.shrink();
-              } else if (dialogList.isEmpty) {
-                return const FittedBox(
-                  fit: BoxFit.contain,
-                  child: Text("No dialogs yet"),
-                );
-              } else {
-                return ListView.separated(
-                  itemCount: dialogList.length,
-                  itemBuilder: (context, index) {
-                    return _getListItemTile(context, index, dialogList);
-                  },
-                  separatorBuilder: (context, index) {
-                    return const Divider(
-                        thickness: 2, indent: 40, endIndent: 40);
-                  },
-                );
-              }
+              return dialogList.isEmpty
+                  ? const Center(
+                      child: Text("No user for chat",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          )))
+                  : ListView.separated(
+                      itemCount: dialogList.length,
+                      itemBuilder: (context, index) {
+                        return _getListItemTile(context, index, dialogList);
+                      },
+                      separatorBuilder: (context, index) {
+                        return const Divider(
+                            thickness: 2, indent: 40, endIndent: 40);
+                      },
+                    );
             }),
       ),
     );

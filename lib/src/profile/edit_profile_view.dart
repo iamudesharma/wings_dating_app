@@ -490,29 +490,29 @@ _signInCC(CubeUser user, WidgetRef ref, {UserModel? userModel}) async {
   if (!CubeSessionManager.instance.isActiveSessionValid()) {
     try {
       await createSession();
+      signUp(user).then((newUser) async {
+        print("signUp newUser $newUser");
+        user.id = newUser.id;
+        await SharedPrefs.instance.saveNewUser(user);
+
+        final user0 = userModel!.copyWith(
+          cubeUser: user,
+        );
+
+        await signIn(user).then((result) async {
+          log("signIn result $result");
+          _loginToCubeChat(user);
+
+          await ref.read(Dependency.profileProvider).updateUserDoc(user0);
+        });
+      }).catchError((exception) {
+        log("signUp exception $exception");
+        // _processLoginError(exception);
+      });
     } catch (error) {
       log("createSession error $error");
     }
   }
-  signUp(user).then((newUser) async {
-    print("signUp newUser $newUser");
-    user.id = newUser.id;
-    SharedPrefs.instance.saveNewUser(user);
-
-    final user0 = userModel!.copyWith(
-      cubeUser: user,
-    );
-
-    await ref.read(Dependency.profileProvider).updateUserDoc(user0);
-
-    signIn(user).then((result) {
-      log("signIn result $result");
-      _loginToCubeChat(user);
-    });
-  }).catchError((exception) {
-    log("signUp exception $exception");
-    // _processLoginError(exception);
-  });
 }
 
 _loginToCubeChat(CubeUser user) {
