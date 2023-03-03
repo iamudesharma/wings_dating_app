@@ -364,9 +364,9 @@ class ChatRepository {
       {required UserModel currentUser, required UserModel receiverUser}) async {
     final chatId = getConversationID(currentUser.id, receiverUser.id);
 
-    final _firestore = FirebaseFirestore.instance.collection("chats");
+    final firestore = FirebaseFirestore.instance.collection("chats");
 
-    await _firestore.doc(chatId).set({
+    await firestore.doc(chatId).set({
       "users": [currentUser.id, receiverUser.id],
       "lastMessage": {
         "senderId": currentUser.id,
@@ -381,7 +381,7 @@ class ChatRepository {
 
   String getConversationID(String userID, String peerID) {
     return userID.hashCode <= peerID.hashCode
-        ? userID + '_' + peerID
-        : peerID + '_' + userID;
+        ? '${userID}_$peerID'
+        : '${peerID}_$userID';
   }
 }

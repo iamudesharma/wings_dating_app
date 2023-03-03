@@ -416,7 +416,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
                                 await _signInCC(
                                     CubeUser(
-                                      login: _usernameController.text,
+                                      login: _usernameController.text.trim(),
                                       fullName: _usernameController.text,
                                       password:
                                           "${Random.secure().nextInt(100000000)}$age",
@@ -499,11 +499,11 @@ _signInCC(CubeUser user, WidgetRef ref, {UserModel? userModel}) async {
     user.id = newUser.id;
     SharedPrefs.instance.saveNewUser(user);
 
-    final _user = userModel!.copyWith(
+    final user0 = userModel!.copyWith(
       cubeUser: user,
     );
 
-    await ref.read(Dependency.profileProvider).updateUserDoc(_user);
+    await ref.read(Dependency.profileProvider).updateUserDoc(user0);
 
     signIn(user).then((result) {
       log("signIn result $result");

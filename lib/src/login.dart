@@ -15,8 +15,8 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false, title: Text('Chat')),
-      body: LoginPage(),
+      appBar: AppBar(automaticallyImplyLeading: false, title: const Text('Chat')),
+      body: const LoginPage(),
     );
   }
 }
@@ -79,7 +79,7 @@ class LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
@@ -99,16 +99,16 @@ class LoginPageState extends State<LoginPage> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(40.0),
+              padding: const EdgeInsets.all(40.0),
               child: Image.asset('assets/images/splash.png'),
             ),
             Container(
-              margin: EdgeInsets.only(left: 8),
+              margin: const EdgeInsets.only(left: 8),
               height: 18,
               width: 18,
               child: Visibility(
                 visible: _isLoginContinues,
-                child: CircularProgressIndicator(
+                child: const CircularProgressIndicator(
                   strokeWidth: 2,
                 ),
               ),
@@ -126,24 +126,25 @@ class LoginPageState extends State<LoginPage> {
           if (snapshot.hasData) {
             return snapshot.data!;
           }
-          return SizedBox.shrink();
+          return const SizedBox.shrink();
         });
   }
 
   Future<Widget> getFilterChipsWidgets() async {
-    if (_isLoginContinues) return SizedBox.shrink();
+    if (_isLoginContinues) return const SizedBox.shrink();
     SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
     CubeUser? user = sharedPrefs.getUser();
     if (user != null) {
       _loginToCC(context, user);
-      return SizedBox.shrink();
-    } else
+      return const SizedBox.shrink();
+    } else {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[_buildTextFields(), _buildButtons()],
       );
+    }
   }
 
   Widget _buildTextFields() {
@@ -151,11 +152,11 @@ class LoginPageState extends State<LoginPage> {
       children: <Widget>[
         TextField(
           controller: _loginFilter,
-          decoration: InputDecoration(labelText: 'Login'),
+          decoration: const InputDecoration(labelText: 'Login'),
         ),
         TextField(
           controller: _passwordFilter,
-          decoration: InputDecoration(labelText: 'Password'),
+          decoration: const InputDecoration(labelText: 'Password'),
           obscureText: true,
         )
       ],
@@ -169,15 +170,15 @@ class LoginPageState extends State<LoginPage> {
           children: <Widget>[
             ElevatedButton(
               onPressed: _loginPressed,
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
             TextButton(
               onPressed: _formChange,
-              child: Text('Don\'t have an account? Tap here to register.'),
+              child: const Text('Don\'t have an account? Tap here to register.'),
             ),
             TextButton(
               onPressed: _deleteUserPressed,
-              child: Text('Delete user?'),
+              child: const Text('Delete user?'),
             )
           ],
         ),
@@ -188,11 +189,11 @@ class LoginPageState extends State<LoginPage> {
           children: <Widget>[
             ElevatedButton(
               onPressed: _createAccountPressed,
-              child: Text('Create an Account'),
+              child: const Text('Create an Account'),
             ),
             TextButton(
               onPressed: _formChange,
-              child: Text('Have an account? Click here to login.'),
+              child: const Text('Have an account? Click here to login.'),
             )
           ],
         ),
@@ -226,11 +227,11 @@ class LoginPageState extends State<LoginPage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text("Delete user"),
-                content: Text("succeeded"),
+                title: const Text("Delete user"),
+                content: const Text("succeeded"),
                 actions: <Widget>[
                   TextButton(
-                    child: Text("OK"),
+                    child: const Text("OK"),
                     onPressed: () => Navigator.of(context).pop(),
                   )
                 ],
@@ -278,10 +279,11 @@ class LoginPageState extends State<LoginPage> {
       print("createSession cubeSession: $cubeSession");
       var tempUser = user;
       user = cubeSession.user!..password = tempUser.password;
-      if (saveUser)
+      if (saveUser) {
         SharedPrefs.instance.init().then((sharedPrefs) {
           sharedPrefs.saveNewUser(user);
         });
+      }
 
       // PushNotificationsManager.instance.init();
 
@@ -348,7 +350,7 @@ class LoginPageState extends State<LoginPage> {
     FlutterLocalNotificationsPlugin()
         .getNotificationAppLaunchDetails()
         .then((details) {
-      String? payload = details!.notificationResponse?.payload;
+      String? payload = details!.payload;
 
       if (payload == null) {
         // Navigator.pushReplacementNamed(

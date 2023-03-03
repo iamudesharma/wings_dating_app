@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -243,7 +242,7 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<List<UserModel?>?> searchUser(String query) async {
     final usercollection = userCollection();
 
-    final docs = usercollection.where("username", isEqualTo: query).get();
+    final docs = usercollection.where("username", isGreaterThanOrEqualTo: query).get();
 
     final data =
         await docs.then((value) => value.docs.map((e) => e.data()).toList());

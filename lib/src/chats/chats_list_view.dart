@@ -1,18 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
-import 'package:collection/collection.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
-import 'package:wings_dating_app/routes/app_router.dart';
-import 'package:wings_dating_app/src/chats/providers/get_chat_contact_provider.dart';
+import '../../routes/app_router.dart';
+
+final chatListProvider = StreamProvider((ref) => getDialogs().asStream());
 
 class ChatListView extends ConsumerStatefulWidget {
   const ChatListView({super.key});
@@ -23,8 +22,6 @@ class ChatListView extends ConsumerStatefulWidget {
 
 class _ChatListViewState extends ConsumerState<ChatListView> {
   CubeUser? currentUser;
-  List<ListItem<CubeDialog>> dialogList = [];
-  var _isDialogContinues = true;
 
   StreamSubscription<CubeMessage>? msgSubscription;
   final ChatMessagesManager? chatMessagesManager =
@@ -32,180 +29,64 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
 
   @override
   Widget build(BuildContext context) {
-    final chatContacts = ref.watch(getChatContactProvider);
-    //   return SafeArea(
-    //     bottom: false,
-    //     child: Scaffold(
-    //       body: CustomScrollView(
-    //         slivers: [
-    //           SliverAppBar(
-    //             title: const Text("Chats"),
-    //             actions: [
-    //               IconButton(
-    //                 icon: const Icon(Icons.search),
-    //                 onPressed: () {},
-    //               ),
-    //             ],
-    //           ),
-    //           chatContacts.when(
-    //             error: (error, stackTrace) => SliverToBoxAdapter(
-    //               child: Center(
-    //                 child: Text(error.toString()),
-    //               ),
-    //             ),
-    //             loading: () => const SliverToBoxAdapter(
-    //                 child: VxShimmer(
-    //               child: ListTile(),
-    //             )),
-    //             data: (data) => data.isEmpty
-    //                 ? SliverToBoxAdapter(
-    //                     child: Center(
-    //                       child: const Text("No User").animate().fadeIn(),
-    //                     ),
-    //                   )
-    //                 : SliverList(
-    //                     delegate: SliverChildBuilderDelegate(
-    //                       childCount: data.length,
-    //                       (context, index) {
-    //                         final userChatList = data[index];
-
-    //                         return ListTile(
-    //                           onTap: () async {
-    //                             await AutoRouter.of(context)
-    //                                 .push(ChatRoute(id: data[index].contactId));
-    //                           },
-    //                           leading: CircleAvatar(
-    //                             backgroundImage: CachedNetworkImageProvider(
-    //                                 userChatList.profilePic),
-    //                           ),
-    //                           title: Text(userChatList.name),
-
-    //                           subtitle: Text(userChatList.lastMessage),
-    //                           trailing: Text(
-    //                             userChatList.timeSent.timeAgo(useShortForm: true),
-    //                           ),
-    //                           // trailing: const Text(_userChatList.contactId),
-    //                         ).animate().fadeIn();
-    //                       },
-    //                     ),
-    //                   ),
-    //           )
-    //         ],
-    //       ),
-    //     ),
-    //   );
-    // }
-
-    return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.only(bottom: 16, top: 16),
-        child: Column(
-          children: [
-            Visibility(
-              visible: _isDialogContinues && dialogList.isEmpty,
-              child: Container(
-                margin: const EdgeInsets.all(40),
-                alignment: FractionalOffset.center,
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
-              ),
-            ),
-            Expanded(
-              child: _getDialogsList(context),
-            ),
-          ],
-        ),
+    final value = ref.watch(chatListProvider);
+    return RefreshIndicator(
+      onRefresh: () => Future.delayed(
+        const Duration(seconds: 1),
+        () => ref.refresh(chatListProvider),
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: "New dialog",
-        backgroundColor: Colors.blue,
-        onPressed: () => _createNewDialog(context),
-        child: const Icon(
-          Icons.chat,
-          color: Colors.white,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Chats"),
         ),
+        body: value.when(
+            error: (error, stackTrace) => Center(child: Text(error.toString())),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            data: (data) {
+              final dialogList = data!.items;
+
+              if (dialogList.isEmpty) {
+                return const SizedBox.shrink();
+              } else if (dialogList.isEmpty) {
+                return const FittedBox(
+                  fit: BoxFit.contain,
+                  child: Text("No dialogs yet"),
+                );
+              } else {
+                return ListView.separated(
+                  itemCount: dialogList.length,
+                  itemBuilder: (context, index) {
+                    return _getListItemTile(context, index, dialogList);
+                  },
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                        thickness: 2, indent: 40, endIndent: 40);
+                  },
+                );
+              }
+            }),
       ),
     );
-  }
-
-  void _createNewDialog(BuildContext context) async {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => CreateChatScreen(currentUser),
-    //   ),
-    // ).then((value) => refresh());
   }
 
   void _processGetDialogError(exception) {
     log(
       "GetDialog error $exception",
     );
-    setState(() {
-      _isDialogContinues = false;
-    });
+
     // showDialogError(exception, context);
   }
 
-  Widget _getDialogsList(BuildContext context) {
-    if (_isDialogContinues) {
-      getDialogs().then((dialogs) {
-        _isDialogContinues = false;
-        log(
-          "getDialogs: $dialogs",
-        );
-        setState(() {
-          dialogList.clear();
-          dialogList.addAll(
-              dialogs!.items.map((dialog) => ListItem(dialog)).toList());
-        });
-      }).catchError((exception) {
-        _processGetDialogError(exception);
-      });
-    }
-    if (_isDialogContinues && dialogList.isEmpty)
-      return const SizedBox.shrink();
-    else if (dialogList.isEmpty)
-      return const FittedBox(
-        fit: BoxFit.contain,
-        child: Text("No dialogs yet"),
-      );
-    else
-      return ListView.separated(
-        itemCount: dialogList.length,
-        itemBuilder: _getListItemTile,
-        separatorBuilder: (context, index) {
-          return const Divider(thickness: 2, indent: 40, endIndent: 40);
-        },
-      );
-  }
-
-  Widget _getListItemTile(BuildContext context, int index) {
-    getDialogIcon() {
-      var dialog = dialogList[index].data;
-      if (dialog.type == CubeDialogType.PRIVATE)
-        return const Icon(
-          Icons.person,
-          size: 40.0,
-          color: Colors.grey,
-        );
-      else {
-        return const Icon(
-          Icons.group,
-          size: 40.0,
-          color: Colors.grey,
-        );
-      }
-    }
-
+  Widget _getListItemTile(
+      BuildContext context, int index, List<CubeDialog> dialogList) {
     getDialogAvatarWidget() {
-      var dialog = dialogList[index].data;
+      var dialog = dialogList[index];
       if (dialog.photo == null) {
-        return CircleAvatar(
-            radius: 25,
-            backgroundColor: Colors.grey.shade300,
-            child: getDialogIcon());
+        return const CircleAvatar(
+          radius: 25,
+          backgroundImage: CachedNetworkImageProvider(
+              "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+        );
       } else {
         return CachedNetworkImage(
           placeholder: (context, url) => Container(
@@ -222,7 +103,8 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
             ),
           ),
-          imageUrl: dialogList[index].data.photo!,
+          imageUrl: dialogList[index].photo ??
+              "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
           width: 45.0,
           height: 45.0,
           fit: BoxFit.cover,
@@ -230,77 +112,38 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
       }
     }
 
-    return Container(
-      margin: const EdgeInsets.only(left: 5.0, right: 5.0),
-      child: TextButton(
-        child: Row(
-          children: <Widget>[
-            Material(
-              borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-              clipBehavior: Clip.hardEdge,
-              child: getDialogAvatarWidget(),
+    return ListTile(
+      onTap: () async {
+        final id = dialogList[index].occupantsIds;
+        AutoRouter.of(context).push(
+          ChatRoute(
+            cubeDialog: dialogList[index],
+            cubeUser: await getUserById(
+              id![0] == currentUser!.id ? id[0] : id[1],
             ),
-            Flexible(
-              child: Container(
-                margin: const EdgeInsets.only(left: 20.0),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      // ignore: sort_child_properties_last
-                      child: Text(
-                        dialogList[index].data.name ?? 'Not available',
-                        style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0),
-                      ),
-                      alignment: Alignment.centerLeft,
-                      margin: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      margin: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                      child: Text(
-                        dialogList[index].data.lastMessage ?? 'Not available',
-                        style: const TextStyle(color: Colors.grey, fontSize: 15.0),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Visibility(
-              maintainSize: true,
-              maintainAnimation: true,
-              maintainState: true,
-              visible: dialogList[index].isSelected,
-              child: IconButton(
-                iconSize: 25.0,
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
-                onPressed: () {
-                  _deleteDialog(context, dialogList[index].data);
-                },
-              ),
-            ),
-            Container(
-              child: Text(
-                dialogList[index].data.lastMessageDateSent != null ? DateFormat('MMM dd').format(DateTime.fromMillisecondsSinceEpoch(dialogList[index].data.lastMessageDateSent! * 1000)) : 'Not available',
-                style: const TextStyle(color: Colors.grey, fontSize: 12.0),
-              ),
-            ),
-          ],
+          ),
+        );
+      },
+      leading: getDialogAvatarWidget(),
+      title: Text(
+        dialogList[index].name ?? 'Not available',
+        style: TextStyle(
+          color: Theme.of(context).primaryColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 20.0,
         ),
-        onLongPress: () {
-          setState(() {
-            dialogList[index].isSelected = !dialogList[index].isSelected;
-          });
-        },
-        onPressed: () {
-          _openDialog(context, dialogList[index].data);
-        },
+      ),
+      subtitle: Text(
+        dialogList[index].lastMessage ?? 'Not available',
+        style: const TextStyle(color: Colors.grey, fontSize: 15.0),
+      ),
+      trailing: Text(
+        dialogList[index].lastMessageDateSent != null
+            ? DateTime.fromMillisecondsSinceEpoch(
+                    dialogList[index].lastMessageDateSent! * 1000)
+                .timeAgo(useShortForm: true)
+            : 'Not available',
+        style: const TextStyle(color: Colors.grey, fontSize: 12.0),
       ),
     );
   }
@@ -315,17 +158,19 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
     //     arguments: {USER_ARG_NAME: currentUser, DIALOG_ARG_NAME: dialog});
   }
 
-  void refresh() {
-    setState(() {
-      _isDialogContinues = true;
-    });
-  }
+  void refresh() {}
 
   @override
   void initState() {
     super.initState();
     msgSubscription =
         chatMessagesManager?.chatMessagesStream.listen(onReceiveMessage);
+
+    final users = ref.read(ProfileController.userControllerProvider).userModel!;
+
+    setState(() {
+      currentUser = users.cubeUser;
+    });
   }
 
   @override
@@ -343,12 +188,17 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
   }
 
   updateDialog(CubeMessage msg) {
-    ListItem<CubeDialog>? dialogItem =
-        dialogList.firstWhereOrNull((dlg) => dlg.data.dialogId == msg.dialogId);
+    var dialogItem = ref
+        .read(chatListProvider)
+        .value!
+        .items
+        .where((dlg) => dlg.dialogId == msg.dialogId)
+        .first;
+    // ignore: unnecessary_null_comparison
     if (dialogItem == null) return;
-    dialogItem.data.lastMessage = msg.body;
+    dialogItem.lastMessage = msg.body;
     setState(() {
-      dialogItem.data.lastMessage = msg.body;
+      dialogItem.lastMessage = msg.body;
     });
   }
 }

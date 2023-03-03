@@ -1,391 +1,959 @@
-import 'dart:io';
+import 'dart:async';
+// import 'package:chat_sample/src/utils/api_utils.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:chat_bubbles/bubbles/bubble_normal.dart';
+import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
+import 'package:chat_bubbles/bubbles/bubble_special_two.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:universal_io/io.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chat_bubbles/chat_bubbles.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:collection/collection.dart' show IterableExtension;
+// import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:wings_dating_app/helpers/helpers.dart';
-import 'package:wings_dating_app/helpers/message_enum.dart';
-import 'package:wings_dating_app/repo/profile_repo.dart';
-import 'package:wings_dating_app/src/chats/pages/video_call_view.dart';
-import 'package:wings_dating_app/src/users/users_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
-import '../../../repo/chat_repo.dart';
-import '../../model/user_models.dart';
-import '../../profile/controller/profile_controller.dart';
-import '../../profile/edit_profile_view.dart';
-import '../controller/chat_controller.dart';
-import '../model/message.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:wings_dating_app/src/chats/chats_list_view.dart';
 
-final getUserChatSteamProvider =
-    StreamProvider.family<List<Message>, String>((ref, id) {
-  return ref.read(chatRepositoryProvider).getChatStream(id);
-});
+// import 'chat_details_screen.dart';
+// import '../src/utils/consts.dart';
+// import '../src/widgets/common.dart';
+// import '../src/widgets/full_photo.dart';
+// import '../src/widgets/loading.dart';
 
-class ChatView extends ConsumerStatefulWidget {
-  const ChatView({
-    Key? key,
-    required this.id,
-  }) : super(key: key);
+class ChatView extends StatelessWidget {
+  final CubeUser? cubeUser;
+  final CubeDialog? cubeDialog;
 
-  final String id;
+  const ChatView({super.key, this.cubeUser, this.cubeDialog});
 
   @override
-  ConsumerState<ChatView> createState() => _ChatViewState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          cubeDialog!.name != null ? cubeDialog!.name! : '',
+        ),
+        centerTitle: false,
+        actions: <Widget>[
+          IconButton(
+            onPressed: () => _chatDetails(context),
+            icon: const Icon(
+              Icons.info_outline,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+      body: ChatScreen(cubeUser!, cubeDialog!),
+    );
+  }
+
+  _chatDetails(BuildContext context) async {
+    // log("_chatDetails= $_cubeDialog");
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => ChatDetailsScreen(_cubeUser, _cubeDialog),
+    //   ),
+    // );
+  }
 }
 
-class _ChatViewState extends ConsumerState<ChatView>
-    with WidgetsBindingObserver {
+class ChatScreen extends ConsumerStatefulWidget {
+  final CubeUser _cubeUser;
+  final CubeDialog _cubeDialog;
+
+  const ChatScreen(this._cubeUser, this._cubeDialog, {super.key});
+
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
+  // ignore: no_logic_in_create_state
+  ConsumerState createState() => ChatScreenState(_cubeUser, _cubeDialog);
+}
 
-    if (state == AppLifecycleState.resumed) {
-      logger.i("App is resumed");
-      ref.read(isUserOnlineProvider(true));
-    } else {
-      logger.i("App is paused");
+class ChatScreenState extends ConsumerState<ChatScreen> {
+  final CubeUser _cubeUser;
+  final CubeDialog _cubeDialog;
+  final Map<int?, CubeUser?> _occupants = {};
 
-      ref.read(isUserOnlineProvider(false));
-    }
-  }
+  late bool isLoading;
+  late StreamSubscription<ConnectivityResult> connectivityStateSubscription;
+  String? imageUrl;
+  List<CubeMessage> listMessage = [];
+  Timer? typingTimer;
+  bool isTyping = false;
+  String userStatus = '';
+  static const int TYPING_TIMEOUT = 700;
+  static const int STOP_TYPING_TIMEOUT = 2000;
+
+  int _sendIsTypingTime = DateTime.now().millisecondsSinceEpoch;
+  Timer? _sendStopTypingTimer;
+
+  final TextEditingController textEditingController = TextEditingController();
+  final ScrollController listScrollController = ScrollController();
+
+  StreamSubscription<CubeMessage>? msgSubscription;
+  StreamSubscription<MessageStatus>? deliveredSubscription;
+  StreamSubscription<MessageStatus>? readSubscription;
+  StreamSubscription<TypingStatus>? typingSubscription;
+
+  final List<CubeMessage> _unreadMessages = [];
+  final List<CubeMessage> _unsentMessages = [];
+
+  static const int messagesPerPage = 50;
+  int lastPartSize = 0;
+
+  List<CubeMessage> oldMessages = [];
+
+  ChatScreenState(this._cubeUser, this._cubeDialog);
 
   @override
   void initState() {
     super.initState();
+    _initCubeChat();
+
+    isLoading = false;
+    imageUrl = '';
+    listScrollController.addListener(onScrollChanged);
+    connectivityStateSubscription =
+        Connectivity().onConnectivityChanged.listen(onConnectivityChanged);
   }
 
   @override
   void dispose() {
-    ref.read(isUserOnlineProvider(false));
+    msgSubscription?.cancel();
+    deliveredSubscription?.cancel();
+    readSubscription?.cancel();
+    typingSubscription?.cancel();
+    textEditingController.dispose();
+    connectivityStateSubscription.cancel();
     super.dispose();
   }
 
-  String? selectedImage;
-  // final String profilePic;
+  void openGallery() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+
+    if (result == null) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    var uploadImageFuture = getUploadingImageFuture(result);
+    Uint8List imageData;
+
+    if (kIsWeb) {
+      imageData = result.files.single.bytes!;
+    } else {
+      imageData = File(result.files.single.path!).readAsBytesSync();
+    }
+
+    var decodedImage = await decodeImageFromList(imageData);
+
+    uploadImageFile(uploadImageFuture, decodedImage);
+  }
+
+  Future uploadImageFile(Future<CubeFile> uploadAction, imageData) async {
+    uploadAction.then((cubeFile) {
+      onSendChatAttachment(cubeFile, imageData);
+    }).catchError((ex) {
+      setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(msg: 'This file is not an image');
+    });
+  }
+
+  void onReceiveMessage(CubeMessage message) {
+    log("onReceiveMessage message= $message");
+    if (message.dialogId != _cubeDialog.dialogId ||
+        message.senderId == _cubeUser.id) return;
+
+    addMessageToListView(message);
+  }
+
+  void onDeliveredMessage(MessageStatus status) {
+    log("onDeliveredMessage message= $status");
+    updateReadDeliveredStatusMessage(status, false);
+  }
+
+  void onReadMessage(MessageStatus status) {
+    log("onReadMessage message= ${status.messageId}");
+    updateReadDeliveredStatusMessage(status, true);
+  }
+
+  void onTypingMessage(TypingStatus status) {
+    log("TypingStatus message= ${status.userId}");
+    if (status.userId == _cubeUser.id ||
+        (status.dialogId != null && status.dialogId != _cubeDialog.dialogId)) {
+      return;
+    }
+    userStatus = _occupants[status.userId]?.fullName ??
+        _occupants[status.userId]?.login ??
+        '';
+    if (userStatus.isEmpty) return;
+    userStatus = "$userStatus is typing ...";
+
+    if (isTyping != true) {
+      setState(() {
+        isTyping = true;
+      });
+    }
+    startTypingTimer();
+  }
+
+  startTypingTimer() {
+    typingTimer?.cancel();
+    typingTimer = Timer(const Duration(milliseconds: 900), () {
+      setState(() {
+        isTyping = false;
+      });
+    });
+  }
+
+  void onSendChatMessage(String content) {
+    if (content.trim() != '') {
+      final message = createCubeMsg();
+      message.body = content.trim();
+      onSendMessage(message);
+    } else {
+      Fluttertoast.showToast(msg: 'Nothing to send');
+    }
+  }
+
+  void onSendChatAttachment(CubeFile cubeFile, imageData) async {
+    final attachment = CubeAttachment();
+    attachment.id = cubeFile.uid;
+    attachment.type = CubeAttachmentType.IMAGE_TYPE;
+    attachment.url = cubeFile.getPublicUrl();
+    attachment.height = imageData.height;
+    attachment.width = imageData.width;
+    final message = createCubeMsg();
+    message.body = "Attachment";
+    message.attachments = [attachment];
+    onSendMessage(message);
+  }
+
+  CubeMessage createCubeMsg() {
+    var message = CubeMessage();
+    message.dateSent = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    message.markable = true;
+    message.saveToHistory = true;
+    return message;
+  }
+
+  void onSendMessage(CubeMessage message) async {
+    log("onSendMessage message= $message");
+    textEditingController.clear();
+    await _cubeDialog.sendMessage(message);
+    message.senderId = _cubeUser.id;
+    addMessageToListView(message);
+    listScrollController.animateTo(0.0,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+  }
+
+  updateReadDeliveredStatusMessage(MessageStatus status, bool isRead) {
+    log('[updateReadDeliveredStatusMessage]');
+    setState(() {
+      CubeMessage? msg = listMessage
+          .firstWhereOrNull((msg) => msg.messageId == status.messageId);
+      if (msg == null) return;
+      if (isRead) {
+        msg.readIds == null
+            ? msg.readIds = [status.userId]
+            : msg.readIds?.add(status.userId);
+      } else {
+        msg.deliveredIds == null
+            ? msg.deliveredIds = [status.userId]
+            : msg.deliveredIds?.add(status.userId);
+      }
+
+      log('[updateReadDeliveredStatusMessage] status updated for $msg');
+    });
+  }
+
+  addMessageToListView(CubeMessage message) {
+    setState(() {
+      isLoading = false;
+      int existMessageIndex = listMessage.indexWhere((cubeMessage) {
+        return cubeMessage.messageId == message.messageId;
+      });
+
+      if (existMessageIndex != -1) {
+        listMessage[existMessageIndex] = message;
+      } else {
+        listMessage.insert(0, message);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final UserModel? currentUser =
-        ref.watch(ProfileController.userControllerProvider).userModel;
+    return WillPopScope(
+      onWillPop: onBackPress,
+      child: Stack(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              // List of messages
+              buildListMessage(),
+              //Typing content
+              buildTyping(),
+              // Input content
+              buildInput(),
+            ],
+          ),
 
-    final messageProvider = ref.watch(getUserChatSteamProvider(widget.id));
-
-    return SafeArea(
-      maintainBottomViewPadding: true,
-      child: StreamBuilder<UserModel?>(
-          stream: ref.read(profileRepoProvider).getUserById(widget.id),
-          builder: (context, snapshot) {
-            final receiverUser = snapshot.data;
-            return snapshot.connectionState == ConnectionState.waiting
-                ? const Scaffold(
-                    body: Center(
-                    child: CircularProgressIndicator(),
-                  ))
-                : Scaffold(
-                    body: messageProvider.when(
-                      skipLoadingOnReload: true,
-                      error: (error, stackTrace) => Center(
-                        child: Text("Error $error"),
-                      ),
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      data: (data) => SafeArea(
-                        child: CustomScrollView(
-                          slivers: [
-                            SliverAppBar(
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    " ${receiverUser?.username}",
-                                    style: const TextStyle(
-                                      // color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  Text(
-                                    " ${receiverUser!.isOnline ? "Online" : "Offline"}",
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              actions: [
-                                IconButton(
-                                  icon: const Icon(Icons.video_call),
-                                  onPressed: () {},
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.more_vert_outlined),
-                                  onPressed: () {},
-                                ),
-                              ],
-                            ),
-                            SliverToBoxAdapter(
-                              child: SizedBox(
-                                height: MediaQuery.of(context).size.height -
-                                    kToolbarHeight * 1.3,
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: ListView.builder(
-                                        itemCount: data.length,
-
-                                        reverse: true,
-                                        // shrinkWrap: true,
-                                        keyboardDismissBehavior:
-                                            ScrollViewKeyboardDismissBehavior
-                                                .onDrag,
-                                        itemBuilder: (context, index) {
-                                          final message = data[index];
-                                          if (!message.isSeen &&
-                                              message.recieverid ==
-                                                  FirebaseAuth.instance
-                                                      .currentUser!.uid) {
-                                            ref
-                                                .read(chatRepositoryProvider)
-                                                .setChatMessageSeen(
-                                                  context,
-                                                  receiverUser!.id,
-                                                  message.messageId,
-                                                );
-                                          }
-                                          return chatType(
-                                              message.type,
-                                              message,
-                                              currentUser!
-                                                  .id); // return BubbleNormal(
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    KeyboardListener(
-                                      focusNode: FocusNode(),
-                                      onKeyEvent: (value) => print(value),
-                                      child: MessageBar(
-                                        messageBarColor: Theme.of(context)
-                                            .appBarTheme
-                                            .backgroundColor!,
-                                        onSend: (value) async {
-                                          ref
-                                              .read(chatRepositoryProvider)
-                                              .sendTextMessage(
-                                                receiverUserData: receiverUser!,
-                                                context: context,
-                                                messageReply: null,
-                                                receiverUserId: widget.id,
-                                                senderUser: currentUser!,
-                                                text: value,
-                                              );
-                                        },
-                                        actions: [
-                                          InkWell(
-                                            child: const Icon(
-                                              Icons.add,
-                                              color: Colors.blue,
-                                              size: 24,
-                                            ),
-                                            onTap: () {
-                                              showModalBottomSheet(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return BottomSheet(
-                                                        onClosing: () {
-                                                      Navigator.pop(context);
-                                                    }, builder: (context) {
-                                                      return SizedBox(
-                                                        height: 200,
-                                                        child: Column(
-                                                          children: [
-                                                            ImagePickerWidget(
-                                                              // isCallEnabled: true,
-                                                              camera: () async {
-                                                                final image = await ref
-                                                                    .read(ChatController
-                                                                        .provider)
-                                                                    .pickImage(
-                                                                        imageSource:
-                                                                            ImageSource.camera);
-
-                                                                if (image !=
-                                                                    null) {
-                                                                  ref.read(chatRepositoryProvider).sendFileMessage(
-                                                                      ref: ref,
-                                                                      file: File(image),
-                                                                      context: context,
-                                                                      messageReply: null,
-                                                                      isGroupChat: false,
-                                                                      messageEnum: MessageEnum.image,
-                                                                      // ref: ref.read(),
-                                                                      receiverUserId: receiverUser!.id,
-                                                                      senderUserData: currentUser!);
-                                                                }
-                                                              },
-                                                              gallery:
-                                                                  () async {
-                                                                final image = await ref
-                                                                    .read(ChatController
-                                                                        .provider)
-                                                                    .pickImage(
-                                                                        imageSource:
-                                                                            ImageSource.gallery);
-
-                                                                if (image !=
-                                                                    null) {
-                                                                  // setState(() {
-                                                                  //   selectedImage = image;
-                                                                  // });
-
-                                                                  ref.read(chatRepositoryProvider).sendFileMessage(
-                                                                      ref: ref,
-                                                                      file: File(image),
-                                                                      context: context,
-                                                                      messageReply: null,
-                                                                      isGroupChat: false,
-                                                                      messageEnum: MessageEnum.image,
-                                                                      // ref: ref.read(),
-                                                                      receiverUserId: receiverUser!.id,
-                                                                      senderUserData: currentUser!);
-                                                                }
-                                                              },
-                                                            ),
-                                                            ListTile(
-                                                              leading:
-                                                                  const Icon(
-                                                                      Icons
-                                                                          .call),
-                                                              title: const Text(
-                                                                  "Call"),
-                                                              onTap: () async {
-                                                                await Navigator
-                                                                    .push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder: (context) => VideoCallView(
-                                                                        userName:
-                                                                            currentUser?.username ??
-                                                                                "",
-                                                                        channelId:
-                                                                            ""),
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    });
-                                                  });
-                                            },
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8, right: 8),
-                                            child: InkWell(
-                                              child: const Icon(
-                                                Icons.camera_alt,
-                                                color: Colors.green,
-                                                size: 24,
-                                              ),
-                                              onTap: () async {
-                                                final image = await ref
-                                                    .read(
-                                                        ChatController.provider)
-                                                    .pickImage(
-                                                        imageSource:
-                                                            ImageSource.camera);
-
-                                                if (image != null) {
-                                                  // ignore: use_build_context_synchronously
-                                                  ref
-                                                      .read(
-                                                          chatRepositoryProvider)
-                                                      .sendFileMessage(
-                                                          ref: ref,
-                                                          file: File(image),
-                                                          context: context,
-                                                          messageReply: null,
-                                                          isGroupChat: false,
-                                                          messageEnum:
-                                                              MessageEnum.image,
-                                                          // ref: ref.read(),
-                                                          receiverUserId:
-                                                              receiverUser!.id,
-                                                          senderUserData:
-                                                              currentUser!);
-                                                }
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-          }),
+          // Loading
+          buildLoading()
+        ],
+      ),
     );
   }
 
-  Widget chatType(MessageEnum radians, Message message, String id) {
-    switch (radians) {
-      case MessageEnum.audio:
-        return BubbleNormalAudio(
-          onPlayPauseButtonClick: () {},
-          onSeekChanged: (double value) {},
-        );
+  Widget buildItem(int index, CubeMessage message) {
+    markAsReadIfNeed() {
+      var isOpponentMsgRead =
+          message.readIds != null && message.readIds!.contains(_cubeUser.id);
+      print(
+          "markAsReadIfNeed message= $message, isOpponentMsgRead= $isOpponentMsgRead");
+      if (message.senderId != _cubeUser.id && !isOpponentMsgRead) {
+        if (message.readIds == null) {
+          message.readIds = [_cubeUser.id!];
+        } else {
+          message.readIds!.add(_cubeUser.id!);
+        }
 
-      case MessageEnum.image:
-        return BubbleNormalImage(
-          delivered: message.isSeen,
-          sent: message.isSeen,
-          image: CachedNetworkImage(
-            imageUrl: message.text,
-            fit: BoxFit.contain,
-            placeholder: (context, url) => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
+        if (CubeChatConnection.instance.chatConnectionState ==
+            CubeChatConnectionState.Ready) {
+          _cubeDialog.readMessage(message);
+        } else {
+          _unreadMessages.add(message);
+        }
+      }
+    }
+
+    bool messageIsRead() {
+      log("[getReadDeliveredWidget] messageIsRead");
+      if (_cubeDialog.type == CubeDialogType.PRIVATE) {
+        return message.readIds != null &&
+            (message.recipientId == null ||
+                message.readIds!.contains(message.recipientId));
+      }
+      return message.readIds != null &&
+          message.readIds!.any(
+              (int id) => id != _cubeUser.id && _occupants.keys.contains(id));
+    }
+
+    bool messageIsDelivered() {
+      log("[getReadDeliveredWidget] messageIsDelivered");
+      if (_cubeDialog.type == CubeDialogType.PRIVATE) {
+        return message.deliveredIds != null &&
+            (message.recipientId == null ||
+                message.deliveredIds!.contains(message.recipientId));
+      }
+      return message.deliveredIds != null &&
+          message.deliveredIds!.any(
+              (int id) => id != _cubeUser.id && _occupants.keys.contains(id));
+    }
+
+    Widget getDateWidget() {
+      return Text(
+        DateFormat('HH:mm').format(
+            DateTime.fromMillisecondsSinceEpoch(message.dateSent! * 1000)),
+        style: const TextStyle(
+            color: Colors.grey, fontSize: 12.0, fontStyle: FontStyle.italic),
+      );
+    }
+
+    Widget getHeaderDateWidget() {
+      return Container(
+        alignment: Alignment.center,
+        // ignore: sort_child_properties_last
+        child: Text(
+          DateFormat('dd MMMM').format(
+              DateTime.fromMillisecondsSinceEpoch(message.dateSent! * 1000)),
+          style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontSize: 20.0,
+              fontStyle: FontStyle.italic),
+        ),
+        margin: const EdgeInsets.all(10.0),
+      );
+    }
+
+    bool isHeaderView() {
+      int headerId = int.parse(DateFormat('ddMMyyyy').format(
+          DateTime.fromMillisecondsSinceEpoch(message.dateSent! * 1000)));
+      if (index >= listMessage.length - 1) {
+        return false;
+      }
+      var msgPrev = listMessage[index + 1];
+      int nextItemHeaderId = int.parse(DateFormat('ddMMyyyy').format(
+          DateTime.fromMillisecondsSinceEpoch(msgPrev.dateSent! * 1000)));
+      var result = headerId != nextItemHeaderId;
+      return result;
+    }
+
+    if (message.senderId == _cubeUser.id) {
+      // Right (own message)
+      return Column(
+        children: <Widget>[
+          isHeaderView() ? getHeaderDateWidget() : const SizedBox.shrink(),
+          Row(
+            // ignore: sort_child_properties_last
+            children: <Widget>[
+              message.attachments?.isNotEmpty ?? false
+                  // Image
+                  ? Container(
+                      margin: EdgeInsets.only(
+                          bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                          right: 10.0),
+                      child: TextButton(
+                        child: Material(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8.0)),
+                          clipBehavior: Clip.hardEdge,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                CachedNetworkImage(
+                                  placeholder: (context, url) => Container(
+                                    width: 200.0,
+                                    height: 200.0,
+                                    padding: const EdgeInsets.all(70.0),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8.0),
+                                      ),
+                                    ),
+                                    child: const CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.blue),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Material(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                    clipBehavior: Clip.hardEdge,
+                                    child: Image.asset(
+                                      'images/img_not_available.jpeg',
+                                      width: 200.0,
+                                      height: 200.0,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  imageUrl: message.attachments!.first.url!,
+                                  width: 200.0,
+                                  height: 200.0,
+                                  fit: BoxFit.cover,
+                                ),
+                                getDateWidget(),
+                              ]),
+                        ),
+                        onPressed: () {
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => FullPhoto(
+                          //             url: message.attachments!.first.url!)));
+                        },
+                      ),
+                    )
+                  : message.body != null && message.body!.isNotEmpty
+                      // Text
+                      ? Flexible(
+                          child: Column(
+                              // crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                getDateWidget(),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                BubbleSpecialTwo(
+                                  text: message.body ?? "",
+                                  isSender: isLastMessageRight(index),
+                                  seen: messageIsRead(),
+                                  delivered: messageIsDelivered(),
+                                  tail: true,
+                                  sent: true,
+                                ),
+                              ]),
+                        )
+                      : Container(
+                          padding:
+                              const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                          width: 200.0,
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(8.0)),
+                          margin: EdgeInsets.only(
+                            bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                            right: 10.0,
+                          ),
+                          child: Text(
+                            "Empty",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.end,
           ),
-          isSender: message.senderId == id ? true : false,
-          id: message.messageId,
-          seen: message.isSeen,
-        );
-
-      case MessageEnum.gif:
-        return const Text("");
-
-      case MessageEnum.video:
-        return Container();
-
-      case MessageEnum.text:
-        return Column(
-          children: [
-            BubbleSpecialThree(
-              delivered: message.isSeen,
-              seen: message.isSeen,
-              text: message.text,
-              color: const Color(0xFFE8E8EE),
-              tail: true,
-              isSender: message.senderId == id ? true : false,
+        ],
+      );
+    } else {
+      // Left (opponent message)
+      markAsReadIfNeed();
+      return Container(
+        // ignore: sort_child_properties_last
+        child: Column(
+          // ignore: sort_child_properties_last
+          children: <Widget>[
+            isHeaderView() ? getHeaderDateWidget() : const SizedBox.shrink(),
+            Row(
+              children: <Widget>[
+                message.attachments?.isNotEmpty ?? false
+                    ? Container(
+                        margin: const EdgeInsets.only(left: 10.0),
+                        child: TextButton(
+                          child: Material(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8.0)),
+                            clipBehavior: Clip.hardEdge,
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CachedNetworkImage(
+                                    placeholder: (context, url) => Container(
+                                      width: 200.0,
+                                      height: 200.0,
+                                      padding: const EdgeInsets.all(70.0),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0),
+                                        ),
+                                      ),
+                                      child: const CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.blue),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Material(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(8.0),
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
+                                      child: Image.asset(
+                                        'images/img_not_available.jpeg',
+                                        width: 200.0,
+                                        height: 200.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    imageUrl: message.attachments!.first.url!,
+                                    width: 200.0,
+                                    height: 200.0,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  getDateWidget(),
+                                ]),
+                          ),
+                          onPressed: () {
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => FullPhoto(
+                            //             url: message.attachments!.first.url!)));
+                          },
+                        ),
+                      )
+                    : message.body != null && message.body!.isNotEmpty
+                        ? Flexible(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  BubbleSpecialThree(
+                                    sent: true,
+                                    isSender: isLastMessageLeft(index),
+                                    text: message.body!,
+                                    seen: messageIsRead(),
+                                    delivered: messageIsDelivered(),
+                                    tail: true,
+                                  ),
+                                  // getDateWidget(),
+                                ]),
+                          )
+                        : Container(
+                            padding: const EdgeInsets.fromLTRB(
+                                15.0, 10.0, 15.0, 10.0),
+                            width: 200.0,
+                            decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(8.0)),
+                            margin: EdgeInsets.only(
+                                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                                right: 10.0),
+                            child: Text(
+                              "Empty",
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                          ),
+              ],
             ),
           ],
-        );
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        margin: const EdgeInsets.only(bottom: 10.0),
+      );
     }
+  }
+
+  bool isLastMessageLeft(int index) {
+    if ((listMessage[index].id == _cubeUser.id)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool isLastMessageRight(int index) {
+    if ((listMessage[index].id != _cubeUser.id)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Widget buildLoading() {
+    return Positioned(
+      child: isLoading ? const CircularProgressIndicator() : Container(),
+    );
+  }
+
+  Widget buildTyping() {
+    return Visibility(
+      visible: isTyping,
+      child: Container(
+        alignment: Alignment.centerLeft,
+        margin: const EdgeInsets.all(16.0),
+        child: Text(
+          userStatus,
+          style:
+              const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+        ),
+      ),
+    );
+  }
+
+  Widget buildInput() {
+    return Container(
+      width: double.infinity,
+      height: 50.0,
+      decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
+          color: Colors.white),
+      child: Row(
+        children: <Widget>[
+          // Button send image
+          Material(
+            color: Colors.white,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 1.0),
+              child: IconButton(
+                icon: const Icon(Icons.image),
+                onPressed: () {
+                  openGallery();
+                },
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+
+          // Edit text
+          Flexible(
+            child: Container(
+              child: TextField(
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 15.0),
+                controller: textEditingController,
+                decoration: const InputDecoration.collapsed(
+                  hintText: 'Type your message...',
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
+                onChanged: (text) {
+                  sendIsTypingStatus();
+                },
+              ),
+            ),
+          ),
+
+          // Button send message
+          Material(
+            color: Colors.white,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: IconButton(
+                icon: const Icon(Icons.send),
+                onPressed: () => onSendChatMessage(textEditingController.text),
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildListMessage() {
+    getWidgetMessages(listMessage) {
+      return ListView.builder(
+        padding: const EdgeInsets.all(10.0),
+        itemBuilder: (context, index) => buildItem(index, listMessage[index]),
+        itemCount: listMessage.length,
+        reverse: true,
+        controller: listScrollController,
+      );
+    }
+
+    return Flexible(
+      child: StreamBuilder<List<CubeMessage>>(
+        stream: getMessagesList().asStream(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+                child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).primaryColor)));
+          } else {
+            listMessage = snapshot.data ?? [];
+            return getWidgetMessages(listMessage);
+          }
+        },
+      ),
+    );
+  }
+
+  Future<List<CubeMessage>> getMessagesList() async {
+    if (listMessage.isNotEmpty) return Future.value(listMessage);
+
+    Completer<List<CubeMessage>> completer = Completer();
+    List<CubeMessage>? messages;
+    try {
+      await Future.wait<void>([
+        getMessagesByDate(0, false).then((loadedMessages) {
+          isLoading = false;
+          messages = loadedMessages;
+        }),
+        getAllUsersByIds(_cubeDialog.occupantsIds!.toSet()).then((result) =>
+            _occupants.addAll({for (var item in result!.items) item.id: item}))
+      ]);
+      completer.complete(messages);
+    } catch (error) {
+      completer.completeError(error);
+    }
+    return completer.future;
+  }
+
+  void onScrollChanged() {
+    if ((listScrollController.position.pixels ==
+            listScrollController.position.maxScrollExtent) &&
+        messagesPerPage >= lastPartSize) {
+      setState(() {
+        isLoading = true;
+
+        if (oldMessages.isNotEmpty) {
+          getMessagesBetweenDates(
+                  oldMessages.first.dateSent ?? 0,
+                  listMessage.last.dateSent ??
+                      DateTime.now().millisecondsSinceEpoch ~/ 1000)
+              .then((newMessages) {
+            setState(() {
+              isLoading = false;
+
+              listMessage.addAll(newMessages);
+
+              if (newMessages.length < messagesPerPage) {
+                oldMessages.insertAll(0, listMessage);
+                listMessage = List.from(oldMessages);
+                oldMessages.clear();
+              }
+            });
+          });
+        } else {
+          getMessagesByDate(listMessage.last.dateSent ?? 0, false)
+              .then((messages) {
+            setState(() {
+              isLoading = false;
+              listMessage.addAll(messages);
+            });
+          });
+        }
+      });
+    }
+  }
+
+  Future<bool> onBackPress() {
+    ref.invalidate(chatListProvider);
+
+    Navigator.pop(context);
+    return Future.value(true);
+  }
+
+  _initChatListeners() {
+    log("[_initChatListeners]");
+    msgSubscription = CubeChatConnection
+        .instance.chatMessagesManager!.chatMessagesStream
+        .listen(onReceiveMessage);
+    deliveredSubscription = CubeChatConnection
+        .instance.messagesStatusesManager!.deliveredStream
+        .listen(onDeliveredMessage);
+    readSubscription = CubeChatConnection
+        .instance.messagesStatusesManager!.readStream
+        .listen(onReadMessage);
+    typingSubscription = CubeChatConnection
+        .instance.typingStatusesManager!.isTypingStream
+        .listen(onTypingMessage);
+  }
+
+  void _initCubeChat() {
+    log("_initCubeChat");
+    if (CubeChatConnection.instance.isAuthenticated()) {
+      log("[_initCubeChat] isAuthenticated");
+      _initChatListeners();
+    } else {
+      log("[_initCubeChat] not authenticated");
+      CubeChatConnection.instance.connectionStateStream.listen((state) {
+        log("[_initCubeChat] state $state");
+        if (CubeChatConnectionState.Ready == state) {
+          _initChatListeners();
+
+          if (_unreadMessages.isNotEmpty) {
+            for (var cubeMessage in _unreadMessages) {
+              _cubeDialog.readMessage(cubeMessage);
+            }
+            _unreadMessages.clear();
+          }
+
+          if (_unsentMessages.isNotEmpty) {
+            for (var cubeMessage in _unsentMessages) {
+              _cubeDialog.sendMessage(cubeMessage);
+            }
+
+            _unsentMessages.clear();
+          }
+        }
+      });
+    }
+  }
+
+  void sendIsTypingStatus() {
+    var currentTime = DateTime.now().millisecondsSinceEpoch;
+    var isTypingTimeout = currentTime - _sendIsTypingTime;
+    if (isTypingTimeout >= TYPING_TIMEOUT) {
+      _sendIsTypingTime = currentTime;
+      _cubeDialog.sendIsTypingStatus();
+      _startStopTypingStatus();
+    }
+  }
+
+  void _startStopTypingStatus() {
+    _sendStopTypingTimer?.cancel();
+    _sendStopTypingTimer =
+        Timer(const Duration(milliseconds: STOP_TYPING_TIMEOUT), () {
+      _cubeDialog.sendStopTypingStatus();
+    });
+  }
+
+  Future<List<CubeMessage>> getMessagesByDate(int date, bool isLoadNew) async {
+    var params = GetMessagesParameters();
+    params.sorter = RequestSorter("desc", '', 'date_sent');
+    params.limit = messagesPerPage;
+    params.filters = [
+      RequestFilter('', 'date_sent', isLoadNew || date == 0 ? 'gt' : 'lt', date)
+    ];
+
+    return getMessages(_cubeDialog.dialogId!, params.getRequestParameters())
+        .then((result) {
+          lastPartSize = result!.items.length;
+
+          return result.items;
+        })
+        .whenComplete(() {})
+        .catchError((onError) {});
+  }
+
+  Future<List<CubeMessage>> getMessagesBetweenDates(
+      int startDate, int endDate) async {
+    var params = GetMessagesParameters();
+    params.sorter = RequestSorter("desc", '', 'date_sent');
+    params.limit = messagesPerPage;
+    params.filters = [
+      RequestFilter('', 'date_sent', 'gt', startDate),
+      RequestFilter('', 'date_sent', 'lt', endDate)
+    ];
+
+    return getMessages(_cubeDialog.dialogId!, params.getRequestParameters())
+        .then((result) {
+      return result!.items;
+    });
+  }
+
+  void onConnectivityChanged(ConnectivityResult connectivityType) {
+    log("[ChatScreenState] connectivityType changed to '$connectivityType'");
+
+    if (connectivityType == ConnectivityResult.wifi ||
+        connectivityType == ConnectivityResult.mobile) {
+      setState(() {
+        isLoading = true;
+      });
+
+      getMessagesBetweenDates(listMessage.first.dateSent ?? 0,
+              DateTime.now().millisecondsSinceEpoch ~/ 1000)
+          .then((newMessages) {
+        setState(() {
+          if (newMessages.length == messagesPerPage) {
+            oldMessages = List.from(listMessage);
+            listMessage = newMessages;
+          } else {
+            listMessage.insertAll(0, newMessages);
+          }
+        });
+      }).whenComplete(() {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
+  }
+}
+
+Future<CubeFile> getUploadingImageFuture(FilePickerResult result) async {
+  // there possible to upload the file as an array of bytes, but here showed two ways just as an example
+  if (kIsWeb) {
+    return uploadRawFile(result.files.single.bytes!, result.files.single.name,
+        isPublic: true, onProgress: (progress) {
+      log("uploadImageFile progress= $progress");
+    });
+  } else {
+    return uploadFile(File(result.files.single.path!), isPublic: true,
+        onProgress: (progress) {
+      log("uploadImageFile progress= $progress");
+    });
   }
 }

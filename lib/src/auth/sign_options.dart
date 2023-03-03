@@ -31,8 +31,13 @@ class SignOptionsView extends ConsumerWidget {
             PhoneProviderConfiguration()
           ],
           actions: [
-            AuthStateChangeAction(
-              (context, AuthState state) {},
+            AuthStateChangeAction<AuthState>(
+              (context, AuthState state) {
+                // ignore: unrelated_type_equality_checks
+                if (state == SigningIn) {
+                  AutoRouter.of(context).popAndPush(const DashboardRoute());
+                }
+              },
             ),
           ],
           showAuthActionSwitch: true,

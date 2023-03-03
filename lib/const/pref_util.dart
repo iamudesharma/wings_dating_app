@@ -39,18 +39,22 @@ class SharedPrefs {
     prefs.setString(prefUserPsw, cubeUser.password!);
     prefs.setString(prefUserName, cubeUser.fullName!);
     prefs.setInt(prefUserId, cubeUser.id!);
-    if (cubeUser.avatar != null)
+    if (cubeUser.avatar != null) {
       prefs.setString(prefUserAvatar, cubeUser.avatar!);
+    }
   }
 
   updateUser(CubeUser cubeUser) {
-    if (cubeUser.password != null)
+    if (cubeUser.password != null) {
       prefs.setString(prefUserPsw, cubeUser.password!);
+    }
     if (cubeUser.login != null) prefs.setString(prefUserLogin, cubeUser.login!);
-    if (cubeUser.fullName != null)
+    if (cubeUser.fullName != null) {
       prefs.setString(prefUserName, cubeUser.fullName!);
-    if (cubeUser.avatar != null)
+    }
+    if (cubeUser.avatar != null) {
       prefs.setString(prefUserAvatar, cubeUser.avatar!);
+    }
   }
 
   CubeUser? getUser() {

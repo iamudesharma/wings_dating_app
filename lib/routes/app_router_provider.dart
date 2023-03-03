@@ -1,11 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:wings_dating_app/routes/app_router.dart';
 
+import '../const/pref_util.dart';
 import '../helpers/app_notification.dart';
 import '../repo/profile_repo.dart';
 import '../src/profile/controller/profile_controller.dart';
@@ -34,8 +36,33 @@ class AuthGuard extends AutoRouteGuard {
       if (await ref.read(profileRepoProvider).checkUserDocExist()) {
         print('user doc exist');
 
+        await ref
+            .read(ProfileController.userControllerProvider)
+            .getCurrentUser();
         // String initialRoute =
 
+        CubeUser? cubeUser = ref
+            .read(ProfileController.userControllerProvider)
+            .userModel!
+            .cubeUser;
+
+        if (CubeSessionManager.instance.isActiveSessionValid()) {
+          if (!CubeChatConnection.instance.isAuthenticated()) {
+            await CubeChatConnection.instance.login(cubeUser);
+            resolver.next(true);
+          } else {
+            resolver.next(true);
+          }
+        } else {
+          await _loginToCC(
+              ref
+                  .read(ProfileController.userControllerProvider)
+                  .userModel!
+                  .cubeUser,
+              saveUser: true);
+
+          resolver.next(true);
+        }
         //   ? PAGE_HOME
         //   : PAGE_PHONE_CALL;
 
@@ -49,9 +76,6 @@ class AuthGuard extends AutoRouteGuard {
         //   ));
         // }
 
-        await ref
-            .read(ProfileController.userControllerProvider)
-            .getCurrentUser();
         resolver.next(true);
 
         // customerController.getCustomerData();
@@ -69,4 +93,42 @@ class AuthGuard extends AutoRouteGuard {
       router.push(const SignOptionsRoute());
     }
   }
+}
+
+_loginToCC(CubeUser user, {bool saveUser = false}) {
+  print("_loginToCC user: $user");
+
+  createSession(user).then((cubeSession) async {
+    print("createSession cubeSession: $cubeSession");
+    var tempUser = user;
+    user = cubeSession.user!..password = tempUser.password;
+    if (saveUser) {
+      SharedPrefs.instance.init().then((sharedPrefs) {
+        sharedPrefs.saveNewUser(user);
+      });
+    }
+
+    PushNotificationsManager.instance.init();
+
+    _loginToCubeChat(user);
+  }).catchError((error) {
+    _processLoginError(error);
+  });
+}
+
+_loginToCubeChat(CubeUser user) {
+  print("_loginToCubeChat user $user");
+  CubeChatConnectionSettings.instance.totalReconnections = 0;
+  CubeChatConnection.instance
+      .login(user)
+      .then((cubeUser) {})
+      .catchError((error) {
+    _processLoginError(error);
+  });
+}
+
+void _processLoginError(exception) {
+  log(
+    "Login error $exception",
+  );
 }

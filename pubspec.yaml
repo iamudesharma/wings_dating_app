@@ -72,7 +72,8 @@ dependencies:
   # agora_rtc_engine: ^6.1.0
   # appwrite: ^8.2.2
   # rxdart: ^0.27.7
-  flutter_local_notifications: ^14.0.0-dev.1
+  # flutter_local_notifications: ^14.0.0-dev.1
+  flutter_local_notifications: ^9.2.0
   isolate_flutter: ^3.0.0
   # flutter_callkit_incoming: ^1.0.3+3
   firebase_crashlytics: ^3.0.14
@@ -84,6 +85,8 @@ dependencies:
   shared_preferences: ^2.0.18
   # platform_device_id: ^1.0.1
   connectivity_plus: ^3.0.3
+  file_picker: ^5.2.5
+  package_info_plus: ^3.0.3
   # package_info_plus: ^3.0.3
   # universal_io: ^2.2.0
  

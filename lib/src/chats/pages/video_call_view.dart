@@ -1,6 +1,5 @@
 // import 'package:agora_uikit/agora_uikit.dart';
 import 'package:flutter/material.dart';
-import '../../../const/app_const.dart';
 
 // import '../../../config/app_config.dart';
 
@@ -40,7 +39,7 @@ class _VideoCallViewState extends State<VideoCallView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       // body: SafeArea(
       //   child: Stack(
       //     children: [

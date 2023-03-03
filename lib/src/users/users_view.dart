@@ -8,7 +8,6 @@ import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -75,19 +74,7 @@ class _UsersViewState extends ConsumerState<UsersView>
       if (message.notification != null) {
         print('Message also contained a notification: ${message.notification}');
 
-        flutterLocalNotificationsPlugin.show(
-          message.notification.hashCode,
-          message.notification!.title,
-          message.notification!.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              message.notification!.android!.channelId!,
-              "call-channel",
-              fullScreenIntent: true,
-              category: AndroidNotificationCategory.call,
-            ),
-          ),
-        );
+        
       }
     });
     printToken();
@@ -167,7 +154,7 @@ class _UsersViewState extends ConsumerState<UsersView>
       },
     );
 
-    _loginToCubeChat(sharedPrefs.getUser()!);
+    // _loginToCubeChat(sharedPrefs.getUser()!);
   }
 
   _loginToCubeChat(CubeUser user) {
@@ -635,7 +622,8 @@ class UserGridItem extends ConsumerWidget {
                 ),
                 const Spacer(),
                 isCurrentUser!
-                    ? InkWell(onTap: onTapEditProfile, child: const Icon(Icons.edit))
+                    ? InkWell(
+                        onTap: onTapEditProfile, child: const Icon(Icons.edit))
                     : Align(
                         alignment: Alignment.topRight,
                         child: Padding(

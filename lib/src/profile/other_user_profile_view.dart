@@ -4,7 +4,6 @@ import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
@@ -187,13 +186,9 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
               //       .read(profileRepoProvider)
               //       .removeToBlockList(id: [otherUser.value!.id]);
               // } else {
-              var users = Set<int>();
 
               print("other user id ${otherUser.value!.cubeUser.id}");
-              _createDialog(context, {
-                currentUser.cubeUser.id ?? 00,
-                otherUser.value!.cubeUser.id ?? 00
-              });
+              _createDialog(context, {7360432 ?? 00, 7360440 ?? 00});
               // await AutoRouter.of(context).push(
               //   ChatRoute(id: widget.id!),
               // );
@@ -209,7 +204,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
         CubeDialog(CubeDialogType.PRIVATE, occupantsIds: users.toList());
     createDialog(newDialog).then((createdDialog) async {
       await AutoRouter.of(context).push(
-        ChatRoute(id: widget.id!),
+        ChatRoute(),
       );
       // Navigator.pushReplacement(
       //   context,
