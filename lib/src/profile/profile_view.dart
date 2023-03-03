@@ -13,7 +13,7 @@ import '../../routes/app_router.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 final getUserByIdProvider =
-    StreamProvider.family<UserModel?, String>((ref, id) {
+    FutureProvider.family<UserModel?, String>((ref, id) {
   return ref.read(profileRepoProvider).getUserById(id);
 });
 

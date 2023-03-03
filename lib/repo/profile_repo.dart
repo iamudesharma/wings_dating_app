@@ -151,20 +151,38 @@ class ProfileRepo with RepositoryExceptionMixin {
     });
   }
 
-  Stream<UserModel?> getUserById(String id) {
+  Future<UserModel?> getUserById(String id)async {
     final usercollection = userCollection();
 
     logger.w(id);
 
-    final data = usercollection
+    final data = await usercollection
         .where(
           "id",
           isEqualTo: id,
         )
         .limit(1)
-        .snapshots();
+        .get();
 
-    final users = data.map((event) => event.docs[0].data());
+    final users = data.docs.first.data();
+
+    return users;
+  }
+
+  Future<UserModel?> getUserByCubeId(int id)async {
+    final usercollection = userCollection();
+
+    logger.w(id);
+
+    final data = await usercollection
+        .where(
+          "cubeUser.id",
+          isEqualTo: id,
+        )
+        .limit(1)
+        .get();
+
+    final users = data.docs.first.data();
 
     return users;
   }
@@ -242,7 +260,8 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<List<UserModel?>?> searchUser(String query) async {
     final usercollection = userCollection();
 
-    final docs = usercollection.where("username", isGreaterThanOrEqualTo: query).get();
+    final docs =
+        usercollection.where("username", isGreaterThanOrEqualTo: query).get();
 
     final data =
         await docs.then((value) => value.docs.map((e) => e.data()).toList());

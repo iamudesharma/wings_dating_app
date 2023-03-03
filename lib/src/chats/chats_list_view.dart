@@ -5,13 +5,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
 import '../../routes/app_router.dart';
 
-final chatListProvider = StreamProvider((ref) => getDialogs().asStream());
+final chatListProvider = StreamProvider((ref) async* {
+  yield* getDialogs().asStream();
+});
 
 class ChatListView extends ConsumerStatefulWidget {
   const ChatListView({super.key});
@@ -112,44 +115,63 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
       }
     }
 
-    return ListTile(
-      onTap: () async {
-        final id = dialogList[index].occupantsIds;
-        AutoRouter.of(context).push(
-          ChatRoute(
-            cubeDialog: dialogList[index],
-            cubeUser: await getUserById(
-              id![0] == currentUser!.id ? id[0] : id[1],
-            ),
+    return Slidable(
+      endActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (context) {
+              _deleteDialog(context, dialogList[index]);
+            },
+            icon: Icons.delete,
+            backgroundColor: Colors.red,
           ),
-        );
-      },
-      leading: getDialogAvatarWidget(),
-      title: Text(
-        dialogList[index].name ?? 'Not available',
-        style: TextStyle(
-          color: Theme.of(context).primaryColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 20.0,
+        ],
+      ),
+      key: ValueKey(dialogList[index].id.toString()),
+      child: ListTile(
+        onTap: () async {
+          final id = dialogList[index].occupantsIds;
+          AutoRouter.of(context).push(
+            ChatRoute(
+              cubeDialog: dialogList[index],
+              cubeUser: await getUserById(
+                id![0] == currentUser!.id ? id[0] : id[1],
+              ),
+            ),
+          );
+        },
+        leading: getDialogAvatarWidget(),
+        title: Text(
+          dialogList[index].name ?? 'Not available',
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 20.0,
+          ),
         ),
-      ),
-      subtitle: Text(
-        dialogList[index].lastMessage ?? 'Not available',
-        style: const TextStyle(color: Colors.grey, fontSize: 15.0),
-      ),
-      trailing: Text(
-        dialogList[index].lastMessageDateSent != null
-            ? DateTime.fromMillisecondsSinceEpoch(
-                    dialogList[index].lastMessageDateSent! * 1000)
-                .timeAgo(useShortForm: true)
-            : 'Not available',
-        style: const TextStyle(color: Colors.grey, fontSize: 12.0),
+        subtitle: Text(
+          dialogList[index].lastMessage ?? 'Not available',
+          style: const TextStyle(color: Colors.grey, fontSize: 15.0),
+        ),
+        trailing: Text(
+          dialogList[index].lastMessageDateSent != null
+              ? DateTime.fromMillisecondsSinceEpoch(
+                      dialogList[index].lastMessageDateSent! * 1000)
+                  .timeAgo(useShortForm: true)
+              : 'Not available',
+          style: const TextStyle(color: Colors.grey, fontSize: 12.0),
+        ),
       ),
     );
   }
 
   void _deleteDialog(BuildContext context, CubeDialog dialog) async {
     log("_deleteDialog= $dialog");
+
+    await deleteDialog(dialog.dialogId!, true);
+
+    ref.invalidate(chatListProvider);
     Fluttertoast.showToast(msg: 'Coming soon');
   }
 

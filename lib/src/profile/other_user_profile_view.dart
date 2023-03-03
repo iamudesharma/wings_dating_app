@@ -187,24 +187,33 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
               //       .removeToBlockList(id: [otherUser.value!.id]);
               // } else {
 
-              print("other user id ${otherUser.value!.cubeUser.id}");
-              _createDialog(context, {7360432 ?? 00, 7360440 ?? 00});
+              // print("other user id ${otherUser.value!.cubeUser.id}");
+              _createDialog(
+                  context,
+                  {currentUser.cubeUser.id!, otherUser.value!.cubeUser.id!},
+                  currentUser.cubeUser);
               // await AutoRouter.of(context).push(
-              //   ChatRoute(id: widget.id!),
+              //   ChatRoute(
+              //       cubeUser: currentUser.cubeUser,
+              //       chatUserCubeId: otherUser.value!.cubeUser.id),
               // );
             }),
       ),
     );
   }
 
-  void _createDialog(BuildContext context, Set<int> users) async {
+  void _createDialog(
+      BuildContext context, Set<int> users, CubeUser cubeUser) async {
     log("_createDialog with users= $users");
 
     CubeDialog newDialog =
         CubeDialog(CubeDialogType.PRIVATE, occupantsIds: users.toList());
     createDialog(newDialog).then((createdDialog) async {
       await AutoRouter.of(context).push(
-        ChatRoute(),
+        ChatRoute(
+          cubeUser: cubeUser,
+          cubeDialog: createdDialog,
+        ),
       );
       // Navigator.pushReplacement(
       //   context,

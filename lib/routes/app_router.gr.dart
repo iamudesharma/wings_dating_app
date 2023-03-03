@@ -40,8 +40,10 @@ class _$AppRouter extends RootStackRouter {
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: ChatView(
+          key: args.key,
           cubeUser: args.cubeUser,
           cubeDialog: args.cubeDialog,
+          chatUserCubeId: args.chatUserCubeId,
         ),
       );
     },
@@ -204,14 +206,18 @@ class DashboardRoute extends PageRouteInfo<void> {
 /// [ChatView]
 class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
   ChatRoute({
+    Key? key,
     CubeUser? cubeUser,
     CubeDialog? cubeDialog,
+    int? chatUserCubeId,
   }) : super(
           ChatRoute.name,
           path: '/chat-view',
           args: ChatRouteArgs(
+            key: key,
             cubeUser: cubeUser,
             cubeDialog: cubeDialog,
+            chatUserCubeId: chatUserCubeId,
           ),
         );
 
@@ -220,17 +226,23 @@ class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
 
 class ChatRouteArgs {
   const ChatRouteArgs({
+    this.key,
     this.cubeUser,
     this.cubeDialog,
+    this.chatUserCubeId,
   });
+
+  final Key? key;
 
   final CubeUser? cubeUser;
 
   final CubeDialog? cubeDialog;
 
+  final int? chatUserCubeId;
+
   @override
   String toString() {
-    return 'ChatRouteArgs{cubeUser: $cubeUser, cubeDialog: $cubeDialog}';
+    return 'ChatRouteArgs{key: $key, cubeUser: $cubeUser, cubeDialog: $cubeDialog, chatUserCubeId: $chatUserCubeId}';
   }
 }
 
