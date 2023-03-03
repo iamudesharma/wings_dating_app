@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
@@ -17,62 +16,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:isolate_flutter/isolate_flutter.dart';
-import 'package:uuid/uuid.dart';
 import 'package:wings_dating_app/const/app_const.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
-import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
 import 'package:wings_dating_app/routes/navigation_observers.dart';
-import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
 import 'firebase_options.dart';
-import 'helpers/app_notification.dart';
-
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description: 'This channel is used for important notifications.',
-  enableVibration: true,
-
-  // description
-  importance: Importance.max,
-);
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
-class ReceivedNotification {
-  ReceivedNotification({
-    required this.id,
-    required this.title,
-    required this.body,
-    required this.payload,
-  });
-
-  final int id;
-  final String? title;
-  final String? body;
-  final String? payload;
-}
-
-final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
-    StreamController<ReceivedNotification>.broadcast();
-
-final StreamController<String?> selectNotificationStream =
-    StreamController<String?>.broadcast();
-
-@pragma('vm:entry-point')
-void notificationTapBackground(NotificationResponse notificationResponse) {
-  // ignore: avoid_print
-  print('notification(${notificationResponse.id}) action tapped: '
-      '${notificationResponse.actionId} with'
-      ' payload: ${notificationResponse.payload}');
-  if (notificationResponse.input?.isNotEmpty ?? false) {
-    // ignore: avoid_print
-    print(
-        'notification action tapped with input: ${notificationResponse.input}');
-  }
-}
 
 Future<void> _onCallAccepted(CallEvent callEvent) async {
   // the call was accepted
@@ -98,12 +47,12 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 // message.messageType
   FirebaseMessaging.instance.app.setAutomaticDataCollectionEnabled(true);
 
-  CallEvent callEvent = CallEvent(
+  CallEvent callEvent = const CallEvent(
       callerId: 1898209,
       callType: 1,
       sessionId: 'Session ID',
       callerName: 'Caller Name',
-      opponentsIds: const {1, 3, 4},
+      opponentsIds: {1, 3, 4},
       userInfo: {'customParameter1': 'value1'});
   ConnectycubeFlutterCallKit.showCallNotification(callEvent);
 
@@ -195,38 +144,13 @@ void main() async {
       .setAutomaticResourceManagementEnabled(true);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  const InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-  );
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-    onDidReceiveNotificationResponse:
-        (NotificationResponse notificationResponse) {
-      switch (notificationResponse.notificationResponseType) {
-        case NotificationResponseType.selectedNotification:
-          break;
-        case NotificationResponseType.selectedNotificationAction:
-          break;
-      }
-    },
-    // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-  );
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     // The following lines are the same as previously explained in "Handling uncaught errors"
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
-    runApp(ProviderScope(child: MyApp()));
+    runApp(const ProviderScope(child: MyApp()));
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
   // runZonedGuarded( ProviderScope(child: MyApp()),((error, stack) => FirebaseCrashlytics.instance.recordError(error, stack)));
 }
@@ -370,12 +294,12 @@ class _MyHomePageState extends State<MyHomePage> {
 // import 'package:flutter/material.dart';
 
 getTokon() async {
-  IsolateFlutter? _value =
+  IsolateFlutter? value =
       await IsolateFlutter.create(printToken(), 'Get Token');
 
-  await _value?.start();
+  await value?.start();
 
-  _value?.stop();
+  value?.stop();
 }
 
 printToken() async {
