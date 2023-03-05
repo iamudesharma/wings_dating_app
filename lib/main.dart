@@ -17,6 +17,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:isolate_flutter/isolate_flutter.dart';
 import 'package:wings_dating_app/const/app_const.dart';
+import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
 import 'package:wings_dating_app/routes/navigation_observers.dart';
@@ -37,98 +38,6 @@ Future<void> _onCallRejected(CallEvent callEvent) async {
       sessionId: callEvent.sessionId);
 }
 
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-
-  await Firebase.initializeApp();
-
-// message.messageType
-  FirebaseMessaging.instance.app.setAutomaticDataCollectionEnabled(true);
-
-  CallEvent callEvent = const CallEvent(
-      callerId: 1898209,
-      callType: 1,
-      sessionId: 'Session ID',
-      callerName: 'Caller Name',
-      opponentsIds: {1, 3, 4},
-      userInfo: {'customParameter1': 'value1'});
-  ConnectycubeFlutterCallKit.showCallNotification(callEvent);
-
-  ConnectycubeFlutterCallKit.instance.init(
-    onCallAccepted: _onCallAccepted,
-    onCallRejected: _onCallRejected,
-  );
-
-  // print("Handling a background message: ${message.messageId}");
-  // var _currentUuid = Uuid().v4();
-
-  // // if(message.messageType)
-  // CallKitParams callKitParams = CallKitParams(
-  //   id: _currentUuid,
-
-  //   nameCaller: 'Hien Nguyen',
-  //   appName: 'Callkit',
-  //   avatar: 'https://i.pravatar.cc/100',
-  //   handle: '0123456789',
-  //   type: 0,
-  //   textAccept: 'Accept',
-  //   textDecline: 'Decline',
-  //   textMissedCall: 'Missed call',
-  //   textCallback: 'Call back',
-  //   duration: 30000,
-  //   extra: <String, dynamic>{'userId': '1a2b3c4d'},
-  //   headers: <String, dynamic>{'apiKey': 'Abc@123!', 'platform': 'flutter'},
-  //   android: const AndroidParams(
-  //     isCustomNotification: true,
-  //     isShowLogo: false,
-  //     isShowCallback: false,
-  //     isShowMissedCallNotification: true,
-  //     ringtonePath: 'system_ringtone_default',
-  //     backgroundColor: '#0955fa',
-  //     backgroundUrl: 'https://i.pravatar.cc/500',
-  //     actionColor: '#4CAF50',
-  //     incomingCallNotificationChannelName: "Incoming Call",
-  //     missedCallNotificationChannelName: "Missed Call",
-  //   ),
-  //   // ios: IOSParams(
-  //   //   iconName: 'CallKitLogo',
-  //   //   handleType: 'generic',
-  //   //   supportsVideo: true,
-  //   //   maximumCallGroups: 2,
-  //   //   maximumCallsPerCallGroup: 1,
-  //   //   audioSessionMode: 'default',
-  //   //   audioSessionActive: true,
-  //   //   audioSessionPreferredSampleRate: 44100.0,
-  //   //   audioSessionPreferredIOBufferDuration: 0.005,
-  //   //   supportsDTMF: true,
-  //   //   supportsHolding: true,
-  //   //   supportsGrouping: false,
-  //   //   supportsUngrouping: false,
-  //   //   ringtonePath: 'system_ringtone_default',
-  //   // ),
-  // );
-  // await FlutterCallkitIncoming.showCallkitIncoming(callKitParams);
-
-  // flutterLocalNotificationsPlugin.show(
-  //   message.notification.hashCode,
-  //   message.notification!.title,
-  //   message.notification!.body,
-  //   NotificationDetails(
-  //     android: AndroidNotificationDetails(
-  //       channel.id,
-  //       channel.name,
-  //       channelAction: AndroidNotificationChannelAction.createIfNotExists,
-  //       importance: Importance.high,
-  //       fullScreenIntent: true,
-  //       category: AndroidNotificationCategory.call,
-
-  //     ),
-  //   ),
-  // );
-}
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -142,14 +51,13 @@ void main() async {
   await FirebaseStorage.instance.app.setAutomaticDataCollectionEnabled(true);
   await FirebaseStorage.instance.app
       .setAutomaticResourceManagementEnabled(true);
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     // The following lines are the same as previously explained in "Handling uncaught errors"
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-
+    await PushNotificationsManager.instance.init();
     runApp(const ProviderScope(child: MyApp()));
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
   // runZonedGuarded( ProviderScope(child: MyApp()),((error, stack) => FirebaseCrashlytics.instance.recordError(error, stack)));

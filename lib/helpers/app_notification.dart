@@ -49,14 +49,14 @@ class PushNotificationsManager {
     //   onDidReceiveLocalNotification: onDidReceiveLocalNotification,
     // );
 
-    final InitializationSettings initializationSettings =
-        const InitializationSettings(
-            android: initializationSettingsAndroid,
-            );
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification,
-        
-        );
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onSelectNotification: onSelectNotification,
+    );
 
     String? token;
     if (Platform.isAndroid || kIsWeb) {
@@ -86,7 +86,6 @@ class PushNotificationsManager {
 
     FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
 
-    // TODO test after fix https://github.com/FirebaseExtended/flutterfire/issues/4898
     FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) {
       log('[onMessageOpenedApp] remoteMessage: $remoteMessage', TAG);
       if (onNotificationClicked != null) {
@@ -108,7 +107,8 @@ class PushNotificationsManager {
     CreateSubscriptionParameters parameters = CreateSubscriptionParameters();
     parameters.pushToken = token;
 
-    bool isProduction = kIsWeb ? true : const bool.fromEnvironment('dart.vm.product');
+    bool isProduction =
+        kIsWeb ? true : const bool.fromEnvironment('dart.vm.product');
     parameters.environment =
         isProduction ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
 

@@ -19,12 +19,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import 'package:connectycube_sdk/connectycube_sdk.dart';
+import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/repo/chat_repo.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/chats/chats_list_view.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
+int? time;
 const int messagesPerPage = 50;
 int lastPartSize = 0;
 final _chatUserData = FutureProvider.family<UserModel?, int>(
@@ -92,6 +94,10 @@ class ChatView extends ConsumerWidget {
                             )
                           ],
                         ),
+                        time == null
+                            ? SizedBox()
+                            : Text(DateTime.fromMicrosecondsSinceEpoch(time!)
+                                .timeAgo())
                       ],
                     )),
           ),
@@ -186,7 +192,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   StreamSubscription<MessageStatus>? readSubscription;
   StreamSubscription<TypingStatus>? typingSubscription;
 
-  StreamSubscription<LastActivityQuery>? lastActivitySubscription;
+  StreamSubscription? lastActivitySubscription;
 
   final List<CubeMessage> _unreadMessages = [];
   final List<CubeMessage> _unsentMessages = [];
@@ -206,6 +212,13 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
       _initCubeChat();
     }
 
+    CubeChatConnection.instance.lastActivityStream!.listen((event) {
+      log('last activity ${event.userId} ${event.seconds}');
+
+      setState(() {
+        time = event.seconds;
+      });
+    });
     isLoading = false;
     imageUrl = '';
     listScrollController.addListener(onScrollChanged);
@@ -340,12 +353,33 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   void onSendMessage(CubeMessage message) async {
     log("onSendMessage message= $message");
-    textEditingController.clear();
+
     await _cubeDialog?.sendMessage(message);
+
     message.senderId = _cubeUser.id;
     addMessageToListView(message);
     listScrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+
+    bool isProduction = bool.fromEnvironment('dart.vm.product');
+
+    CreateEventParams params = CreateEventParams();
+    params.parameters = {
+      'message': "Some message in push", // 'message' field is required
+      'custom_parameter1': "custom parameter value 1",
+      'custom_parameter2': "custom parameter value 2",
+      'ios_voip': 1 // to send VoIP push notification to iOS
+      //more standard parameters you can found by link https://developers.connectycube.com/server/push_notifications?id=universal-push-notifications
+    };
+
+    params.notificationType = NotificationType.PUSH;
+    params.environment =
+        isProduction ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
+    params.usersIds = [message.senderId];
+
+    createEvent(params.getEventForRequest())
+        .then((cubeEvent) {})
+        .catchError((error) {});
   }
 
   updateReadDeliveredStatusMessage(MessageStatus status, bool isRead) {
@@ -682,8 +716,6 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                     seen: messageIsRead(),
                                     delivered: messageIsDelivered(),
                                     tail: true,
-                                    
-
                                   ),
                                   // getDateWidget(),
                                 ]),
@@ -768,7 +800,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
       messageBarColor: Colors.black,
       onSend: (p0) async {
         if (p0.isNotEmpty) {
-          onSendChatMessage(textEditingController.text);
+          onSendChatMessage(p0);
         }
       },
       onTextChanged: (p0) {
