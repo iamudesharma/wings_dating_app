@@ -16,6 +16,11 @@ final chatListProvider = StreamProvider((ref) async* {
   yield* getDialogs().asStream();
 });
 
+final unreadMessageCount =
+    FutureProvider.family<dynamic, List<String>?>((ref, dialogId) async {
+  return getUnreadMessagesCount(dialogId);
+});
+
 class ChatListView extends ConsumerStatefulWidget {
   const ChatListView({super.key});
 
@@ -48,23 +53,28 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
             data: (data) {
               final dialogList = data!.items;
 
-              return dialogList.isEmpty
-                  ? const Center(
-                      child: Text("No user for chat",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          )))
-                  : ListView.separated(
-                      itemCount: dialogList.length,
-                      itemBuilder: (context, index) {
-                        return _getListItemTile(context, index, dialogList);
-                      },
-                      separatorBuilder: (context, index) {
-                        return const Divider(
-                            thickness: 2, indent: 40, endIndent: 40);
-                      },
+              if (dialogList.isEmpty) {
+                return const Center(
+                    child: Text("No user for chat",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        )));
+              } else {
+                return ListView.separated(
+                  itemCount: dialogList.length,
+                  itemBuilder: (context, index) {
+                    return _getListItemTile(context, index, dialogList);
+                  },
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      thickness: 2,
+                      indent: 40,
+                      endIndent: 40,
                     );
+                  },
+                );
+              }
             }),
       ),
     );
@@ -134,10 +144,15 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
             ChatRoute(
               cubeDialog: dialogList[index],
               cubeUser: await getUserById(
-                id![0] == currentUser!.id ? id[0] : id[1],
+                id!.where((element) => element == currentUser!.id).first,
               ),
             ),
           );
+
+          // id?.first == currentUser!.id ? id![0] : id![1],
+          // log(
+          //   "${id?.first != currentUser!.id ? id![0] : id![1]}",
+          // );
         },
         leading: getDialogAvatarWidget(),
         title: Text(

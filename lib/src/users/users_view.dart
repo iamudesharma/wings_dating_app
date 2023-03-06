@@ -14,7 +14,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
-import '../../const/app_const.dart';
 import '../../const/pref_util.dart';
 import '../../main.dart';
 import '../../routes/app_router.dart';
@@ -142,18 +141,19 @@ class _UsersViewState extends ConsumerState<UsersView>
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
+    CubeChatConnection.instance.getLasUserActivity(7375047).then((seconds) {
+      // 'userId' was 'seconds' ago
 
-    SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
+      log("seconds $seconds");
+    }).catchError((error) {
+      print("error $error");
+      // 'userId' never logged to the chat
+    });
+    // SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
 
-    await init(
-      AppConst.cubeappId,
-      AppConst.authKey,
-      AppConst.authSecret,
-      onSessionRestore: () {
-        final user = sharedPrefs.getUser();
-        return createSession(user);
-      },
-    );
+    // await ref
+    //     .read(ProfileController.userControllerProvider)
+    //     .updateCubeUserData(await sharedPrefs.getUser()!);
 
     // _loginToCubeChat(sharedPrefs.getUser()!);
   }

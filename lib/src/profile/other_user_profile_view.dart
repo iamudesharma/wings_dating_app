@@ -190,13 +190,16 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
               // print("other user id ${otherUser.value!.cubeUser.id}");
               _createDialog(
                   context,
-                  {currentUser.cubeUser.id!, otherUser.value!.cubeUser.id!},
+                  {
+                    currentUser.cubeUser.id ?? 0,
+                    otherUser.value!.cubeUser.id ?? 0
+                  },
                   currentUser.cubeUser);
-              // await AutoRouter.of(context).push(
-              //   ChatRoute(
-              //       cubeUser: currentUser.cubeUser,
-              //       chatUserCubeId: otherUser.value!.cubeUser.id),
-              // );
+              await AutoRouter.of(context).push(
+                ChatRoute(
+                    cubeUser: currentUser.cubeUser,
+                    chatUserCubeId: otherUser.value!.cubeUser.id),
+              );
             }),
       ),
     );

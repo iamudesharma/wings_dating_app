@@ -19,6 +19,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/const/pref_util.dart';
 
 import 'package:wings_dating_app/dependency/dependenies.dart';
+import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
@@ -336,11 +337,13 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         replacement: ElevatedButton(
                           onPressed: () async {
                             final route = AutoRouter.of(context);
-                            final data = await Geolocator.getCurrentPosition();
 
                             setState(() {
                               _loading = true;
                             });
+
+                            final data = await Geolocator.getCurrentPosition();
+
                             GeoFirePoint myLocation = geo.point(
                               latitude: data.latitude,
                               longitude: data.longitude,
@@ -491,19 +494,21 @@ _signInCC(CubeUser user, WidgetRef ref, {UserModel? userModel}) async {
     try {
       await createSession();
       signUp(user).then((newUser) async {
-        print("signUp newUser $newUser");
+        logger.i("signUp newUser $newUser");
         user.id = newUser.id;
         await SharedPrefs.instance.saveNewUser(user);
 
-        final user0 = userModel!.copyWith(
-          cubeUser: user,
+        final cube = SharedPrefs.instance.getUser();
+
+        final user0 = userModel?.copyWith(
+          cubeUser: cube!,
         );
 
         await signIn(user).then((result) async {
           log("signIn result $result");
           _loginToCubeChat(user);
 
-          await ref.read(Dependency.profileProvider).updateUserDoc(user0);
+          await ref.read(Dependency.profileProvider).updateUserDoc(user0!);
         });
       }).catchError((exception) {
         log("signUp exception $exception");
@@ -516,10 +521,12 @@ _signInCC(CubeUser user, WidgetRef ref, {UserModel? userModel}) async {
 }
 
 _loginToCubeChat(CubeUser user) {
-  print("_loginToCubeChat user $user");
+  log("_loginToCubeChat user $user");
   CubeChatConnectionSettings.instance.totalReconnections = 0;
-  CubeChatConnection.instance
-      .login(user)
-      .then((cubeUser) {})
-      .catchError((error) {});
+  CubeChatConnection.instance.login(user).then((cubeUser) async {
+    PushNotificationsManager.instance.init();
+    log("login cubeUser $cubeUser");
+  }).catchError((error) {
+    log("login error $error");
+  });
 }

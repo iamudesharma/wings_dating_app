@@ -30,6 +30,9 @@ class AuthGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) async {
     FirebaseAuth auth = FirebaseAuth.instance;
+
+    SharedPrefs? prefs = await SharedPrefs.instance.init();
+
     // var customerController = ref.read(profileControllerProvider);
     if (auth.currentUser != null) {
       print(auth.currentUser != null);
@@ -41,28 +44,23 @@ class AuthGuard extends AutoRouteGuard {
             .getCurrentUser();
         // String initialRoute =
 
-        CubeUser? cubeUser = ref
-            .read(ProfileController.userControllerProvider)
-            .userModel!
-            .cubeUser;
-
         if (CubeSessionManager.instance.isActiveSessionValid()) {
           if (!CubeChatConnection.instance.isAuthenticated()) {
-            await CubeChatConnection.instance.login(cubeUser);
+            final user0 = SharedPrefs.instance.getUser();
+
+            await CubeChatConnection.instance.login(user0!);
+
             resolver.next(true);
           } else {
             resolver.next(true);
           }
         } else {
-          await _loginToCC(
-              ref
-                  .read(ProfileController.userControllerProvider)
-                  .userModel!
-                  .cubeUser,
-              saveUser: true);
+          final user0 = SharedPrefs.instance.getUser();
+
+          await _loginToCC(user0!, saveUser: true);
 
           resolver.next(true);
-        }
+      }
         //   ? PAGE_HOME
         //   : PAGE_PHONE_CALL;
 

@@ -57,7 +57,10 @@ void main() async {
     await Firebase.initializeApp();
     // The following lines are the same as previously explained in "Handling uncaught errors"
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-    await PushNotificationsManager.instance.init();
+
+    // FirebaseMessaging.onBackgroundMessage((message) async {
+    //   showNotification(message);
+    // });
     runApp(const ProviderScope(child: MyApp()));
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
   // runZonedGuarded( ProviderScope(child: MyApp()),((error, stack) => FirebaseCrashlytics.instance.recordError(error, stack)));
@@ -84,7 +87,6 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
