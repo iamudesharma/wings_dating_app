@@ -193,13 +193,6 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
     Fluttertoast.showToast(msg: 'Coming soon');
   }
 
-  void _openDialog(BuildContext context, CubeDialog dialog) async {
-    // Navigator.pushNamed(context, 'chat_dialog',
-    //     arguments: {USER_ARG_NAME: currentUser, DIALOG_ARG_NAME: dialog});
-  }
-
-  void refresh() {}
-
   @override
   void initState() {
     super.initState();
