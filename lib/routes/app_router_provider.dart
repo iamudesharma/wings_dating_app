@@ -107,10 +107,10 @@ Future<void> _loginToCC(CubeUser user, {bool saveUser = false}) async {
 Future<void> _loginToCubeChat(CubeUser user) async {
   print("_loginToCubeChat user $user");
   CubeChatConnectionSettings.instance.totalReconnections = 0;
-  await CubeChatConnection.instance
-      .login(user)
-      .then((cubeUser) {})
-      .catchError((error) {
+  await CubeChatConnection.instance.login(user).then((cubeUser) async {
+    await CubeChatConnection.instance
+        .subscribeToUserLastActivityStatus(user.id!);
+  }).catchError((error) {
     _processLoginError(error);
   });
 }

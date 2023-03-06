@@ -114,17 +114,19 @@ class _UsersViewState extends ConsumerState<UsersView>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     log("Current app state: $state");
     appState = state;
 
     if (AppLifecycleState.paused == state) {
       if (CubeChatConnection.instance.isAuthenticated()) {
         CubeChatConnection.instance.markInactive();
+
+        await ref.read(profileRepoProvider).isUserOnline(false);
       }
     } else if (AppLifecycleState.resumed == state) {
       // // just for an example user was saved in the local storage
-      SharedPrefs.instance.init().then((sharedPrefs) {
+      SharedPrefs.instance.init().then((sharedPrefs) async {
         CubeUser? user = sharedPrefs.getUser();
 
         if (user != null) {
@@ -132,6 +134,7 @@ class _UsersViewState extends ConsumerState<UsersView>
             CubeChatConnection.instance.login(user);
           } else {
             CubeChatConnection.instance.markActive();
+            await ref.read(profileRepoProvider).isUserOnline(true);
           }
         }
       });
@@ -156,35 +159,12 @@ class _UsersViewState extends ConsumerState<UsersView>
   _loginToCubeChat(CubeUser user) {
     print("_loginToCubeChat user $user");
     CubeChatConnectionSettings.instance.totalReconnections = 0;
-    CubeChatConnection.instance
-        .login(user)
-        .then((cubeUser) {})
-        .catchError((error) {});
+    CubeChatConnection.instance.login(user).then((cubeUser) {
+      CubeChatConnection.instance.subscribeToUserLastActivityStatus(user.id!);
+    }).catchError((error) {});
   }
 
-  _signInCC(CubeUser user) async {
-    if (!CubeSessionManager.instance.isActiveSessionValid()) {
-      try {
-        await createSession();
-      } catch (error) {
-        log("createSession error $error");
-      }
-    }
-    signUp(user).then((newUser) async {
-      print("signUp newUser $newUser");
-      user.id = newUser.id;
-      SharedPrefs.instance.saveNewUser(user);
-
-      await signIn(user).then((result) {
-        log("signIn result $result");
-        // _loginToCubeChat(context, user);
-      });
-    }).catchError((exception) {
-      log("signUp exception $exception");
-      // _processLoginError(exception);
-    });
-  }
-
+ 
   bool? isOnline = false;
 
   @override

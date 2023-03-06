@@ -525,6 +525,9 @@ _loginToCubeChat(CubeUser user) {
   CubeChatConnection.instance.login(user).then((cubeUser) async {
     logger.i("login cubeUser $cubeUser");
 
+    await CubeChatConnection.instance
+        .subscribeToUserLastActivityStatus(user.id!);
+
     if (!Platform.isIOS) {
       PushNotificationsManager.instance.init();
     }
