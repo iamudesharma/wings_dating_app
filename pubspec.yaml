@@ -88,6 +88,7 @@ dependencies:
   file_picker: ^5.2.5
   package_info_plus: ^3.0.3
   flutter_slidable: ^2.0.0
+  flutter_isolate: ^2.0.4
   # package_info_plus: ^3.0.3
   # universal_io: ^2.2.0
  
