@@ -1,4 +1,5 @@
 import 'dart:async';
+
 // import 'package:chat_sample/src/utils/api_utils.dart';
 
 import 'package:chat_bubbles/chat_bubbles.dart';
@@ -365,17 +366,31 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
     CreateEventParams params = CreateEventParams();
     params.parameters = {
-      'message': "Some message in push", // 'message' field is required
-      'custom_parameter1': "custom parameter value 1",
-      'custom_parameter2': "custom parameter value 2",
-      'ios_voip': 1 // to send VoIP push notification to iOS
+      'message': "Incoming  Video call",
+      'call_type': "video",
+      'session_id': "qsjnndww",
+      'caller_id': " jxwwjwjk",
+      'caller_name': "jxwwjwjk",
+      'call_opponents': "udesh",
+      'signal_type': 'startCall',
+      'ios_voip': 1,
+      // 'message':
+      //     "${_cubeUser.fullName} send a message", // 'message' field is required
+      // 'custom_parameter1': "custom parameter value 1",
+      // 'custom_parameter2': "custom parameter value 2",
+      // 'ios_voip': 1 // to send VoIP push notification to iOS
       //more standard parameters you can found by link https://developers.connectycube.com/server/push_notifications?id=universal-push-notifications
     };
 
     params.notificationType = NotificationType.PUSH;
+
     params.environment =
         isProduction ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
-    params.usersIds = [message.senderId];
+    params.usersIds = [
+      _cubeDialog!.occupantsIds!
+          .where((element) => element != _cubeUser.id)
+          .first
+    ];
 
     createEvent(params.getEventForRequest())
         .then((cubeEvent) {})

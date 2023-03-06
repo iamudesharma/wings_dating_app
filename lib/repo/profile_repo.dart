@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
@@ -79,6 +80,15 @@ class ProfileRepo with RepositoryExceptionMixin {
     );
   }
 
+  Future<void> updateCubeUserDoc(CubeUser cubeUser) async {
+    await exceptionHandler<void>(
+      userCollection()
+          .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+          .update({"cubeUser": cubeUser.toJson()}).onError(
+              (error, stackTrace) => logger.e(error)),
+    );
+  }
+
   Future<void> updateLocation(dynamic pointData) async {
     logger.e(pointData);
     final usercollection = userCollection();
@@ -151,7 +161,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     });
   }
 
-  Future<UserModel?> getUserById(String id)async {
+  Future<UserModel?> getUserById(String id) async {
     final usercollection = userCollection();
 
     logger.w(id);
@@ -169,7 +179,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     return users;
   }
 
-  Future<UserModel?> getUserByCubeId(int id)async {
+  Future<UserModel?> getUserByCubeId(int id) async {
     final usercollection = userCollection();
 
     logger.w(id);
