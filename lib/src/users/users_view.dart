@@ -149,11 +149,6 @@ class _UsersViewState extends ConsumerState<UsersView>
       print("error $error");
       // 'userId' never logged to the chat
     });
-    // SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
-
-    // await ref
-    //     .read(ProfileController.userControllerProvider)
-    //     .updateCubeUserData(await sharedPrefs.getUser()!);
 
     // _loginToCubeChat(sharedPrefs.getUser()!);
   }

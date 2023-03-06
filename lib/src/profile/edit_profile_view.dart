@@ -379,7 +379,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               } else {
                                 int age = calculateAge(_selectedDate!);
 
-                                int id = Random().nextInt(1000000);
+                                String password =
+                                    "${Random.secure().nextInt(100000000)}$age";
 
                                 UserModel user = UserModel(
                                   fcmToken: token ?? "",
@@ -396,10 +397,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       .uploadImage(),
                                   birthday: _dobController.text,
                                   cubeUser: CubeUser(
-                                    login:
-                                        "${_usernameController.text.trim()}-$age",
+                                    login: _usernameController.text.trim(),
                                     fullName: _usernameController.text,
-                                    password: "12345678",
+                                    password: password,
                                   ),
                                   position: GeoPointData(
                                     geohash: myLocation.hash,
@@ -413,24 +413,19 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     .read(Dependency.profileProvider)
                                     .createUserDoc(user);
 
-                                SharedPrefs sharedPrefs = SharedPrefs.instance;
+                                final cubeUser = CubeUser(
+                                  login: _usernameController.text.trim(),
+                                  fullName: _usernameController.text,
+                                  password: password,
+                                  phone: FirebaseAuth
+                                      .instance.currentUser?.phoneNumber,
+                                  avatar: await ref
+                                      .read(ProfileController
+                                          .userControllerProvider)
+                                      .uploadImage(),
+                                );
+                                await _signInCC(cubeUser, ref);
 
-                                await sharedPrefs.init();
-
-                                await _signInCC(
-                                    CubeUser(
-                                      login: _usernameController.text.trim(),
-                                      fullName: _usernameController.text,
-                                      password:
-                                          "${Random.secure().nextInt(100000000)}$age",
-                                      phone: FirebaseAuth
-                                          .instance.currentUser?.phoneNumber,
-                                      avatar: await ref
-                                          .read(ProfileController
-                                              .userControllerProvider)
-                                          .uploadImage(),
-                                    ),
-                                    ref);
                                 await route.replace(const DashboardRoute());
                               }
                             }
@@ -489,44 +484,51 @@ class ImagePickerWidget extends StatelessWidget {
   }
 }
 
-_signInCC(CubeUser user, WidgetRef ref, {UserModel? userModel}) async {
+Future<void> _signInCC(CubeUser user, WidgetRef ref,
+    {UserModel? userModel}) async {
   if (!CubeSessionManager.instance.isActiveSessionValid()) {
+    SharedPrefs sharedPrefs = SharedPrefs.instance;
+
+    await sharedPrefs.init();
     try {
       await createSession();
       signUp(user).then((newUser) async {
         logger.i("signUp newUser $newUser");
         user.id = newUser.id;
-        await SharedPrefs.instance.saveNewUser(user);
+        await sharedPrefs.saveNewUser(user);
 
-        final cube = SharedPrefs.instance.getUser();
+        final cube = sharedPrefs.getUser();
 
         final user0 = userModel?.copyWith(
           cubeUser: cube!,
         );
 
         await signIn(user).then((result) async {
-          log("signIn result $result");
+          logger.i("signIn result $result");
           _loginToCubeChat(user);
 
           await ref.read(Dependency.profileProvider).updateUserDoc(user0!);
         });
       }).catchError((exception) {
-        log("signUp exception $exception");
+        logger.e("signUp exception $exception");
         // _processLoginError(exception);
       });
     } catch (error) {
-      log("createSession error $error");
+      logger.e("createSession error $error");
     }
   }
 }
 
 _loginToCubeChat(CubeUser user) {
-  log("_loginToCubeChat user $user");
+  logger.i("_loginToCubeChat user $user");
   CubeChatConnectionSettings.instance.totalReconnections = 0;
   CubeChatConnection.instance.login(user).then((cubeUser) async {
-    PushNotificationsManager.instance.init();
-    log("login cubeUser $cubeUser");
+    logger.i("login cubeUser $cubeUser");
+
+    if (!Platform.isIOS) {
+      PushNotificationsManager.instance.init();
+    }
   }).catchError((error) {
-    log("login error $error");
+    logger.e("login error $error");
   });
 }

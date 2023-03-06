@@ -1,9 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wings_dating_app/helpers/helpers.dart';
 
 import 'package:wings_dating_app/routes/app_router.dart';
 
@@ -44,43 +47,28 @@ class AuthGuard extends AutoRouteGuard {
             .getCurrentUser();
         // String initialRoute =
 
+        final userModel =
+            ref.read(ProfileController.userControllerProvider).userModel;
+
         if (CubeSessionManager.instance.isActiveSessionValid()) {
           if (!CubeChatConnection.instance.isAuthenticated()) {
-            final user0 = SharedPrefs.instance.getUser();
+            await SharedPrefs.instance.saveNewUser(userModel!.cubeUser);
 
-            await CubeChatConnection.instance.login(user0!);
+            await CubeChatConnection.instance.login(userModel.cubeUser);
 
             resolver.next(true);
           } else {
             resolver.next(true);
           }
         } else {
-          final user0 = SharedPrefs.instance.getUser();
-
-          await _loginToCC(user0!, saveUser: true);
+          await _loginToCC(userModel!.cubeUser, saveUser: true);
 
           resolver.next(true);
-      }
-        //   ? PAGE_HOME
-        //   : PAGE_PHONE_CALL;
-
-        // if (NotificationsController.initialCallAction == null) {
-
-        // } else {
-        //   resolver.next(false);
-
-        //   router.push(CallRoute(
-        //     receivedAction: NotificationsController.initialCallAction,
-        //   ));
-        // }
-
-        resolver.next(true);
-
-        // customerController.getCustomerData();
+        }
       } else {
         resolver.next(false);
 
-        print('user doc not exist');
+        logger.e('user doc not exist');
         router.push(EditProfileRoute(isEditProfile: false));
       }
 
@@ -93,31 +81,33 @@ class AuthGuard extends AutoRouteGuard {
   }
 }
 
-_loginToCC(CubeUser user, {bool saveUser = false}) {
+Future<void> _loginToCC(CubeUser user, {bool saveUser = false}) async {
   print("_loginToCC user: $user");
 
-  createSession(user).then((cubeSession) async {
+  await createSession(user).then((cubeSession) async {
     print("createSession cubeSession: $cubeSession");
     var tempUser = user;
     user = cubeSession.user!..password = tempUser.password;
     if (saveUser) {
-      SharedPrefs.instance.init().then((sharedPrefs) {
-        sharedPrefs.saveNewUser(user);
+      SharedPrefs.instance.init().then((sharedPrefs) async {
+        await sharedPrefs.saveNewUser(user);
       });
     }
 
-    PushNotificationsManager.instance.init();
+    await _loginToCubeChat(user);
 
-    _loginToCubeChat(user);
+    if (!Platform.isIOS) {
+      PushNotificationsManager.instance.init();
+    }
   }).catchError((error) {
     _processLoginError(error);
   });
 }
 
-_loginToCubeChat(CubeUser user) {
+Future<void> _loginToCubeChat(CubeUser user) async {
   print("_loginToCubeChat user $user");
   CubeChatConnectionSettings.instance.totalReconnections = 0;
-  CubeChatConnection.instance
+  await CubeChatConnection.instance
       .login(user)
       .then((cubeUser) {})
       .catchError((error) {

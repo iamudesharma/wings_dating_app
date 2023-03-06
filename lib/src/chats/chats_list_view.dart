@@ -67,25 +67,13 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
                     return _getListItemTile(context, index, dialogList);
                   },
                   separatorBuilder: (context, index) {
-                    return const Divider(
-                      thickness: 2,
-                      indent: 40,
-                      endIndent: 40,
-                    );
+                    return const SizedBox();
                   },
                 );
               }
             }),
       ),
     );
-  }
-
-  void _processGetDialogError(exception) {
-    log(
-      "GetDialog error $exception",
-    );
-
-    // showDialogError(exception, context);
   }
 
   Widget _getListItemTile(
@@ -167,13 +155,30 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
           dialogList[index].lastMessage ?? 'Not available',
           style: const TextStyle(color: Colors.grey, fontSize: 15.0),
         ),
-        trailing: Text(
-          dialogList[index].lastMessageDateSent != null
-              ? DateTime.fromMillisecondsSinceEpoch(
-                      dialogList[index].lastMessageDateSent! * 1000)
-                  .timeAgo(useShortForm: true)
-              : 'Not available',
-          style: const TextStyle(color: Colors.grey, fontSize: 12.0),
+        trailing: Row(
+          // crossAxisAlignment: ,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            dialogList[index].unreadMessageCount == 0
+                ? const SizedBox.shrink()
+                : Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.red,
+                    ),
+                    child:
+                        Text(dialogList[index].unreadMessageCount.toString())),
+            const SizedBox(width: 10.0),
+            Text(
+              dialogList[index].lastMessageDateSent != null
+                  ? DateTime.fromMillisecondsSinceEpoch(
+                          dialogList[index].lastMessageDateSent! * 1000)
+                      .timeAgo(useShortForm: true)
+                  : 'Not available',
+              style: const TextStyle(color: Colors.grey, fontSize: 12.0),
+            ),
+          ],
         ),
       ),
     );

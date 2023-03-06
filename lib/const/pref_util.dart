@@ -33,14 +33,14 @@ class SharedPrefs {
     return completer.future;
   }
 
-  saveNewUser(CubeUser cubeUser) {
+  saveNewUser(CubeUser cubeUser) async {
     prefs.clear();
-    prefs.setString(prefUserLogin, cubeUser.login!);
-    prefs.setString(prefUserPsw, cubeUser.password!);
-    prefs.setString(prefUserName, cubeUser.fullName!);
-    prefs.setInt(prefUserId, cubeUser.id!);
+    await prefs.setString(prefUserLogin, cubeUser.login!);
+    await prefs.setString(prefUserPsw, cubeUser.password!);
+    await prefs.setString(prefUserName, cubeUser.fullName!);
+    await prefs.setInt(prefUserId, cubeUser.id!);
     if (cubeUser.avatar != null) {
-      prefs.setString(prefUserAvatar, cubeUser.avatar!);
+      await prefs.setString(prefUserAvatar, cubeUser.avatar!);
     }
   }
 
