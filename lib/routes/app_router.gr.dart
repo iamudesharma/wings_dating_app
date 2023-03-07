@@ -44,6 +44,8 @@ class _$AppRouter extends RootStackRouter {
           cubeUser: args.cubeUser,
           cubeDialog: args.cubeDialog,
           chatUserCubeId: args.chatUserCubeId,
+          dialogId: args.dialogId,
+          cubeUserId: args.cubeUserId,
         ),
       );
     },
@@ -210,6 +212,8 @@ class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
     CubeUser? cubeUser,
     CubeDialog? cubeDialog,
     int? chatUserCubeId,
+    String? dialogId,
+    int? cubeUserId,
   }) : super(
           ChatRoute.name,
           path: '/chat-view',
@@ -218,6 +222,8 @@ class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
             cubeUser: cubeUser,
             cubeDialog: cubeDialog,
             chatUserCubeId: chatUserCubeId,
+            dialogId: dialogId,
+            cubeUserId: cubeUserId,
           ),
         );
 
@@ -230,6 +236,8 @@ class ChatRouteArgs {
     this.cubeUser,
     this.cubeDialog,
     this.chatUserCubeId,
+    this.dialogId,
+    this.cubeUserId,
   });
 
   final Key? key;
@@ -240,9 +248,13 @@ class ChatRouteArgs {
 
   final int? chatUserCubeId;
 
+  final String? dialogId;
+
+  final int? cubeUserId;
+
   @override
   String toString() {
-    return 'ChatRouteArgs{key: $key, cubeUser: $cubeUser, cubeDialog: $cubeDialog, chatUserCubeId: $chatUserCubeId}';
+    return 'ChatRouteArgs{key: $key, cubeUser: $cubeUser, cubeDialog: $cubeDialog, chatUserCubeId: $chatUserCubeId, dialogId: $dialogId, cubeUserId: $cubeUserId}';
   }
 }
 

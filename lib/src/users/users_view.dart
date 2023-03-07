@@ -55,16 +55,6 @@ class _UsersViewState extends ConsumerState<UsersView>
   late StreamSubscription<ConnectivityResult> connectivityStateSubscription;
   AppLifecycleState? appState;
 
-  setSafeState(Function execution) {
-    if (!mounted) {
-      execution();
-    } else {
-      setState(() {
-        execution();
-      });
-    }
-  }
-
   @override
   void initState() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -77,7 +67,7 @@ class _UsersViewState extends ConsumerState<UsersView>
         showNotification(message);
       }
     });
-    printToken();
+
     WidgetsBinding.instance.addObserver(this);
 
     super.initState();
@@ -144,15 +134,11 @@ class _UsersViewState extends ConsumerState<UsersView>
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    CubeChatConnection.instance.getLasUserActivity(7375047).then((seconds) {
-      // 'userId' was 'seconds' ago
+    SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
 
-      log("seconds $seconds");
-    }).catchError((error) {
-      print("error $error");
-      // 'userId' never logged to the chat
+    await CubeChatConnection.instance.getLasUserActivity(7378641).then((value) {
+      print(" getLasUserActivity $value");
     });
-
     // _loginToCubeChat(sharedPrefs.getUser()!);
   }
 
@@ -164,7 +150,6 @@ class _UsersViewState extends ConsumerState<UsersView>
     }).catchError((error) {});
   }
 
- 
   bool? isOnline = false;
 
   @override
@@ -596,21 +581,21 @@ class UserGridItem extends ConsumerWidget {
                     fontSize: 10,
                   ),
                 ),
-                // const Spacer(),
-                // isCurrentUser!
-                //     ? InkWell(
-                //         onTap: onTapEditProfile, child: const Icon(Icons.edit))
-                //     : Align(
-                //         alignment: Alignment.topRight,
-                //         child: Padding(
-                //           padding: const EdgeInsets.all(8.0),
-                //           child: CircleAvatar(
-                //             radius: 5,
-                //             backgroundColor:
-                //                 users.isOnline ? Colors.green : Colors.amber,
-                //           ),
-                //         ),
-                //       ),
+                const Spacer(),
+                isCurrentUser!
+                    ? InkWell(
+                        onTap: onTapEditProfile, child: const Icon(Icons.edit))
+                    : Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            radius: 5,
+                            backgroundColor:
+                                users.isOnline ? Colors.green : Colors.amber,
+                          ),
+                        ),
+                      ),
               ],
             ),
           ),

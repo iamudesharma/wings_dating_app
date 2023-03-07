@@ -3,12 +3,12 @@ import 'dart:async';
 // import 'package:chat_sample/src/utils/api_utils.dart';
 
 import 'package:chat_bubbles/chat_bubbles.dart';
-import 'package:chat_bubbles/message_bars/message_bar.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
+// ignore: depend_on_referenced_packages
 import 'package:universal_io/io.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -21,7 +21,6 @@ import 'package:intl/intl.dart';
 
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:wings_dating_app/repo/chat_repo.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/chats/chats_list_view.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
@@ -44,21 +43,43 @@ final _chatUserData = FutureProvider.family<UserModel?, int>(
 //   ).asStream();
 // });
 
-class ChatView extends ConsumerWidget {
+class ChatView extends ConsumerStatefulWidget {
   final CubeUser? cubeUser;
   final CubeDialog? cubeDialog;
   final int? chatUserCubeId;
+  final String? dialogId;
+  final int? cubeUserId;
 
-  const ChatView(
-      {super.key, this.cubeUser, this.cubeDialog, this.chatUserCubeId});
+  const ChatView({
+    super.key,
+    this.cubeUser,
+    this.cubeDialog,
+    this.chatUserCubeId,
+    this.dialogId,
+    this.cubeUserId,
+  });
 
   @override
-  Widget build(BuildContext context, ref) {
-    final otherUser = ref.watch(_chatUserData(chatUserCubeId != null
-        ? chatUserCubeId!
-        : cubeDialog!.occupantsIds!.first == cubeUser!.id
-            ? cubeDialog!.occupantsIds!.last
-            : cubeDialog!.occupantsIds!.first));
+  ConsumerState<ChatView> createState() => _ChatViewState();
+}
+
+class _ChatViewState extends ConsumerState<ChatView> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+// Future<> getDialogById() async {
+//   // createDialog();
+// }
+
+  @override
+  Widget build(BuildContext context) {
+    final otherUser = ref.watch(_chatUserData(widget.chatUserCubeId != null
+        ? widget.chatUserCubeId!
+        : widget.cubeDialog!.occupantsIds!.first == widget.cubeUser!.id
+            ? widget.cubeDialog!.occupantsIds!.last
+            : widget.cubeDialog!.occupantsIds!.first));
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
@@ -96,13 +117,13 @@ class ChatView extends ConsumerWidget {
                           ],
                         ),
                         time == null
-                            ? SizedBox()
+                            ? const SizedBox()
                             : Text(DateTime.fromMicrosecondsSinceEpoch(time!)
                                 .timeAgo())
                       ],
                     )),
           ),
-          body: ChatScreen(cubeUser!, cubeDialog)),
+          body: ChatScreen(widget.cubeUserId!, widget.cubeDialog)),
     );
   }
 }
@@ -157,18 +178,20 @@ class ChatView extends ConsumerWidget {
 // }
 
 class ChatScreen extends ConsumerStatefulWidget {
-  final CubeUser _cubeUser;
+  // final CubeUser _cubeUser;
+  final int _cubeUserId;
   final CubeDialog? _cubeDialog;
 
-  const ChatScreen(this._cubeUser, this._cubeDialog, {super.key});
+  const ChatScreen(this._cubeUserId, this._cubeDialog, {super.key});
 
   @override
   // ignore: no_logic_in_create_state
-  ConsumerState createState() => ChatScreenState(_cubeUser, _cubeDialog);
+  ConsumerState createState() => ChatScreenState(_cubeUserId, _cubeDialog);
 }
 
 class ChatScreenState extends ConsumerState<ChatScreen> {
-  final CubeUser _cubeUser;
+  final int _cubeUserId;
+
   final CubeDialog? _cubeDialog;
   final Map<int?, CubeUser?> _occupants = {};
 
@@ -203,7 +226,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   List<CubeMessage> oldMessages = [];
 
-  ChatScreenState(this._cubeUser, this._cubeDialog);
+  ChatScreenState(this._cubeUserId, this._cubeDialog);
 
   @override
   void initState() {
@@ -277,7 +300,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   void onReceiveMessage(CubeMessage message) {
     log("onReceiveMessage message= $message");
     if (message.dialogId != _cubeDialog?.dialogId ||
-        message.senderId == _cubeUser.id) return;
+        message.senderId == _cubeUserId) return;
 
     addMessageToListView(message);
   }
@@ -294,7 +317,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   void onTypingMessage(TypingStatus status) {
     log("TypingStatus message= ${status.userId}");
-    if (status.userId == _cubeUser.id ||
+    if (status.userId == _cubeUserId ||
         (status.dialogId != null && status.dialogId != _cubeDialog?.dialogId)) {
       return;
     }
@@ -357,7 +380,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
     await _cubeDialog?.sendMessage(message);
 
-    message.senderId = _cubeUser.id;
+    message.senderId = _cubeUserId;
     addMessageToListView(message);
     listScrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -366,16 +389,12 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
     CreateEventParams params = CreateEventParams();
     params.parameters = {
-      'message': "Incoming  Video call",
-      'call_type': "video",
-      'session_id': "qsjnndww",
-      'caller_id': " jxwwjwjk",
-      'caller_name': "jxwwjwjk",
-      'call_opponents': "udesh",
-      'signal_type': 'startCall',
-      'ios_voip': 1,
-      // 'message':
-      //     "${_cubeUser.fullName} send a message", // 'message' field is required
+      'message':
+          "you have new message from ${_occupants[_cubeUserId]?.fullName ?? _occupants[_cubeUserId]?.login ?? ''}",
+      "cube_dialog_id": "${_cubeDialog?.dialogId}",
+      "cube_user_id": "${_cubeDialog?.userId}"
+
+      // 'message' field is required
       // 'custom_parameter1': "custom parameter value 1",
       // 'custom_parameter2': "custom parameter value 2",
       // 'ios_voip': 1 // to send VoIP push notification to iOS
@@ -388,7 +407,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
         isProduction ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
     params.usersIds = [
       _cubeDialog!.occupantsIds!
-          .where((element) => element != _cubeUser.id)
+          .where((element) => element != _cubeUserId)
           .first
     ];
 
@@ -459,14 +478,14 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   Widget buildItem(int index, CubeMessage message) {
     markAsReadIfNeed() {
       var isOpponentMsgRead =
-          message.readIds != null && message.readIds!.contains(_cubeUser.id);
+          message.readIds != null && message.readIds!.contains(_cubeUserId);
       print(
           "markAsReadIfNeed message= $message, isOpponentMsgRead= $isOpponentMsgRead");
-      if (message.senderId != _cubeUser.id && !isOpponentMsgRead) {
+      if (message.senderId != _cubeUserId && !isOpponentMsgRead) {
         if (message.readIds == null) {
-          message.readIds = [_cubeUser.id!];
+          message.readIds = [_cubeUserId];
         } else {
-          message.readIds!.add(_cubeUser.id!);
+          message.readIds!.add(_cubeUserId);
         }
 
         if (CubeChatConnection.instance.chatConnectionState ==
@@ -487,7 +506,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
       }
       return message.readIds != null &&
           message.readIds!.any(
-              (int id) => id != _cubeUser.id && _occupants.keys.contains(id));
+              (int id) => id != _cubeUserId && _occupants.keys.contains(id));
     }
 
     bool messageIsDelivered() {
@@ -499,7 +518,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
       }
       return message.deliveredIds != null &&
           message.deliveredIds!.any(
-              (int id) => id != _cubeUser.id && _occupants.keys.contains(id));
+              (int id) => id != _cubeUserId && _occupants.keys.contains(id));
     }
 
     Widget getDateWidget() {
@@ -540,7 +559,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
       return result;
     }
 
-    if (message.senderId == _cubeUser.id) {
+    if (message.senderId == _cubeUserId) {
       // Right (own message)
       return Column(
         children: <Widget>[
@@ -762,7 +781,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   bool isLastMessageLeft(int index) {
-    if ((listMessage[index].id == _cubeUser.id)) {
+    if ((listMessage[index].id == _cubeUserId)) {
       return true;
     } else {
       return false;
@@ -770,7 +789,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   bool isLastMessageRight(int index) {
-    if ((listMessage[index].id != _cubeUser.id)) {
+    if ((listMessage[index].id != _cubeUserId)) {
       return true;
     } else {
       return false;

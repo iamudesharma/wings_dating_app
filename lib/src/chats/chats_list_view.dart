@@ -131,9 +131,10 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
           AutoRouter.of(context).push(
             ChatRoute(
               cubeDialog: dialogList[index],
-              cubeUser: await getUserById(
-                id!.where((element) => element == currentUser!.id).first,
-              ),
+              cubeUserId:
+                  id!.where((element) => element == currentUser!.id).first,
+              chatUserCubeId:
+                  id.where((element) => element != currentUser!.id).first,
             ),
           );
 
