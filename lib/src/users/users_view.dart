@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -112,7 +113,7 @@ class _UsersViewState extends ConsumerState<UsersView>
       if (CubeChatConnection.instance.isAuthenticated()) {
         CubeChatConnection.instance.markInactive();
 
-        await ref.read(profileRepoProvider).isUserOnline(false);
+        await compute(ref.read(profileRepoProvider).isUserOnline, false);
       }
     } else if (AppLifecycleState.resumed == state) {
       // // just for an example user was saved in the local storage
@@ -124,7 +125,8 @@ class _UsersViewState extends ConsumerState<UsersView>
             CubeChatConnection.instance.login(user);
           } else {
             CubeChatConnection.instance.markActive();
-            await ref.read(profileRepoProvider).isUserOnline(true);
+
+            await compute(ref.read(profileRepoProvider).isUserOnline, true);
           }
         }
       });
@@ -136,10 +138,11 @@ class _UsersViewState extends ConsumerState<UsersView>
     super.didChangeDependencies();
     SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
 
-    await CubeChatConnection.instance.getLasUserActivity(7378641).then((value) {
-      print(" getLasUserActivity $value");
-    });
     // _loginToCubeChat(sharedPrefs.getUser()!);
+
+    await ref
+        .read(ProfileController.userControllerProvider)
+        .updateCubeUserData(sharedPrefs.getUser()!);
   }
 
   _loginToCubeChat(CubeUser user) {
@@ -160,7 +163,7 @@ class _UsersViewState extends ConsumerState<UsersView>
 
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () async => ref.refresh(userListProvider),
+        onRefresh: () async => ref.invalidate(userListProvider),
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
