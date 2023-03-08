@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:isolate_flutter/isolate_flutter.dart';
+// import 'package:isolate_flutter/isolate_flutter.dart';
 import 'package:wings_dating_app/const/app_const.dart';
 import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
@@ -125,8 +125,15 @@ class _MyAppState extends ConsumerState<MyApp> {
         fontFamily: GoogleFonts.notoSans().fontFamily,
       ),
       themeMode: ThemeMode.dark,
-      routerDelegate:
-          appRouter.delegate(navigatorObservers: () => [MyObserver()]),
+      routerDelegate: appRouter.delegate(
+        navigatorObservers: () => [
+          MyObserver(),
+        ],
+        placeholder: (context) => Scaffold(
+            body: Center(
+          child: Image.asset("assets/logo.png"),
+        )),
+      ),
       routeInformationParser: appRouter.defaultRouteParser(),
       title: 'Wings',
     );
@@ -203,14 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
 // import 'package:auto_route/auto_route.dart';
 // import 'package:flutter/material.dart';
 
-getTokon() async {
-  IsolateFlutter? value =
-      await IsolateFlutter.create(printToken(), 'Get Token');
 
-  await value?.start();
-
-  value?.stop();
-}
 
 printToken() async {
   await FirebaseMessaging.instance.getToken().then(

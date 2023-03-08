@@ -1101,14 +1101,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  isolate_flutter:
-    dependency: "direct main"
-    description:
-      name: isolate_flutter
-      sha256: "6c7a020a7a44205e1755c4096fd09b05fd36a24caa2c22ed81888b8b6958f12e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   js:
     dependency: transitive
     description:
