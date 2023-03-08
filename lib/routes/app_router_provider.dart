@@ -6,7 +6,6 @@ import 'dart:isolate';
 import 'package:auto_route/auto_route.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
@@ -103,7 +102,7 @@ Future<void> _loginToCC(CubeUser user, {bool saveUser = false}) async {
       print("User saved: $saved");
     }
 
-    await _loginToCubeChat(user);
+    await chat.login(user);
 
     if (!Platform.isIOS) {
       PushNotificationsManager.instance.init();
@@ -136,37 +135,4 @@ void _saveUser(List<dynamic> args) async {
     return false;
   });
   sendPort.send(saved);
-}
-
-Future<void> _loginToCubeChat(CubeUser user) async {
-  final completer = Completer<void>();
-  final receivePort = ReceivePort();
-
-  Isolate.spawn(_loginToCubeChatIsolate, [
-    user,
-    receivePort.sendPort,
-  ]);
-
-  receivePort.listen((message) {
-    if (message is Exception) {
-      _processLoginError(message);
-    } else {
-      completer.complete();
-    }
-  });
-
-  await completer.future;
-}
-
-void _loginToCubeChatIsolate(List<dynamic> args) async {
-  final user = args[0] as CubeUser;
-  final sendPort = args[1] as SendPort;
-
-  try {
-    CubeChatConnectionSettings.instance.totalReconnections = 0;
-    final cubeUser = chat.login(user);
-    sendPort.send(cubeUser);
-  } catch (error) {
-    sendPort.send(error);
-  }
 }
