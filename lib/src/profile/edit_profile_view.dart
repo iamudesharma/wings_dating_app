@@ -341,6 +341,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                             setState(() {
                               _loading = true;
                             });
+                            SharedPrefs sharedPrefs =
+                                await SharedPrefs.instance.init();
 
                             final data = await Geolocator.getCurrentPosition();
 
@@ -353,6 +355,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 await FirebaseMessaging.instance.getToken();
 
                             if (_formKey.currentState!.validate()) {
+                              CubeUser? _cubeUser = sharedPrefs.getUser();
+                              final image = await ref
+                                  .read(
+                                      ProfileController.userControllerProvider)
+                                  .uploadImage();
                               if (widget.isEditProfile) {
                                 UserModel? user = profile.userModel?.copyWith(
                                   position: GeoPointData(
@@ -360,11 +367,15 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       geopoint: myLocation.geoPoint),
                                   bio: _bioController.text,
                                   fcmToken: token ?? "",
+                                  cubeUser: CubeUser(
+                                    id: _cubeUser?.id,
+                                    password: _cubeUser?.password,
+                                    login: _cubeUser?.login,
+                                    fullName: _usernameController.text,
+                                    avatar: image,
+                                  ),
                                   username: _usernameController.text,
-                                  profileUrl: await ref
-                                      .read(ProfileController
-                                          .userControllerProvider)
-                                      .uploadImage(),
+                                  profileUrl: image,
                                   birthday: _dobController.text,
                                 );
                                 logger.i(user?.toJson());
