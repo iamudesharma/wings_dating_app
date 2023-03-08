@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wings_dating_app/const/pref_util.dart';
 import 'package:wings_dating_app/dependency/dependenies.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/repo/repo_exception.dart';
@@ -77,6 +78,12 @@ class ProfileRepo with RepositoryExceptionMixin {
           .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
           .update(userModel.toJson())
           .onError((error, stackTrace) => logger.e(error)),
+    );
+
+    await exceptionHandler<void>(
+      updateUser(userModel.cubeUser).then((value) async {
+        SharedPrefs.instance.updateUser(value);
+      }),
     );
   }
 
