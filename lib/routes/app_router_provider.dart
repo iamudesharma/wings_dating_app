@@ -1,9 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
@@ -16,6 +19,8 @@ import '../repo/profile_repo.dart';
 import '../src/profile/controller/profile_controller.dart';
 
 part 'app_router_provider.g.dart';
+
+final chat = CubeChatConnection.instance;
 
 @Riverpod(keepAlive: true)
 AppRouter appRoute(AppRouteRef ref) {
@@ -50,10 +55,10 @@ class AuthGuard extends AutoRouteGuard {
             ref.read(ProfileController.userControllerProvider).userModel;
 
         if (CubeSessionManager.instance.isActiveSessionValid()) {
-          if (!CubeChatConnection.instance.isAuthenticated()) {
+          if (!chat.isAuthenticated()) {
             await SharedPrefs.instance.saveNewUser(userModel!.cubeUser);
 
-            await CubeChatConnection.instance.login(userModel.cubeUser);
+            await chat.login(userModel.cubeUser);
 
             resolver.next(true);
           } else {
@@ -80,6 +85,12 @@ class AuthGuard extends AutoRouteGuard {
   }
 }
 
+void _processLoginError(exception) {
+  log(
+    "Login error $exception",
+  );
+}
+
 Future<void> _loginToCC(CubeUser user, {bool saveUser = false}) async {
   print("_loginToCC user: $user");
 
@@ -88,9 +99,8 @@ Future<void> _loginToCC(CubeUser user, {bool saveUser = false}) async {
     var tempUser = user;
     user = cubeSession.user!..password = tempUser.password;
     if (saveUser) {
-      SharedPrefs.instance.init().then((sharedPrefs) async {
-        await sharedPrefs.saveNewUser(user);
-      });
+      final saved = await _saveUserInIsolate(user);
+      print("User saved: $saved");
     }
 
     await _loginToCubeChat(user);
@@ -103,19 +113,60 @@ Future<void> _loginToCC(CubeUser user, {bool saveUser = false}) async {
   });
 }
 
-Future<void> _loginToCubeChat(CubeUser user) async {
-  print("_loginToCubeChat user $user");
-  CubeChatConnectionSettings.instance.totalReconnections = 0;
-  await CubeChatConnection.instance.login(user).then((cubeUser) async {
-    await CubeChatConnection.instance
-        .subscribeToUserLastActivityStatus(user.id!);
-  }).catchError((error) {
-    _processLoginError(error);
+Future<bool> _saveUserInIsolate(CubeUser user) async {
+  final completer = Completer<bool>();
+  final receivePort = ReceivePort();
+  Isolate.spawn(_saveUser, [user, receivePort.sendPort]);
+  receivePort.listen((message) {
+    if (message is bool) {
+      completer.complete(message);
+    }
   });
+  return completer.future;
 }
 
-void _processLoginError(exception) {
-  log(
-    "Login error $exception",
-  );
+void _saveUser(List<dynamic> args) async {
+  final user = args[0] as CubeUser;
+  final sendPort = args[1] as SendPort;
+  final saved = await SharedPrefs.instance.init().then((sharedPrefs) async {
+    await sharedPrefs.saveNewUser(user);
+    return true;
+  }).catchError((error) {
+    print("Error saving user in isolate: $error");
+    return false;
+  });
+  sendPort.send(saved);
+}
+
+Future<void> _loginToCubeChat(CubeUser user) async {
+  final completer = Completer<void>();
+  final receivePort = ReceivePort();
+
+  Isolate.spawn(_loginToCubeChatIsolate, [
+    user,
+    receivePort.sendPort,
+  ]);
+
+  receivePort.listen((message) {
+    if (message is Exception) {
+      _processLoginError(message);
+    } else {
+      completer.complete();
+    }
+  });
+
+  await completer.future;
+}
+
+void _loginToCubeChatIsolate(List<dynamic> args) async {
+  final user = args[0] as CubeUser;
+  final sendPort = args[1] as SendPort;
+
+  try {
+    CubeChatConnectionSettings.instance.totalReconnections = 0;
+    final cubeUser = chat.login(user);
+    sendPort.send(cubeUser);
+  } catch (error) {
+    sendPort.send(error);
+  }
 }
