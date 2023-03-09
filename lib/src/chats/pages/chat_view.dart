@@ -66,12 +66,25 @@ class ChatView extends ConsumerStatefulWidget {
 class _ChatViewState extends ConsumerState<ChatView> {
   @override
   void initState() {
+    if (widget.cubeDialog == null) {
+      getDialogById(widget.dialogId!);
+    }
+
     super.initState();
   }
 
-// Future<> getDialogById() async {
-//   // createDialog();
-// }
+  bool isLoading = false;
+  Future<CubeDialog?> getDialogById(String id) async {
+    setState(() {
+      isLoading = true;
+    });
+    final data = await getDialogs({'id': id});
+
+    setState(() {
+      isLoading = true;
+    });
+    return data!.items.first;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,42 +99,46 @@ class _ChatViewState extends ConsumerState<ChatView> {
             title: otherUser.when(
                 error: (error, stackTrace) => Text(error.toString()),
                 loading: () => const Text('Loading...'),
-                data: (users) => Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: CachedNetworkImageProvider(
-                            users!.profileUrl!,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              users.username,
+                data: (users) => isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: CachedNetworkImageProvider(
+                              users!.profileUrl!,
                             ),
-                            Text(
-                              ref
-                                  .read(
-                                      ProfileController.userControllerProvider)
-                                  .getDistance(
-                                    Coordinates(
-                                      users.position!.geopoint.latitude,
-                                      users.position!.geopoint.longitude,
-                                    ),
-                                  ),
-                              style: const TextStyle(
-                                fontSize: 10,
+                          ),
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                users.username,
                               ),
-                            )
-                          ],
-                        ),
-                        time == null
-                            ? const SizedBox()
-                            : Text(DateTime.fromMicrosecondsSinceEpoch(time!)
-                                .timeAgo())
-                      ],
-                    )),
+                              Text(
+                                ref
+                                    .read(ProfileController
+                                        .userControllerProvider)
+                                    .getDistance(
+                                      Coordinates(
+                                        users.position!.geopoint.latitude,
+                                        users.position!.geopoint.longitude,
+                                      ),
+                                    ),
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                ),
+                              )
+                            ],
+                          ),
+                          time == null
+                              ? const SizedBox()
+                              : Text(DateTime.fromMicrosecondsSinceEpoch(time!)
+                                  .timeAgo())
+                        ],
+                      )),
           ),
           body: ChatScreen(widget.cubeUserId!, widget.cubeDialog)),
     );
@@ -385,14 +402,15 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     listScrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
 
-    bool isProduction = bool.fromEnvironment('dart.vm.product');
+    bool isProduction = const bool.fromEnvironment('dart.vm.product');
 
     CreateEventParams params = CreateEventParams();
+
     params.parameters = {
       'message':
           "you have new message from ${_occupants[_cubeUserId]?.fullName ?? _occupants[_cubeUserId]?.login ?? ''}",
       "cube_dialog_id": "${_cubeDialog?.dialogId}",
-      "cube_user_id": "${_cubeDialog?.userId}"
+      "cube_user_id": "${_cubeDialog?.userId}",
 
       // 'message' field is required
       // 'custom_parameter1': "custom parameter value 1",

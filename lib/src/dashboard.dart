@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 
+import 'chats/chats_list_view.dart';
 
 class DashboardView extends ConsumerStatefulWidget {
   const DashboardView({super.key});
@@ -33,7 +34,12 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
         bottomNavigationBuilder: (_, tabsRouter) {
           return NavigationBar(
             selectedIndex: tabsRouter.activeIndex,
-            onDestinationSelected: tabsRouter.setActiveIndex,
+            onDestinationSelected: (value) async {
+              if (value == 1) {
+                ref.invalidate(chatListProvider);
+              }
+              tabsRouter.setActiveIndex(value);
+            },
             destinations: const [
               NavigationDestination(
                 label: 'Users',

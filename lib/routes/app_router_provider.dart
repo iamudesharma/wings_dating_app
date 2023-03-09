@@ -6,6 +6,7 @@ import 'dart:isolate';
 import 'package:auto_route/auto_route.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
@@ -49,6 +50,7 @@ class AuthGuard extends AutoRouteGuard {
         await ref
             .read(ProfileController.userControllerProvider)
             .getCurrentUser();
+        await ref.read(profileRepoProvider).isUserOnline(true);
 
         final userModel =
             ref.read(ProfileController.userControllerProvider).userModel;
