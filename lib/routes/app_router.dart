@@ -9,6 +9,7 @@ import 'package:wings_dating_app/src/profile/add_additional_information_view.dar
 
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
+import '../src/chats/pages/call_view.dart';
 import '../src/chats/pages/chat_view.dart';
 import '../src/chats/pages/video_call_view.dart';
 import '../src/dashboard.dart';
@@ -56,9 +57,9 @@ part 'app_router.gr.dart';
       page: AddAdditionalInformationView,
     ),
 
-    // AutoRoute(
-    //   page: CallView,
-    // ),
+    AutoRoute(
+      page: CallView,
+    ),
 
     AutoRoute(page: EditProfileView),
     AutoRoute(page: UserBlockListView),

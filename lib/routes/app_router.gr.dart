@@ -67,6 +67,16 @@ class _$AppRouter extends RootStackRouter {
         child: const AddAdditionalInformationView(),
       );
     },
+    CallRoute.name: (routeData) {
+      final args = routeData.argsAs<CallRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: CallView(
+          args.callSession,
+          args.isIncoming,
+        ),
+      );
+    },
     EditProfileRoute.name: (routeData) {
       final args = routeData.argsAs<EditProfileRouteArgs>();
       return MaterialPageX<dynamic>(
@@ -159,6 +169,10 @@ class _$AppRouter extends RootStackRouter {
         RouteConfig(
           AddAdditionalInformationRoute.name,
           path: '/add-additional-information-view',
+        ),
+        RouteConfig(
+          CallRoute.name,
+          path: '/call-view',
         ),
         RouteConfig(
           EditProfileRoute.name,
@@ -307,6 +321,40 @@ class AddAdditionalInformationRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AddAdditionalInformationRoute';
+}
+
+/// generated route for
+/// [CallView]
+class CallRoute extends PageRouteInfo<CallRouteArgs> {
+  CallRoute({
+    required P2PSession callSession,
+    required bool isIncoming,
+  }) : super(
+          CallRoute.name,
+          path: '/call-view',
+          args: CallRouteArgs(
+            callSession: callSession,
+            isIncoming: isIncoming,
+          ),
+        );
+
+  static const String name = 'CallRoute';
+}
+
+class CallRouteArgs {
+  const CallRouteArgs({
+    required this.callSession,
+    required this.isIncoming,
+  });
+
+  final P2PSession callSession;
+
+  final bool isIncoming;
+
+  @override
+  String toString() {
+    return 'CallRouteArgs{callSession: $callSession, isIncoming: $isIncoming}';
+  }
 }
 
 /// generated route for
