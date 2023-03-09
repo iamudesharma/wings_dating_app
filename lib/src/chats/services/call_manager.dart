@@ -9,6 +9,7 @@ import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/chats/model/call.dart';
 import 'package:wings_dating_app/src/chats/pages/call_view.dart';
 
+import '../pages/incoming_call_screen.dart';
 import 'call_kit_manager.dart';
 
 class CallManager {
@@ -129,12 +130,12 @@ class CallManager {
 
   void _showIncomingCallScreen(P2PSession callSession) {
     if (context != null) {
-      // Navigator.push(
-      //   context!,
-      //   MaterialPageRoute(
-      //     builder: (context) => IncomingCallScreen(callSession),
-      //   ),
-      // );
+      Navigator.push(
+        context!,
+        MaterialPageRoute(
+          builder: (context) => IncomingCallScreen(callSession),
+        ),
+      );
     }
   }
 
@@ -144,21 +145,17 @@ class CallManager {
 
     if (_currentCall != null) {
       if (context != null) {
-        // if (AppLifecycleState.resumed !=
-        //     WidgetsBinding.instance.lifecycleState) {
-        //   _currentCall?.acceptCall();
-        // }
+        if (AppLifecycleState.resumed !=
+            WidgetsBinding.instance.lifecycleState) {
+          _currentCall?.acceptCall();
+        }
 
         if (!fromCallkit) {
           ConnectycubeFlutterCallKit.reportCallAccepted(sessionId: sessionId);
         }
 
-        // Navigator.pushReplacement(
-        //   context!,
-        //   MaterialPageRoute(
-        //     builder: (context) => ConversationCallScreen(_currentCall!, true),
-        //   ),
-        // );
+        AutoRouter.of(context!)
+            .replace(CallRoute(callSession: _currentCall!, isIncoming: true));
       }
     }
   }
