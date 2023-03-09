@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:universal_io/io.dart';
@@ -11,6 +12,8 @@ import 'package:platform_device_id/platform_device_id.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 
 import '../const/pref_util.dart';
+import '../src/chats/pages/incoming_call_screen.dart';
+import '../src/chats/services/call_manager.dart';
 
 // import 'utils/consts.dart';
 // import 'utils/pref_util.dart';
@@ -33,7 +36,27 @@ class PushNotificationsManager {
 
   Future<dynamic> Function(String? payload)? onNotificationClicked;
 
+  initCall() async {
+    ConnectycubeFlutterCallKit.initEventsHandler();
+
+    ConnectycubeFlutterCallKit.onTokenRefreshed = (token) {
+      log('[onTokenRefresh] VoIP token: $token', TAG);
+      subscribe(token);
+    };
+
+    ConnectycubeFlutterCallKit.getToken().then((token) {
+      log('[getToken] VoIP token: $token', TAG);
+      if (token != null) {
+        subscribe(token);
+      }
+    });
+
+    ConnectycubeFlutterCallKit.onCallRejectedWhenTerminated =
+        onCallRejectedWhenTerminated;
+  }
+
   init() async {
+    await initCall();
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
     await firebaseMessaging.requestPermission(
@@ -210,6 +233,30 @@ Future<void> onBackgroundMessage(RemoteMessage message) async {
   return Future.value();
 }
 
+Future<void> onCallRejectedWhenTerminated(CallEvent callEvent) async {
+  print(
+      '[PushNotificationsManager][onCallRejectedWhenTerminated] callEvent: $callEvent');
+
+  var currentUser = SharedPrefs.instance.getUser();
+  initConnectycubeContextLess();
+
+  var sendOfflineReject = rejectCall(callEvent.sessionId, {
+    ...callEvent.opponentsIds.where((userId) => currentUser!.id != userId),
+    callEvent.callerId
+  });
+  var sendPushAboutReject = sendPushAboutRejectFromKilledState({
+    PARAM_CALL_TYPE: callEvent.callType,
+    PARAM_SESSION_ID: callEvent.sessionId,
+    PARAM_CALLER_ID: callEvent.callerId,
+    PARAM_CALLER_NAME: callEvent.callerName,
+    PARAM_CALL_OPPONENTS: callEvent.opponentsIds.join(','),
+  }, callEvent.callerId);
+
+  return Future.wait([sendOfflineReject, sendPushAboutReject]).then((result) {
+    return Future.value();
+  });
+}
+
 Future<dynamic> onNotificationSelected(String? payload, BuildContext? context) {
   log('[onSelectNotification] payload: $payload', PushNotificationsManager.TAG);
 
@@ -241,4 +288,22 @@ Future<dynamic> onNotificationSelected(String? payload, BuildContext? context) {
   } else {
     return Future.value();
   }
+}
+
+Future<void> sendPushAboutRejectFromKilledState(
+  Map<String, dynamic> parameters,
+  int callerId,
+) {
+  CreateEventParams params = CreateEventParams();
+  params.parameters = parameters;
+  params.parameters['message'] = "Reject call";
+  params.parameters[PARAM_SIGNAL_TYPE] = SIGNAL_TYPE_REJECT_CALL;
+  // params.parameters[PARAM_IOS_VOIP] = 1;
+
+  params.notificationType = NotificationType.PUSH;
+  params.environment =
+      kReleaseMode ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
+  params.usersIds = [callerId];
+
+  return createEvent(params.getEventForRequest());
 }
