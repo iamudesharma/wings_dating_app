@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:wings_dating_app/src/chats/services/call_manager.dart';
 
 import 'chats/chats_list_view.dart';
 
@@ -25,6 +26,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
 
   @override
   Widget build(BuildContext context) {
+    CallManager.instance.init(context);
     return AutoTabsScaffold(
         routes: const [
           UsersRoute(),

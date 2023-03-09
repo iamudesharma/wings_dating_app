@@ -1,9 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_io/io.dart';
 
 import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:wings_dating_app/src/chats/model/call.dart';
+import 'package:wings_dating_app/src/chats/pages/call_view.dart';
 
 import 'call_kit_manager.dart';
 
@@ -116,12 +120,9 @@ class CallManager {
     P2PSession callSession =
         _callClient!.createCallSession(callType, opponents);
     _currentCall = callSession;
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => ConversationCallScreen(callSession, false),
-    //   ),
-    // );
+    AutoRouter.of(context).push(
+      CallRoute(callSession: callSession, isIncoming: false),
+    );
 
     _sendStartCallSignalForOffliners(_currentCall!);
   }
