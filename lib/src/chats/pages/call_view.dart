@@ -508,3 +508,207 @@
 //     );
 //   }
 // }
+
+import 'dart:io';
+
+import 'package:connectycube_sdk/connectycube_sdk.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_background/flutter_background.dart';
+// import 'package:geolocator/geolocator.dart';
+
+import '../../../helpers/logger.dart';
+import '../services/call_manager.dart';
+
+class CallScreen extends StatefulWidget {
+  const CallScreen({super.key});
+
+  @override
+  State<CallScreen> createState() => _CallScreenState();
+}
+
+class _CallScreenState extends State<CallScreen>
+    implements RTCSessionStateCallback<P2PSession> {
+  bool _isCameraEnabled = true;
+  bool _isSpeakerEnabled = true;
+  bool _isMicMute = false;
+
+  RTCVideoRenderer? localRenderer;
+  Map<int, RTCVideoRenderer> remoteRenderers = {};
+  final CubeStatsReportsManager _statsReportsManager =
+      CubeStatsReportsManager();
+  MediaStream? _localMediaStream;
+
+  Widget? _localVideoView;
+
+  bool _needRebuildLocalVideoView = true;
+
+  bool _customMediaStream = false;
+
+  late P2PSession _callSession;
+  bool? _isIncoming;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _localMediaStream = CallManager.instance.localMediaStream;
+
+    _callSession.onLocalStreamReceived = _addLocalMediaStream;
+    _callSession.onRemoteStreamReceived = _addRemoteMediaStream;
+    _callSession.onSessionClosed = _onSessionClosed;
+    _statsReportsManager.init(_callSession);
+    _callSession.setSessionCallbacksListener(this);
+
+    if (_isIncoming ?? false) {
+      if (_callSession.state == RTCSessionState.RTC_SESSION_NEW) {
+        _callSession.acceptCall();
+      }
+    } else {
+      _callSession.startCall();
+    }
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+
+    stopBackgroundExecution();
+
+    localRenderer?.srcObject = null;
+    localRenderer?.dispose();
+
+    remoteRenderers.forEach((opponentId, renderer) {
+      logger.i("[dispose] dispose renderer for $opponentId");
+      try {
+        renderer.srcObject = null;
+        renderer.dispose();
+      } catch (e) {
+        log('Error $e');
+      }
+    });
+  }
+
+  void _addRemoteMediaStream(session, int userId, MediaStream stream) {
+    log(
+      "_addRemoteMediaStream for user $userId",
+    );
+    _onRemoteStreamAdd(userId, stream);
+  }
+
+  void _onSessionClosed(session) {
+    logger.i(
+      "_onSessionClosed",
+    );
+    _callSession.removeSessionCallbacksListener();
+
+    // _statsReportsManager.dispose();
+
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => LoginScreen(),
+    //   ),
+    // );
+  }
+
+  void _onRemoteStreamAdd(int opponentId, MediaStream stream) async {
+    logger.i(
+      "_onStreamAdd for user $opponentId",
+    );
+
+    RTCVideoRenderer streamRender = RTCVideoRenderer();
+    await streamRender.initialize();
+    streamRender.srcObject = stream;
+    setState(() {
+      remoteRenderers[opponentId] = streamRender;
+    });
+  }
+
+  Future<void> _addLocalMediaStream(MediaStream stream) async {
+    _localMediaStream = stream;
+
+    if (!mounted) return;
+
+    setState(() {
+      _needRebuildLocalVideoView = localRenderer == null;
+    });
+
+    localRenderer?.srcObject = _localMediaStream;
+  }
+
+  Future<void> _removeMediaStream(callSession, int userId) async {
+    logger.i(
+      "_removeMediaStream for user $userId",
+    );
+    RTCVideoRenderer? videoRenderer = remoteRenderers[userId];
+    if (videoRenderer == null) return;
+
+    videoRenderer.srcObject = null;
+    videoRenderer.dispose();
+
+    setState(() {
+      remoteRenderers.remove(userId);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+
+  @override
+  void onConnectedToUser(P2PSession session, int userId) {
+    // TODO: implement onConnectedToUser
+  }
+
+  @override
+  void onConnectionClosedForUser(P2PSession session, int userId) {
+    // TODO: implement onConnectionClosedForUser
+  }
+
+  @override
+  void onDisconnectedFromUser(P2PSession session, int userId) {
+    // TODO: implement onDisconnectedFromUser
+  }
+}
+
+Future<bool> initForegroundService() async {
+  if (Platform.isAndroid) {
+    const androidConfig = FlutterBackgroundAndroidConfig(
+      notificationTitle: 'Conference Calls sample',
+      notificationText: 'Screen sharing in in progress',
+      notificationImportance: AndroidNotificationImportance.Default,
+      notificationIcon:
+          AndroidResource(name: 'ic_launcher_foreground', defType: 'drawable'),
+    );
+    return FlutterBackground.initialize(androidConfig: androidConfig);
+  } else {
+    return Future.value(true);
+  }
+}
+
+Future<bool> startBackgroundExecution() async {
+  if (Platform.isAndroid) {
+    return initForegroundService().then((_) {
+      return FlutterBackground.enableBackgroundExecution();
+    });
+  } else {
+    return Future.value(true);
+  }
+}
+
+Future<bool> stopBackgroundExecution() async {
+  if (Platform.isAndroid && FlutterBackground.isBackgroundExecutionEnabled) {
+    return FlutterBackground.disableBackgroundExecution();
+  } else {
+    return Future.value(true);
+  }
+}
+
+Future<bool> hasBackgroundExecutionPermissions() async {
+  if (Platform.isAndroid) {
+    return FlutterBackground.hasPermissions;
+  } else {
+    return Future.value(true);
+  }
+}
