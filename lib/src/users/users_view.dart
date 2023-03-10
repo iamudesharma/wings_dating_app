@@ -11,8 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
+import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/app_notification.dart';
+import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
 import '../../const/pref_util.dart';
@@ -29,14 +32,17 @@ final isUserOnlineProvider = FutureProvider.family<bool, bool>(
   (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
 );
 
-final userListProvider =
-    AsyncNotifierProvider<UserListNotifier, List<UserModel?>?>(
-        () => UserListNotifier());
+final userListProvider = FutureProvider<List<UserModel?>?>(
+    (ref) => ref.read(profileRepoProvider).getUserList());
 
 class UserListNotifier extends AsyncNotifier<List<UserModel?>?> {
   @override
   FutureOr<List<UserModel?>?> build() {
-    return ref.read(profileRepoProvider).getUserList();
+    return [];
+  }
+
+  Future refresh() async {
+    return build();
   }
 
   addToBlockList(String id) async {
@@ -140,9 +146,38 @@ class _UsersViewState extends ConsumerState<UsersView>
 
     // _loginToCubeChat(sharedPrefs.getUser()!);
 
+    // await CubeChatConnection.instance
+    //     .subscribeToUserLastActivityStatus(7375047)
+    //     .then((value) {
+    //   logger.e("subscribeToUserLastActivityStatus");
+    // }).catchError((error) {
+    //   logger.e("subscribeToUserLastActivityStatus error $error");
+    // });
+    CubeChatConnection.instance.getLasUserActivity(7375047).then((seconds) {
+      logger.e("seconds $seconds");
+
+      // final date = DateFormat('HH:mm:ss').format(
+      //     DateTime.fromMillisecondsSinceEpoch(seconds * 1000).toLocal());
+      // logger.e("date ${date}");
+      // 'userId' was 'seconds' ago
+
+      final date = formatedTime(timeInSecond: seconds);
+      logger.e("date ${date}");
+    }).catchError((error) {
+      // 'userId' never logged to the chat
+    });
+
     await ref
         .read(ProfileController.userControllerProvider)
         .updateCubeUserData(sharedPrefs.getUser()!);
+  }
+
+  formatedTime({required int timeInSecond}) {
+    int sec = timeInSecond % 60;
+    int min = (timeInSecond / 60).floor();
+    String minute = min.toString().length <= 1 ? "0$min" : "$min";
+    String second = sec.toString().length <= 1 ? "0$sec" : "$sec";
+    return "$minute : $second";
   }
 
   _loginToCubeChat(CubeUser user) {
@@ -163,7 +198,7 @@ class _UsersViewState extends ConsumerState<UsersView>
 
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () async => ref.invalidate(userListProvider),
+        onRefresh: () async => ref.refresh(userListProvider),
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
