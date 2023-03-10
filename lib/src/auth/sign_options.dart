@@ -31,14 +31,18 @@ class SignOptionsView extends ConsumerWidget {
             PhoneProviderConfiguration()
           ],
           actions: [
-            AuthStateChangeAction<AuthState>(
-              (context, AuthState state) {
-                // ignore: unrelated_type_equality_checks
-                if (state == SigningIn) {
-                  AutoRouter.of(context).popAndPush(const DashboardRoute());
-                }
-              },
-            ),
+            // AuthStateChangeAction<AuthState>(
+            //   (context, AuthState state) {
+            //     // ignore: unrelated_type_equality_checks
+            //     if (state == SigningIn) {
+            //       AutoRouter.of(context).popAndPush(const DashboardRoute());
+            //     }
+            //   },
+            // ),
+
+            AuthStateChangeAction<SignedIn>((context, state) {
+              AutoRouter.of(context).replace(const DashboardRoute());
+            }),
           ],
           showAuthActionSwitch: true,
         );
