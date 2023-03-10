@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
@@ -7,6 +8,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' as google;
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
+
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_callkit_incoming/entities/android_params.dart';
@@ -19,6 +26,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:wings_dating_app/const/app_const.dart';
 import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
 import 'package:wings_dating_app/routes/navigation_observers.dart';
 
@@ -61,6 +69,15 @@ void main() async {
     // FirebaseMessaging.onBackgroundMessage((message) async {
     //   showNotification(message);
     // });
+
+    FirebaseUIAuth.configureProviders([
+      EmailAuthProvider(),
+      PhoneAuthProvider(),
+      GoogleProvider(
+        clientId:
+            "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
+      ),
+    ]);
     runApp(const ProviderScope(child: MyApp()));
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
   // runZonedGuarded( ProviderScope(child: MyApp()),((error, stack) => FirebaseCrashlytics.instance.recordError(error, stack)));
@@ -88,6 +105,10 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
+
+    await FirebaseUIAuth.signOut();
+
+    context.router.replace(SignOptionsRoute());
   }
 
   // This widget is the root of your application.
@@ -210,8 +231,6 @@ class _MyHomePageState extends State<MyHomePage> {
 // import 'package:auto_route/auto_route.dart';
 // import 'package:flutter/material.dart';
 
-
-
 printToken() async {
   await FirebaseMessaging.instance.getToken().then(
     (value) {
@@ -245,3 +264,5 @@ printToken() async {
 //         ));
 //   }
 // }
+
+
