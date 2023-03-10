@@ -511,9 +511,11 @@
 
 import 'dart:io';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background/flutter_background.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
 
 import '../../../helpers/logger.dart';
 import '../services/call_manager.dart';
@@ -534,9 +536,9 @@ class _CallViewState extends State<CallView>
     implements RTCSessionStateCallback<P2PSession> {
   final P2PSession _callSession;
   final bool _isIncoming;
-  final bool _isCameraEnabled = true;
-  final bool _isSpeakerEnabled = true;
-  final bool _isMicMute = false;
+  bool _isCameraEnabled = true;
+  bool _isSpeakerEnabled = true;
+  bool _isMicMute = false;
 
   RTCVideoRenderer? localRenderer;
   Map<int, RTCVideoRenderer> remoteRenderers = {};
@@ -878,13 +880,114 @@ class _CallViewState extends State<CallView>
                     ],
                   ),
                 ),
-          // Align(
-          //   alignment: Alignment.bottomCenter,
-          //   child: _getActionsPanel(),
-          // ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: _getActionsPanel(),
+          ),
         ]),
       ),
     );
+  }
+
+  Widget _getActionsPanel() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16, left: 8, right: 8),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(32),
+            bottomRight: Radius.circular(32),
+            topLeft: Radius.circular(32),
+            topRight: Radius.circular(32)),
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          color: Colors.black26,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: FloatingActionButton(
+                  elevation: 0,
+                  heroTag: "Mute",
+                  onPressed: () => _muteMic(),
+                  backgroundColor: Colors.black38,
+                  child: Icon(
+                    Icons.mic,
+                    color: _isMicMute ? Colors.grey : Colors.white,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: FloatingActionButton(
+                  elevation: 0,
+                  heroTag: "Speacker",
+                  onPressed: () => _switchSpeaker(),
+                  backgroundColor: Colors.black38,
+                  child: Icon(
+                    Icons.volume_up,
+                    color: _isSpeakerEnabled ? Colors.white : Colors.grey,
+                  ),
+                ),
+              ),
+              const Expanded(
+                flex: 1,
+                child: SizedBox(),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 0),
+                child: FloatingActionButton(
+                  backgroundColor: Colors.red,
+                  onPressed: () => _endCall(),
+                  child: const Icon(
+                    Icons.call_end,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _switchSpeaker() {
+    setState(() {
+      _isSpeakerEnabled = !_isSpeakerEnabled;
+      _callSession.enableSpeakerphone(_isSpeakerEnabled);
+    });
+  }
+
+  _endCall() {
+    CallManager.instance.hungUp();
+    if (_isIncoming) {
+      AutoRouter.of(context).replace(DashboardRoute());
+    } else {
+      AutoRouter.of(context).pop();
+    }
+  }
+
+  _muteMic() {
+    setState(() {
+      _isMicMute = !_isMicMute;
+      _callSession.setMicrophoneMute(_isMicMute);
+    });
+  }
+
+  _switchCamera() {
+    if (!_isVideoEnabled()) return;
+
+    _callSession.switchCamera();
+  }
+
+  _toggleCamera() {
+    if (!_isVideoCall()) return;
+
+    setState(() {
+      _isCameraEnabled = !_isCameraEnabled;
+      _callSession.setVideoEnabled(_isCameraEnabled);
+    });
   }
 
   bool _isVideoEnabled() {
