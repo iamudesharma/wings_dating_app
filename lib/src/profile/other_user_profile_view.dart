@@ -60,9 +60,9 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       onTap: () async {
-                        await ref
-                            .read(userListProvider.notifier)
-                            .addToBlockList(userData!.id);
+                        // await ref
+                        //     .read(userListProvider.notifier)
+                        //     .addToBlockList(userData!.id);
 
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pop();
