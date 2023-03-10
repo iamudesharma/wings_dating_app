@@ -11,42 +11,21 @@ class SignOptionsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final authState = ref.watch(authstateProvider);
-    return authState.when(
-      skipLoadingOnReload: true,
-      error: (error, stackTrace) => const Text('error'),
-      loading: () => const CircularProgressIndicator(),
-      data: (data) {
-        if (data != null) {
-          AutoRouter.of(context).popAndPush(const DashboardRoute());
-          return const Scaffold();
-        }
-        return SignInScreen(
-          auth: FirebaseAuth.instance,
-          providerConfigs: const [
-            EmailProviderConfiguration(),
-            GoogleProviderConfiguration(
-                clientId:
-                    '546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com'),
-            PhoneProviderConfiguration()
-          ],
-          actions: [
-            // AuthStateChangeAction<AuthState>(
-            //   (context, AuthState state) {
-            //     // ignore: unrelated_type_equality_checks
-            //     if (state == SigningIn) {
-            //       AutoRouter.of(context).popAndPush(const DashboardRoute());
-            //     }
-            //   },
-            // ),
-
-            AuthStateChangeAction<SignedIn>((context, state) {
-              AutoRouter.of(context).replace(const DashboardRoute());
-            }),
-          ],
-          showAuthActionSwitch: true,
-        );
-      },
+    return SignInScreen(
+      auth: FirebaseAuth.instance,
+      providerConfigs: const [
+        EmailProviderConfiguration(),
+        GoogleProviderConfiguration(
+            clientId:
+                '546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com'),
+        PhoneProviderConfiguration()
+      ],
+      actions: [
+        AuthStateChangeAction<SignedIn>((context, state) {
+          AutoRouter.of(context).replace(const DashboardRoute());
+        }),
+      ],
+      showAuthActionSwitch: true,
     );
   }
 }
