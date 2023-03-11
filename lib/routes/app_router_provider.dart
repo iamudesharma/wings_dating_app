@@ -24,17 +24,10 @@ final chat = CubeChatConnection.instance;
 
 @Riverpod(keepAlive: true)
 AppRouter appRoute(AppRouteRef ref) {
-  return AppRouter(
-    authGuard: AuthGuard(ref: ref),
-    // profileDocGuard: ProfileDocGuard(ref: ref),
-  );
+  return AppRouter(ref);
 }
 
 class AuthGuard extends AutoRouteGuard {
-  final Ref ref;
-  AuthGuard({
-    required this.ref,
-  });
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -43,29 +36,28 @@ class AuthGuard extends AutoRouteGuard {
 
     // var customerController = ref.read(profileControllerProvider);
     if (auth.currentUser != null) {
-      if (await ref.read(profileRepoProvider).checkUserDocExist()) {
+      if (await ProfileRepo.checkUserDocExist()) {
         logger.i('user doc exist');
 
-        await ref
-            .read(ProfileController.userControllerProvider)
-            .getCurrentUser();
-        await ref.read(profileRepoProvider).isUserOnline(true);
+        // await ref
+        //     .read(ProfileController.userControllerProvider)
+        //     .getCurrentUser();
+        // await ref.read(profileRepoProvider).isUserOnline(true);
 
-        final userModel =
-            ref.read(ProfileController.userControllerProvider).userModel;
+        // final userModel =
+        //     ref.read(ProfileController.userControllerProvider).userModel;
+        final user = await SharedPrefs.instance.getUser();
 
         if (CubeSessionManager.instance.isActiveSessionValid()) {
           if (!chat.isAuthenticated()) {
-            await SharedPrefs.instance.saveNewUser(userModel!.cubeUser);
-
-            await chat.login(userModel.cubeUser);
+            await chat.login(user!);
 
             resolver.next(true);
           } else {
             resolver.next(true);
           }
         } else {
-          await _loginToCC(userModel!.cubeUser, saveUser: true);
+          await _loginToCC(user!, saveUser: true);
 
           resolver.next(true);
         }
@@ -92,7 +84,6 @@ void _processLoginError(exception) {
 }
 
 Future<void> _loginToCC(CubeUser user, {bool saveUser = false}) async {
-
   await createSession(user).then((cubeSession) async {
     var tempUser = user;
     user = cubeSession.user!..password = tempUser.password;

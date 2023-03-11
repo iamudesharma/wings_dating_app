@@ -21,6 +21,9 @@ final unreadMessageCount =
   return getUnreadMessagesCount(dialogId);
 });
 
+
+@RoutePage()
+
 class ChatListView extends ConsumerStatefulWidget {
   const ChatListView({super.key});
 

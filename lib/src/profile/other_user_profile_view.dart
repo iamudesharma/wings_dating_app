@@ -10,6 +10,7 @@ import 'package:wings_dating_app/src/profile/profile_view.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
 
 import '../../routes/app_router.dart';
+@RoutePage()
 
 class OtherUserProfileView extends ConsumerStatefulWidget {
   const OtherUserProfileView({

@@ -2,6 +2,7 @@ import 'dart:async';
 
 // import 'package:chat_sample/src/utils/api_utils.dart';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
@@ -43,6 +44,8 @@ final _chatUserData = FutureProvider.family<UserModel?, int>(
 //     "",
 //   ).asStream();
 // });
+
+@RoutePage()
 
 class ChatView extends ConsumerStatefulWidget {
   final CubeUser? cubeUser;

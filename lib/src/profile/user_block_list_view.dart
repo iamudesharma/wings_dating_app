@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,7 @@ final getUserBlockListProvider = FutureProvider<List<UserModel?>>((ref) async {
   return await ref.read(profileRepoProvider).getBlockList();
 });
 
+@RoutePage()
 class UserBlockListView extends ConsumerWidget {
   const UserBlockListView({super.key});
 

@@ -520,6 +520,8 @@ import 'package:wings_dating_app/routes/app_router.dart';
 import '../../../helpers/logger.dart';
 import '../services/call_manager.dart';
 
+@RoutePage()
+
 class CallView extends StatefulWidget {
   final P2PSession _callSession;
   final bool _isIncoming;

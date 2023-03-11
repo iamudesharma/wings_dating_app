@@ -58,6 +58,7 @@ void main() async {
             "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
       ),
     ]);
+
     runApp(const ProviderScope(child: MyApp()));
   }, (error, stack) {
     if (!kIsWeb) {

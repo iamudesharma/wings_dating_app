@@ -17,6 +17,8 @@ final getUserByIdProvider =
   return ref.read(profileRepoProvider).getUserById(id);
 });
 
+@RoutePage()
+
 class ProfileView extends ConsumerStatefulWidget {
   const ProfileView({
     super.key,

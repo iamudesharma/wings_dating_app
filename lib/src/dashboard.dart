@@ -6,6 +6,7 @@ import 'package:wings_dating_app/src/chats/services/call_manager.dart';
 
 import 'chats/chats_list_view.dart';
 
+@RoutePage()
 class DashboardView extends ConsumerStatefulWidget {
   const DashboardView({super.key});
 

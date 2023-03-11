@@ -76,8 +76,6 @@ class GeoPointConverter implements JsonConverter<GeoPoint, GeoPoint> {
   @override
   GeoPoint toJson(GeoPoint geoPoint) => geoPoint;
 }
-// @Collection<UserModel>("users", prefix: 'User')
-// final usersRef = UserModelCollectionReference();
 
 // // final personRef = UserModel();
 

@@ -31,6 +31,7 @@ import 'package:wings_dating_app/src/profile/controller/profile_controller.dart'
 import '../../helpers/responsive_layout.dart';
 import '../model/geo_point_data.dart';
 
+@RoutePage()
 class EditProfileView extends ConsumerStatefulWidget {
   const EditProfileView({
     super.key,
@@ -82,8 +83,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     }
 
     super.initState();
-
-    ref.read(Dependency.profileProvider).checkUserDocExist();
   }
 
   @override
@@ -144,7 +143,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   radius: 35,
                                   backgroundImage: NetworkImage(
                                     profile.profileImage!,
-                                    
                                   ),
                                 )
                               : CircleAvatar(

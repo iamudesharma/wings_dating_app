@@ -50,6 +50,7 @@ class UserListNotifier extends AsyncNotifier<List<UserModel?>?> {
   }
 }
 
+@RoutePage()
 class UsersView extends ConsumerStatefulWidget {
   const UsersView({super.key});
 
