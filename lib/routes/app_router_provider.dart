@@ -43,7 +43,6 @@ class AuthGuard extends AutoRouteGuard {
 
     // var customerController = ref.read(profileControllerProvider);
     if (auth.currentUser != null) {
-      print(auth.currentUser != null);
       if (await ref.read(profileRepoProvider).checkUserDocExist()) {
         logger.i('user doc exist');
 
@@ -93,20 +92,21 @@ void _processLoginError(exception) {
 }
 
 Future<void> _loginToCC(CubeUser user, {bool saveUser = false}) async {
-  print("_loginToCC user: $user");
 
   await createSession(user).then((cubeSession) async {
-    print("createSession cubeSession: $cubeSession");
     var tempUser = user;
     user = cubeSession.user!..password = tempUser.password;
     if (saveUser) {
-      final saved = await _saveUserInIsolate(user);
-      print("User saved: $saved");
+      if (!kIsWeb) {
+        final saved = await _saveUserInIsolate(user);
+      } else {
+        SharedPrefs.instance.saveNewUser(user);
+      }
     }
 
     await chat.login(user);
 
-    if (!Platform.isIOS) {
+    if (Platform.isAndroid) {
       PushNotificationsManager.instance.init();
     }
   }).catchError((error) {
@@ -133,7 +133,6 @@ void _saveUser(List<dynamic> args) async {
     await sharedPrefs.saveNewUser(user);
     return true;
   }).catchError((error) {
-    print("Error saving user in isolate: $error");
     return false;
   });
   sendPort.send(saved);

@@ -56,7 +56,10 @@ class PushNotificationsManager {
   }
 
   init() async {
-    await initCall();
+    if (Platform.isAndroid || Platform.isIOS) {
+      await initCall();
+    }
+
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
     await firebaseMessaging.requestPermission(

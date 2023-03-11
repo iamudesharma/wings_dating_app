@@ -197,83 +197,90 @@ class _UsersViewState extends ConsumerState<UsersView>
     final userList = ref.watch(userListProvider);
 
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () async => ref.refresh(userListProvider),
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              centerTitle: true,
-              pinned: true,
-              // floating: false,
+      body: LayoutBuilder(builder: (context, constraints) {
+        return RefreshIndicator(
+          onRefresh: () async => ref.refresh(userListProvider),
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                centerTitle: true,
+                pinned: true,
+                // floating: false,
 
-              titleSpacing: 50,
-              leading: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  // radius: 2,
-                  backgroundImage: CachedNetworkImageProvider(userData!
-                          .profileUrl ??
-                      "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                ),
-              ),
-              title: Text(userData.username),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () async {
-                    showSearch(
-                      context: context,
-                      delegate: UsersSearchDelegate(ref),
-                    );
-                  },
-                ),
-              ],
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.all(10),
-              sliver: userList.when(
-                loading: () => const SliverToBoxAdapter(
-                  child: Center(
-                    child: CircularProgressIndicator(),
+                titleSpacing: 50,
+                leading: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    // radius: 2,
+                    backgroundImage: CachedNetworkImageProvider(userData!
+                            .profileUrl ??
+                        "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                   ),
                 ),
-                error: (error, stackTrace) => (error is Exception)
-                    ? SliverToBoxAdapter(
-                        child: Center(
-                          child: Text(error.toString()),
-                        ),
-                      )
-                    : SliverToBoxAdapter(
-                        child: Center(
-                          child: Text(error.toString()),
-                        ),
-                      ),
-                data: (data) => SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final users = data[index];
-
-                      return UserGridItem(
-                        onTapEditProfile: () {
-                          AutoTabsRouter.of(context).setActiveIndex(2);
-                        },
-                        isCurrentUser: users!.id == userData.id ? true : false,
-                        users: users,
-                      ).animate().shake();
+                title: Text(userData.username),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () async {
+                      showSearch(
+                        context: context,
+                        delegate: UsersSearchDelegate(ref),
+                      );
                     },
-                    childCount: data!.length,
+                  ),
+                ],
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.all(10),
+                sliver: userList.when(
+                  loading: () => const SliverToBoxAdapter(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  error: (error, stackTrace) => (error is Exception)
+                      ? SliverToBoxAdapter(
+                          child: Center(
+                            child: Text(error.toString()),
+                          ),
+                        )
+                      : SliverToBoxAdapter(
+                          child: Center(
+                            child: Text(error.toString()),
+                          ),
+                        ),
+                  data: (data) => SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: constraints.isMobile
+                          ? 3
+                          : constraints.isTablet
+                              ? 4
+                              : 5,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final users = data[index];
+
+                        return UserGridItem(
+                          onTapEditProfile: () {
+                            AutoTabsRouter.of(context).setActiveIndex(2);
+                          },
+                          isCurrentUser:
+                              users!.id == userData.id ? true : false,
+                          users: users,
+                        ).animate().shake();
+                      },
+                      childCount: data!.length,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
