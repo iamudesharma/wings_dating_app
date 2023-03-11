@@ -508,3 +508,559 @@
 //     );
 //   }
 // }
+
+import 'dart:io';
+
+import 'package:auto_route/auto_route.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_background/flutter_background.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
+
+import '../../../helpers/logger.dart';
+import '../services/call_manager.dart';
+
+@RoutePage()
+
+class CallView extends StatefulWidget {
+  final P2PSession _callSession;
+  final bool _isIncoming;
+
+  @override
+  State<CallView> createState() {
+    return _CallViewState(_callSession, _isIncoming);
+  }
+
+  const CallView(this._callSession, this._isIncoming);
+}
+
+class _CallViewState extends State<CallView>
+    implements RTCSessionStateCallback<P2PSession> {
+  final P2PSession _callSession;
+  final bool _isIncoming;
+  bool _isCameraEnabled = true;
+  bool _isSpeakerEnabled = true;
+  bool _isMicMute = false;
+
+  RTCVideoRenderer? localRenderer;
+  Map<int, RTCVideoRenderer> remoteRenderers = {};
+  final CubeStatsReportsManager _statsReportsManager =
+      CubeStatsReportsManager();
+  MediaStream? _localMediaStream;
+
+  Widget? _localVideoView;
+
+  bool _needRebuildLocalVideoView = true;
+
+  final bool _customMediaStream = false;
+
+  _CallViewState(this._callSession, this._isIncoming);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _localMediaStream = CallManager.instance.localMediaStream;
+
+    _callSession.onLocalStreamReceived = _addLocalMediaStream;
+    _callSession.onRemoteStreamReceived = _addRemoteMediaStream;
+    _callSession.onSessionClosed = _onSessionClosed;
+    _statsReportsManager.init(_callSession);
+    _callSession.setSessionCallbacksListener(this);
+
+    if (_isIncoming ?? false) {
+      if (_callSession.state == RTCSessionState.RTC_SESSION_NEW) {
+        _callSession.acceptCall();
+      }
+    } else {
+      _callSession.startCall();
+    }
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+
+    stopBackgroundExecution();
+
+    localRenderer?.srcObject = null;
+    localRenderer?.dispose();
+
+    remoteRenderers.forEach((opponentId, renderer) {
+      logger.i("[dispose] dispose renderer for $opponentId");
+      try {
+        renderer.srcObject = null;
+        renderer.dispose();
+      } catch (e) {
+        log('Error $e');
+      }
+    });
+  }
+
+  void _addRemoteMediaStream(session, int userId, MediaStream stream) {
+    log(
+      "_addRemoteMediaStream for user $userId",
+    );
+    _onRemoteStreamAdd(userId, stream);
+  }
+
+  void _onSessionClosed(session) {
+    logger.i(
+      "_onSessionClosed",
+    );
+    _callSession.removeSessionCallbacksListener();
+
+    // _statsReportsManager.dispose();
+
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => LoginScreen(),
+    //   ),
+    // );
+  }
+
+  void _onRemoteStreamAdd(int opponentId, MediaStream stream) async {
+    logger.i(
+      "_onStreamAdd for user $opponentId",
+    );
+
+    RTCVideoRenderer streamRender = RTCVideoRenderer();
+    await streamRender.initialize();
+    streamRender.srcObject = stream;
+    setState(() {
+      remoteRenderers[opponentId] = streamRender;
+    });
+  }
+
+  Future<void> _addLocalMediaStream(MediaStream stream) async {
+    _localMediaStream = stream;
+
+    if (!mounted) return;
+
+    setState(() {
+      _needRebuildLocalVideoView = localRenderer == null;
+    });
+
+    localRenderer?.srcObject = _localMediaStream;
+  }
+
+  Future<void> _removeMediaStream(callSession, int userId) async {
+    logger.i(
+      "_removeMediaStream for user $userId",
+    );
+    RTCVideoRenderer? videoRenderer = remoteRenderers[userId];
+    if (videoRenderer == null) return;
+
+    videoRenderer.srcObject = null;
+    videoRenderer.dispose();
+
+    setState(() {
+      remoteRenderers.remove(userId);
+    });
+  }
+
+//Remove this method if you don't want to use background execution
+  Widget buildRemoteVideoItem(int opponentId, RTCVideoRenderer renderer) {
+    return Expanded(
+      child: Stack(
+        children: [
+          RTCVideoView(
+            renderer,
+            objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+            mirror: false,
+          ),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                margin: const EdgeInsets.all(8),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                  ),
+                  child: RotatedBox(
+                    quarterTurns: -1,
+                    child: StreamBuilder<CubeMicLevelEvent>(
+                      stream: _statsReportsManager.micLevelStream
+                          .where((event) => event.userId == opponentId),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const LinearProgressIndicator(value: 0);
+                        } else {
+                          var micLevelForUser = snapshot.data!;
+                          return LinearProgressIndicator(
+                              value: micLevelForUser.micLevel);
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              )),
+          Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                margin: const EdgeInsets.only(top: 8),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(12)),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    color: Colors.black26,
+                    child: StreamBuilder<CubeVideoBitrateEvent>(
+                      stream: _statsReportsManager.videoBitrateStream
+                          .where((event) => event.userId == opponentId),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Text(
+                            '0 kbits/sec',
+                            style: TextStyle(color: Colors.white),
+                          );
+                        } else {
+                          var videoBitrateForUser = snapshot.data!;
+                          return Text(
+                            '${videoBitrateForUser.bitRate} kbits/sec',
+                            style: const TextStyle(color: Colors.white),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
+  Future<Widget> _buildLocalVideoItem() async {
+    logger.i(
+      "buildLocalVideoStreamItem",
+    );
+    if (localRenderer == null) {
+      localRenderer = RTCVideoRenderer();
+      await localRenderer!.initialize();
+    }
+
+    localRenderer?.srcObject = _localMediaStream;
+
+    _localVideoView = Expanded(
+        child: RTCVideoView(
+      localRenderer!,
+      objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+      mirror: true,
+    ));
+    _needRebuildLocalVideoView = false;
+
+    return _localVideoView!;
+  }
+
+  List<Widget> renderStreamsGrid(Orientation orientation) {
+    List<Widget> streamsExpanded = [];
+
+    if (_localMediaStream != null) {
+      streamsExpanded.add(_localVideoView == null
+          ? FutureBuilder<Widget>(
+              future: _needRebuildLocalVideoView
+                  ? _buildLocalVideoItem()
+                  : Future.value(_localVideoView),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!;
+                } else {
+                  return Expanded(child: Container());
+                }
+              })
+          : _localVideoView != null
+              ? _localVideoView!
+              : Expanded(child: Container()));
+    }
+
+    if (remoteRenderers.isEmpty) {
+      streamsExpanded
+          .addAll(CallManager.instance.remoteStreams.entries.map((entry) {
+        var videoRenderer = RTCVideoRenderer();
+        var initialisationFuture = videoRenderer.initialize().then((_) {
+          videoRenderer.srcObject = entry.value;
+          return videoRenderer;
+        });
+
+        return FutureBuilder<RTCVideoRenderer>(
+          future: initialisationFuture,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return buildRemoteVideoItem(entry.key, snapshot.data!);
+            } else {
+              return Expanded(
+                  child: Container(
+                child: const Text('Waiting...'),
+              ));
+            }
+          },
+        );
+      }));
+    } else {
+      streamsExpanded.addAll(remoteRenderers.entries
+          .map(
+            (entry) => buildRemoteVideoItem(entry.key, entry.value),
+          )
+          .toList());
+    }
+
+    if (streamsExpanded.length > 2) {
+      List<Widget> rows = [];
+
+      for (var i = 0; i < streamsExpanded.length; i += 2) {
+        var chunkEndIndex = i + 2;
+
+        if (streamsExpanded.length < chunkEndIndex) {
+          chunkEndIndex = streamsExpanded.length;
+        }
+
+        var chunk = streamsExpanded.sublist(i, chunkEndIndex);
+
+        rows.add(
+          Expanded(
+            child: orientation == Orientation.portrait
+                ? Row(children: chunk)
+                : Column(children: chunk),
+          ),
+        );
+      }
+
+      return rows;
+    }
+
+    return streamsExpanded;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () => _onBackPressed(context),
+      child: Scaffold(
+        body: Stack(fit: StackFit.loose, clipBehavior: Clip.none, children: [
+          _isVideoCall()
+              ? OrientationBuilder(
+                  builder: (context, orientation) {
+                    return Center(
+                      child: Container(
+                        child: orientation == Orientation.portrait
+                            ? Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: renderStreamsGrid(orientation))
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: renderStreamsGrid(orientation)),
+                      ),
+                    );
+                  },
+                )
+              : Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 24),
+                        child: Text(
+                          "Audio call",
+                          style: TextStyle(fontSize: 28),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 12),
+                        child: Text(
+                          "Members:",
+                          style: TextStyle(
+                              fontSize: 20, fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                      Text(
+                        _callSession.opponentsIds.join(", "),
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: _getActionsPanel(),
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Widget _getActionsPanel() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16, left: 8, right: 8),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(32),
+            bottomRight: Radius.circular(32),
+            topLeft: Radius.circular(32),
+            topRight: Radius.circular(32)),
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          color: Colors.black26,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: FloatingActionButton(
+                  elevation: 0,
+                  heroTag: "Mute",
+                  onPressed: () => _muteMic(),
+                  backgroundColor: Colors.black38,
+                  child: Icon(
+                    Icons.mic,
+                    color: _isMicMute ? Colors.grey : Colors.white,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: FloatingActionButton(
+                  elevation: 0,
+                  heroTag: "Speacker",
+                  onPressed: () => _switchSpeaker(),
+                  backgroundColor: Colors.black38,
+                  child: Icon(
+                    Icons.volume_up,
+                    color: _isSpeakerEnabled ? Colors.white : Colors.grey,
+                  ),
+                ),
+              ),
+              const Expanded(
+                flex: 1,
+                child: SizedBox(),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 0),
+                child: FloatingActionButton(
+                  backgroundColor: Colors.red,
+                  onPressed: () => _endCall(),
+                  child: const Icon(
+                    Icons.call_end,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _switchSpeaker() {
+    setState(() {
+      _isSpeakerEnabled = !_isSpeakerEnabled;
+      _callSession.enableSpeakerphone(_isSpeakerEnabled);
+    });
+  }
+
+  _endCall() {
+    CallManager.instance.hungUp();
+    if (_isIncoming) {
+      AutoRouter.of(context).replace(DashboardRoute());
+    } else {
+      AutoRouter.of(context).pop();
+    }
+  }
+
+  _muteMic() {
+    setState(() {
+      _isMicMute = !_isMicMute;
+      _callSession.setMicrophoneMute(_isMicMute);
+    });
+  }
+
+  _switchCamera() {
+    if (!_isVideoEnabled()) return;
+
+    _callSession.switchCamera();
+  }
+
+  _toggleCamera() {
+    if (!_isVideoCall()) return;
+
+    setState(() {
+      _isCameraEnabled = !_isCameraEnabled;
+      _callSession.setVideoEnabled(_isCameraEnabled);
+    });
+  }
+
+  bool _isVideoEnabled() {
+    return _isVideoCall() && _isCameraEnabled;
+  }
+
+  bool _isVideoCall() {
+    return CallType.VIDEO_CALL == _callSession.callType;
+  }
+
+  @override
+  void onConnectedToUser(P2PSession session, int userId) {
+    logger.i(
+      "onConnectedToUser for user $userId",
+    );
+  }
+
+  @override
+  void onConnectionClosedForUser(P2PSession session, int userId) {
+    logger.i("onConnectionClosedForUser userId= $userId");
+    _removeMediaStream(session, userId);
+  }
+
+  @override
+  void onDisconnectedFromUser(P2PSession session, int userId) {
+    logger.i("onDisconnectedFromUser userId= $userId");
+    _removeMediaStream(session, userId);
+  }
+}
+
+Future<bool> initForegroundService() async {
+  if (Platform.isAndroid) {
+    const androidConfig = FlutterBackgroundAndroidConfig(
+      notificationTitle: 'Conference Calls sample',
+      notificationText: 'Screen sharing in in progress',
+      notificationImportance: AndroidNotificationImportance.Default,
+      notificationIcon:
+          AndroidResource(name: 'ic_launcher_foreground', defType: 'drawable'),
+    );
+    return FlutterBackground.initialize(androidConfig: androidConfig);
+  } else {
+    return Future.value(true);
+  }
+}
+
+Future<bool> startBackgroundExecution() async {
+  if (Platform.isAndroid) {
+    return initForegroundService().then((_) {
+      return FlutterBackground.enableBackgroundExecution();
+    });
+  } else {
+    return Future.value(true);
+  }
+}
+
+Future<bool> stopBackgroundExecution() async {
+  if (Platform.isAndroid && FlutterBackground.isBackgroundExecutionEnabled) {
+    return FlutterBackground.disableBackgroundExecution();
+  } else {
+    return Future.value(true);
+  }
+}
+
+Future<bool> hasBackgroundExecutionPermissions() async {
+  if (Platform.isAndroid) {
+    return FlutterBackground.hasPermissions;
+  } else {
+    return Future.value(true);
+  }
+}
+
+Future<bool> _onBackPressed(BuildContext context) {
+  return Future.value(false);
+}

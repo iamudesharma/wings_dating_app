@@ -1,3 +1,7 @@
 {
-    "dart.flutterSdkPath": "/Users/udeshsharma/fvm/versions/stable"
+    "dart.flutterSdkPath": "/Users/udeshsharma/fvm/versions/stable",
+    "cSpell.words": [
+        "geohash",
+        "th"
+    ]
 }

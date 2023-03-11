@@ -1,14 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:wings_dating_app/repo/profile_repo.dart';
+import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
 
 import '../../routes/app_router.dart';
+@RoutePage()
 
 class OtherUserProfileView extends ConsumerStatefulWidget {
   const OtherUserProfileView({
@@ -59,9 +61,9 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       onTap: () async {
-                        await ref
-                            .read(userListProvider.notifier)
-                            .addToBlockList(userData!.id);
+                        // await ref
+                        //     .read(userListProvider.notifier)
+                        //     .addToBlockList(userData!.id);
 
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pop();
@@ -107,7 +109,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
+                child: SizedBox(
                   height: 300,
                   width: MediaQuery.of(context).size.width,
                   child: CachedNetworkImage(
@@ -176,23 +178,38 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton.icon(
-          icon: const Icon(Icons.chat_bubble),
-          label: currentUser!.blockList.contains(otherUser.value?.id)
-              ? const Text("Unblock")
-              : const Text("Message"),
-          onPressed: () async {
-            if (currentUser.blockList.contains(otherUser.value?.id)) {
-              ref
-                  .read(profileRepoProvider)
-                  .removeToBlockList(id: [otherUser.value!.id]);
-            } else {
-              await AutoRouter.of(context).push(
-                ChatRoute(id: widget.id!),
-              );
-            }
-          },
-        ),
+            icon: const Icon(Icons.chat_bubble),
+            label: currentUser!.blockList.contains(otherUser.value?.id)
+                ? const Text("Unblock")
+                : const Text("Message"),
+            onPressed: () async {
+              _createDialog(
+                  context,
+                  {
+                    currentUser.cubeUser.id ?? 0,
+                    otherUser.value!.cubeUser.id ?? 0
+                  },
+                  currentUser.cubeUser.id ?? 0);
+            }),
       ),
     );
+  }
+
+  void _createDialog(BuildContext context, Set<int> users, int current) async {
+    log("_createDialog with users= $users");
+
+    CubeDialog newDialog =
+        CubeDialog(CubeDialogType.PRIVATE, occupantsIds: users.toList());
+    await createDialog(newDialog).then((createdDialog) async {
+      await AutoRouter.of(context).push(
+        ChatRoute(
+          cubeUserId: current,
+          chatUserCubeId: users.where((element) => element != current).first,
+          cubeDialog: createdDialog,
+        ),
+      );
+    }).catchError((error) {
+      logger.e(error);
+    });
   }
 }

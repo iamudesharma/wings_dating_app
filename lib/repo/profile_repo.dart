@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wings_dating_app/const/pref_util.dart';
 import 'package:wings_dating_app/dependency/dependenies.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/repo/repo_exception.dart';
@@ -54,11 +55,10 @@ class ProfileRepo with RepositoryExceptionMixin {
     );
   }
 
-  Future<bool> checkUserDocExist() async {
-    final data = await ref
-        .read(Dependency.firebaseStoreProvider)
+ static Future<bool> checkUserDocExist() async {
+    final data = await FirebaseFirestore.instance
         .collection("users")
-        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser?.uid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
     if (data.exists) {
@@ -77,6 +77,21 @@ class ProfileRepo with RepositoryExceptionMixin {
           .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
           .update(userModel.toJson())
           .onError((error, stackTrace) => logger.e(error)),
+    );
+
+    await exceptionHandler<void>(
+      updateUser(userModel.cubeUser).then((value) async {
+        SharedPrefs.instance.updateUser(value);
+      }),
+    );
+  }
+
+  Future<void> updateCubeUserDoc(CubeUser cubeUser) async {
+    await exceptionHandler<void>(
+      userCollection()
+          .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+          .update({"cubeUser": cubeUser.toJson()}).onError(
+              (error, stackTrace) => logger.e(error)),
     );
   }
 
@@ -152,20 +167,38 @@ class ProfileRepo with RepositoryExceptionMixin {
     });
   }
 
-  Stream<UserModel?> getUserById(String id) {
+  Future<UserModel?> getUserById(String id) async {
     final usercollection = userCollection();
 
     logger.w(id);
 
-    final data = usercollection
+    final data = await usercollection
         .where(
           "id",
           isEqualTo: id,
         )
         .limit(1)
-        .snapshots();
+        .get();
 
-    final users = data.map((event) => event.docs[0].data());
+    final users = data.docs.first.data();
+
+    return users;
+  }
+
+  Future<UserModel?> getUserByCubeId(int id) async {
+    final usercollection = userCollection();
+
+    logger.w(id);
+
+    final data = await usercollection
+        .where(
+          "cubeUser.id",
+          isEqualTo: id,
+        )
+        .limit(1)
+        .get();
+
+    final users = data.docs.first.data();
 
     return users;
   }
@@ -243,7 +276,8 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<List<UserModel?>?> searchUser(String query) async {
     final usercollection = userCollection();
 
-    final docs = usercollection.where("username", isEqualTo: query).get();
+    final docs =
+        usercollection.where("username", isGreaterThanOrEqualTo: query).get();
 
     final data =
         await docs.then((value) => value.docs.map((e) => e.data()).toList());

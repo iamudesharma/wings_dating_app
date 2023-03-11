@@ -45,6 +45,7 @@ mixin _$UserModel {
   List<String> get blockList => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
   String get fcmToken => throw _privateConstructorUsedError;
+  CubeUser get cubeUser => throw _privateConstructorUsedError;
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
@@ -96,7 +97,8 @@ abstract class $UserModelCopyWith<$Res> {
       bool isBlocked,
       List<String> blockList,
       String id,
-      String fcmToken});
+      String fcmToken,
+      CubeUser cubeUser});
 
   $GeoPointDataCopyWith<$Res>? get position;
 }
@@ -137,6 +139,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? blockList = null,
     Object? id = null,
     Object? fcmToken = null,
+    Object? cubeUser = null,
   }) {
     return _then(_value.copyWith(
       username: null == username
@@ -231,6 +234,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
               as String,
+      cubeUser: null == cubeUser
+          ? _value.cubeUser
+          : cubeUser // ignore: cast_nullable_to_non_nullable
+              as CubeUser,
     ) as $Val);
   }
 
@@ -277,7 +284,8 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       bool isBlocked,
       List<String> blockList,
       String id,
-      String fcmToken});
+      String fcmToken,
+      CubeUser cubeUser});
 
   @override
   $GeoPointDataCopyWith<$Res>? get position;
@@ -317,6 +325,7 @@ class __$$_UserModelCopyWithImpl<$Res>
     Object? blockList = null,
     Object? id = null,
     Object? fcmToken = null,
+    Object? cubeUser = null,
   }) {
     return _then(_$_UserModel(
       username: null == username
@@ -411,6 +420,10 @@ class __$$_UserModelCopyWithImpl<$Res>
           ? _value.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
               as String,
+      cubeUser: null == cubeUser
+          ? _value.cubeUser
+          : cubeUser // ignore: cast_nullable_to_non_nullable
+              as CubeUser,
     ));
   }
 }
@@ -442,7 +455,8 @@ class _$_UserModel implements _UserModel {
       this.isBlocked = false,
       final List<String> blockList = const [],
       required this.id,
-      required this.fcmToken})
+      required this.fcmToken,
+      required this.cubeUser})
       : _albumUrl = albumUrl,
         _blockList = blockList;
 
@@ -521,10 +535,12 @@ class _$_UserModel implements _UserModel {
   final String id;
   @override
   final String fcmToken;
+  @override
+  final CubeUser cubeUser;
 
   @override
   String toString() {
-    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, id: $id, fcmToken: $fcmToken)';
+    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, id: $id, fcmToken: $fcmToken, cubeUser: $cubeUser)';
   }
 
   @override
@@ -568,7 +584,9 @@ class _$_UserModel implements _UserModel {
                 .equals(other._blockList, _blockList) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.fcmToken, fcmToken) ||
-                other.fcmToken == fcmToken));
+                other.fcmToken == fcmToken) &&
+            (identical(other.cubeUser, cubeUser) ||
+                other.cubeUser == cubeUser));
   }
 
   @JsonKey(ignore: true)
@@ -597,7 +615,8 @@ class _$_UserModel implements _UserModel {
         isBlocked,
         const DeepCollectionEquality().hash(_blockList),
         id,
-        fcmToken
+        fcmToken,
+        cubeUser
       ]);
 
   @JsonKey(ignore: true)
@@ -666,7 +685,8 @@ abstract class _UserModel implements UserModel {
       final bool isBlocked,
       final List<String> blockList,
       required final String id,
-      required final String fcmToken}) = _$_UserModel;
+      required final String fcmToken,
+      required final CubeUser cubeUser}) = _$_UserModel;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$_UserModel.fromJson;
@@ -718,6 +738,8 @@ abstract class _UserModel implements UserModel {
   String get id;
   @override
   String get fcmToken;
+  @override
+  CubeUser get cubeUser;
   @override
   @JsonKey(ignore: true)
   _$$_UserModelCopyWith<_$_UserModel> get copyWith =>
