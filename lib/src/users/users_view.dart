@@ -3,20 +3,22 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
+import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uuid/uuid.dart';
+import 'package:velocity_x/velocity_x.dart';
+import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
+import '../../const/pref_util.dart';
 import '../../main.dart';
 import '../../routes/app_router.dart';
 import '../model/user_models.dart';
@@ -30,14 +32,17 @@ final isUserOnlineProvider = FutureProvider.family<bool, bool>(
   (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
 );
 
-final userListProvider =
-    AsyncNotifierProvider<UserListNotifier, List<UserModel?>?>(
-        () => UserListNotifier());
+final userListProvider = FutureProvider<List<UserModel?>?>(
+    (ref) => ref.read(profileRepoProvider).getUserList());
 
 class UserListNotifier extends AsyncNotifier<List<UserModel?>?> {
   @override
   FutureOr<List<UserModel?>?> build() {
-    return ref.read(profileRepoProvider).getUserList();
+    return [];
+  }
+
+  Future refresh() async {
+    return build();
   }
 
   addToBlockList(String id) async {
@@ -45,6 +50,7 @@ class UserListNotifier extends AsyncNotifier<List<UserModel?>?> {
   }
 }
 
+@RoutePage()
 class UsersView extends ConsumerStatefulWidget {
   const UsersView({super.key});
 
@@ -54,17 +60,8 @@ class UsersView extends ConsumerStatefulWidget {
 
 class _UsersViewState extends ConsumerState<UsersView>
     with WidgetsBindingObserver {
-  String _firebaseAppToken = '';
-
-  setSafeState(Function execution) {
-    if (!mounted) {
-      execution();
-    } else {
-      setState(() {
-        execution();
-      });
-    }
-  }
+  late StreamSubscription<ConnectivityResult> connectivityStateSubscription;
+  AppLifecycleState? appState;
 
   @override
   void initState() {
@@ -75,74 +72,121 @@ class _UsersViewState extends ConsumerState<UsersView>
       if (message.notification != null) {
         print('Message also contained a notification: ${message.notification}');
 
-        flutterLocalNotificationsPlugin.show(
-          message.notification.hashCode,
-          message.notification!.title,
-          message.notification!.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              message.notification!.android!.channelId!,
-              "call-channel",
-              fullScreenIntent: true,
-              category: AndroidNotificationCategory.call,
-            ),
-          ),
-        );
+        showNotification(message);
       }
     });
-    printToken();
+
     WidgetsBinding.instance.addObserver(this);
 
     super.initState();
-  }
 
-  sendMessage() async {
-    var token =
-        "cgORXx_oQOqbpyi4HI-ct0:APA91bG-Ty5rQ3FKMXiPfKYyRSvcZ4Yr7wKiWqjBy0Bx5BDweldHkVqwV87i33R-9D403qhk1sI2d0Ohj54vEL2OF-cZ3zzfZheVDnllvujURHRnv60rT71DbV6AC0e2HcE8B-6TUhF5";
-    // "cAFhGg9eQu2-c-ThAD26qj:APA91bFrjsYtL4SioPw8ZWNFjxjLdKYSMWeHWqIrrQo5DhDEf3rYDcjaecV7fUTOW7kzkqZGvkABaaEMjRDW8S1MlUg8tiIYQeB1N9tjBxZefih3npTdzhfYI8UP2Kjphoi3F9hHAiRG";
-    await Firebase.initializeApp();
+    connectivityStateSubscription =
+        Connectivity().onConnectivityChanged.listen((connectivityType) {
+      if (AppLifecycleState.resumed != appState) return;
 
-    final messgae = FirebaseMessaging.instance;
-    await messgae.sendMessage();
+      if (connectivityType != ConnectivityResult.none) {
+        log("chatConnectionState = ${CubeChatConnection.instance.chatConnectionState}");
+        bool isChatDisconnected =
+            CubeChatConnection.instance.chatConnectionState ==
+                    CubeChatConnectionState.Closed ||
+                CubeChatConnection.instance.chatConnectionState ==
+                    CubeChatConnectionState.ForceClosed;
+
+        if (isChatDisconnected &&
+            CubeChatConnection.instance.currentUser != null) {
+          CubeChatConnection.instance.relogin();
+        }
+      }
+    });
+
+    appState = WidgetsBinding.instance.lifecycleState;
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    switch (state) {
-      case AppLifecycleState.resumed:
-        ref.read(isUserOnlineProvider(true));
-        break;
-      case AppLifecycleState.inactive:
-      case AppLifecycleState.detached:
-      case AppLifecycleState.paused:
-        ref.read(isUserOnlineProvider(false));
-        break;
+  void dispose() {
+    connectivityStateSubscription.cancel();
+
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    log("Current app state: $state");
+    appState = state;
+
+    if (AppLifecycleState.paused == state) {
+      if (CubeChatConnection.instance.isAuthenticated()) {
+        CubeChatConnection.instance.markInactive();
+
+        await compute(ref.read(profileRepoProvider).isUserOnline, false);
+      }
+    } else if (AppLifecycleState.resumed == state) {
+      // // just for an example user was saved in the local storage
+      SharedPrefs.instance.init().then((sharedPrefs) async {
+        CubeUser? user = sharedPrefs.getUser();
+
+        if (user != null) {
+          if (!CubeChatConnection.instance.isAuthenticated()) {
+            CubeChatConnection.instance.login(user);
+          } else {
+            CubeChatConnection.instance.markActive();
+
+            await compute(ref.read(profileRepoProvider).isUserOnline, true);
+          }
+        }
+      });
     }
   }
 
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
+    SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
 
-    final token = await FirebaseMessaging.instance.getToken();
+    // _loginToCubeChat(sharedPrefs.getUser()!);
 
-    final userData = ref
-        .watch(ProfileController.userControllerProvider)
-        .userModel
-        ?.copyWith(fcmToken: token!);
+    // await CubeChatConnection.instance
+    //     .subscribeToUserLastActivityStatus(7375047)
+    //     .then((value) {
+    //   logger.e("subscribeToUserLastActivityStatus");
+    // }).catchError((error) {
+    //   logger.e("subscribeToUserLastActivityStatus error $error");
+    // });
+    CubeChatConnection.instance.getLasUserActivity(7375047).then((seconds) {
+      logger.e("seconds $seconds");
 
-    logger.i("FCM TOKEN: $token");
+      // final date = DateFormat('HH:mm:ss').format(
+      //     DateTime.fromMillisecondsSinceEpoch(seconds * 1000).toLocal());
+      // logger.e("date ${date}");
+      // 'userId' was 'seconds' ago
+
+      final date = formatedTime(timeInSecond: seconds);
+      logger.e("date ${date}");
+    }).catchError((error) {
+      // 'userId' never logged to the chat
+    });
 
     await ref
         .read(ProfileController.userControllerProvider)
-        .updateUserData(userData!);
+        .updateCubeUserData(sharedPrefs.getUser()!);
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
+  formatedTime({required int timeInSecond}) {
+    int sec = timeInSecond % 60;
+    int min = (timeInSecond / 60).floor();
+    String minute = min.toString().length <= 1 ? "0$min" : "$min";
+    String second = sec.toString().length <= 1 ? "0$sec" : "$sec";
+    return "$minute : $second";
+  }
+
+  _loginToCubeChat(CubeUser user) {
+    print("_loginToCubeChat user $user");
+    CubeChatConnectionSettings.instance.totalReconnections = 0;
+    CubeChatConnection.instance.login(user).then((cubeUser) {
+      CubeChatConnection.instance.subscribeToUserLastActivityStatus(user.id!);
+    }).catchError((error) {});
   }
 
   bool? isOnline = false;
@@ -154,83 +198,90 @@ class _UsersViewState extends ConsumerState<UsersView>
     final userList = ref.watch(userListProvider);
 
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () async => ref.refresh(userListProvider),
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              centerTitle: true,
-              pinned: true,
-              // floating: false,
+      body: LayoutBuilder(builder: (context, constraints) {
+        return RefreshIndicator(
+          onRefresh: () async => ref.refresh(userListProvider),
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                centerTitle: true,
+                pinned: true,
+                // floating: false,
 
-              titleSpacing: 50,
-              leading: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  // radius: 2,
-                  backgroundImage: CachedNetworkImageProvider(userData!
-                          .profileUrl ??
-                      "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                ),
-              ),
-              title: Text(userData!.username),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () async {
-                    showSearch(
-                      context: context,
-                      delegate: UsersSearchDelegate(ref),
-                    );
-                  },
-                ),
-              ],
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.all(10),
-              sliver: userList.when(
-                loading: () => const SliverToBoxAdapter(
-                  child: Center(
-                    child: CircularProgressIndicator(),
+                titleSpacing: 50,
+                leading: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    // radius: 2,
+                    backgroundImage: CachedNetworkImageProvider(userData!
+                            .profileUrl ??
+                        "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                   ),
                 ),
-                error: (error, stackTrace) => (error is Exception)
-                    ? SliverToBoxAdapter(
-                        child: Center(
-                          child: Text(error.toString()),
-                        ),
-                      )
-                    : SliverToBoxAdapter(
-                        child: Center(
-                          child: Text(error.toString()),
-                        ),
-                      ),
-                data: (data) => SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final users = data[index];
-
-                      return UserGridItem(
-                        onTapEditProfile: () {
-                          AutoTabsRouter.of(context).setActiveIndex(2);
-                        },
-                        isCurrentUser: users!.id == userData.id ? true : false,
-                        users: users,
-                      ).animate().shake();
+                title: Text(userData.username),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () async {
+                      showSearch(
+                        context: context,
+                        delegate: UsersSearchDelegate(ref),
+                      );
                     },
-                    childCount: data!.length,
+                  ),
+                ],
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.all(10),
+                sliver: userList.when(
+                  loading: () => const SliverToBoxAdapter(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  error: (error, stackTrace) => (error is Exception)
+                      ? SliverToBoxAdapter(
+                          child: Center(
+                            child: Text(error.toString()),
+                          ),
+                        )
+                      : SliverToBoxAdapter(
+                          child: Center(
+                            child: Text(error.toString()),
+                          ),
+                        ),
+                  data: (data) => SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: constraints.isMobile
+                          ? 3
+                          : constraints.isTablet
+                              ? 4
+                              : 5,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final users = data[index];
+
+                        return UserGridItem(
+                          onTapEditProfile: () {
+                            AutoTabsRouter.of(context).setActiveIndex(2);
+                          },
+                          isCurrentUser:
+                              users!.id == userData.id ? true : false,
+                          users: users,
+                        ).animate().shake();
+                      },
+                      childCount: data!.length,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
@@ -578,7 +629,8 @@ class UserGridItem extends ConsumerWidget {
                 ),
                 const Spacer(),
                 isCurrentUser!
-                    ? InkWell(onTap: onTapEditProfile, child: Icon(Icons.edit))
+                    ? InkWell(
+                        onTap: onTapEditProfile, child: const Icon(Icons.edit))
                     : Align(
                         alignment: Alignment.topRight,
                         child: Padding(
@@ -626,18 +678,18 @@ class UserGridItem extends ConsumerWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    users.height == "Do not show"
+                    users.height == null
                         ? const SizedBox.shrink()
                         : Text(
-                            users.height ?? "170 cm",
+                            users.height!,
                             style: const TextStyle(
                               fontSize: 10,
                             ),
                           ),
-                    users.weight == "Do not show"
+                    users.weight == null
                         ? const SizedBox.shrink()
                         : Text(
-                            users.weight ?? "70 kg",
+                            users.weight!,
                             style: const TextStyle(
                               fontSize: 10,
                             ),

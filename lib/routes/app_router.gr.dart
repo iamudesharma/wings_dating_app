@@ -1,53 +1,32 @@
-// **************************************************************************
-// AutoRouteGenerator
-// **************************************************************************
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
-// AutoRouteGenerator
+// AutoRouterGenerator
 // **************************************************************************
-//
-// ignore_for_file: type=lint
 
 part of 'app_router.dart';
 
-class _$AppRouter extends RootStackRouter {
-  _$AppRouter({
-    GlobalKey<NavigatorState>? navigatorKey,
-    required this.authGuard,
-  }) : super(navigatorKey);
-
-  final AuthGuard authGuard;
+abstract class _$AppRouter extends RootStackRouter {
+  _$AppRouter([GlobalKey<NavigatorState>? navigatorKey]) : super(navigatorKey);
 
   @override
   final Map<String, PageFactory> pagesMap = {
     SignOptionsRoute.name: (routeData) {
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const SignOptionsView(),
       );
     },
     DashboardRoute.name: (routeData) {
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const DashboardView(),
-      );
-    },
-    ChatRoute.name: (routeData) {
-      final args = routeData.argsAs<ChatRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ChatView(
-          key: args.key,
-          id: args.id,
-        ),
       );
     },
     OtherUserProfileRoute.name: (routeData) {
       final args = routeData.argsAs<OtherUserProfileRouteArgs>(
           orElse: () => const OtherUserProfileRouteArgs());
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: OtherUserProfileView(
           key: args.key,
@@ -56,15 +35,21 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    AddAdditionalInformationRoute.name: (routeData) {
-      return MaterialPageX<dynamic>(
+    ProfileRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const AddAdditionalInformationView(),
+        child: const ProfileView(),
+      );
+    },
+    UserBlockListRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const UserBlockListView(),
       );
     },
     EditProfileRoute.name: (routeData) {
       final args = routeData.argsAs<EditProfileRouteArgs>();
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: EditProfileView(
           key: args.key,
@@ -72,108 +57,64 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    UserBlockListRoute.name: (routeData) {
-      return MaterialPageX<dynamic>(
+    AddAdditionalInformationRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const UserBlockListView(),
-      );
-    },
-    VideoCallRoute.name: (routeData) {
-      final args = routeData.argsAs<VideoCallRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: VideoCallView(
-          key: args.key,
-          channelId: args.channelId,
-          userName: args.userName,
-        ),
+        child: const AddAdditionalInformationView(),
       );
     },
     UsersRoute.name: (routeData) {
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const UsersView(),
       );
     },
     ChatListRoute.name: (routeData) {
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ChatListView(),
       );
     },
-    ProfileRoute.name: (routeData) {
-      return MaterialPageX<dynamic>(
+    ChatRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<ChatRouteArgs>(orElse: () => const ChatRouteArgs());
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfileView(),
+        child: ChatView(
+          key: args.key,
+          cubeUser: args.cubeUser,
+          cubeDialog: args.cubeDialog,
+          chatUserCubeId: args.chatUserCubeId,
+          dialogId: args.dialogId,
+          cubeUserId: args.cubeUserId,
+        ),
+      );
+    },
+    CallRoute.name: (routeData) {
+      final args = routeData.argsAs<CallRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CallView(
+          args.callSession,
+          args.isIncoming,
+        ),
       );
     },
   };
-
-  @override
-  List<RouteConfig> get routes => [
-        RouteConfig(
-          SignOptionsRoute.name,
-          path: '/sign-options-view',
-        ),
-        RouteConfig(
-          DashboardRoute.name,
-          path: '/',
-          guards: [authGuard],
-          children: [
-            RouteConfig(
-              UsersRoute.name,
-              path: 'users-view',
-              parent: DashboardRoute.name,
-            ),
-            RouteConfig(
-              ChatListRoute.name,
-              path: 'chat-list-view',
-              parent: DashboardRoute.name,
-            ),
-            RouteConfig(
-              ProfileRoute.name,
-              path: 'profile-view',
-              parent: DashboardRoute.name,
-            ),
-          ],
-        ),
-        RouteConfig(
-          ChatRoute.name,
-          path: '/chat-view',
-        ),
-        RouteConfig(
-          OtherUserProfileRoute.name,
-          path: '/other-user-profile-view',
-        ),
-        RouteConfig(
-          AddAdditionalInformationRoute.name,
-          path: '/add-additional-information-view',
-        ),
-        RouteConfig(
-          EditProfileRoute.name,
-          path: '/edit-profile-view',
-        ),
-        RouteConfig(
-          UserBlockListRoute.name,
-          path: '/user-block-list-view',
-        ),
-        RouteConfig(
-          VideoCallRoute.name,
-          path: '/video-call-view',
-        ),
-      ];
 }
 
 /// generated route for
 /// [SignOptionsView]
 class SignOptionsRoute extends PageRouteInfo<void> {
-  const SignOptionsRoute()
+  const SignOptionsRoute({List<PageRouteInfo>? children})
       : super(
           SignOptionsRoute.name,
-          path: '/sign-options-view',
+          initialChildren: children,
         );
 
   static const String name = 'SignOptionsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -182,45 +123,12 @@ class DashboardRoute extends PageRouteInfo<void> {
   const DashboardRoute({List<PageRouteInfo>? children})
       : super(
           DashboardRoute.name,
-          path: '/',
           initialChildren: children,
         );
 
   static const String name = 'DashboardRoute';
-}
 
-/// generated route for
-/// [ChatView]
-class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
-  ChatRoute({
-    Key? key,
-    required String id,
-  }) : super(
-          ChatRoute.name,
-          path: '/chat-view',
-          args: ChatRouteArgs(
-            key: key,
-            id: id,
-          ),
-        );
-
-  static const String name = 'ChatRoute';
-}
-
-class ChatRouteArgs {
-  const ChatRouteArgs({
-    this.key,
-    required this.id,
-  });
-
-  final Key? key;
-
-  final String id;
-
-  @override
-  String toString() {
-    return 'ChatRouteArgs{key: $key, id: $id}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -230,17 +138,21 @@ class OtherUserProfileRoute extends PageRouteInfo<OtherUserProfileRouteArgs> {
     Key? key,
     String? id,
     bool? isCurrentUser = true,
+    List<PageRouteInfo>? children,
   }) : super(
           OtherUserProfileRoute.name,
-          path: '/other-user-profile-view',
           args: OtherUserProfileRouteArgs(
             key: key,
             id: id,
             isCurrentUser: isCurrentUser,
           ),
+          initialChildren: children,
         );
 
   static const String name = 'OtherUserProfileRoute';
+
+  static const PageInfo<OtherUserProfileRouteArgs> page =
+      PageInfo<OtherUserProfileRouteArgs>(name);
 }
 
 class OtherUserProfileRouteArgs {
@@ -263,15 +175,31 @@ class OtherUserProfileRouteArgs {
 }
 
 /// generated route for
-/// [AddAdditionalInformationView]
-class AddAdditionalInformationRoute extends PageRouteInfo<void> {
-  const AddAdditionalInformationRoute()
+/// [ProfileView]
+class ProfileRoute extends PageRouteInfo<void> {
+  const ProfileRoute({List<PageRouteInfo>? children})
       : super(
-          AddAdditionalInformationRoute.name,
-          path: '/add-additional-information-view',
+          ProfileRoute.name,
+          initialChildren: children,
         );
 
-  static const String name = 'AddAdditionalInformationRoute';
+  static const String name = 'ProfileRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [UserBlockListView]
+class UserBlockListRoute extends PageRouteInfo<void> {
+  const UserBlockListRoute({List<PageRouteInfo>? children})
+      : super(
+          UserBlockListRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'UserBlockListRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -280,16 +208,20 @@ class EditProfileRoute extends PageRouteInfo<EditProfileRouteArgs> {
   EditProfileRoute({
     Key? key,
     required bool isEditProfile,
+    List<PageRouteInfo>? children,
   }) : super(
           EditProfileRoute.name,
-          path: '/edit-profile-view',
           args: EditProfileRouteArgs(
             key: key,
             isEditProfile: isEditProfile,
           ),
+          initialChildren: children,
         );
 
   static const String name = 'EditProfileRoute';
+
+  static const PageInfo<EditProfileRouteArgs> page =
+      PageInfo<EditProfileRouteArgs>(name);
 }
 
 class EditProfileRouteArgs {
@@ -309,88 +241,137 @@ class EditProfileRouteArgs {
 }
 
 /// generated route for
-/// [UserBlockListView]
-class UserBlockListRoute extends PageRouteInfo<void> {
-  const UserBlockListRoute()
+/// [AddAdditionalInformationView]
+class AddAdditionalInformationRoute extends PageRouteInfo<void> {
+  const AddAdditionalInformationRoute({List<PageRouteInfo>? children})
       : super(
-          UserBlockListRoute.name,
-          path: '/user-block-list-view',
+          AddAdditionalInformationRoute.name,
+          initialChildren: children,
         );
 
-  static const String name = 'UserBlockListRoute';
-}
+  static const String name = 'AddAdditionalInformationRoute';
 
-/// generated route for
-/// [VideoCallView]
-class VideoCallRoute extends PageRouteInfo<VideoCallRouteArgs> {
-  VideoCallRoute({
-    Key? key,
-    required String channelId,
-    String? userName,
-  }) : super(
-          VideoCallRoute.name,
-          path: '/video-call-view',
-          args: VideoCallRouteArgs(
-            key: key,
-            channelId: channelId,
-            userName: userName,
-          ),
-        );
-
-  static const String name = 'VideoCallRoute';
-}
-
-class VideoCallRouteArgs {
-  const VideoCallRouteArgs({
-    this.key,
-    required this.channelId,
-    this.userName,
-  });
-
-  final Key? key;
-
-  final String channelId;
-
-  final String? userName;
-
-  @override
-  String toString() {
-    return 'VideoCallRouteArgs{key: $key, channelId: $channelId, userName: $userName}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
 /// [UsersView]
 class UsersRoute extends PageRouteInfo<void> {
-  const UsersRoute()
+  const UsersRoute({List<PageRouteInfo>? children})
       : super(
           UsersRoute.name,
-          path: 'users-view',
+          initialChildren: children,
         );
 
   static const String name = 'UsersRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
 /// [ChatListView]
 class ChatListRoute extends PageRouteInfo<void> {
-  const ChatListRoute()
+  const ChatListRoute({List<PageRouteInfo>? children})
       : super(
           ChatListRoute.name,
-          path: 'chat-list-view',
+          initialChildren: children,
         );
 
   static const String name = 'ChatListRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
-/// [ProfileView]
-class ProfileRoute extends PageRouteInfo<void> {
-  const ProfileRoute()
-      : super(
-          ProfileRoute.name,
-          path: 'profile-view',
+/// [ChatView]
+class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
+  ChatRoute({
+    Key? key,
+    CubeUser? cubeUser,
+    CubeDialog? cubeDialog,
+    int? chatUserCubeId,
+    String? dialogId,
+    int? cubeUserId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ChatRoute.name,
+          args: ChatRouteArgs(
+            key: key,
+            cubeUser: cubeUser,
+            cubeDialog: cubeDialog,
+            chatUserCubeId: chatUserCubeId,
+            dialogId: dialogId,
+            cubeUserId: cubeUserId,
+          ),
+          initialChildren: children,
         );
 
-  static const String name = 'ProfileRoute';
+  static const String name = 'ChatRoute';
+
+  static const PageInfo<ChatRouteArgs> page = PageInfo<ChatRouteArgs>(name);
+}
+
+class ChatRouteArgs {
+  const ChatRouteArgs({
+    this.key,
+    this.cubeUser,
+    this.cubeDialog,
+    this.chatUserCubeId,
+    this.dialogId,
+    this.cubeUserId,
+  });
+
+  final Key? key;
+
+  final CubeUser? cubeUser;
+
+  final CubeDialog? cubeDialog;
+
+  final int? chatUserCubeId;
+
+  final String? dialogId;
+
+  final int? cubeUserId;
+
+  @override
+  String toString() {
+    return 'ChatRouteArgs{key: $key, cubeUser: $cubeUser, cubeDialog: $cubeDialog, chatUserCubeId: $chatUserCubeId, dialogId: $dialogId, cubeUserId: $cubeUserId}';
+  }
+}
+
+/// generated route for
+/// [CallView]
+class CallRoute extends PageRouteInfo<CallRouteArgs> {
+  CallRoute({
+    required P2PSession callSession,
+    required bool isIncoming,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CallRoute.name,
+          args: CallRouteArgs(
+            callSession: callSession,
+            isIncoming: isIncoming,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CallRoute';
+
+  static const PageInfo<CallRouteArgs> page = PageInfo<CallRouteArgs>(name);
+}
+
+class CallRouteArgs {
+  const CallRouteArgs({
+    required this.callSession,
+    required this.isIncoming,
+  });
+
+  final P2PSession callSession;
+
+  final bool isIncoming;
+
+  @override
+  String toString() {
+    return 'CallRouteArgs{callSession: $callSession, isIncoming: $isIncoming}';
+  }
 }

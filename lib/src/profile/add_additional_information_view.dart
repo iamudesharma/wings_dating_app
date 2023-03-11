@@ -28,6 +28,8 @@ final albumListProvider = StateProvider<List<String>?>((ref) {
   return [];
 });
 
+
+@RoutePage()
 class AddAdditionalInformationView extends ConsumerStatefulWidget {
   const AddAdditionalInformationView({super.key});
 

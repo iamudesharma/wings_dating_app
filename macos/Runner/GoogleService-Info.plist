@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCUM6PqbnYqoNGngQ3TfvFG3udHqAKbypc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>546119961072</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.wingsDatingApp</string>
+	<key>PROJECT_ID</key>
+	<string>wings-dating-951ed</string>
+	<key>STORAGE_BUCKET</key>
+	<string>wings-dating-951ed.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:546119961072:ios:ef020db2491cf562d9b535</string>
+</dict>
+</plist>

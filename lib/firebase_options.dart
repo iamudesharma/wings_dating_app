@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,6 +43,16 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDDIXAG9ted2nU4e_KgSti2ajmxlLp3-aE',
+    appId: '1:546119961072:web:7b2629a6b13942b1d9b535',
+    messagingSenderId: '546119961072',
+    projectId: 'wings-dating-951ed',
+    authDomain: 'wings-dating-951ed.firebaseapp.com',
+    storageBucket: 'wings-dating-951ed.appspot.com',
+    measurementId: 'G-9GGB2052VJ',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDcHVq9mSbSRUWDHe_jmSVafTr_BvXSfkE',
     appId: '1:546119961072:android:ccd2092af11903ccd9b535',
@@ -58,6 +62,17 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyCUM6PqbnYqoNGngQ3TfvFG3udHqAKbypc',
+    appId: '1:546119961072:ios:ef020db2491cf562d9b535',
+    messagingSenderId: '546119961072',
+    projectId: 'wings-dating-951ed',
+    storageBucket: 'wings-dating-951ed.appspot.com',
+    androidClientId: '546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com',
+    iosClientId: '546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com',
+    iosBundleId: 'com.example.wingsDatingApp',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyCUM6PqbnYqoNGngQ3TfvFG3udHqAKbypc',
     appId: '1:546119961072:ios:ef020db2491cf562d9b535',
     messagingSenderId: '546119961072',

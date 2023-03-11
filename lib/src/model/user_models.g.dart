@@ -66,6 +66,7 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
           const [],
       id: json['id'] as String,
       fcmToken: json['fcmToken'] as String,
+      cubeUser: CubeUser.fromJson(json['cubeUser'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
@@ -76,7 +77,7 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'profileUrl': instance.profileUrl,
       'birthday': instance.birthday,
       'age': instance.age,
-      'position': instance.position?.toJson(),
+      'position': instance.position,
       'dob': instance.dob,
       'height': instance.height,
       'weight': instance.weight,
@@ -94,6 +95,7 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'blockList': instance.blockList,
       'id': instance.id,
       'fcmToken': instance.fcmToken,
+      'cubeUser': instance.cubeUser,
     };
 
 const _$RoleEnumMap = {

@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
+import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,6 +43,10 @@ class ProfileController extends ChangeNotifier {
 
   Future updateUserData(UserModel user) async {
     await ref.read(Dependency.profileProvider).updateUserDoc(user);
+  }
+
+  Future updateCubeUserData(CubeUser user) async {
+    await ref.read(Dependency.profileProvider).updateCubeUserDoc(user);
   }
 
   Future<void> pickImage({required ImageSource imageSource}) async {
