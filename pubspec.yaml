@@ -47,7 +47,7 @@ dependencies:
   # c: ^1.0.0-dev.45
   cloud_firestore_odm: ^1.0.0-dev.51
   # json_annotation: ^4.7.0
-  auto_route: ^6.0.0-rc-4
+  auto_route: ^6.0.0-rc-5
   # flutterfire_ui: ^0.4.3+20
   firebase_ui_auth: ^1.1.16
   riverpod_annotation: ^2.0.1
@@ -109,7 +109,8 @@ dev_dependencies:
   # cloud_firestore_odm_generator: ^1.0.0-dev.45
   cloud_firestore_odm_generator: ^1.0.0-dev.51
   json_serializable: ^6.6.0
-  auto_route_generator: ^6.0.0-rc
+  # auto_route_generator: ^6.0.0-rc
+  auto_route_generator: ^6.0.0-rc-1
   riverpod_generator: ^2.1.3
   custom_lint: ^0.3.2
   riverpod_lint: ^1.1.5
