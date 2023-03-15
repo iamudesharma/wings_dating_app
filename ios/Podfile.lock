@@ -608,7 +608,7 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.24):
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
-  - cloud_firestore (4.4.3):
+  - cloud_firestore (4.4.4):
     - Firebase/Firestore (= 10.3.0)
     - firebase_core
     - Flutter
@@ -653,14 +653,6 @@ PODS:
   - DKPhotoGallery/Resource (0.0.17):
     - SDWebImage
     - SwiftyGif
-  - FBAEMKit (14.1.0):
-    - FBSDKCoreKit_Basics (= 14.1.0)
-  - FBSDKCoreKit (14.1.0):
-    - FBAEMKit (= 14.1.0)
-    - FBSDKCoreKit_Basics (= 14.1.0)
-  - FBSDKCoreKit_Basics (14.1.0)
-  - FBSDKLoginKit (14.1.0):
-    - FBSDKCoreKit (= 14.1.0)
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
     - Flutter
@@ -677,9 +669,6 @@ PODS:
   - Firebase/Crashlytics (10.3.0):
     - Firebase/CoreOnly
     - FirebaseCrashlytics (~> 10.3.0)
-  - Firebase/Database (10.3.0):
-    - Firebase/CoreOnly
-    - FirebaseDatabase (~> 10.3.0)
   - Firebase/DynamicLinks (10.3.0):
     - Firebase/CoreOnly
     - FirebaseDynamicLinks (~> 10.3.0)
@@ -696,22 +685,18 @@ PODS:
     - Firebase/Analytics (= 10.3.0)
     - firebase_core
     - Flutter
-  - firebase_auth (4.2.9):
+  - firebase_auth (4.2.10):
     - Firebase/Auth (= 10.3.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.7.0):
+  - firebase_core (2.7.1):
     - Firebase/CoreOnly (= 10.3.0)
     - Flutter
   - firebase_crashlytics (3.0.15):
     - Firebase/Crashlytics (= 10.3.0)
     - firebase_core
     - Flutter
-  - firebase_database (10.0.14):
-    - Firebase/Database (= 10.3.0)
-    - firebase_core
-    - Flutter
-  - firebase_dynamic_links (5.0.15):
+  - firebase_dynamic_links (5.0.16):
     - Firebase/DynamicLinks (= 10.3.0)
     - firebase_core
     - Flutter
@@ -763,9 +748,6 @@ PODS:
     - GoogleUtilities/Environment (~> 7.8)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (~> 2.1)
-  - FirebaseDatabase (10.3.0):
-    - FirebaseCore (~> 10.0)
-    - leveldb-library (~> 1.22)
   - FirebaseDynamicLinks (10.3.0):
     - FirebaseCore (~> 10.0)
   - FirebaseFirestore (10.3.0):
@@ -802,9 +784,6 @@ PODS:
     - FirebaseCoreExtension (~> 10.0)
     - GTMSessionFetcher/Core (< 4.0, >= 2.1)
   - Flutter (1.0.0)
-  - flutter_facebook_auth (4.4.1):
-    - FBSDKLoginKit (= 14.1.0)
-    - Flutter
   - flutter_isolate (0.0.1):
     - Flutter
   - flutter_local_notifications (0.0.1):
@@ -956,15 +935,11 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - sign_in_with_apple (0.0.1):
-    - Flutter
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
   - SwiftyGif (5.4.3)
   - Toast (4.0.0)
-  - twitter_login (0.0.1):
-    - Flutter
   - WebRTC-SDK (104.5112.09)
 
 DEPENDENCIES:
@@ -978,12 +953,10 @@ DEPENDENCIES:
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
-  - firebase_database (from `.symlinks/plugins/firebase_database/ios`)
   - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
-  - flutter_facebook_auth (from `.symlinks/plugins/flutter_facebook_auth/ios`)
   - flutter_isolate (from `.symlinks/plugins/flutter_isolate/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
@@ -996,9 +969,7 @@ DEPENDENCIES:
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - platform_device_id (from `.symlinks/plugins/platform_device_id/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
-  - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
-  - twitter_login (from `.symlinks/plugins/twitter_login/ios`)
 
 SPEC REPOS:
   trunk:
@@ -1007,10 +978,6 @@ SPEC REPOS:
     - BoringSSL-GRPC
     - DKImagePickerController
     - DKPhotoGallery
-    - FBAEMKit
-    - FBSDKCoreKit
-    - FBSDKCoreKit_Basics
-    - FBSDKLoginKit
     - Firebase
     - FirebaseAnalytics
     - FirebaseAppCheckInterop
@@ -1020,7 +987,6 @@ SPEC REPOS:
     - FirebaseCoreExtension
     - FirebaseCoreInternal
     - FirebaseCrashlytics
-    - FirebaseDatabase
     - FirebaseDynamicLinks
     - FirebaseFirestore
     - FirebaseInstallations
@@ -1066,8 +1032,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_crashlytics:
     :path: ".symlinks/plugins/firebase_crashlytics/ios"
-  firebase_database:
-    :path: ".symlinks/plugins/firebase_database/ios"
   firebase_dynamic_links:
     :path: ".symlinks/plugins/firebase_dynamic_links/ios"
   firebase_messaging:
@@ -1076,8 +1040,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
-  flutter_facebook_auth:
-    :path: ".symlinks/plugins/flutter_facebook_auth/ios"
   flutter_isolate:
     :path: ".symlinks/plugins/flutter_isolate/ios"
   flutter_local_notifications:
@@ -1102,36 +1064,27 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/platform_device_id/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/ios"
-  sign_in_with_apple:
-    :path: ".symlinks/plugins/sign_in_with_apple/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
-  twitter_login:
-    :path: ".symlinks/plugins/twitter_login/ios"
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
   AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
-  cloud_firestore: 94326bb743acbfe43c68f933dab8a094e84d5849
+  cloud_firestore: 612a89fe1210990e2ba642b850e8faf7d393eedd
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
   connectycube_flutter_call_kit: 5b630949cb5ff856dd76170287206952664191ae
   desktop_webview_auth: d645139460ef203d50bd0cdb33356785dd939cce
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
-  FBAEMKit: a899515e45476027f73aef377b5cffadcd56ca3a
-  FBSDKCoreKit: 24f8bc8d3b5b2a8c5c656a1329492a12e8efa792
-  FBSDKCoreKit_Basics: 6e578c9bdc7aa1365dbbbde633c9ebb536bcaa98
-  FBSDKLoginKit: 787de205d524c3a4b17d527916f1d066e4361660
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
   Firebase: f92fc551ead69c94168d36c2b26188263860acd9
   firebase_analytics: 4f57c422c9c6225cd5ddd5fca28f92bde5fb21b5
-  firebase_auth: 4e8c693e848ed13b263de2d702d55fa82ed04a79
-  firebase_core: 128d8c43c3a453a4a67463314fc3761bedff860b
+  firebase_auth: e94093901bee37bdba241fd8647c1d3ea6f55c8b
+  firebase_core: 1ae9f9aa76e6e1edc14fb181637ad466fd6c6fa4
   firebase_crashlytics: 0a99d06e38030d769021340b551d8ac4b27345fc
-  firebase_database: bf91bed526bd1252779a88863c36f48c4d28cd0f
-  firebase_dynamic_links: bb28b0958fd7f9c026611fcc11a61d9a40a0820c
+  firebase_dynamic_links: 42ab4dd387b07d5c7af2e9aa63a7b5fa3518dd8b
   firebase_messaging: 8ac28baba96e69a58ad26b4bb5f9ee67c3e5efe2
   firebase_storage: bdbef04ce485eb426152016c735736bc3615b8c0
   FirebaseAnalytics: 036232b6a1e2918e5f67572417be1173576245f3
@@ -1142,14 +1095,12 @@ SPEC CHECKSUMS:
   FirebaseCoreExtension: 93d252fabdc9696bf14a73b04d84877ab9b3a832
   FirebaseCoreInternal: 29b76f784d607df8b2a1259d73c3f04f1210137b
   FirebaseCrashlytics: f20d956f8229010b645e534693c39e0b7843c268
-  FirebaseDatabase: d0732ba8aece0eccfa0cfb3ef540e7ba6fa1c6a6
   FirebaseDynamicLinks: 51c81d07bd63155bb56d76b0abdda79c8a3d8d02
   FirebaseFirestore: 244f71ff14ef44f39e00b44d356eac708ce03103
   FirebaseInstallations: e2f26126089dcf41e215f7b8925af8d953c7d602
   FirebaseMessaging: e345b219fd15d325f0cf2fef28cb8ce00d851b3f
   FirebaseStorage: 0efbff0ac978981866d89804191688ae50d64033
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_facebook_auth: 361ac7a57263ebf327f26089507ead0d66558ee8
   flutter_isolate: 0edf5081826d071adf21759d1eb10ff5c24503b5
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
@@ -1157,7 +1108,7 @@ SPEC CHECKSUMS:
   fluttertoast: eb263d302cc92e04176c053d2385237e9f43fad0
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
-  google_sign_in_ios: 63e49658400eb806dd30054dc56f8baee3025508
+  google_sign_in_ios: 1256ff9d941db546373826966720b0c24804bcdd
   GoogleAppMeasurement: c7d6fff39bf2d829587d74088d582e32d75133c3
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
   GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
@@ -1177,11 +1128,9 @@ SPEC CHECKSUMS:
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   SDWebImage: 9c36e66c8ce4620b41a7407698dda44211a96764
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
-  sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  twitter_login: 2794db69b7640681171b17b3c2c84ad9dfb4a57f
   WebRTC-SDK: 3fa5c6fa717314fade68bffed85737484a28ad0b
 
 PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -22,8 +21,6 @@ import 'package:wings_dating_app/routes/app_router_provider.dart';
 import 'package:wings_dating_app/routes/navigation_observers.dart';
 
 import 'firebase_options.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,7 +61,9 @@ void main() async {
     if (!kIsWeb) {
       FirebaseCrashlytics.instance.recordError(error, stack);
     } else {
-      print(error);
+      if (kDebugMode) {
+        print(error);
+      }
     }
   });
   // runZonedGuarded( ProviderScope(child: MyApp()),((error, stack) => FirebaseCrashlytics.instance.recordError(error, stack)));
@@ -91,6 +90,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   void didChangeDependencies() async {
+    
     super.didChangeDependencies();
   }
 

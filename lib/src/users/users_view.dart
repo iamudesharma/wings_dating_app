@@ -76,6 +76,8 @@ class _UsersViewState extends ConsumerState<UsersView>
       }
     });
 
+ 
+
     WidgetsBinding.instance.addObserver(this);
 
     super.initState();

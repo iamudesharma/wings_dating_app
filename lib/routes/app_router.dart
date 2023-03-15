@@ -24,12 +24,15 @@ part 'app_router.gr.dart';
 // @AutoRouterConfig()
 @AutoRouterConfig(replaceInRouteName: 'View,Route')
 class AppRouter extends _$AppRouter {
-  final Ref ref;
+  Ref ref;
+
+  AppRouter(this.ref);
 
   @override
-  final List<AutoRoute> routes = [
+  late final List<AutoRoute> routes = [
     AutoRoute(
       page: DashboardRoute.page,
+      path: "/",
       children: [
         AutoRoute(
           page: UsersRoute.page,
@@ -42,12 +45,9 @@ class AppRouter extends _$AppRouter {
         ),
       ],
       guards: [
-        
         // AuthGuard(),
-        AuthGuard(),
+        AuthGuard(ref),
       ],
-      type: const RouteType.material(),
-      keepHistory: true,
     ),
     AutoRoute(
       page: SignOptionsRoute.page,
@@ -78,8 +78,6 @@ class AppRouter extends _$AppRouter {
       type: const RouteType.material(),
     ),
   ];
-
-  AppRouter(this.ref);
 }
 
 // @MaterialAutoRouter(
