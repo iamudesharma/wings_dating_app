@@ -28,6 +28,9 @@ AppRouter appRoute(AppRouteRef ref) {
 }
 
 class AuthGuard extends AutoRouteGuard {
+  final Ref ref;
+
+  AuthGuard(this.ref);
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -39,25 +42,25 @@ class AuthGuard extends AutoRouteGuard {
       if (await ProfileRepo.checkUserDocExist()) {
         logger.i('user doc exist');
 
-        // await ref
-        //     .read(ProfileController.userControllerProvider)
-        //     .getCurrentUser();
-        // await ref.read(profileRepoProvider).isUserOnline(true);
+        await ref
+            .read(ProfileController.userControllerProvider)
+            .getCurrentUser();
+        await ref.read(profileRepoProvider).isUserOnline(true);
 
-        // final userModel =
-        //     ref.read(ProfileController.userControllerProvider).userModel;
-        final user = await SharedPrefs.instance.getUser();
+        final userModel =
+            ref.read(ProfileController.userControllerProvider).userModel;
 
         if (CubeSessionManager.instance.isActiveSessionValid()) {
           if (!chat.isAuthenticated()) {
-            await chat.login(user!);
+            await chat.login(userModel!.cubeUser);
 
             resolver.next(true);
           } else {
             resolver.next(true);
+            await chat.login(userModel!.cubeUser);
           }
         } else {
-          await _loginToCC(user!, saveUser: true);
+          await _loginToCC(userModel!.cubeUser, saveUser: true);
 
           resolver.next(true);
         }
