@@ -27,8 +27,9 @@ class AppRouter extends _$AppRouter {
   final Ref ref;
 
   @override
-  final List<AutoRoute> routes = [
+  late final List<AutoRoute> routes = [
     AutoRoute(
+      path: "/",
       page: DashboardRoute.page,
       children: [
         AutoRoute(
@@ -42,9 +43,8 @@ class AppRouter extends _$AppRouter {
         ),
       ],
       guards: [
-        
         // AuthGuard(),
-        AuthGuard(),
+        AuthGuard(ref),
       ],
       type: const RouteType.material(),
       keepHistory: true,
