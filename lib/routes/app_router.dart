@@ -46,7 +46,7 @@ class AppRouter extends _$AppRouter {
       ],
       guards: [
         // AuthGuard(),
-        AuthGuard(ref),
+        AuthGuard(ref: ref),
       ],
     ),
     AutoRoute(

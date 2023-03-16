@@ -55,9 +55,8 @@ class ProfileRepo with RepositoryExceptionMixin {
     );
   }
 
- static Future<bool> checkUserDocExist() async {
-    final data = await FirebaseFirestore.instance
-        .collection("users")
+  Future<bool> checkUserDocExist() async {
+    final data = await userCollection()
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
