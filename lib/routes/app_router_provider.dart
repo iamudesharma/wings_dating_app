@@ -24,13 +24,17 @@ final chat = CubeChatConnection.instance;
 
 @Riverpod(keepAlive: true)
 AppRouter appRoute(AppRouteRef ref) {
-  return AppRouter(ref);
+  return AppRouter(
+    ref,
+    // profileDocGuard: ProfileDocGuard(ref: ref),
+  );
 }
 
 class AuthGuard extends AutoRouteGuard {
   final Ref ref;
-
-  AuthGuard(this.ref);
+  AuthGuard({
+    required this.ref,
+  });
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -39,7 +43,8 @@ class AuthGuard extends AutoRouteGuard {
 
     // var customerController = ref.read(profileControllerProvider);
     if (auth.currentUser != null) {
-      if (await ProfileRepo.checkUserDocExist()) {
+      print(auth.currentUser != null);
+      if (await ref.read(profileRepoProvider).checkUserDocExist()) {
         logger.i('user doc exist');
 
         await ref
@@ -49,21 +54,23 @@ class AuthGuard extends AutoRouteGuard {
 
         final userModel =
             ref.read(ProfileController.userControllerProvider).userModel;
+        resolver.next(true);
 
-        if (CubeSessionManager.instance.isActiveSessionValid()) {
-          if (!chat.isAuthenticated()) {
-            await chat.login(userModel!.cubeUser);
+        // if (CubeSessionManager.instance.isActiveSessionValid()) {
+        //   if (!chat.isAuthenticated()) {
+        //     await SharedPrefs.instance.saveNewUser(userModel!.cubeUser);
 
-            resolver.next(true);
-          } else {
-            resolver.next(true);
-            await chat.login(userModel!.cubeUser);
-          }
-        } else {
-          await _loginToCC(userModel!.cubeUser, saveUser: true);
+        //     await chat.login(userModel.cubeUser);
 
-          resolver.next(true);
-        }
+        //     resolver.next(true);
+        //   } else {
+        //     resolver.next(true);
+        //   }
+        // } else {
+        //   await _loginToCC(userModel!.cubeUser, saveUser: true);
+
+        //   resolver.next(true);
+        // }
       } else {
         resolver.next(false);
 
@@ -87,20 +94,20 @@ void _processLoginError(exception) {
 }
 
 Future<void> _loginToCC(CubeUser user, {bool saveUser = false}) async {
+  print("_loginToCC user: $user");
+
   await createSession(user).then((cubeSession) async {
+    print("createSession cubeSession: $cubeSession");
     var tempUser = user;
     user = cubeSession.user!..password = tempUser.password;
     if (saveUser) {
-      if (!kIsWeb) {
-        final saved = await _saveUserInIsolate(user);
-      } else {
-        SharedPrefs.instance.saveNewUser(user);
-      }
+      final saved = await _saveUserInIsolate(user);
+      print("User saved: $saved");
     }
 
     await chat.login(user);
 
-    if (Platform.isAndroid) {
+    if (!Platform.isIOS) {
       PushNotificationsManager.instance.init();
     }
   }).catchError((error) {
@@ -127,6 +134,7 @@ void _saveUser(List<dynamic> args) async {
     await sharedPrefs.saveNewUser(user);
     return true;
   }).catchError((error) {
+    print("Error saving user in isolate: $error");
     return false;
   });
   sendPort.send(saved);
