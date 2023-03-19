@@ -509,36 +509,53 @@ class ImagePickerWidget extends StatelessWidget {
 Future<void> _signInCC(CubeUser user, WidgetRef ref,
     {UserModel? userModel}) async {
   if (!CubeSessionManager.instance.isActiveSessionValid()) {
-    SharedPrefs sharedPrefs = SharedPrefs.instance;
-
-    await sharedPrefs.init();
     try {
       await createSession();
-      signUp(user).then((newUser) async {
-        logger.i("signUp newUser $newUser");
-        user.id = newUser.id;
-        await sharedPrefs.saveNewUser(user);
-
-        final cube = sharedPrefs.getUser();
-
-        final user0 = userModel?.copyWith(
-          cubeUser: cube!,
-        );
-
-        await signIn(user).then((result) async {
-          logger.i("signIn result $result");
-          _loginToCubeChat(user);
-
-          await ref.read(Dependency.profileProvider).updateUserDoc(user0!);
-        });
-      }).catchError((exception) {
-        logger.e("signUp exception $exception");
-        // _processLoginError(exception);
-      });
-    } catch (error) {
-      logger.e("createSession error $error");
+    } on Exception catch (e) {
+      logger.e("createSession error $e");
     }
   }
+  SharedPrefs sharedPrefs = SharedPrefs.instance;
+
+  await sharedPrefs.init();
+
+await  signUp(user).then((newUser) {
+    logger.i("signUp newUser $newUser");
+    user.id = newUser.id;
+    SharedPrefs.instance.saveNewUser(user);
+    signIn(user).then((result) {
+      _loginToCubeChat(user);
+    });
+  }).catchError((exception) {
+    logger.e("signUp exception $exception");
+    // _processLoginError(exception);
+  });
+
+  // // try {
+  // //   signUp(user).then((newUser) async {
+  // //     logger.i("signUp newUser $newUser");
+  // //     user.id = newUser.id;
+  // //     await sharedPrefs.saveNewUser(user);
+
+  // //     final cube = sharedPrefs.getUser();
+
+  // //     final user0 = userModel?.copyWith(
+  // //       cubeUser: cube!,
+  // //     );
+
+  // //     await signIn(user).then((result) async {
+  // //       logger.i("signIn result $result");
+  // //       _loginToCubeChat(user);
+
+  // //       await ref.read(Dependency.profileProvider).updateUserDoc(user0!);
+  // //     });
+  // //   }).catchError((exception) {
+  // //     logger.e("signUp exception $exception");
+  // //     // _processLoginError(exception);
+  // //   });
+  // } catch (error) {
+  //   logger.e("createSession error $error");
+  // }
 }
 
 _loginToCubeChat(CubeUser user) {

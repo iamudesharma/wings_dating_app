@@ -32,15 +32,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
   }
 
   @override
-  void didChangeDependencies() async {
-    final userModel =
-        ref.read(ProfileController.userControllerProvider).userModel;
-    await _loginToCC(userModel!.cubeUser);
-
-    await CubeChatConnection.instance.login(userModel.cubeUser);
-
-    super.didChangeDependencies();
-  }
+  void didChangeDependencies() async {}
 
   Future<void> _loginToCC(CubeUser user, {bool saveUser = false}) async {
     print("_loginToCC user: $user");
