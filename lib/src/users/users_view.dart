@@ -66,6 +66,13 @@ class _UsersViewState extends ConsumerState<UsersView>
 
   @override
   void initState() {
+    init(AppConst.cubeappId, AppConst.authKey, AppConst.authSecret,
+        onSessionRestore: () async {
+      SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
+      CubeUser? user = sharedPrefs.getUser();
+
+      return createSession(user);
+    });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
@@ -145,12 +152,12 @@ class _UsersViewState extends ConsumerState<UsersView>
   void didChangeDependencies() async {
     super.didChangeDependencies();
 
-    await init(
-      AppConst.cubeappId,
-      AppConst.authKey,
-      AppConst.authSecret,
-    );
-    SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
+    // await init(
+    //   AppConst.cubeappId,
+    //   AppConst.authKey,
+    //   AppConst.authSecret,
+    // );
+    // SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
 
     // _loginToCubeChat(sharedPrefs.getUser()!);
 
