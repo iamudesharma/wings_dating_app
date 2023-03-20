@@ -76,7 +76,7 @@ dependencies:
   flutter_animate: ^4.1.0
   geolocator: ^9.0.2
   connectycube_flutter_call_kit: ^2.2.2
-  connectycube_sdk: ^2.4.0
+  connectycube_sdk: ^2.4.1
   shared_preferences: ^2.0.18
 
   connectivity_plus: ^3.0.3
