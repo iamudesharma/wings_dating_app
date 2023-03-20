@@ -301,10 +301,10 @@ packages:
     dependency: "direct main"
     description:
       name: connectycube_sdk
-      sha256: d1c1314b3bbb153856403788a1048b0ef9898cd23b30c97b78874ded6cc2ee05
+      sha256: "2edb99027f4b3746c0d57983dc6c7c36bd831b9bfd5b0b431819d172842d1d31"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.0"
+    version: "2.4.1"
   console:
     dependency: transitive
     description:
@@ -825,10 +825,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_webrtc
-      sha256: "558d90e093cd1a48b8ce6d859f1435630b624cd19c6fda39ac7956402f91818c"
+      sha256: "4eacac1b49c65fd225ea69f41b3c28fae55c1f2caba6d5f21a6de2bd43e6dc02"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.23"
+    version: "0.9.24"
   fluttertoast:
     dependency: "direct main"
     description:
