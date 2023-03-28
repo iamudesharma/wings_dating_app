@@ -515,6 +515,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background/flutter_background.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 
 import '../../../helpers/logger.dart';
@@ -836,7 +837,8 @@ class _CallViewState extends State<CallView>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => _onBackPressed(context),
-      child: Scaffold(
+      child: PlatformScaffold(
+        
         body: Stack(fit: StackFit.loose, clipBehavior: Clip.none, children: [
           _isVideoCall()
               ? OrientationBuilder(

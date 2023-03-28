@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:connectycube_sdk/connectycube_sdk.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:wings_dating_app/const/app_const.dart';
 
 import '../../../const/pref_util.dart';
@@ -21,7 +22,7 @@ class IncomingCallScreen extends StatelessWidget {
 
     return WillPopScope(
         onWillPop: () => _onBackPressed(context),
-        child: Scaffold(
+        child: PlatformScaffold(
             body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,

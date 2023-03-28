@@ -7,6 +7,7 @@ import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 // ignore: depend_on_referenced_packages
@@ -46,7 +47,6 @@ final _chatUserData = FutureProvider.family<UserModel?, int>(
 // });
 
 @RoutePage()
-
 class ChatView extends ConsumerStatefulWidget {
   final CubeUser? cubeUser;
   final CubeDialog? cubeDialog;
@@ -98,8 +98,8 @@ class _ChatViewState extends ConsumerState<ChatView> {
             ? widget.cubeDialog!.occupantsIds!.last
             : widget.cubeDialog!.occupantsIds!.first));
     return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
+      child: PlatformScaffold(
+          appBar: PlatformAppBar(
             title: otherUser.when(
                 error: (error, stackTrace) => Text(error.toString()),
                 loading: () => const Text('Loading...'),
