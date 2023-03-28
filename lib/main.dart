@@ -9,10 +9,12 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,8 +24,6 @@ import 'package:wings_dating_app/routes/app_router_provider.dart';
 import 'package:wings_dating_app/routes/navigation_observers.dart';
 
 import 'firebase_options.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -98,37 +98,80 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     final appRouter = ref.watch(appRouteProvider);
-    return MaterialApp.router(
-      theme: FlexThemeData.light(
-        scheme: FlexScheme.aquaBlue,
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 20,
-        appBarOpacity: 0.95,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 20,
-          blendOnColors: false,
-          inputDecoratorRadius: 12.0,
+    return PlatformApp.router(
+      localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+        DefaultMaterialLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+      ],
+
+      material: (context, platform) => MaterialAppRouterData(
+        themeMode: ThemeMode.dark,
+        theme: FlexThemeData.light(
+          scheme: FlexScheme.aquaBlue,
+          surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+          blendLevel: 20,
+          appBarOpacity: 0.95,
+          subThemesData: const FlexSubThemesData(
+            blendOnLevel: 20,
+            blendOnColors: false,
+            inputDecoratorRadius: 12.0,
+          ),
+          visualDensity: FlexColorScheme.comfortablePlatformDensity,
+          useMaterial3: true,
+          // To use the playground font, add GoogleFonts package and uncomment
+          fontFamily: GoogleFonts.notoSans().fontFamily,
         ),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        // To use the playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts.notoSans().fontFamily,
-      ),
-      darkTheme: FlexThemeData.dark(
-        scheme: FlexScheme.aquaBlue,
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 15,
-        appBarOpacity: 0.90,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 30,
-          inputDecoratorRadius: 12.0,
+        darkTheme: FlexThemeData.dark(
+          scheme: FlexScheme.aquaBlue,
+          surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+          blendLevel: 15,
+          appBarOpacity: 0.90,
+          subThemesData: const FlexSubThemesData(
+            blendOnLevel: 30,
+            inputDecoratorRadius: 12.0,
+          ),
+          visualDensity: FlexColorScheme.comfortablePlatformDensity,
+          useMaterial3: true,
+          // To use the playground font, add GoogleFonts package and uncomment
+          fontFamily: GoogleFonts.notoSans().fontFamily,
         ),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        // To use the playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts.notoSans().fontFamily,
       ),
-      themeMode: ThemeMode.dark,
+      cupertino: (context, platform) => CupertinoAppRouterData(
+          theme: CupertinoThemeData(
+        primaryColor: Colors.blue,
+        brightness: Brightness.dark,
+      )),
+      // theme: FlexThemeData.light(
+      //   scheme: FlexScheme.aquaBlue,
+      //   surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+      //   blendLevel: 20,
+      //   appBarOpacity: 0.95,
+      //   subThemesData: const FlexSubThemesData(
+      //     blendOnLevel: 20,
+      //     blendOnColors: false,
+      //     inputDecoratorRadius: 12.0,
+      //   ),
+      //   visualDensity: FlexColorScheme.comfortablePlatformDensity,
+      //   useMaterial3: true,
+      //   // To use the playground font, add GoogleFonts package and uncomment
+      //   fontFamily: GoogleFonts.notoSans().fontFamily,
+      // ),
+      // darkTheme: FlexThemeData.dark(
+      //   scheme: FlexScheme.aquaBlue,
+      //   surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+      //   blendLevel: 15,
+      //   appBarOpacity: 0.90,
+      //   subThemesData: const FlexSubThemesData(
+      //     blendOnLevel: 30,
+      //     inputDecoratorRadius: 12.0,
+      //   ),
+      //   visualDensity: FlexColorScheme.comfortablePlatformDensity,
+      //   useMaterial3: true,
+      //   // To use the playground font, add GoogleFonts package and uncomment
+      //   fontFamily: GoogleFonts.notoSans().fontFamily,
+      // ),
+      // themeMode: ThemeMode.dark,
       routerDelegate: appRouter.delegate(
         navigatorObservers: () => [
           MyObserver(),
