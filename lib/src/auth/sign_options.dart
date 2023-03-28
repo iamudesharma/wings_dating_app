@@ -8,9 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 // import 'package:firebase_auth/firebase_auth.dart' show EmailAuthProvider;
 
-
 @RoutePage()
-
 class SignOptionsView extends ConsumerWidget {
   const SignOptionsView({super.key});
 
@@ -36,6 +34,9 @@ class SignOptionsView extends ConsumerWidget {
       auth: FirebaseAuth.instance,
       actions: [
         AuthStateChangeAction<SignedIn>((context, state) {
+          AutoRouter.of(context).replace(const DashboardRoute());
+        }),
+        AuthStateChangeAction<SigningUp>((context, state) {
           AutoRouter.of(context).replace(const DashboardRoute());
         }),
       ],

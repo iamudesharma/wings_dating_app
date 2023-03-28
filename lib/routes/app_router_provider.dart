@@ -49,7 +49,7 @@ class AuthGuard extends AutoRouteGuard {
 
         final userModel =
             ref.read(ProfileController.userControllerProvider).userModel;
-        final user =  SharedPrefs.instance.getUser();
+        final user = SharedPrefs.instance.getUser();
 
         if (CubeSessionManager.instance.isActiveSessionValid()) {
           if (!chat.isAuthenticated()) {
@@ -60,8 +60,13 @@ class AuthGuard extends AutoRouteGuard {
             resolver.next(true);
           }
         } else {
-          await _loginToCC(user!, saveUser: true);
-
+          // Login to CC and save user to local storage.
+          // CubeUser cubeUser = CubeUser(
+          //     id: 7464087,
+          //     email: "iphone@gmail.com",
+          //     login: "iphone",
+          //     password: "12345678");
+          // await signIn(cubeUser);
           resolver.next(true);
         }
       } else {

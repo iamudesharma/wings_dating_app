@@ -14,6 +14,7 @@ import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:wings_dating_app/const/app_const.dart';
 import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
@@ -65,42 +66,43 @@ class _UsersViewState extends ConsumerState<UsersView>
 
   @override
   void initState() {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
+    init(AppConst.cubeappId,AppConst.authKey,AppConst.authSecret);
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   print('Got a message whilst in the foreground!');
+    //   print('Message data: ${message.data}');
 
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
+    //   if (message.notification != null) {
+    //     print('Message also contained a notification: ${message.notification}');
 
-        showNotification(message);
-      }
-    });
+    //     showNotification(message);
+    //   }
+    // });
 
-    WidgetsBinding.instance.addObserver(this);
+    // WidgetsBinding.instance.addObserver(this);
 
     super.initState();
 
-    connectivityStateSubscription =
-        Connectivity().onConnectivityChanged.listen((connectivityType) {
-      if (AppLifecycleState.resumed != appState) return;
+    // connectivityStateSubscription =
+    //     Connectivity().onConnectivityChanged.listen((connectivityType) {
+    //   if (AppLifecycleState.resumed != appState) return;
 
-      if (connectivityType != ConnectivityResult.none) {
-        log("chatConnectionState = ${CubeChatConnection.instance.chatConnectionState}");
-        bool isChatDisconnected =
-            CubeChatConnection.instance.chatConnectionState ==
-                    CubeChatConnectionState.Closed ||
-                CubeChatConnection.instance.chatConnectionState ==
-                    CubeChatConnectionState.ForceClosed;
+    //   if (connectivityType != ConnectivityResult.none) {
+    //     log("chatConnectionState = ${CubeChatConnection.instance.chatConnectionState}");
+    //     bool isChatDisconnected =
+    //         CubeChatConnection.instance.chatConnectionState ==
+    //                 CubeChatConnectionState.Closed ||
+    //             CubeChatConnection.instance.chatConnectionState ==
+    //                 CubeChatConnectionState.ForceClosed;
 
-        if (isChatDisconnected &&
-            CubeChatConnection.instance.currentUser != null) {
-          CubeChatConnection.instance.relogin();
-        }
-      }
-    });
+    //     if (isChatDisconnected &&
+    //         CubeChatConnection.instance.currentUser != null) {
+    //       CubeChatConnection.instance.relogin();
+    //     }
+    //   }
+    // });
 
-    appState = WidgetsBinding.instance.lifecycleState;
-    WidgetsBinding.instance.addObserver(this);
+    // appState = WidgetsBinding.instance.lifecycleState;
+    // WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -138,39 +140,6 @@ class _UsersViewState extends ConsumerState<UsersView>
         }
       });
     }
-  }
-
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
-
-    // _loginToCubeChat(sharedPrefs.getUser()!);
-
-    // await CubeChatConnection.instance
-    //     .subscribeToUserLastActivityStatus(7375047)
-    //     .then((value) {
-    //   logger.e("subscribeToUserLastActivityStatus");
-    // }).catchError((error) {
-    //   logger.e("subscribeToUserLastActivityStatus error $error");
-    // });
-    CubeChatConnection.instance.getLasUserActivity(7375047).then((seconds) {
-      logger.e("seconds $seconds");
-
-      // final date = DateFormat('HH:mm:ss').format(
-      //     DateTime.fromMillisecondsSinceEpoch(seconds * 1000).toLocal());
-      // logger.e("date ${date}");
-      // 'userId' was 'seconds' ago
-
-      final date = formatedTime(timeInSecond: seconds);
-      logger.e("date ${date}");
-    }).catchError((error) {
-      // 'userId' never logged to the chat
-    });
-
-    await ref
-        .read(ProfileController.userControllerProvider)
-        .updateCubeUserData(sharedPrefs.getUser()!);
   }
 
   formatedTime({required int timeInSecond}) {
