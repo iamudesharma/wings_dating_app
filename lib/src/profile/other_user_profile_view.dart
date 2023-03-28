@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
@@ -38,159 +39,161 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
     var otherUser = ref.watch(getUserByIdProvider(widget.id!));
     // }
 
-    return Scaffold(
-      body: otherUser.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        error: (error, stackTrace) => (error is Exception)
-            ? const Center(
-                child: Text("User not found"),
-              )
-            : const Center(
-                child: Text("Something went wrong"),
-              ),
-        data: (userData) => CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-
-              actions: [
-                PopupMenuButton<int>(
-                  padding: EdgeInsets.zero,
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      onTap: () async {
-                        // await ref
-                        //     .read(userListProvider.notifier)
-                        //     .addToBlockList(userData!.id);
-
-                        // ignore: use_build_context_synchronously
-                        Navigator.of(context).pop();
-                        // AutoRouter.of(context).replace(const DashboardRoute());
-                      },
-                      value: 1,
-                      // row has two child icon and text.
-                      child: Row(
-                        children: const [
-                          Icon(Icons.block),
-                          SizedBox(
-                            // sized box with width 10
-                            width: 10,
-                          ),
-                          Text("Block")
-                        ],
-                      ),
-                    ),
-                    // popupmenu item 2
-                    PopupMenuItem(
-                      value: 2,
-                      // row has two child icon and text
-                      child: Row(
-                        children: const [
-                          Icon(Icons.chrome_reader_mode),
-                          SizedBox(
-                            // sized box with width 10
-                            width: 10,
-                          ),
-                          Text("About")
-                        ],
-                      ),
-                    ),
-                  ],
-                  offset: const Offset(0, 100),
-                  color: Colors.grey,
-                  elevation: 2,
+    return PlatformScaffold(
+      body: Scaffold(
+        body: otherUser.when(
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          error: (error, stackTrace) => (error is Exception)
+              ? const Center(
+                  child: Text("User not found"),
+                )
+              : const Center(
+                  child: Text("Something went wrong"),
                 ),
-              ],
-              // centerTitle: true,
-              title: Text(userData!.username),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: 300,
-                  width: MediaQuery.of(context).size.width,
-                  child: CachedNetworkImage(
-                    imageUrl: (userData.profileUrl ??
-                        "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                    fit: BoxFit.cover,
+          data: (userData) => CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                pinned: true,
+    
+                actions: [
+                  PopupMenuButton<int>(
+                    padding: EdgeInsets.zero,
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        onTap: () async {
+                          // await ref
+                          //     .read(userListProvider.notifier)
+                          //     .addToBlockList(userData!.id);
+    
+                          // ignore: use_build_context_synchronously
+                          Navigator.of(context).pop();
+                          // AutoRouter.of(context).replace(const DashboardRoute());
+                        },
+                        value: 1,
+                        // row has two child icon and text.
+                        child: Row(
+                          children: const [
+                            Icon(Icons.block),
+                            SizedBox(
+                              // sized box with width 10
+                              width: 10,
+                            ),
+                            Text("Block")
+                          ],
+                        ),
+                      ),
+                      // popupmenu item 2
+                      PopupMenuItem(
+                        value: 2,
+                        // row has two child icon and text
+                        child: Row(
+                          children: const [
+                            Icon(Icons.chrome_reader_mode),
+                            SizedBox(
+                              // sized box with width 10
+                              width: 10,
+                            ),
+                            Text("About")
+                          ],
+                        ),
+                      ),
+                    ],
+                    offset: const Offset(0, 100),
+                    color: Colors.grey,
+                    elevation: 2,
+                  ),
+                ],
+                // centerTitle: true,
+                title: Text(userData!.username),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 300,
+                    width: MediaQuery.of(context).size.width,
+                    child: CachedNetworkImage(
+                      imageUrl: (userData.profileUrl ??
+                          "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "About",
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    10.heightBox,
-                    Text(
-                      userData.bio ?? "",
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    20.heightBox,
-                    Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ProfileInputCard(
-                                title: "Role", value: userData.role.value),
-                            ProfileInputCard(
-                                title: "Body Type",
-                                value: userData.bodyType.value),
-                            ProfileInputCard(
-                                title: "Ethnicity",
-                                value: userData.ethnicity.value),
-                            ProfileInputCard(
-                                title: "Relationship Status",
-                                value: userData.relationshipStatus.value),
-                            ProfileInputCard(
-                                title: "Looking for",
-                                value: userData.lookingFor.value),
-                            ProfileInputCard(
-                                title: "Where to meet",
-                                value: userData.whereToMeet.value),
-                            ProfileInputCard(
-                                title: "Height",
-                                value: userData.height ?? "Do not Show"),
-                            ProfileInputCard(
-                                title: "Weight",
-                                value: userData.weight ?? "Do not Show"),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "About",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      10.heightBox,
+                      Text(
+                        userData.bio ?? "",
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      20.heightBox,
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ProfileInputCard(
+                                  title: "Role", value: userData.role.value),
+                              ProfileInputCard(
+                                  title: "Body Type",
+                                  value: userData.bodyType.value),
+                              ProfileInputCard(
+                                  title: "Ethnicity",
+                                  value: userData.ethnicity.value),
+                              ProfileInputCard(
+                                  title: "Relationship Status",
+                                  value: userData.relationshipStatus.value),
+                              ProfileInputCard(
+                                  title: "Looking for",
+                                  value: userData.lookingFor.value),
+                              ProfileInputCard(
+                                  title: "Where to meet",
+                                  value: userData.whereToMeet.value),
+                              ProfileInputCard(
+                                  title: "Height",
+                                  value: userData.height ?? "Do not Show"),
+                              ProfileInputCard(
+                                  title: "Weight",
+                                  value: userData.weight ?? "Do not Show"),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ElevatedButton.icon(
-            icon: const Icon(Icons.chat_bubble),
-            label: currentUser!.blockList.contains(otherUser.value?.id)
-                ? const Text("Unblock")
-                : const Text("Message"),
-            onPressed: () async {
-              _createDialog(
-                  context,
-                  {
-                    currentUser.cubeUser.id ?? 0,
-                    otherUser.value!.cubeUser.id ?? 0
-                  },
-                  currentUser.cubeUser.id ?? 0);
-            }),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton.icon(
+              icon: const Icon(Icons.chat_bubble),
+              label: currentUser!.blockList.contains(otherUser.value?.id)
+                  ? const Text("Unblock")
+                  : const Text("Message"),
+              onPressed: () async {
+                _createDialog(
+                    context,
+                    {
+                      currentUser.cubeUser.id ?? 0,
+                      otherUser.value!.cubeUser.id ?? 0
+                    },
+                    currentUser.cubeUser.id ?? 0);
+              }),
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -60,7 +61,8 @@ class _AddAdditionalInformationViewState
     final albumList = ref.watch(albumListProvider);
 
     logger.i(profiledata?.role.index);
-    return Scaffold(
+    return PlatformScaffold(
+    
       body: CustomScrollView(
         slivers: [
           SliverAppBar.medium(

@@ -9,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:intl/intl.dart';
@@ -166,7 +167,7 @@ class _UsersViewState extends ConsumerState<UsersView>
         ref.watch(ProfileController.userControllerProvider).userModel;
     final userList = ref.watch(userListProvider);
 
-    return Scaffold(
+    return PlatformScaffold(
       body: LayoutBuilder(builder: (context, constraints) {
         return RefreshIndicator(
           onRefresh: () async => ref.refresh(userListProvider),
