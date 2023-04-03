@@ -58,14 +58,12 @@ class AuthGuard extends AutoRouteGuard {
           if (!chat.isAuthenticated()) {
             await SharedPrefs.instance.saveNewUser(userModel!);
 
-            await chat.login(userModel);
-
             resolver.next(true);
           } else {
             resolver.next(true);
           }
         } else {
-          await _loginToCC(userModel!, saveUser: false);
+          _loginToCC(userModel!, saveUser: true);
 
           resolver.next(true);
         }
@@ -91,23 +89,24 @@ void _processLoginError(exception) {
   );
 }
 
-Future<void> _loginToCC(CubeUser user, {bool saveUser = false}) async {
+_loginToCC(CubeUser user, {bool saveUser = false}) async {
   print("_loginToCC user: $user");
 
-  await createSession(user).then((cubeSession) async {
+  createSession(user).then((cubeSession) async {
     print("createSession cubeSession: $cubeSession");
     var tempUser = user;
     user = cubeSession.user!..password = tempUser.password;
     if (saveUser) {
-      final saved = await _saveUserInIsolate(user);
+      final saved = _saveUserInIsolate(user);
       print("User saved: $saved");
     }
 
-    await chat.login(user);
+     chat.login(user);
 
     if (!Platform.isIOS) {
       PushNotificationsManager.instance.init();
     }
+
   }).catchError((error) {
     _processLoginError(error);
   });

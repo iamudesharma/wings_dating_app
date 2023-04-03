@@ -159,9 +159,9 @@ class _UsersViewState extends ConsumerState<UsersView>
     // );
     SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
 
-    await ref
-        .read(profileRepoProvider)
-        .updateCubeUserDoc(sharedPrefs.getUser()!);
+    // await ref
+    //     .read(profileRepoProvider)
+    //     .updateCubeUserDoc(sharedPrefs.getUser()!);
 
     // _loginToCubeChat(sharedPrefs.getUser()!);
 

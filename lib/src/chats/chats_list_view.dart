@@ -10,6 +10,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
+import '../../const/pref_util.dart';
+import '../../helpers/logger.dart';
 import '../../routes/app_router.dart';
 
 final chatListProvider = StreamProvider((ref) async* {
@@ -21,9 +23,7 @@ final unreadMessageCount =
   return getUnreadMessagesCount(dialogId);
 });
 
-
 @RoutePage()
-
 class ChatListView extends ConsumerStatefulWidget {
   const ChatListView({super.key});
 
