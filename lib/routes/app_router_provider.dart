@@ -52,25 +52,23 @@ class AuthGuard extends AutoRouteGuard {
             .getCurrentUser();
         await ref.read(profileRepoProvider).isUserOnline(true);
 
-        final userModel =
-            ref.read(ProfileController.userControllerProvider).userModel;
-        resolver.next(true);
+        final userModel = SharedPrefs.instance.getUser();
 
-        // if (CubeSessionManager.instance.isActiveSessionValid()) {
-        //   if (!chat.isAuthenticated()) {
-        //     await SharedPrefs.instance.saveNewUser(userModel!.cubeUser);
+        if (CubeSessionManager.instance.isActiveSessionValid()) {
+          if (!chat.isAuthenticated()) {
+            await SharedPrefs.instance.saveNewUser(userModel!);
 
-        //     await chat.login(userModel.cubeUser);
+            await chat.login(userModel);
 
-        //     resolver.next(true);
-        //   } else {
-        //     resolver.next(true);
-        //   }
-        // } else {
-        //   await _loginToCC(userModel!.cubeUser, saveUser: true);
+            resolver.next(true);
+          } else {
+            resolver.next(true);
+          }
+        } else {
+          await _loginToCC(userModel!, saveUser: false);
 
-        //   resolver.next(true);
-        // }
+          resolver.next(true);
+        }
       } else {
         resolver.next(false);
 
