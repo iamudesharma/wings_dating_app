@@ -22,11 +22,14 @@ import 'package:intl/intl.dart';
 
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/chats/chats_list_view.dart';
 import 'package:wings_dating_app/src/chats/services/call_manager.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
+
+import '../../../const/pref_util.dart';
 
 int? time;
 const int messagesPerPage = 50;
@@ -46,7 +49,6 @@ final _chatUserData = FutureProvider.family<UserModel?, int>(
 // });
 
 @RoutePage()
-
 class ChatView extends ConsumerStatefulWidget {
   final CubeUser? cubeUser;
   final CubeDialog? cubeDialog;
@@ -75,6 +77,20 @@ class _ChatViewState extends ConsumerState<ChatView> {
     }
 
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() async {
+    var user = await SharedPrefs.instance.getUser()!;
+
+    await CubeChatConnection.instance
+        .getLasUserActivity(user.id!)
+        .then((value) {
+      logger.d("subscribeToUserLastActivityStatus $value");
+    }).onError((error, stackTrace) {
+      logger.e("subscribeToUserLastActivityStatus error $error");
+    });
+    super.didChangeDependencies();
   }
 
   bool isLoading = false;
