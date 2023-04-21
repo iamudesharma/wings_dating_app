@@ -378,7 +378,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     fcmToken: "",
                                     cubeUser: CubeUser(
                                       id: _cubeUser?.id,
-                                      password: _cubeUser?.password,
+                                      password: "1234567890",
                                       login: _cubeUser?.login,
                                       fullName: _usernameController.text,
                                       avatar: image,
@@ -392,17 +392,46 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       .read(Dependency.profileProvider)
                                       .updateUserDoc(user!);
 
+                                  // updateUser(CubeUser(
+                                  //   id: _cubeUser?.id,
+                                  //   login: _usernameController.text,
+                                  //   fullName: _usernameController.text,
+                                  //   avatar: image,
+                                  //   phone: _cubeUser!.phone,
+                                  //   password: "1234567890",
+                                  // ));
+
+                                  // await SharedPrefs.instance
+                                  //     .updateUser(CubeUser(
+                                  //   id: _cubeUser?.id,
+                                  //   login: _usernameController.text,
+                                  //   fullName: _usernameController.text,
+                                  //   avatar: image,
+                                  //   phone: _cubeUser!.phone,
+                                  // ));
+
                                   setState(() {
                                     _loading = false;
                                   });
                                   await route.pop();
                                 } else {
+                                  final sharedPrefs =
+                                      await SharedPrefs.instance.init();
                                   int age = calculateAge(_selectedDate!);
 
-                                  String password =
-                                      "${Random.secure().nextInt(100000000)}$age";
+                                  int password = Random().nextInt(1000000000);
 
+                                  final cubeUser = sharedPrefs.getUser();
                                   UserModel user = UserModel(
+                                    cubeUser: CubeUser(
+                                        avatar: await ref
+                                            .read(ProfileController
+                                                .userControllerProvider)
+                                            .uploadImage(),
+                                        fullName: _usernameController.text,
+                                        password: password.toString(),
+                                        login: _usernameController.text
+                                            .toLowerCase()),
                                     fcmToken: "",
                                     // fcmToken: token ?? "",
                                     dob: _dobController.text,
@@ -417,11 +446,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                             .userControllerProvider)
                                         .uploadImage(),
                                     birthday: _dobController.text,
-                                    cubeUser: CubeUser(
-                                      login: _usernameController.text.trim(),
-                                      fullName: _usernameController.text,
-                                      password: password,
-                                    ),
+
                                     position: GeoPointData(
                                       geohash: myLocation.hash,
                                       geopoint: myLocation.geoPoint,
@@ -434,20 +459,15 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       .read(Dependency.profileProvider)
                                       .createUserDoc(user);
 
-                                  final cubeUser = CubeUser(
-                                    login: _usernameController.text.trim(),
-                                    fullName: _usernameController.text,
-                                    password: password,
-                                    phone: FirebaseAuth
-                                        .instance.currentUser?.phoneNumber,
-                                    avatar: await ref
-                                        .read(ProfileController
-                                            .userControllerProvider)
-                                        .uploadImage(),
-                                  );
-                                  await _signInCC(cubeUser, ref);
-
-                                  await route.replace(const DashboardRoute());
+                                  _signInCC(CubeUser(
+                                      avatar: await ref
+                                          .read(ProfileController
+                                              .userControllerProvider)
+                                          .uploadImage(),
+                                      fullName: _usernameController.text,
+                                      password: password.toString(),
+                                      login: _usernameController.text
+                                          .toLowerCase()));
                                 }
                               }
                             },
@@ -506,71 +526,139 @@ class ImagePickerWidget extends StatelessWidget {
   }
 }
 
-Future<void> _signInCC(CubeUser user, WidgetRef ref,
-    {UserModel? userModel}) async {
+// Future<void> _signInCC(CubeUser user, WidgetRef ref,
+//     {UserModel? userModel}) async {
+//   if (!CubeSessionManager.instance.isActiveSessionValid()) {
+//     try {
+//       await createSession();
+//     } on Exception catch (e) {
+//       logger.e("createSession error $e");
+//     }
+//   }
+//   SharedPrefs sharedPrefs = SharedPrefs.instance;
+
+//   await sharedPrefs.init();
+
+//   await signUp(user).then((newUser) {
+//     logger.i("signUp newUser $newUser");
+//     user.id = newUser.id;
+//     SharedPrefs.instance.saveNewUser(user);
+//     signIn(user).then((result) {
+//       _loginToCubeChat(user);
+//     });
+//   }).catchError((exception) {
+//     logger.e("signUp exception $exception");
+//     // _processLoginError(exception);
+//   });
+
+//   // // try {
+//   // //   signUp(user).then((newUser) async {
+//   // //     logger.i("signUp newUser $newUser");
+//   // //     user.id = newUser.id;
+//   // //     await sharedPrefs.saveNewUser(user);
+
+//   // //     final cube = sharedPrefs.getUser();
+
+//   // //     final user0 = userModel?.copyWith(
+//   // //       cubeUser: cube!,
+//   // //     );
+
+//   // //     await signIn(user).then((result) async {
+//   // //       logger.i("signIn result $result");
+//   // //       _loginToCubeChat(user);
+
+//   // //       await ref.read(Dependency.profileProvider).updateUserDoc(user0!);
+//   // //     });
+//   // //   }).catchError((exception) {
+//   // //     logger.e("signUp exception $exception");
+//   // //     // _processLoginError(exception);
+//   // //   });
+//   // } catch (error) {
+//   //   logger.e("createSession error $error");
+//   // }
+// }
+
+// _loginToCubeChat(CubeUser user) {
+//   logger.i("_loginToCubeChat user $user");
+//   CubeChatConnectionSettings.instance.totalReconnections = 0;
+//   CubeChatConnection.instance.login(user).then((cubeUser) async {
+//     logger.i("login cubeUser $cubeUser");
+
+//     await CubeChatConnection.instance
+//         .subscribeToUserLastActivityStatus(user.id!);
+
+//     if (!Platform.isIOS) {
+//       PushNotificationsManager.instance.init();
+//     }
+//   }).catchError((error) {
+//     logger.e("login error $error");
+//   });
+// }
+
+_signInCC(CubeUser user) async {
+  // if (_isLoginContinues) return;
+
+  // setState(() {
+  //   _isLoginContinues = true;
+  // });
   if (!CubeSessionManager.instance.isActiveSessionValid()) {
     try {
       await createSession();
-    } on Exception catch (e) {
-      logger.e("createSession error $e");
+    } catch (error) {
+      _processLoginError(error);
     }
   }
-  SharedPrefs sharedPrefs = SharedPrefs.instance;
-
-  await sharedPrefs.init();
-
-await  signUp(user).then((newUser) {
-    logger.i("signUp newUser $newUser");
+  signUp(user).then((newUser) {
+    print("signUp newUser $newUser");
     user.id = newUser.id;
     SharedPrefs.instance.saveNewUser(user);
     signIn(user).then((result) {
       _loginToCubeChat(user);
     });
   }).catchError((exception) {
-    logger.e("signUp exception $exception");
-    // _processLoginError(exception);
+    _processLoginError(exception);
   });
+}
 
-  // // try {
-  // //   signUp(user).then((newUser) async {
-  // //     logger.i("signUp newUser $newUser");
-  // //     user.id = newUser.id;
-  // //     await sharedPrefs.saveNewUser(user);
+_loginToCC(CubeUser user, {bool saveUser = false}) {
+  print("_loginToCC user: $user");
+  // if (_isLoginContinues) return;
+  // setState(() {
+  //   _isLoginContinues = true;
+  // });
 
-  // //     final cube = sharedPrefs.getUser();
+  createSession(user).then((cubeSession) async {
+    print("createSession cubeSession: $cubeSession");
+    var tempUser = user;
+    user = cubeSession.user!..password = tempUser.password;
+    if (saveUser)
+      SharedPrefs.instance.init().then((sharedPrefs) {
+        sharedPrefs.saveNewUser(user);
+      });
 
-  // //     final user0 = userModel?.copyWith(
-  // //       cubeUser: cube!,
-  // //     );
+    PushNotificationsManager.instance.init();
 
-  // //     await signIn(user).then((result) async {
-  // //       logger.i("signIn result $result");
-  // //       _loginToCubeChat(user);
-
-  // //       await ref.read(Dependency.profileProvider).updateUserDoc(user0!);
-  // //     });
-  // //   }).catchError((exception) {
-  // //     logger.e("signUp exception $exception");
-  // //     // _processLoginError(exception);
-  // //   });
-  // } catch (error) {
-  //   logger.e("createSession error $error");
-  // }
+    _loginToCubeChat(user);
+  }).catchError((error) {
+    _processLoginError(error);
+  });
 }
 
 _loginToCubeChat(CubeUser user) {
-  logger.i("_loginToCubeChat user $user");
+  print("_loginToCubeChat user $user");
   CubeChatConnectionSettings.instance.totalReconnections = 0;
-  CubeChatConnection.instance.login(user).then((cubeUser) async {
-    logger.i("login cubeUser $cubeUser");
-
-    await CubeChatConnection.instance
-        .subscribeToUserLastActivityStatus(user.id!);
-
-    if (!Platform.isIOS) {
-      PushNotificationsManager.instance.init();
-    }
+  CubeChatConnection.instance.login(user).then((cubeUser) {
+    // _isLoginContinues = false;
+    // _goDialogScreen(context, cubeUser);
   }).catchError((error) {
-    logger.e("login error $error");
+    _processLoginError(error);
   });
+}
+
+void _processLoginError(exception) {
+  // log("Login error $exception", TAG);
+  // setState(() {
+  //   _isLoginContinues = false;
+  // });
+  // showDialogError(exception, context);
 }
