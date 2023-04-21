@@ -8,10 +8,12 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -97,48 +99,96 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     final appRouter = ref.watch(appRouteProvider);
-    return MaterialApp.router(
-      theme: FlexThemeData.light(
-        scheme: FlexScheme.aquaBlue,
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 20,
-        appBarOpacity: 0.95,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 20,
-          blendOnColors: false,
-          inputDecoratorRadius: 12.0,
+    return PlatformProvider(
+      settings: PlatformSettingsData(),
+      builder: (context) => PlatformApp.router(
+        material: (context, platform) => MaterialAppRouterData(
+          theme: FlexThemeData.light(
+            scheme: FlexScheme.aquaBlue,
+            surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+            blendLevel: 20,
+            appBarOpacity: 0.95,
+            subThemesData: const FlexSubThemesData(
+              blendOnLevel: 20,
+              blendOnColors: false,
+              inputDecoratorRadius: 12.0,
+            ),
+            visualDensity: FlexColorScheme.comfortablePlatformDensity,
+            useMaterial3: true,
+            // To use the playground font, add GoogleFonts package and uncomment
+            fontFamily: GoogleFonts.notoSans().fontFamily,
+          ),
+          darkTheme: FlexThemeData.dark(
+            scheme: FlexScheme.aquaBlue,
+            surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+            blendLevel: 15,
+            appBarOpacity: 0.90,
+            subThemesData: const FlexSubThemesData(
+              blendOnLevel: 30,
+              inputDecoratorRadius: 12.0,
+            ),
+            visualDensity: FlexColorScheme.comfortablePlatformDensity,
+            useMaterial3: true,
+            // To use the playground font, add GoogleFonts package and uncomment
+            fontFamily: GoogleFonts.notoSans().fontFamily,
+          ),
+          themeMode: ThemeMode.dark,
         ),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        // To use the playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts.notoSans().fontFamily,
-      ),
-      darkTheme: FlexThemeData.dark(
-        scheme: FlexScheme.aquaBlue,
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 15,
-        appBarOpacity: 0.90,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 30,
-          inputDecoratorRadius: 12.0,
-        ),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        // To use the playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts.notoSans().fontFamily,
-      ),
-      themeMode: ThemeMode.dark,
-      routerDelegate: appRouter.delegate(
-        navigatorObservers: () => [
-          MyObserver(),
-        ],
-        placeholder: (context) => Scaffold(
-            body: Center(
-          child: Image.asset("assets/logo.png"),
+        cupertino: (context, platform) => CupertinoAppRouterData(
+            theme: CupertinoThemeData(
+          primaryColor: FlexColor.aquaBlueDarkPrimary,
+          primaryContrastingColor: FlexColor.aquaBlueDarkPrimaryVariant,
+          scaffoldBackgroundColor: FlexColor.darkScaffoldBackground,
+          brightness: Brightness.dark,
         )),
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+          DefaultMaterialLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
+          DefaultCupertinoLocalizations.delegate,
+        ],
+
+        // theme: FlexThemeData.light(
+        //   scheme: FlexScheme.aquaBlue,
+        //   surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+        //   blendLevel: 20,
+        //   appBarOpacity: 0.95,
+        //   subThemesData: const FlexSubThemesData(
+        //     blendOnLevel: 20,
+        //     blendOnColors: false,
+        //     inputDecoratorRadius: 12.0,
+        //   ),
+        //   visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        //   useMaterial3: true,
+        //   // To use the playground font, add GoogleFonts package and uncomment
+        //   fontFamily: GoogleFonts.notoSans().fontFamily,
+        // ),
+        // darkTheme: FlexThemeData.dark(
+        //   scheme: FlexScheme.aquaBlue,
+        //   surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+        //   blendLevel: 15,
+        //   appBarOpacity: 0.90,
+        //   subThemesData: const FlexSubThemesData(
+        //     blendOnLevel: 30,
+        //     inputDecoratorRadius: 12.0,
+        //   ),
+        //   visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        //   useMaterial3: true,
+        //   // To use the playground font, add GoogleFonts package and uncomment
+        //   fontFamily: GoogleFonts.notoSans().fontFamily,
+        // ),
+        // themeMode: ThemeMode.dark,
+        routerDelegate: appRouter.delegate(
+          navigatorObservers: () => [
+            MyObserver(),
+          ],
+          placeholder: (context) => Scaffold(
+              body: Center(
+            child: Image.asset("assets/logo.png"),
+          )),
+        ),
+        routeInformationParser: appRouter.defaultRouteParser(),
+        title: 'Wings',
       ),
-      routeInformationParser: appRouter.defaultRouteParser(),
-      title: 'Wings',
     );
   }
 }
