@@ -102,9 +102,9 @@ _loginToCC(CubeUser user, {bool saveUser = false}) {
       });
     }
 
-    PushNotificationsManager.instance.init();
-
-    _loginToCubeChat(user);
+    if (Platform.isIOS) {
+      _loginToCubeChat(user);
+    }
   }).catchError((error) {
     _processLoginError(error);
   });
