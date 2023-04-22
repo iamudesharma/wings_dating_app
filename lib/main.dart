@@ -110,6 +110,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         CupertinoThemeData(brightness: Brightness.dark);
     final cupertinoDarkTheme = MaterialBasedCupertinoThemeData(
       materialTheme: materialDarkTheme.copyWith(
+        brightness: Brightness.dark,
         colorScheme:
             ColorScheme.fromSeed(seedColor: FlexColor.aquaBlue.dark.primary),
         cupertinoOverrideTheme: CupertinoThemeData(
@@ -118,14 +119,6 @@ class _MyAppState extends ConsumerState<MyApp> {
           brightness: Brightness.dark,
           primaryColor: FlexColor.aquaBlueDarkPrimary,
           barBackgroundColor: FlexColor.aquaBlueDarkPrimaryContainer,
-          textTheme: CupertinoTextThemeData(
-            navActionTextStyle: darkDefaultCupertinoTheme
-                .textTheme.navActionTextStyle
-                .copyWith(color: const Color(0xF0F9F9F9)),
-            navLargeTitleTextStyle: darkDefaultCupertinoTheme
-                .textTheme.navLargeTitleTextStyle
-                .copyWith(color: const Color(0xF0F9F9F9)),
-          ),
         ),
       ),
     );
@@ -166,15 +159,15 @@ class _MyAppState extends ConsumerState<MyApp> {
           themeMode: ThemeMode.dark,
         ),
         cupertino: (context, platform) => CupertinoAppRouterData(
-          // theme: CupertinoThemeData(
-          //   primaryColor: FlexColor.aquaBlueDarkPrimary,
-          //   primaryContrastingColor: Colors.white,
-          //   barBackgroundColor: FlexColor.aquaBlueDarkPrimary,
-          //   scaffoldBackgroundColor: FlexColor.darkScaffoldBackground,
-          //   brightness: Brightness.dark,
-          // ),
+          theme: const CupertinoThemeData(
+            primaryColor: FlexColor.aquaBlueDarkPrimary,
+            primaryContrastingColor: Colors.white,
+            barBackgroundColor: FlexColor.aquaBlueDarkPrimary,
+            scaffoldBackgroundColor: Colors.black,
+            brightness: Brightness.dark,
+          ),
 
-          theme: cupertinoDarkTheme,
+          // theme: cupertinoDarkTheme,
         ),
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           DefaultMaterialLocalizations.delegate,

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,9 +46,9 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
           ],
           bottomNavigationBuilder: (_, tabsRouter) {
             return PlatformNavBar(
-              
                 backgroundColor: Colors.black,
                 cupertino: (context, platform) => CupertinoTabBarData(
+                      inactiveColor: Colors.grey,
                       activeColor: Theme.of(context).primaryColor,
                       currentIndex: tabsRouter.activeIndex,
                       itemChanged: (value) async {
@@ -60,41 +61,32 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                         BottomNavigationBarItem(
                           label: 'Users',
                           icon: Icon(
-                            Icons.people,
+                            PlatformIcons(context).home,
                           ),
                         ),
                         BottomNavigationBarItem(
                           label: 'Chat',
                           icon: Icon(
-                            Icons.chat_bubble,
+                            CupertinoIcons.chat_bubble,
                           ),
                         ),
                         BottomNavigationBarItem(
                           label: 'Profile',
                           icon: Icon(
-                            Icons.person,
+                            PlatformIcons(context).person,
                           ),
                         ),
                       ],
-                      backgroundColor: Colors.white,
-                      border: Border(
-                        top: BorderSide(
-                          color: Colors.grey,
-                          width: 0.0, // One physical pixel.
-                          style: BorderStyle.solid,
-                        ),
-                      ),
                     ),
                 material: (context, platform) => MaterialNavBarData(
-                      backgroundColor: Colors.white,
                       elevation: 0,
                       showSelectedLabels: true,
                       showUnselectedLabels: true,
-                      selectedLabelStyle: TextStyle(
+                      selectedLabelStyle: const TextStyle(
                         color: Colors.black,
                         fontSize: 12,
                       ),
-                      unselectedLabelStyle: TextStyle(
+                      unselectedLabelStyle: const TextStyle(
                         color: Colors.grey,
                         fontSize: 12,
                       ),
