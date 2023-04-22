@@ -10,6 +10,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:geolocator/geolocator.dart';
@@ -116,14 +117,17 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(ProfileController.userControllerProvider);
-    return Scaffold(
+    return PlatformScaffold(
       // appBar: AppBar(
       //   title: Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
       // ),
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            title: Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
+          SliverToBoxAdapter(
+            child: PlatformAppBar(
+              title:
+                  Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
+            ),
           ),
           SliverToBoxAdapter(
             child: Form(
@@ -164,9 +168,10 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         height: 20,
                       ),
                       Builder(builder: (context) {
-                        return ElevatedButton(
+                        return PlatformElevatedButton(
                           onPressed: () async {
-                            showModalBottomSheet(
+                            showPlatformModalSheet(
+                                cupertino: CupertinoModalSheetData(),
                                 context: context,
                                 builder: (context) {
                                   return BottomSheet(onClosing: () {
@@ -212,24 +217,40 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       const SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please enter a Username";
-                          } else {
-                            return null;
-                          }
-                        },
-                        controller: _usernameController,
-                        decoration: const InputDecoration(
-                          isDense: true,
-                          hintText: "Username",
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
+                      PlatformTextFormField(
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Please enter a Username";
+                            } else {
+                              return null;
+                            }
+                          },
+                          controller: _usernameController,
+                          cupertino: (context, platform) =>
+                              CupertinoTextFormFieldData(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: CupertinoColors.systemGrey,
+                                    width: 0.0, // One physical pixel.
+                                    style: BorderStyle.solid,
+                                  ),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 12),
+                                placeholder: "username",
+                              ),
+                          material: (context, platform) =>
+                              MaterialTextFormFieldData(
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                  hintText: "Username",
+                                ),
+                              )),
+                      // const SizedBox(
+                      //   height: 20,
+                      // ),
+                      PlatformTextFormField(
                         validator: ((value) {
                           if (value!.isEmpty) {
                             return "Please enter a nickname";
@@ -238,75 +259,122 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                           }
                         }),
                         controller: _dobController,
-                        decoration: const InputDecoration(
-                          isDense: true,
-                          hintText: "Date of Birth",
+                        cupertino: (context, platform) =>
+                            CupertinoTextFormFieldData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: CupertinoColors.systemGrey,
+                              width: 0.0, // One physical pixel.
+                              style: BorderStyle.solid,
+                            ),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 12),
+                          placeholder: "Date of Birth",
+                        ),
+                        material: (context, platform) =>
+                            MaterialTextFormFieldData(
+                          decoration: const InputDecoration(
+                            isDense: true,
+                            hintText: "Date of Birth",
+                          ),
                         ),
                         readOnly: true,
                         onTap: () async {
-                          if (Platform.isIOS) {
-                            await showCupertinoModalPopup(
-                                context: context,
-                                builder: (_) => Builder(builder: (context) {
-                                      return Container(
-                                        height: 190,
-                                        color: const Color.fromARGB(
-                                            255, 255, 255, 255),
-                                        child: Column(
-                                          children: [
-                                            SizedBox(
-                                              height: 180,
-                                              child: CupertinoDatePicker(
-                                                dateOrder:
-                                                    DatePickerDateOrder.dmy,
-                                                backgroundColor: Theme.of(
-                                                        context)
-                                                    .scaffoldBackgroundColor,
-                                                onDateTimeChanged: (value) {
-                                                  _dobController.text =
-                                                      DateFormat.yMd()
-                                                          .format(value);
-
-                                                  _selectedDate = value;
-
-                                                  setState(() {});
-                                                },
-                                                initialDateTime: DateTime(
-                                                    DateTime.now().year - 18),
-                                                // maximumYear: ,
-                                                maximumYear:
-                                                    DateTime.now().year - 18,
-                                                minimumYear: 1960,
-                                                mode: CupertinoDatePickerMode
-                                                    .date,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }));
-                          } else {
-                            await showDatePicker(
+                          // if (Platform.isIOS) {
+                          await showPlatformDatePicker(
+                              material: (context, platform) =>
+                                  MaterialDatePickerData(
+                                      cancelText: "Cancel",
+                                      confirmText: "Done",
+                                      helpText: "Select Date of Birth",
+                                      errorFormatText: "Enter valid date",
+                                      errorInvalidText:
+                                          "Enter date in valid range",
+                                      fieldHintText: "MM/DD/YYYY",
+                                      fieldLabelText: "Date of Birth"),
                               context: context,
                               initialDate: DateTime(2004),
                               firstDate: DateTime(1960),
                               lastDate: DateTime(2004),
-                            ).then((value) {
-                              logger.i(value);
+                              cupertino: (context, platform) =>
+                                  CupertinoDatePickerData(
+                                    dateOrder: DatePickerDateOrder.dmy,
+                                    backgroundColor: Colors.black,
+                                    onDateTimeChanged: (value) {
+                                      _dobController.text =
+                                          DateFormat.yMd().format(value);
 
-                              _dobController.text =
-                                  DateFormat.yMd().format(value!);
+                                      _selectedDate = value;
 
-                              _selectedDate = value;
-                              setState(() {});
-                            });
-                          }
+                                      setState(() {});
+                                    },
+                                    // maximumYear: ,
+                                    maximumYear: DateTime.now().year - 18,
+                                    minimumYear: 1960,
+                                    mode: CupertinoDatePickerMode.date,
+                                  ));
+                          // builder: (_) => Builder(builder: (context) {
+                          //       return Container(
+                          //         height: 190,
+                          //         color: const Color.fromARGB(
+                          //             255, 255, 255, 255),
+                          //         child: Column(
+                          //           children: [
+                          //             SizedBox(
+                          //               height: 180,
+                          //               child: CupertinoDatePicker(
+                          //                 dateOrder:
+                          //                     DatePickerDateOrder.dmy,
+                          //                 backgroundColor: Theme.of(
+                          //                         context)
+                          //                     .scaffoldBackgroundColor,
+                          //                 onDateTimeChanged: (value) {
+                          //                   _dobController.text =
+                          //                       DateFormat.yMd()
+                          //                           .format(value);
+
+                          //                   _selectedDate = value;
+
+                          //                   setState(() {});
+                          //                 },
+                          //                 initialDateTime: DateTime(
+                          //                     DateTime.now().year - 18),
+                          //                 // maximumYear: ,
+                          //                 maximumYear:
+                          //                     DateTime.now().year - 18,
+                          //                 minimumYear: 1960,
+                          //                 mode: CupertinoDatePickerMode
+                          //                     .date,
+                          //               ),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       );
+                          //     }));
+                          // } else {
+                          //   await showDatePicker(
+                          //     context: context,
+                          //     initialDate: DateTime(2004),
+                          //     firstDate: DateTime(1960),
+                          //     lastDate: DateTime(2004),
+                          //   ).then((value) {
+                          //     logger.i(value);
+
+                          //     _dobController.text =
+                          //         DateFormat.yMd().format(value!);
+
+                          //     _selectedDate = value;
+                          //     setState(() {});
+                          //   });
+                          // }
                         },
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
+                      // const SizedBox(
+                      //   height: 20,
+                      // ),
+                      PlatformTextFormField(
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please enter a nickname";
@@ -316,9 +384,26 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         },
                         maxLines: 2,
                         controller: _bioController,
-                        decoration: const InputDecoration(
-                          isDense: true,
-                          hintText: "bio",
+                        cupertino: (context, platform) =>
+                            CupertinoTextFormFieldData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: CupertinoColors.systemGrey,
+                              width: 0.0, // One physical pixel.
+                              style: BorderStyle.solid,
+                            ),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 12),
+                          placeholder: "Bio",
+                        ),
+                        material: (context, platform) =>
+                            MaterialTextFormFieldData(
+                          decoration: const InputDecoration(
+                            isDense: true,
+                            hintText: "Bio",
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -345,7 +430,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         curve: Curves.easeInOut,
                         child: Visibility(
                           visible: _loading,
-                          replacement: ElevatedButton(
+                          replacement: PlatformElevatedButton(
                             onPressed: () async {
                               final route = AutoRouter.of(context);
 
@@ -511,12 +596,12 @@ class ImagePickerWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           ListTile(
-            leading: const Icon(Icons.camera),
+            leading: Icon(PlatformIcons(context).photoCamera),
             title: const Text("Camera"),
             onTap: camera,
           ),
           ListTile(
-            leading: const Icon(Icons.photo),
+            leading: Icon(PlatformIcons(context).folderSolid),
             title: const Text("Gallery"),
             onTap: gallery,
           ),
