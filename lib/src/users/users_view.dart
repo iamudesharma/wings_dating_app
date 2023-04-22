@@ -219,33 +219,32 @@ class _UsersViewState extends ConsumerState<UsersView>
           onRefresh: () async => ref.refresh(userListProvider),
           child: CustomScrollView(
             slivers: [
-              SliverAppBar(
-                centerTitle: true,
-                pinned: true,
-                // floating: false,
+              SliverToBoxAdapter(
+                child: PlatformAppBar(
+                  // centerTitle: true,
+                  // pinned: true,
+                  // // floating: false,
 
-                titleSpacing: 50,
-                leading: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircleAvatar(
+                  // titleSpacing: 50,
+                  leading: CircleAvatar(
                     // radius: 2,
                     backgroundImage: CachedNetworkImageProvider(userData!
                             .profileUrl ??
                         "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                   ),
+                  title: Text(userData.username),
+                  trailingActions: [
+                    IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () async {
+                        showSearch(
+                          context: context,
+                          delegate: UsersSearchDelegate(ref),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-                title: Text(userData.username),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () async {
-                      showSearch(
-                        context: context,
-                        delegate: UsersSearchDelegate(ref),
-                      );
-                    },
-                  ),
-                ],
               ),
               SliverPadding(
                 padding: const EdgeInsets.all(10),
