@@ -6,7 +6,6 @@ import 'dart:isolate';
 import 'package:auto_route/auto_route.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
@@ -101,12 +100,11 @@ _loginToCC(CubeUser user, {bool saveUser = false}) async {
       print("User saved: $saved");
     }
 
-     chat.login(user);
+    chat.login(user);
 
     if (!Platform.isIOS) {
       PushNotificationsManager.instance.init();
     }
-
   }).catchError((error) {
     _processLoginError(error);
   });
