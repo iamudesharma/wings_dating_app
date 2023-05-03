@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -46,8 +47,8 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
         const Duration(seconds: 1),
         () => ref.refresh(chatListProvider),
       ),
-      child: Scaffold(
-        appBar: AppBar(
+      child: PlatformScaffold(
+        appBar: PlatformAppBar(
           title: const Text("Chats"),
         ),
         body: value.when(
@@ -58,11 +59,16 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
 
               if (dialogList.isEmpty) {
                 return const Center(
-                    child: Text("No user for chat",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        )));
+                  child: Text(
+                    "No user for chat",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                        // color: Colors.white,
+                        ),
+                  ),
+                );
               } else {
                 return ListView.separated(
                   itemCount: dialogList.length,

@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:wings_dating_app/src/model/user_models.dart';
@@ -18,7 +19,6 @@ final getUserByIdProvider =
 });
 
 @RoutePage()
-
 class ProfileView extends ConsumerStatefulWidget {
   const ProfileView({
     super.key,
@@ -36,129 +36,139 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
 
     // logger.i(userData?.profileUrl);
 
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          // flexibleSpace: FlexibleSpaceBar(
-          //   centerTitle: true,
-          //   title: Text(
-          //     userData?.username ?? "",
-          //     style: const TextStyle(
-          //       color: Colors.white,
-          //       fontSize: 16.0,
-          //     ),
-          //   ),
-          //   background: Image.network(
-          //     userData!.profileUrl ?? "",
-          //     fit: BoxFit.cover,
-          //   ),
-          // ),
-          pinned: true,
+    return DefaultTextStyle(
+      style: TextStyle(color: Colors.white),
+      child: PlatformScaffold(
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: PlatformAppBar(
+                // flexibleSpace: FlexibleSpaceBar(
+                //   centerTitle: true,
+                //   title: Text(
+                //     userData?.username ?? "",
+                //     style: const TextStyle(
+                //       color: Colors.white,
+                //       fontSize: 16.0,
+                //     ),
+                //   ),
+                //   background: Image.network(
+                //     userData!.profileUrl ?? "",
+                //     fit: BoxFit.cover,
+                //   ),
+                // ),
 
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.more_vert_outlined),
-              onPressed: () {
-                context.router.push(
-                  const UserBlockListRoute(),
-                );
-              },
+                trailingActions: [
+                  PlatformIconButton(
+                    icon: Icon(PlatformIcons(context).fullscreenExit),
+                    onPressed: () {
+                      context.router.push(
+                        const UserBlockListRoute(),
+                      );
+                    },
+                  ),
+                ],
+                // centerTitle: true,
+                title: Text(userData!.username),
+              ),
             ),
-          ],
-          // centerTitle: true,
-          title: Text(userData!.username),
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                20.heightBox,
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(userData.profileUrl ?? ""),
-                    ),
-                    10.widthBox,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [],
-                    ),
-                    const Spacer(),
-                    ElevatedButton.icon(
-                      onPressed: () async {
-                        // await ref.read(profileRepoProvider).getUserList();
-
-                        context.router.push(
-                          EditProfileRoute(isEditProfile: true),
-                        );
-                      },
-                      icon: const Icon(Icons.edit, size: 10),
-                      label: Text(
-                        "Edit Profile",
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "About",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                10.heightBox,
-                Text(
-                  userData.bio ?? "",
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                20.heightBox,
-                Row(
-                  children: [
-                    Column(
+                    20.heightBox,
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ProfileInputCard(
-                            title: "Role", value: userData.role.value),
-                        ProfileInputCard(
-                            title: "Body Type", value: userData.bodyType.value),
-                        ProfileInputCard(
-                            title: "Ethnicity",
-                            value: userData.ethnicity.value),
-                        ProfileInputCard(
-                            title: "Relationship Status",
-                            value: userData.relationshipStatus.value),
-                        ProfileInputCard(
-                            title: "Looking for",
-                            value: userData.lookingFor.value),
-                        ProfileInputCard(
-                            title: "Where to meet",
-                            value: userData.whereToMeet.value),
-                        ProfileInputCard(
-                            title: "Height",
-                            value: userData.height ?? "Do not Show"),
-                        ProfileInputCard(
-                            title: "Weight",
-                            value: userData.weight ?? "Do not Show"),
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage:
+                              NetworkImage(userData.profileUrl ?? ""),
+                        ),
+                        10.widthBox,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [],
+                        ),
+                        const Spacer(),
+                        ElevatedButton.icon(
+                          onPressed: () async {
+                            // await ref.read(profileRepoProvider).getUserList();
+
+                            context.router.push(
+                              EditProfileRoute(isEditProfile: true),
+                            );
+                          },
+                          icon: const Icon(Icons.edit, size: 10),
+                          label: Text(
+                            "Edit Profile",
+                            // style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
                       ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PlatformText(
+                      "About",
+                      style: TextStyle(
+                        fontSize: 25,
+                      ),
+                    ),
+                    10.heightBox,
+                    Text(
+                      userData.bio ?? "",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    20.heightBox,
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ProfileInputCard(
+                                title: "Role", value: userData.role.value),
+                            ProfileInputCard(
+                                title: "Body Type",
+                                value: userData.bodyType.value),
+                            ProfileInputCard(
+                                title: "Ethnicity",
+                                value: userData.ethnicity.value),
+                            ProfileInputCard(
+                                title: "Relationship Status",
+                                value: userData.relationshipStatus.value),
+                            ProfileInputCard(
+                                title: "Looking for",
+                                value: userData.lookingFor.value),
+                            ProfileInputCard(
+                                title: "Where to meet",
+                                value: userData.whereToMeet.value),
+                            ProfileInputCard(
+                                title: "Height",
+                                value: userData.height ?? "Do not Show"),
+                            ProfileInputCard(
+                                title: "Weight",
+                                value: userData.weight ?? "Do not Show"),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -190,14 +200,14 @@ class ProfileInputCard extends StatelessWidget {
                   // mainAxisSize: MainAxisSize.min,
                   // mainAxisSize,
                   children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Text(
-                      value,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
+                    PlatformText(title,
+                        style: TextStyle(
+                          fontSize: 20,
+                        )),
+                    PlatformText(value,
+                        style: TextStyle(
+                          fontSize: 15,
+                        )),
                   ],
                 ),
               ],
