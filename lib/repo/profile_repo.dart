@@ -55,6 +55,30 @@ class ProfileRepo with RepositoryExceptionMixin {
     );
   }
 
+  createCubeUser(CubeUser user) async {
+    await signUp(user).then((value) async {
+
+       user.id = value.id;
+      SharedPrefs.instance.saveNewUser(user);
+    
+      await updateCubeUserDoc(value);
+
+      signInCubeUser(value);
+    });
+  }
+
+  updateCubeUser(
+    CubeUser newcubeUser,
+  ) async {
+    await updateUser(newcubeUser);
+  }
+
+  signInCubeUser(
+    CubeUser newcubeUser,
+  ) async {
+    await signIn(newcubeUser);
+  }
+
   Future<bool> checkUserDocExist() async {
     final data = await userCollection()
         .doc(FirebaseAuth.instance.currentUser!.uid)

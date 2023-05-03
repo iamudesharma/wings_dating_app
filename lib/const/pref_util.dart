@@ -10,6 +10,7 @@ const String prefUserId = "pref_user_id";
 const String prefUserAvatar = "pref_user_avatar";
 const String prefSubscriptionToken = "pref_subscription_token";
 const String prefSubscriptionId = "pref_subscription_id";
+const String prefphone = "pref_phone";
 
 class SharedPrefs {
   static final SharedPrefs _instance = SharedPrefs._internal();
@@ -35,10 +36,11 @@ class SharedPrefs {
 
   saveNewUser(CubeUser cubeUser) async {
     prefs.clear();
-    await prefs.setString(prefUserLogin, cubeUser.login!);
-    await prefs.setString(prefUserPsw, cubeUser.password!);
-    await prefs.setString(prefUserName, cubeUser.fullName!);
+    await prefs.setString(prefUserLogin, cubeUser.login ?? "");
+    await prefs.setString(prefUserPsw, cubeUser.password ?? "");
+    await prefs.setString(prefUserName, cubeUser.fullName ?? "");
     await prefs.setInt(prefUserId, cubeUser.id!);
+    await prefs.setString(prefphone, cubeUser.phone ?? "");
     if (cubeUser.avatar != null) {
       await prefs.setString(prefUserAvatar, cubeUser.avatar!);
     }
@@ -51,6 +53,9 @@ class SharedPrefs {
     if (cubeUser.login != null) prefs.setString(prefUserLogin, cubeUser.login!);
     if (cubeUser.fullName != null) {
       prefs.setString(prefUserName, cubeUser.fullName!);
+    }
+    if (cubeUser.phone != null) {
+      prefs.setString(prefphone, cubeUser.phone!);
     }
     if (cubeUser.avatar != null) {
       prefs.setString(prefUserAvatar, cubeUser.avatar!);
@@ -65,6 +70,7 @@ class SharedPrefs {
     user.fullName = prefs.getString(prefUserName);
     user.id = prefs.getInt(prefUserId);
     user.avatar = prefs.getString(prefUserAvatar);
+    user.phone = prefs.getString(prefphone);
     return user;
   }
 
