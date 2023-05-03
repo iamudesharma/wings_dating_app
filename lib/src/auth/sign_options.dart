@@ -50,7 +50,7 @@ class SignOptionsView extends ConsumerWidget {
             // });
             // });
           }),
-          AuthStateChangeAction<SigningUp>((context, state) async {
+          AuthStateChangeAction<UserCreated>((context, state) async {
             // await    state!.user?.getIdToken().then((idToken) {
             //       signInUsingFirebase(
             //               DefaultFirebaseOptions.currentPlatform.projectId, idToken)
@@ -58,9 +58,9 @@ class SignOptionsView extends ConsumerWidget {
             //         await SharedPrefs.instance.saveNewUser(cubeUser);
 
             //         logger.i('Saved  cubeUser: is true ');
-            //         AutoRouter.of(context).replace(
-            //           const DashboardRoute(),
-            //         );
+            AutoRouter.of(context).replace(
+              const DashboardRoute(),
+            );
             //       });
             // });
           }),
