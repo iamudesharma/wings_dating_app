@@ -1,4 +1,3 @@
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -75,6 +74,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
               ),
               material: (context, platform) => MaterialNavBarData(
                 elevation: 0,
+                iconSize: 30,
                 showSelectedLabels: true,
                 showUnselectedLabels: true,
                 selectedLabelStyle: const TextStyle(
@@ -96,21 +96,21 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
               },
               items: const [
                 BottomNavigationBarItem(
-                  label: 'Users',
+                  label: 'Home',
                   icon: Icon(
-                    Icons.people,
+                    Icons.home_outlined,
                   ),
                 ),
                 BottomNavigationBarItem(
                   label: 'Chat',
                   icon: Icon(
-                    Icons.chat_bubble,
+                    Icons.chat_bubble_outline,
                   ),
                 ),
                 BottomNavigationBarItem(
                   label: 'Profile',
                   icon: Icon(
-                    Icons.person,
+                    Icons.person_2_outlined,
                   ),
                 ),
               ],
