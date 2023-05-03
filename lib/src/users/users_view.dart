@@ -227,6 +227,7 @@ class _UsersViewState extends ConsumerState<UsersView>
 
                   // titleSpacing: 50,
                   leading: CircleAvatar(
+                    radius: 25,
                     // radius: 2,
                     backgroundImage: CachedNetworkImageProvider(userData!
                             .profileUrl ??
