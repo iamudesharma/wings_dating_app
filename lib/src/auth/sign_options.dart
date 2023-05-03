@@ -37,6 +37,9 @@ class SignOptionsView extends ConsumerWidget {
         AuthStateChangeAction<SignedIn>((context, state) async {
           AutoRouter.of(context).replace(const DashboardRoute());
         }),
+        AuthStateChangeAction<SigningUp>((context, state) async {
+          AutoRouter.of(context).replace(const DashboardRoute());
+        }),
       ],
       showAuthActionSwitch: true,
     );
