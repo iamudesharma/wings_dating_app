@@ -273,13 +273,13 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
       _initCubeChat();
     }
 
-    CubeChatConnection.instance.lastActivityStream!.listen((event) {
-      log('last activity ${event.userId} ${event.seconds}');
+    // CubeChatConnection.instance.lastActivityStream!.listen((event) {
+    //   log('last activity ${event.userId} ${event.seconds}');
 
-      setState(() {
-        time = event.seconds;
-      });
-    });
+    //   setState(() {
+    //     time = event.seconds;
+    //   });
+    // });
     isLoading = false;
     imageUrl = '';
     listScrollController.addListener(onScrollChanged);

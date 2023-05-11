@@ -79,9 +79,11 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                       ],
                     ),
                 material: (context, platform) => MaterialNavBarData(
+                      iconSize: 30,
                       elevation: 0,
                       showSelectedLabels: true,
                       showUnselectedLabels: true,
+                      padding: EdgeInsets.zero,
                       selectedLabelStyle: const TextStyle(
                         color: Colors.black,
                         fontSize: 12,
@@ -90,6 +92,33 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                         color: Colors.grey,
                         fontSize: 12,
                       ),
+                      currentIndex: tabsRouter.activeIndex,
+                      itemChanged: (value) async {
+                        if (value == 1) {
+                          ref.invalidate(chatListProvider);
+                        }
+                        tabsRouter.setActiveIndex(value);
+                      },
+                      items: [
+                        BottomNavigationBarItem(
+                          label: 'Users',
+                          icon: Icon(
+                            PlatformIcons(context).home,
+                          ),
+                        ),
+                        const BottomNavigationBarItem(
+                          label: 'Chat',
+                          icon: Icon(
+                            CupertinoIcons.chat_bubble,
+                          ),
+                        ),
+                        BottomNavigationBarItem(
+                          label: 'Profile',
+                          icon: Icon(
+                            PlatformIcons(context).person,
+                          ),
+                        ),
+                      ],
                     )
                 // selectedIndex: tabsRouter.activeIndex,
                 // onDestinationSelected: (value) async {
