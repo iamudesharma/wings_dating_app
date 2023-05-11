@@ -250,6 +250,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       // const SizedBox(
                       //   height: 20,
                       // ),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       PlatformTextFormField(
                         validator: ((value) {
                           if (value!.isEmpty) {
@@ -374,6 +377,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       // const SizedBox(
                       //   height: 20,
                       // ),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       PlatformTextFormField(
                         validator: (value) {
                           if (value!.isEmpty) {
