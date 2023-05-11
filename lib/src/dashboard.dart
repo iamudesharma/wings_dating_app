@@ -1,17 +1,11 @@
-import 'dart:io';
-
 import 'package:auto_route/auto_route.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/chats/services/call_manager.dart';
-import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
-import '../const/pref_util.dart';
-import '../helpers/app_notification.dart';
 import 'chats/chats_list_view.dart';
 
 @RoutePage()
@@ -46,108 +40,81 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
           ],
           bottomNavigationBuilder: (_, tabsRouter) {
             return PlatformNavBar(
-                backgroundColor: Colors.black,
-                cupertino: (context, platform) => CupertinoTabBarData(
-                      inactiveColor: Colors.grey,
-                      activeColor: Theme.of(context).primaryColor,
-                      currentIndex: tabsRouter.activeIndex,
-                      itemChanged: (value) async {
-                        if (value == 1) {
-                          ref.invalidate(chatListProvider);
-                        }
-                        tabsRouter.setActiveIndex(value);
-                      },
-                      items: [
-                        BottomNavigationBarItem(
-                          label: 'Users',
-                          icon: Icon(
-                            PlatformIcons(context).home,
-                          ),
-                        ),
-                        BottomNavigationBarItem(
-                          label: 'Chat',
-                          icon: Icon(
-                            CupertinoIcons.chat_bubble,
-                          ),
-                        ),
-                        BottomNavigationBarItem(
-                          label: 'Profile',
-                          icon: Icon(
-                            PlatformIcons(context).person,
-                          ),
-                        ),
-                      ],
+              backgroundColor: Colors.black,
+              cupertino: (context, platform) => CupertinoTabBarData(
+                inactiveColor: Colors.grey,
+                activeColor: Theme.of(context).primaryColor,
+                currentIndex: tabsRouter.activeIndex,
+                itemChanged: (value) async {
+                  if (value == 1) {
+                    ref.invalidate(chatListProvider);
+                  }
+                  tabsRouter.setActiveIndex(value);
+                },
+                items: [
+                  BottomNavigationBarItem(
+                    label: 'Users',
+                    icon: Icon(
+                      PlatformIcons(context).home,
                     ),
-                material: (context, platform) => MaterialNavBarData(
-                      iconSize: 30,
-                      elevation: 0,
-                      showSelectedLabels: true,
-                      showUnselectedLabels: true,
-                      padding: EdgeInsets.zero,
-                      selectedLabelStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                      ),
-                      unselectedLabelStyle: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
-                      currentIndex: tabsRouter.activeIndex,
-                      itemChanged: (value) async {
-                        if (value == 1) {
-                          ref.invalidate(chatListProvider);
-                        }
-                        tabsRouter.setActiveIndex(value);
-                      },
-                      items: [
-                        BottomNavigationBarItem(
-                          label: 'Users',
-                          icon: Icon(
-                            PlatformIcons(context).home,
-                          ),
-                        ),
-                        const BottomNavigationBarItem(
-                          label: 'Chat',
-                          icon: Icon(
-                            CupertinoIcons.chat_bubble,
-                          ),
-                        ),
-                        BottomNavigationBarItem(
-                          label: 'Profile',
-                          icon: Icon(
-                            PlatformIcons(context).person,
-                          ),
-                        ),
-                      ],
-                    )
-                // selectedIndex: tabsRouter.activeIndex,
-                // onDestinationSelected: (value) async {
-                //   if (value == 1) {
-                //     ref.invalidate(chatListProvider);
-                //   }
-                //   tabsRouter.setActiveIndex(value);
-                // },
-                // destinations: const [
-                //   NavigationDestination(
-                //     label: 'Users',
-                //     icon: Icon(
-                //       Icons.people,
-                //     ),
-                //   ),
-                //   NavigationDestination(
-                //     label: 'Chat',
-                //     icon: Icon(
-                //       Icons.chat_bubble,
-                //     ),
-                //   ),
-                //   NavigationDestination(
-                //     label: 'Profile',
-                //     icon: Icon(
-                //       Icons.person,
-                //     ),
-                //   ),
-                // ],
-                );
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Chat',
+                    icon: Icon(
+                      CupertinoIcons.chat_bubble,
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Profile',
+                    icon: Icon(
+                      PlatformIcons(context).person,
+                    ),
+                  ),
+                ],
+              ),
+              material: (context, platform) => MaterialNavBarData(
+                elevation: 0,
+                iconSize: 30,
+                showSelectedLabels: true,
+                showUnselectedLabels: true,
+                selectedLabelStyle: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                ),
+                padding: EdgeInsets.zero,
+                unselectedLabelStyle: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                ),
+              ),
+              currentIndex: tabsRouter.activeIndex,
+              itemChanged: (value) async {
+                if (value == 1) {
+                  ref.invalidate(chatListProvider);
+                }
+                tabsRouter.setActiveIndex(value);
+              },
+              items: const [
+                BottomNavigationBarItem(
+                  label: 'Home',
+                  icon: Icon(
+                    Icons.home_outlined,
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  label: 'Chat',
+                  icon: Icon(
+                    Icons.chat_bubble_outline,
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  label: 'Profile',
+                  icon: Icon(
+                    Icons.person_2_outlined,
+                  ),
+                ),
+              ],
+            );
           }),
     );
   }

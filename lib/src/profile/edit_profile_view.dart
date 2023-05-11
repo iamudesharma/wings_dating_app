@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
+// import 'dart:js';
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
@@ -25,9 +26,11 @@ import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:wings_dating_app/routes/app_router_provider.dart';
 // / / /  / / import 'package:wings_dating_app/src/model/geo_point.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
+import 'package:wings_dating_app/src/users/users_view.dart';
 
 import '../../helpers/responsive_layout.dart';
 import '../model/geo_point_data.dart';
@@ -247,9 +250,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   hintText: "Username",
                                 ),
                               )),
-                      // const SizedBox(
-                      //   height: 20,
-                      // ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -289,18 +289,32 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                           await showPlatformDatePicker(
                               material: (context, platform) =>
                                   MaterialDatePickerData(
-                                      cancelText: "Cancel",
-                                      confirmText: "Done",
-                                      helpText: "Select Date of Birth",
-                                      errorFormatText: "Enter valid date",
-                                      errorInvalidText:
-                                          "Enter date in valid range",
-                                      fieldHintText: "MM/DD/YYYY",
-                                      fieldLabelText: "Date of Birth"),
+                                    cancelText: "Cancel",
+                                    confirmText: "Done",
+                                    helpText: "Select Date of Birth",
+                                    errorFormatText: "Enter valid date",
+                                    errorInvalidText:
+                                        "Enter date in valid range",
+                                    fieldHintText: "MM/DD/YYYY",
+                                    fieldLabelText: "Date of Birth",
+                                    lastDate: DateTime.now().subtract(
+                                      Duration(
+                                        days: 6570,
+                                      ),
+                                    ),
+                                  ),
                               context: context,
-                              initialDate: DateTime(2004),
+                              initialDate: DateTime.now().subtract(
+                                Duration(
+                                  days: 6570,
+                                ),
+                              ),
                               firstDate: DateTime(1960),
-                              lastDate: DateTime(2004),
+                              lastDate: DateTime.now().subtract(
+                                Duration(
+                                  days: 6570,
+                                ),
+                              ),
                               cupertino: (context, platform) =>
                                   CupertinoDatePickerData(
                                     dateOrder: DatePickerDateOrder.dmy,
@@ -317,7 +331,18 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     maximumYear: DateTime.now().year - 18,
                                     minimumYear: 1960,
                                     mode: CupertinoDatePickerMode.date,
-                                  ));
+                                  )).then((value) {
+                            print(value);
+                            if (value != null) {
+                              setState(() {
+                                _dobController.text =
+                                    DateFormat.yMd().format(value!);
+
+                                //     _selectedDate = value;
+                                _selectedDate = value;
+                              });
+                            }
+                          });
                           // builder: (_) => Builder(builder: (context) {
                           //       return Container(
                           //         height: 190,
@@ -374,9 +399,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                           // }
                         },
                       ),
-                      // const SizedBox(
-                      //   height: 20,
-                      // ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -550,15 +572,17 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       .read(Dependency.profileProvider)
                                       .createUserDoc(user);
 
-                                  _signInCC(CubeUser(
-                                      avatar: await ref
-                                          .read(ProfileController
-                                              .userControllerProvider)
-                                          .uploadImage(),
-                                      fullName: _usernameController.text,
-                                      password: password.toString(),
-                                      login: _usernameController.text
-                                          .toLowerCase()));
+                                  _signInCC(
+                                      CubeUser(
+                                          avatar: await ref
+                                              .read(ProfileController
+                                                  .userControllerProvider)
+                                              .uploadImage(),
+                                          fullName: _usernameController.text,
+                                          password: password.toString(),
+                                          login: _usernameController.text
+                                              .toLowerCase()),
+                                      ref);
                                 }
                               }
                             },
@@ -686,7 +710,7 @@ class ImagePickerWidget extends StatelessWidget {
 //   });
 // }
 
-_signInCC(CubeUser user) async {
+_signInCC(CubeUser user, WidgetRef ref) async {
   // if (_isLoginContinues) return;
 
   // setState(() {
@@ -704,7 +728,10 @@ _signInCC(CubeUser user) async {
     user.id = newUser.id;
     SharedPrefs.instance.saveNewUser(user);
     signIn(user).then((result) {
+      ref.read(appRouteProvider).replace(const DashboardRoute());
       _loginToCubeChat(user);
+
+      ref.read(profileRepoProvider).updateCubeUser(user);
     });
   }).catchError((exception) {
     _processLoginError(exception);
