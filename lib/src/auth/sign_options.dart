@@ -16,7 +16,7 @@ class SignOptionsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return PlatformScaffold(
+    return Scaffold(
       body: SignInScreen(
         oauthButtonVariant: OAuthButtonVariant.icon_and_text,
         headerBuilder: (context, constraints, shrinkOffset) {

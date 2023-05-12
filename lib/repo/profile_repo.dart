@@ -4,7 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geoflutterfire2/geoflutterfire2.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
+// import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/const/pref_util.dart';
 import 'package:wings_dating_app/dependency/dependenies.dart';
@@ -57,10 +58,9 @@ class ProfileRepo with RepositoryExceptionMixin {
 
   createCubeUser(CubeUser user) async {
     await signUp(user).then((value) async {
-
-       user.id = value.id;
+      user.id = value.id;
       SharedPrefs.instance.saveNewUser(user);
-    
+
       await updateCubeUserDoc(value);
 
       signInCubeUser(value);
@@ -134,15 +134,15 @@ class ProfileRepo with RepositoryExceptionMixin {
   }
 
   Future<List<UserModel>?>? getUserList() async {
-    final geo = GeoFlutterFire();
+    final usercollection = userCollection();
 
     final userModel =
         ref.read(ProfileController.userControllerProvider).userModel!;
 
     logger.i(userModel.position);
-    GeoFirePoint center = geo.point(
-      latitude: userModel.position!.geopoint.latitude,
-      longitude: userModel.position!.geopoint.longitude,
+    GeoPoint center = GeoPoint(
+      userModel.position!.geopoint.latitude,
+      userModel.position!.geopoint.longitude,
     );
     // GeoFi
     //rePoint center = geo.point(latitude: 19.075983, longitude: 72.877678);
@@ -152,16 +152,23 @@ class ProfileRepo with RepositoryExceptionMixin {
     // logger.w(center.data);
 
     // final usercollection = userCollection();
-    final firestore = FirebaseFirestore.instance.collection("users").limit(10);
+    final firestore = FirebaseFirestore.instance.collection("users");
 
-    final data = geo.collection(collectionRef: firestore).within(
-          center: center,
-          radius: 150,
-          field: "position",
-          strictMode: false,
-        );
+    // final data = geo.collection(collectionRef: firestore).within(
+    //       center: center,
+    //       radius: 150,
+    //       field: "position",
+    //       strictMode: false,
+    //     );
 
-    final userListRaw = await data.asBroadcastStream().first;
+    final Stream<List<DocumentSnapshot<UserModel?>>> stream =
+        GeoCollectionReference<UserModel?>(usercollection).subscribeWithin(
+            center: GeoFirePoint(center),
+            radiusInKm: 150,
+            field: "position",
+            geopointFrom: geopointFrom);
+
+    final userListRaw = await stream.first;
 
     logger.i(userListRaw.length);
 
@@ -170,11 +177,6 @@ class ProfileRepo with RepositoryExceptionMixin {
     final users = userListRaw
         .map((e) => UserModel.fromJson(e.data() as dynamic))
         .toList();
-
-    users.removeWhere((element) {
-      return userModel.blockList.contains(element.id) ||
-          element.id == userModel.id;
-    });
 
     return users;
   }
@@ -309,3 +311,5 @@ class ProfileRepo with RepositoryExceptionMixin {
     return data;
   }
 }
+
+GeoPoint geopointFrom(UserModel? data) => data!.position!.geopoint;
