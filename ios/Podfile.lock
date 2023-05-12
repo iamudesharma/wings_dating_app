@@ -608,7 +608,7 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.24):
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
-  - cloud_firestore (4.5.2):
+  - cloud_firestore (4.5.3):
     - Firebase/Firestore (= 10.7.0)
     - firebase_core
     - Flutter
@@ -621,6 +621,8 @@ PODS:
   - desktop_webview_auth (0.0.1):
     - Flutter
   - device_info (0.0.1):
+    - Flutter
+  - device_info_plus (0.0.1):
     - Flutter
   - DKImagePickerController/Core (4.3.4):
     - DKImagePickerController/ImageDataManager
@@ -959,6 +961,7 @@ DEPENDENCIES:
   - connectycube_flutter_call_kit (from `.symlinks/plugins/connectycube_flutter_call_kit/ios`)
   - desktop_webview_auth (from `.symlinks/plugins/desktop_webview_auth/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
+  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
@@ -977,9 +980,9 @@ DEPENDENCIES:
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
-  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - platform_device_id (from `.symlinks/plugins/platform_device_id/ios`)
-  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
 
 SPEC REPOS:
@@ -1035,6 +1038,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/desktop_webview_auth/ios"
   device_info:
     :path: ".symlinks/plugins/device_info/ios"
+  device_info_plus:
+    :path: ".symlinks/plugins/device_info_plus/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   firebase_analytics:
@@ -1072,11 +1077,11 @@ EXTERNAL SOURCES:
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
-    :path: ".symlinks/plugins/path_provider_foundation/ios"
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   platform_device_id:
     :path: ".symlinks/plugins/platform_device_id/ios"
   shared_preferences_foundation:
-    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
 
@@ -1084,11 +1089,12 @@ SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
   AppAuth: e48b432bb4ba88b10cb2bcc50d7f3af21e78b9c2
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
-  cloud_firestore: 48bc9a6ed3d534417f4f5c095c30e9374c1101bc
+  cloud_firestore: 13b9ec4f7e44d1ccd361a18f4275ed6d26d03ef2
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
   connectycube_flutter_call_kit: 038f42559fc4f2ee60f4c1027385c40f873451ba
   desktop_webview_auth: d645139460ef203d50bd0cdb33356785dd939cce
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
+  device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
@@ -1150,4 +1156,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 5d289dd0c42447aaed50114c33b8597068ea338f
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1

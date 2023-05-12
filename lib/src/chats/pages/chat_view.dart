@@ -4,11 +4,12 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geoflutterfire2/geoflutterfire2.dart';
+// import 'package:geoflutterfire2/geoflutterfire2.dart';
 // ignore: depend_on_referenced_packages
 import 'package:universal_io/io.dart';
 
@@ -142,7 +143,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
                                     .read(ProfileController
                                         .userControllerProvider)
                                     .getDistance(
-                                      Coordinates(
+                                      GeoPoint(
                                         users.position!.geopoint.latitude,
                                         users.position!.geopoint.longitude,
                                       ),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geoflutterfire2/geoflutterfire2.dart';
+// import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -284,9 +285,8 @@ class _UsersViewState extends ConsumerState<UsersView>
                           onTapEditProfile: () {
                             AutoTabsRouter.of(context).setActiveIndex(2);
                           },
-                          isCurrentUser:
-                              users!.id == userData.id ? true : false,
-                          users: users,
+                          // isCurrentUser: true,
+                          users: users!,
                         ).animate().shake();
                       },
                       childCount: data!.length,
@@ -590,12 +590,12 @@ class UserGridItem extends ConsumerWidget {
   const UserGridItem(
       {super.key,
       required this.users,
-      this.isCurrentUser = false,
+      // this.isCurrentUser = false,
       this.onTapEditProfile});
 
   final UserModel users;
 
-  final bool? isCurrentUser;
+  // final bool? isCurrentUser;
 
   final VoidCallback? onTapEditProfile;
 
@@ -603,15 +603,15 @@ class UserGridItem extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return InkWell(
       onTap: () {
-        if (isCurrentUser!) {
-          AutoTabsRouter.of(context).setActiveIndex(2);
-        } else {
-          AutoRouter.of(context).push(
-            OtherUserProfileRoute(
-              id: users.id,
-            ),
-          );
-        }
+        // if (isCurrentUser!) {
+        //   AutoTabsRouter.of(context).setActiveIndex(2);
+        // } else {
+        AutoRouter.of(context).push(
+          OtherUserProfileRoute(
+            id: users.id,
+          ),
+        );
+        // }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -633,7 +633,7 @@ class UserGridItem extends ConsumerWidget {
                   ref
                       .read(ProfileController.userControllerProvider)
                       .getDistance(
-                        Coordinates(
+                        GeoPoint(
                           users.position!.geopoint.latitude,
                           users.position!.geopoint.longitude,
                         ),
@@ -644,20 +644,24 @@ class UserGridItem extends ConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                isCurrentUser!
-                    ? InkWell(
-                        onTap: onTapEditProfile, child: const Icon(Icons.edit))
-                    : Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            radius: 5,
-                            backgroundColor:
-                                users.isOnline ? Colors.green : Colors.amber,
-                          ),
-                        ),
-                      ),
+                // isCurrentUser!
+                //     ?
+
+                //     InkWell(
+                //         onTap: onTapEditProfile, child: const Icon(Icons.edit))
+                //     :
+
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircleAvatar(
+                      radius: 5,
+                      backgroundColor:
+                          users.isOnline ? Colors.green : Colors.amber,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
