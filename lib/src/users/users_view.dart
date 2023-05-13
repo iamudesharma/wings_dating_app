@@ -13,16 +13,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
-import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/app_notification.dart';
-import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
 import '../../const/app_const.dart';
 import '../../const/pref_util.dart';
-import '../../main.dart';
 import '../../routes/app_router.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
@@ -35,7 +32,7 @@ final isUserOnlineProvider = FutureProvider.family<bool, bool>(
   (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
 );
 
-final userListProvider = FutureProvider<List<UserModel?>?>(
+final userListProvider = StreamProvider<List<UserModel?>?>(
     (ref) => ref.read(profileRepoProvider).getUserList());
 
 class UserListNotifier extends AsyncNotifier<List<UserModel?>?> {
