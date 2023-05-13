@@ -133,7 +133,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     );
   }
 
-  Future<List<UserModel>?>? getUserList() async {
+  Stream<List<UserModel?>?> getUserList()  {
     final usercollection = userCollection();
 
     final userModel =
@@ -164,21 +164,33 @@ class ProfileRepo with RepositoryExceptionMixin {
     final Stream<List<DocumentSnapshot<UserModel?>>> stream =
         GeoCollectionReference<UserModel?>(usercollection).subscribeWithin(
             center: GeoFirePoint(center),
-            radiusInKm: 150,
+            radiusInKm: 100000,
             field: "position",
             geopointFrom: geopointFrom);
 
-    final userListRaw = await stream.first;
+    final userListRaw =  stream.map((event) {
+      return event.map((e) {
+        return e.data();
+      }).toList();
+    });
 
-    logger.i(userListRaw.length);
+    return userListRaw;
 
-    logger.i(userListRaw[0].data());
+    // logger.i(userListRaw.length);
 
-    final users = userListRaw
-        .map((e) => UserModel.fromJson(e.data() as dynamic))
-        .toList();
+    // logger.i(userListRaw[0].data());
 
-    return users;
+    // final users = userListRaw
+    //     .map(
+    //       (e) => e.data(),
+    //     )
+    //     .toList();
+
+    // logger.v(users);
+    // print(users.length);
+    // print(users.first);
+
+    // return users;
   }
 
   Future<void> saveUserLocationData(
