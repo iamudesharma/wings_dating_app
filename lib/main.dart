@@ -28,7 +28,6 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -101,29 +100,11 @@ class _MyAppState extends ConsumerState<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    const themeMode = ThemeMode.light;
-
-    final materialLightTheme = ThemeData.light();
     final materialDarkTheme = ThemeData.dark();
 
-    final cupertinoLightTheme =
-        MaterialBasedCupertinoThemeData(materialTheme: materialLightTheme);
-    const darkDefaultCupertinoTheme =
-        CupertinoThemeData(brightness: Brightness.dark);
-    final cupertinoDarkTheme = MaterialBasedCupertinoThemeData(
-      materialTheme: materialDarkTheme.copyWith(
-        brightness: Brightness.dark,
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: FlexColor.aquaBlue.dark.primary),
-        cupertinoOverrideTheme: CupertinoThemeData(
-          scaffoldBackgroundColor:
-              darkDefaultCupertinoTheme.scaffoldBackgroundColor,
-          brightness: Brightness.dark,
-          primaryColor: FlexColor.aquaBlueDarkPrimary,
-          barBackgroundColor: FlexColor.aquaBlueDarkPrimaryContainer,
-        ),
-      ),
-    );
+    // final cupertinoLightTheme =
+    //     MaterialBasedCupertinoThemeData(materialTheme: materialLightTheme);
+
     final appRouter = ref.watch(appRouteProvider);
     return PlatformProvider(
       settings: PlatformSettingsData(),
@@ -162,11 +143,9 @@ class _MyAppState extends ConsumerState<MyApp> {
         ),
         cupertino: (context, platform) => CupertinoAppRouterData(
           theme: const CupertinoThemeData(
-            primaryColor: FlexColor.aquaBlueDarkPrimary,
-            primaryContrastingColor: Colors.white,
-            barBackgroundColor: FlexColor.aquaBlueDarkPrimary,
-            scaffoldBackgroundColor: Colors.black,
-            brightness: Brightness.dark,
+            applyThemeToAll: true,
+            primaryColor: Colors.teal,
+            primaryContrastingColor: Colors.tealAccent,
           ),
 
           // theme: cupertinoDarkTheme,
