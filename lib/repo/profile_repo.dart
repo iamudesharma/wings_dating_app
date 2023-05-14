@@ -133,7 +133,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     );
   }
 
-  Stream<List<UserModel?>?> getUserList()  {
+  Stream<List<UserModel?>?> getUserList() {
     final usercollection = userCollection();
 
     final userModel =
@@ -144,31 +144,16 @@ class ProfileRepo with RepositoryExceptionMixin {
       userModel.position!.geopoint.latitude,
       userModel.position!.geopoint.longitude,
     );
-    // GeoFi
-    //rePoint center = geo.point(latitude: 19.075983, longitude: 72.877678);
-
-    // GeoFirePoint center = geo.point(latitude: 12.960632, longitude: 77.641603);
-    // logger.w(center.geoPoint);
-    // logger.w(center.data);
-
-    // final usercollection = userCollection();
-    final firestore = FirebaseFirestore.instance.collection("users");
-
-    // final data = geo.collection(collectionRef: firestore).within(
-    //       center: center,
-    //       radius: 150,
-    //       field: "position",
-    //       strictMode: false,
-    //     );
 
     final Stream<List<DocumentSnapshot<UserModel?>>> stream =
         GeoCollectionReference<UserModel?>(usercollection).subscribeWithin(
             center: GeoFirePoint(center),
             radiusInKm: 100000,
             field: "position",
+            asBroadcastStream: true,
             geopointFrom: geopointFrom);
 
-    final userListRaw =  stream.map((event) {
+    final userListRaw = stream.map((event) {
       return event.map((e) {
         return e.data();
       }).toList();
