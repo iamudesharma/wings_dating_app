@@ -269,14 +269,68 @@ class _UsersViewState extends ConsumerState<UsersView>
                       ),
                       title: Text(userData.username),
                       trailingActions: [
-                        IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () async {
-                            showSearch(
-                              context: context,
-                              delegate: UsersSearchDelegate(ref),
-                            );
-                          },
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SearchAnchor(
+                            builder: (context, controller) => InkWell(
+                                onTap: () {
+                                  controller.openView();
+                                },
+                                child: Icon(Icons.search)),
+
+                            suggestionsBuilder: (context, controller) {
+                              final userList = ref
+                                  .watch(searchUsersProvider(controller.text));
+
+                              return [
+                                userList.when(
+                                  loading: () => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  error: (error, stackTrace) =>
+                                      (error is Exception)
+                                          ? Center(
+                                              child: Text(error.toString()),
+                                            )
+                                          : Center(
+                                              child: Text(error.toString()),
+                                            ),
+                                  data: (data) => SizedBox(
+                                    height: MediaQuery.of(context).size.height,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ListView.builder(
+                                      itemCount: data!.length,
+                                      itemBuilder: (context, index) {
+                                        final users = data[index];
+                                        return ListTile(
+                                          leading: CircleAvatar(
+                                            backgroundImage:
+                                                CachedNetworkImageProvider(
+                                                    users!.profileUrl!),
+                                          ),
+                                          title: Text(users.username),
+                                          onTap: () {
+                                            // // Navigator.push(
+                                            // //   context,
+                                            // //   MaterialPageRoute(
+                                            // //     builder: (context) => ProfileScreen(
+                                            // //       userId: users.id,
+                                            // //     ),
+                                            // //   ),
+                                            // );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ];
+                            },
+                            isFullScreen: true,
+
+                            // context: context,
+                            // delegate: UsersSearchDelegate(ref),
+                          ),
                         ),
                       ],
                     ),
