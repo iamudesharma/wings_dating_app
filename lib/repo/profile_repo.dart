@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -150,11 +151,12 @@ class ProfileRepo with RepositoryExceptionMixin {
             center: GeoFirePoint(center),
             radiusInKm: 100000,
             field: "position",
-            asBroadcastStream: true,
             geopointFrom: geopointFrom);
 
     final userListRaw = stream.map((event) {
+      logger.i(event.length);
       return event.map((e) {
+        logger.i(e.data());
         return e.data();
       }).toList();
     });
@@ -225,8 +227,21 @@ class ProfileRepo with RepositoryExceptionMixin {
     return users;
   }
 
-  Future<void> addToBlockList({required String id}) async {
+  Future<void> addToBlockList({required String id, CubeUser? cube}) async {
     final usercollection = userCollection();
+
+    var listName = 'blockList';
+
+    var items = [
+      CubePrivacyListItem(cube!.id!, CubePrivacyAction.deny, isMutual: true),
+    ];
+
+    CubeChatConnection.instance.privacyListsManager
+        ?.createList(listName, items)
+        .then((users) {})
+        .catchError((exception) {
+      // error occurred during creation privacy list
+    });
 
     await usercollection
         .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
