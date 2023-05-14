@@ -100,10 +100,19 @@ class _MyAppState extends ConsumerState<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final materialDarkTheme = ThemeData.dark();
+    // final materialDarkTheme = ThemeData.dark();
 
     // final cupertinoLightTheme =
     //     MaterialBasedCupertinoThemeData(materialTheme: materialLightTheme);
+
+    final materialDarkTheme = ThemeData.dark();
+
+    // final cupertinoLightTheme = MaterialBasedCupertinoThemeData(
+    // materialTheme: materialDarkTheme.copyWith(
+    //     colorScheme: ColorScheme.fromSeed(
+    //   seedColor: FlexColor.,
+    // )),
+    // );
 
     final appRouter = ref.watch(appRouteProvider);
     return PlatformProvider(
@@ -146,8 +155,9 @@ class _MyAppState extends ConsumerState<MyApp> {
             applyThemeToAll: true,
             primaryColor: Colors.teal,
             primaryContrastingColor: Colors.tealAccent,
+            barBackgroundColor: FlexColor.tealM3DarkPrimary,
           ),
-
+          // theme: cupertinoLightTheme
           // theme: cupertinoDarkTheme,
         ),
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
