@@ -272,6 +272,9 @@ class _UsersViewState extends ConsumerState<UsersView>
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SearchAnchor(
+                            viewBackgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            viewSurfaceTintColor: Colors.black,
                             builder: (context, controller) => InkWell(
                                 onTap: () {
                                   controller.openView();
@@ -283,44 +286,49 @@ class _UsersViewState extends ConsumerState<UsersView>
                                   .watch(searchUsersProvider(controller.text));
 
                               return [
-                                userList.when(
-                                  loading: () => const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                  error: (error, stackTrace) =>
-                                      (error is Exception)
-                                          ? Center(
-                                              child: Text(error.toString()),
-                                            )
-                                          : Center(
-                                              child: Text(error.toString()),
+                                PlatformScaffold(
+                                  body: userList.when(
+                                    loading: () => const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                    error: (error, stackTrace) =>
+                                        (error is Exception)
+                                            ? Center(
+                                                child: Text(error.toString()),
+                                              )
+                                            : Center(
+                                                child: Text(error.toString()),
+                                              ),
+                                    data: (data) => SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ListView.builder(
+                                        itemCount: data!.length,
+                                        itemBuilder: (context, index) {
+                                          final users = data[index];
+                                          return ListTile(
+                                            leading: CircleAvatar(
+                                              backgroundImage:
+                                                  CachedNetworkImageProvider(
+                                                      users!.profileUrl!),
                                             ),
-                                  data: (data) => SizedBox(
-                                    height: MediaQuery.of(context).size.height,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: ListView.builder(
-                                      itemCount: data!.length,
-                                      itemBuilder: (context, index) {
-                                        final users = data[index];
-                                        return ListTile(
-                                          leading: CircleAvatar(
-                                            backgroundImage:
-                                                CachedNetworkImageProvider(
-                                                    users!.profileUrl!),
-                                          ),
-                                          title: Text(users.username),
-                                          onTap: () {
-                                            // // Navigator.push(
-                                            // //   context,
-                                            // //   MaterialPageRoute(
-                                            // //     builder: (context) => ProfileScreen(
-                                            // //       userId: users.id,
-                                            // //     ),
-                                            // //   ),
-                                            // );
-                                          },
-                                        );
-                                      },
+                                            title: Text(users.username,
+                                                style: TextStyle(
+                                                    color: Colors.white)),
+                                            onTap: () {
+                                              // // Navigator.push(
+                                              // //   context,
+                                              // //   MaterialPageRoute(
+                                              // //     builder: (context) => ProfileScreen(
+                                              // //       userId: users.id,
+                                              // //     ),
+                                              // //   ),
+                                              // );
+                                            },
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                                 )

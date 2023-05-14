@@ -107,12 +107,14 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     final materialDarkTheme = ThemeData.dark();
 
-    // final cupertinoLightTheme = MaterialBasedCupertinoThemeData(
-    // materialTheme: materialDarkTheme.copyWith(
-    //     colorScheme: ColorScheme.fromSeed(
-    //   seedColor: FlexColor.,
-    // )),
-    // );
+    final cupertinoLightTheme = MaterialBasedCupertinoThemeData(
+      materialTheme: materialDarkTheme.copyWith(
+          useMaterial3: true,
+          brightness: Brightness.dark,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: FlexColor.redDarkPrimary,
+          )),
+    );
 
     final appRouter = ref.watch(appRouteProvider);
     return PlatformProvider(
@@ -151,10 +153,11 @@ class _MyAppState extends ConsumerState<MyApp> {
           themeMode: ThemeMode.dark,
         ),
         cupertino: (context, platform) => CupertinoAppRouterData(
-          theme: const CupertinoThemeData(
+          theme: cupertinoLightTheme.copyWith(
             applyThemeToAll: true,
-            primaryColor: Colors.teal,
-            primaryContrastingColor: Colors.tealAccent,
+            scaffoldBackgroundColor: Colors.black,
+            // primaryColor: Colors.teal,
+            // primaryContrastingColor: Colors.tealAccent,
             barBackgroundColor: FlexColor.tealM3DarkPrimary,
           ),
           // theme: cupertinoLightTheme
