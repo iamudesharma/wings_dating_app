@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -13,7 +14,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geoflutterfire2/geoflutterfire2.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
+// import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -59,7 +61,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Geolocator location = Geolocator();
-  final geo = GeoFlutterFire();
+  // final geo = GeoFlutterFire();
 
   @override
   void initState() {
@@ -174,7 +176,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         return PlatformElevatedButton(
                           onPressed: () async {
                             showPlatformModalSheet(
-                                cupertino: CupertinoModalSheetData(),
+                                // cupertino: CupertinoModalSheetData(),
                                 context: context,
                                 builder: (context) {
                                   return BottomSheet(onClosing: () {
@@ -471,10 +473,10 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               final data =
                                   await Geolocator.getCurrentPosition();
 
-                              GeoFirePoint myLocation = geo.point(
-                                latitude: data.latitude,
-                                longitude: data.longitude,
-                              );
+                              GeoFirePoint myLocation = GeoFirePoint(GeoPoint(
+                                data.latitude,
+                                data.longitude,
+                              ));
 
                               if (_formKey.currentState!.validate()) {
                                 CubeUser? _cubeUser = sharedPrefs.getUser();
@@ -485,8 +487,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 if (widget.isEditProfile) {
                                   UserModel? user = profile.userModel?.copyWith(
                                     position: GeoPointData(
-                                        geohash: myLocation.hash,
-                                        geopoint: myLocation.geoPoint),
+                                        geohash: myLocation.geohash,
+                                        geopoint: myLocation.geopoint),
                                     bio: _bioController.text,
                                     fcmToken: "",
                                     cubeUser: CubeUser(
@@ -561,8 +563,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     birthday: _dobController.text,
 
                                     position: GeoPointData(
-                                      geohash: myLocation.hash,
-                                      geopoint: myLocation.geoPoint,
+                                      geohash: myLocation.geohash,
+                                      geopoint: myLocation.geopoint,
                                     ),
                                   );
 

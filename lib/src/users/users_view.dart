@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,17 +12,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geoflutterfire2/geoflutterfire2.dart';
-import 'package:intl/intl.dart';
+import 'package:geolocator/geolocator.dart';
+// import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/app_notification.dart';
-import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 
 import '../../const/app_const.dart';
 import '../../const/pref_util.dart';
-import '../../main.dart';
 import '../../routes/app_router.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
@@ -34,7 +33,7 @@ final isUserOnlineProvider = FutureProvider.family<bool, bool>(
   (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
 );
 
-final userListProvider = FutureProvider<List<UserModel?>?>(
+final userListProvider = StreamProvider<List<UserModel?>?>(
     (ref) => ref.read(profileRepoProvider).getUserList());
 
 class UserListNotifier extends AsyncNotifier<List<UserModel?>?> {
@@ -64,6 +63,40 @@ class _UsersViewState extends ConsumerState<UsersView>
     with WidgetsBindingObserver {
   late StreamSubscription<ConnectivityResult> connectivityStateSubscription;
   AppLifecycleState? appState;
+
+  Widget? nullWidget;
+
+  checkIfService() async {
+    Geolocator.isLocationServiceEnabled().then((value) async {
+      if (value) {
+        checkISLocationEnabled(await Geolocator.checkPermission());
+      } else {
+        nullWidget = Center(
+          child: Column(
+            children: [
+              Text("Plase enable location service"),
+              TextButton(
+                child: Text("Enable"),
+                onPressed: () {
+                  Geolocator.openLocationSettings();
+                },
+              )
+            ],
+          ),
+        );
+      }
+    });
+  }
+
+  checkISLocationEnabled(LocationPermission locationPermission) async {
+    return switch (locationPermission) {
+      LocationPermission.denied => await Geolocator.requestPermission(),
+      LocationPermission.deniedForever => "deniedForever",
+      LocationPermission.whileInUse => true,
+      LocationPermission.always => true,
+      LocationPermission.unableToDetermine => "unableToDetermine",
+    };
+  }
 
   @override
   void initState() {
@@ -217,85 +250,147 @@ class _UsersViewState extends ConsumerState<UsersView>
       body: LayoutBuilder(builder: (context, constraints) {
         return RefreshIndicator(
           onRefresh: () async => ref.refresh(userListProvider),
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: PlatformAppBar(
-                  // centerTitle: true,
-                  // pinned: true,
-                  // // floating: false,
+          child: nullWidget ??
+              CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: PlatformAppBar(
+                      // centerTitle: true,
+                      // pinned: true,
+                      // // floating: false,
 
-                  // titleSpacing: 50,
-                  leading: CircleAvatar(
-                    radius: 25,
-                    // radius: 2,
-                    backgroundImage: CachedNetworkImageProvider(userData!
-                            .profileUrl ??
-                        "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                  ),
-                  title: Text(userData.username),
-                  trailingActions: [
-                    IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () async {
-                        showSearch(
-                          context: context,
-                          delegate: UsersSearchDelegate(ref),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.all(10),
-                sliver: userList.when(
-                  loading: () => const SliverToBoxAdapter(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                  error: (error, stackTrace) => (error is Exception)
-                      ? SliverToBoxAdapter(
-                          child: Center(
-                            child: Text(error.toString()),
-                          ),
-                        )
-                      : SliverToBoxAdapter(
-                          child: Center(
-                            child: Text(error.toString()),
+                      // titleSpacing: 50,
+                      leading: CircleAvatar(
+                        radius: 25,
+                        // radius: 2,
+                        backgroundImage: CachedNetworkImageProvider(userData!
+                                .profileUrl ??
+                            "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+                      ),
+                      title: Text(userData.username),
+                      trailingActions: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SearchAnchor(
+                            viewBackgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            viewSurfaceTintColor: Colors.black,
+                            builder: (context, controller) => InkWell(
+                                onTap: () {
+                                  controller.openView();
+                                },
+                                child: Icon(Icons.search)),
+
+                            suggestionsBuilder: (context, controller) {
+                              final userList = ref
+                                  .watch(searchUsersProvider(controller.text));
+
+                              return [
+                                PlatformScaffold(
+                                  body: userList.when(
+                                    loading: () => const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                    error: (error, stackTrace) =>
+                                        (error is Exception)
+                                            ? Center(
+                                                child: Text(error.toString()),
+                                              )
+                                            : Center(
+                                                child: Text(error.toString()),
+                                              ),
+                                    data: (data) => SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ListView.builder(
+                                        itemCount: data!.length,
+                                        itemBuilder: (context, index) {
+                                          final users = data[index];
+                                          return ListTile(
+                                            leading: CircleAvatar(
+                                              backgroundImage:
+                                                  CachedNetworkImageProvider(
+                                                      users!.profileUrl!),
+                                            ),
+                                            title: Text(users.username,
+                                                style: TextStyle(
+                                                    color: Colors.white)),
+                                            onTap: () {
+                                              // // Navigator.push(
+                                              // //   context,
+                                              // //   MaterialPageRoute(
+                                              // //     builder: (context) => ProfileScreen(
+                                              // //       userId: users.id,
+                                              // //     ),
+                                              // //   ),
+                                              // );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ];
+                            },
+                            isFullScreen: true,
+
+                            // context: context,
+                            // delegate: UsersSearchDelegate(ref),
                           ),
                         ),
-                  data: (data) => SliverGrid(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: constraints.isMobile
-                          ? 3
-                          : constraints.isTablet
-                              ? 4
-                              : 5,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final users = data[index];
-
-                        return UserGridItem(
-                          onTapEditProfile: () {
-                            AutoTabsRouter.of(context).setActiveIndex(2);
-                          },
-                          isCurrentUser:
-                              users!.id == userData.id ? true : false,
-                          users: users,
-                        ).animate().shake();
-                      },
-                      childCount: data!.length,
+                      ],
                     ),
                   ),
-                ),
+                  SliverPadding(
+                    padding: const EdgeInsets.all(10),
+                    sliver: userList.when(
+                      loading: () => const SliverToBoxAdapter(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                      error: (error, stackTrace) => (error is Exception)
+                          ? SliverToBoxAdapter(
+                              child: Center(
+                                child: Text(error.toString()),
+                              ),
+                            )
+                          : SliverToBoxAdapter(
+                              child: Center(
+                                child: Text(error.toString()),
+                              ),
+                            ),
+                      data: (data) => SliverGrid(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: constraints.isMobile
+                              ? 3
+                              : constraints.isTablet
+                                  ? 4
+                                  : 5,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final users = data[index];
+
+                            return UserGridItem(
+                              onTapEditProfile: () {
+                                AutoTabsRouter.of(context).setActiveIndex(2);
+                              },
+                              // isCurrentUser: true,
+                              users: users!,
+                            ).animate().shake();
+                          },
+                          childCount: data!.length,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
         );
       }),
     );
@@ -590,12 +685,12 @@ class UserGridItem extends ConsumerWidget {
   const UserGridItem(
       {super.key,
       required this.users,
-      this.isCurrentUser = false,
+      // this.isCurrentUser = false,
       this.onTapEditProfile});
 
   final UserModel users;
 
-  final bool? isCurrentUser;
+  // final bool? isCurrentUser;
 
   final VoidCallback? onTapEditProfile;
 
@@ -603,15 +698,15 @@ class UserGridItem extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return InkWell(
       onTap: () {
-        if (isCurrentUser!) {
-          AutoTabsRouter.of(context).setActiveIndex(2);
-        } else {
-          AutoRouter.of(context).push(
-            OtherUserProfileRoute(
-              id: users.id,
-            ),
-          );
-        }
+        // if (isCurrentUser!) {
+        //   AutoTabsRouter.of(context).setActiveIndex(2);
+        // } else {
+        AutoRouter.of(context).push(
+          OtherUserProfileRoute(
+            id: users.id,
+          ),
+        );
+        // }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -633,7 +728,7 @@ class UserGridItem extends ConsumerWidget {
                   ref
                       .read(ProfileController.userControllerProvider)
                       .getDistance(
-                        Coordinates(
+                        GeoPoint(
                           users.position!.geopoint.latitude,
                           users.position!.geopoint.longitude,
                         ),
@@ -644,20 +739,24 @@ class UserGridItem extends ConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                isCurrentUser!
-                    ? InkWell(
-                        onTap: onTapEditProfile, child: const Icon(Icons.edit))
-                    : Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            radius: 5,
-                            backgroundColor:
-                                users.isOnline ? Colors.green : Colors.amber,
-                          ),
-                        ),
-                      ),
+                // isCurrentUser!
+                //     ?
+
+                //     InkWell(
+                //         onTap: onTapEditProfile, child: const Icon(Icons.edit))
+                //     :
+
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircleAvatar(
+                      radius: 5,
+                      backgroundColor:
+                          users.isOnline ? Colors.green : Colors.amber,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

@@ -27,6 +27,7 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -99,29 +100,22 @@ class _MyAppState extends ConsumerState<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    const themeMode = ThemeMode.light;
+    // final materialDarkTheme = ThemeData.dark();
 
-    final materialLightTheme = ThemeData.light();
+    // final cupertinoLightTheme =
+    //     MaterialBasedCupertinoThemeData(materialTheme: materialLightTheme);
+
     final materialDarkTheme = ThemeData.dark();
 
-    final cupertinoLightTheme =
-        MaterialBasedCupertinoThemeData(materialTheme: materialLightTheme);
-    const darkDefaultCupertinoTheme =
-        CupertinoThemeData(brightness: Brightness.dark);
-    final cupertinoDarkTheme = MaterialBasedCupertinoThemeData(
+    final cupertinoLightTheme = MaterialBasedCupertinoThemeData(
       materialTheme: materialDarkTheme.copyWith(
-        brightness: Brightness.dark,
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: FlexColor.aquaBlue.dark.primary),
-        cupertinoOverrideTheme: CupertinoThemeData(
-          scaffoldBackgroundColor:
-              darkDefaultCupertinoTheme.scaffoldBackgroundColor,
+          useMaterial3: true,
           brightness: Brightness.dark,
-          primaryColor: FlexColor.aquaBlueDarkPrimary,
-          barBackgroundColor: FlexColor.aquaBlueDarkPrimaryContainer,
-        ),
-      ),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: FlexColor.redDarkPrimary,
+          )),
     );
+
     final appRouter = ref.watch(appRouteProvider);
     return PlatformProvider(
       settings: PlatformSettingsData(),
@@ -159,14 +153,14 @@ class _MyAppState extends ConsumerState<MyApp> {
           themeMode: ThemeMode.dark,
         ),
         cupertino: (context, platform) => CupertinoAppRouterData(
-          theme: const CupertinoThemeData(
-            primaryColor: FlexColor.aquaBlueDarkPrimary,
-            primaryContrastingColor: Colors.white,
-            barBackgroundColor: FlexColor.aquaBlueDarkPrimary,
+          theme: cupertinoLightTheme.copyWith(
+            applyThemeToAll: true,
             scaffoldBackgroundColor: Colors.black,
-            brightness: Brightness.dark,
+            // primaryColor: Colors.teal,
+            // primaryContrastingColor: Colors.tealAccent,
+            barBackgroundColor: FlexColor.tealM3DarkPrimary,
           ),
-
+          // theme: cupertinoLightTheme
           // theme: cupertinoDarkTheme,
         ),
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[

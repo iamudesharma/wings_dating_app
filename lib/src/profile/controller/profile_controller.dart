@@ -1,11 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geoflutterfire2/geoflutterfire2.dart';
+// import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -83,7 +84,7 @@ class ProfileController extends ChangeNotifier {
     return image;
   }
 
-  String getDistance(Coordinates coordinates) {
+  String getDistance(GeoPoint coordinates) {
     final data = Geolocator.distanceBetween(
       userModel!.position!.geopoint.latitude,
       userModel!.position!.geopoint.longitude,
