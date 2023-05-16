@@ -70,7 +70,7 @@ dependencies:
   firebase_messaging: ^14.6.0
   cached_network_image: ^3.2.3
  
-  flutter_local_notifications: ^9.2.0
+  flutter_local_notifications: ^14.0.0+2
  
   firebase_crashlytics: ^3.3.0
   firebase_analytics: ^10.4.0
