@@ -350,7 +350,7 @@ class LoginPageState extends State<LoginPage> {
     FlutterLocalNotificationsPlugin()
         .getNotificationAppLaunchDetails()
         .then((details) {
-      String? payload = details!.payload;
+      String? payload = details!.notificationResponse?.payload;
 
       if (payload == null) {
         // Navigator.pushReplacementNamed(

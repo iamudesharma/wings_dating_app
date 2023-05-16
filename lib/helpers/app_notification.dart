@@ -81,7 +81,8 @@ class PushNotificationsManager {
     );
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onSelectNotification: onSelectNotification,
+      onDidReceiveNotificationResponse: (details) => onSelectNotification(details.payload),
+     onDidReceiveBackgroundNotificationResponse: (details) =>notificationTapBackground ,
     );
 
     String? token;
@@ -234,6 +235,11 @@ Future<void> onBackgroundMessage(RemoteMessage message) async {
       PushNotificationsManager.TAG);
   showNotification(message);
   return Future.value();
+}
+
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse notificationResponse) {
+  // handle action
 }
 
 Future<void> onCallRejectedWhenTerminated(CallEvent callEvent) async {
