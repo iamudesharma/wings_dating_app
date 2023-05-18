@@ -66,6 +66,7 @@ class SignOptionsView extends ConsumerWidget {
           }),
         ],
         showAuthActionSwitch: true,
+        
       ),
     );
   }

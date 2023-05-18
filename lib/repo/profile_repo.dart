@@ -156,7 +156,6 @@ class ProfileRepo with RepositoryExceptionMixin {
     final userListRaw = stream.map((event) {
       logger.i(event.length);
       return event.map((e) {
-        logger.i(e.data());
         return e.data();
       }).toList();
     });
