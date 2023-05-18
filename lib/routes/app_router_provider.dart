@@ -59,7 +59,11 @@ class AuthGuard extends AutoRouteGuard {
           // chat.login(userModel.);
           // resolver.next(true);
         } else {
-          _loginToCC(userModel.getUser()!);
+          _loginToCC(userModel.getUser() ??
+              ref
+                  .read(ProfileController.userControllerProvider)
+                  .userModel!
+                  .cubeUser);
 
           resolver.next(true);
         }
@@ -85,25 +89,27 @@ void _processLoginError(exception) {
   );
 }
 
-_loginToCC(CubeUser user, {bool saveUser = false}) {
-  print("_loginToCC user: $user");
+_loginToCC(CubeUser _user, {bool saveUser = false}) {
+  print("_loginToCC user: $_user");
   // if (_isLoginContinues) return;
   // setState(() {
   //   _isLoginContinues = true;
   // });
 
+  CubeUser user = CubeUser(login: _user.login, password: _user.password);
+
   createSession(user).then((cubeSession) async {
     print("createSession cubeSession: $cubeSession");
-    var tempUser = user;
-    user = cubeSession.user!..password = tempUser.password;
-    if (saveUser) {
-      SharedPrefs.instance.init().then((sharedPrefs) {
-        sharedPrefs.saveNewUser(user);
-      });
-    }
+    // var tempUser = user;
+    // user = cubeSession.user!..password = tempUser.password;
+    // if (saveUser) {
+    //   SharedPrefs.instance.init().then((sharedPrefs) {
+    //     sharedPrefs.saveNewUser(user);
+    //   });
+    // }
 
-    if (Platform.isIOS) {
-      _loginToCubeChat(user);
+    if (!Platform.isLinux) {
+      _loginToCubeChat(_user);
     }
   }).catchError((error) {
     _processLoginError(error);
@@ -120,58 +126,3 @@ _loginToCubeChat(CubeUser user) {
     _processLoginError(error);
   });
 }
-
-
-
-
-// _loginToCC(CubeUser user, {bool saveUser = false}) async {
-//   print("_loginToCC user: $user");
-
-//   var token = await FirebaseAuth.instance.currentUser?.getIdToken();
-
-//   //
-//   createSessionUsingFirebase(
-//           DefaultFirebaseOptions.currentPlatform.projectId, token!)
-//       .then((cubeSession) async {
-//     print("createSession cubeSession: $cubeSession");
-//     // var tempUser = user;
-//     // user = cubeSession.user!..password = tempUser.password;
-//     // if (saveUser) {
-//     //   final saved = _saveUserInIsolate(user);
-//     //   print("User saved: $saved");
-//     // }
-
-//     // chat.login(user);
-
-//     // if (!Platform.isIOS) {
-//     //   PushNotificationsManager.instance.
-//     // }
-//   }).catchError((error) {
-//     _processLoginError(error);
-//   });
-// }
-
-// Future<bool> _saveUserInIsolate(CubeUser user) async {
-//   final completer = Completer<bool>();
-//   final receivePort = ReceivePort();
-//   Isolate.spawn(_saveUser, [user, receivePort.sendPort]);
-//   receivePort.listen((message) {
-//     if (message is bool) {
-//       completer.complete(message);
-//     }
-//   });
-//   return completer.future;
-// }
-
-// void _saveUser(List<dynamic> args) async {
-//   final user = args[0] as CubeUser;
-//   final sendPort = args[1] as SendPort;
-//   final saved = await SharedPrefs.instance.init().then((sharedPrefs) async {
-//     await sharedPrefs.saveNewUser(user);
-//     return true;
-//   }).catchError((error) {
-//     print("Error saving user in isolate: $error");
-//     return false;
-//   });
-//   sendPort.send(saved);
-// }
