@@ -7,7 +7,6 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
-import 'package:wings_dating_app/src/users/users_view.dart';
 
 import '../../routes/app_router.dart';
 @RoutePage()
@@ -71,8 +70,8 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                       },
                       value: 1,
                       // row has two child icon and text.
-                      child: Row(
-                        children: const [
+                      child: const Row(
+                        children: [
                           Icon(Icons.block),
                           SizedBox(
                             // sized box with width 10
@@ -83,11 +82,11 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                       ),
                     ),
                     // popupmenu item 2
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 2,
                       // row has two child icon and text
                       child: Row(
-                        children: const [
+                        children: [
                           Icon(Icons.chrome_reader_mode),
                           SizedBox(
                             // sized box with width 10

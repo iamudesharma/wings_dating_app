@@ -9,6 +9,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reaction_askany/models/emotions.dart';
+import 'package:reaction_askany/models/reaction_box_paramenters.dart';
+import 'package:reaction_askany/reaction_askany.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
 // ignore: depend_on_referenced_packages
 import 'package:universal_io/io.dart';
@@ -71,6 +74,7 @@ class ChatView extends ConsumerStatefulWidget {
 }
 
 class _ChatViewState extends ConsumerState<ChatView> {
+  final Emotions _emotions = Emotions.wow;
   @override
   void initState() {
     if (widget.cubeDialog == null) {
@@ -82,7 +86,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
 
   @override
   void didChangeDependencies() async {
-    var user = await SharedPrefs.instance.getUser()!;
+    var user = SharedPrefs.instance.getUser()!;
 
     await CubeChatConnection.instance
         .getLasUserActivity(user.id!)
@@ -161,7 +165,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
                         ],
                       )),
           ),
-          body: ChatScreen(widget.cubeUserId!, widget.cubeDialog)),
+          body: ChatScreen(widget.cubeUserId!, widget.cubeDialog, _emotions)),
     );
   }
 }
@@ -219,12 +223,15 @@ class ChatScreen extends ConsumerStatefulWidget {
   // final CubeUser _cubeUser;
   final int _cubeUserId;
   final CubeDialog? _cubeDialog;
+  final Emotions _emotions;
 
-  const ChatScreen(this._cubeUserId, this._cubeDialog, {super.key});
+  const ChatScreen(this._cubeUserId, this._cubeDialog, this._emotions,
+      {super.key});
 
   @override
   // ignore: no_logic_in_create_state
-  ConsumerState createState() => ChatScreenState(_cubeUserId, _cubeDialog);
+  ConsumerState createState() =>
+      ChatScreenState(_cubeUserId, _cubeDialog, _emotions);
 }
 
 class ChatScreenState extends ConsumerState<ChatScreen> {
@@ -264,7 +271,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   List<CubeMessage> oldMessages = [];
 
-  ChatScreenState(this._cubeUserId, this._cubeDialog);
+  ChatScreenState(this._cubeUserId, this._cubeDialog, this._emotions);
 
   @override
   void initState() {
@@ -334,6 +341,8 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
       Fluttertoast.showToast(msg: 'This file is not an image');
     });
   }
+
+  final Emotions _emotions;
 
   void onReceiveMessage(CubeMessage message) {
     log("onReceiveMessage message= $message");
@@ -450,9 +459,11 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
           .first
     ];
 
+    //  if(Platform.isAndroid){
     createEvent(params.getEventForRequest())
         .then((cubeEvent) {})
         .catchError((error) {});
+    //  }
   }
 
   updateReadDeliveredStatusMessage(MessageStatus status, bool isRead) {
@@ -489,6 +500,8 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
       }
     });
   }
+
+  Emotions? emotions;
 
   @override
   Widget build(BuildContext context) {
@@ -676,13 +689,47 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                BubbleNormal(
-                                  text: message.body ?? "",
-                                  isSender: isLastMessageRight(index),
-                                  seen: messageIsRead(),
-                                  delivered: messageIsDelivered(),
-                                  tail: true,
-                                  sent: true,
+                                GestureDetector(
+                                  onTapDown: (details) {
+                                    ReactionAskany.showReactionBox(
+                                      context,
+                                      offset: details.globalPosition,
+                                      boxParamenters: ReactionBoxParamenters(
+                                        brightness: Brightness.light,
+                                        iconSize: 26,
+                                        iconSpacing: 10,
+                                        paddingHorizontal: 30,
+                                        radiusBox: 40,
+                                        quantityPerPage: 6,
+                                      ),
+                                      emotionPicked: widget._emotions,
+                                      handlePressed: (Emotions emotion) {
+                                        setState(() {
+                                          emotions = emotion;
+                                        });
+                                      },
+                                    );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: BubbleNormal(
+                                          text: message.body ?? "",
+                                          isSender: isLastMessageRight(index),
+                                          seen: messageIsRead(),
+                                          delivered: messageIsDelivered(),
+                                          tail: true,
+                                          sent: true,
+                                        ),
+                                      ),
+                                      const ReactionWrapper(
+                                        buttonReaction: Padding(
+                                            padding: EdgeInsets.only(top: 2.0),
+                                            child: Text("👎")),
+                                        child: SizedBox(),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ]),
                         )
@@ -782,13 +829,29 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  BubbleNormal(
-                                    sent: true,
-                                    isSender: isLastMessageLeft(index),
-                                    text: message.body!,
-                                    seen: messageIsRead(),
-                                    delivered: messageIsDelivered(),
-                                    tail: true,
+                                  GestureDetector(
+                                    onTapDown: (details) {
+                                      var messageId = message.messageId;
+                                      var reaction = '🔥';
+
+                                      addMessageReaction(messageId!, reaction)
+                                          .then((_) {})
+                                          .catchError((onError) {});
+                                    },
+                                    child: Row(
+                                      children: [
+                                        FittedBox(
+                                          child: BubbleNormal(
+                                            sent: true,
+                                            isSender: isLastMessageLeft(index),
+                                            text: message.body!,
+                                            seen: messageIsRead(),
+                                            delivered: messageIsDelivered(),
+                                            tail: true,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   // getDateWidget(),
                                 ]),
@@ -1127,3 +1190,12 @@ Future<CubeFile> getUploadingImageFuture(FilePickerResult result) async {
     });
   }
 }
+
+String addEmotionsCase(Emotions emotions) => switch (emotions) {
+      Emotions.angry => "angry",
+      Emotions.like => "like",
+      Emotions.care => "care",
+      Emotions.haha => "haha",
+      Emotions.love => "love",
+      Emotions.wow => "wow",
+    };

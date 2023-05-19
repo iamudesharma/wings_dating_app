@@ -8,7 +8,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +31,6 @@ import 'package:wings_dating_app/routes/app_router_provider.dart';
 // / / /  / / import 'package:wings_dating_app/src/model/geo_point.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
-import 'package:wings_dating_app/src/users/users_view.dart';
 
 import '../../helpers/responsive_layout.dart';
 import '../model/geo_point_data.dart';
@@ -300,20 +298,20 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     fieldHintText: "MM/DD/YYYY",
                                     fieldLabelText: "Date of Birth",
                                     lastDate: DateTime.now().subtract(
-                                      Duration(
+                                      const Duration(
                                         days: 6570,
                                       ),
                                     ),
                                   ),
                               context: context,
                               initialDate: DateTime.now().subtract(
-                                Duration(
+                                const Duration(
                                   days: 6570,
                                 ),
                               ),
                               firstDate: DateTime(1960),
                               lastDate: DateTime.now().subtract(
-                                Duration(
+                                const Duration(
                                   days: 6570,
                                 ),
                               ),
@@ -338,7 +336,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                             if (value != null) {
                               setState(() {
                                 _dobController.text =
-                                    DateFormat.yMd().format(value!);
+                                    DateFormat.yMd().format(value);
 
                                 //     _selectedDate = value;
                                 _selectedDate = value;
@@ -479,7 +477,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               ));
 
                               if (_formKey.currentState!.validate()) {
-                                CubeUser? _cubeUser = sharedPrefs.getUser();
+                                CubeUser? cubeUser0 = sharedPrefs.getUser();
                                 final image = await ref
                                     .read(ProfileController
                                         .userControllerProvider)
@@ -492,9 +490,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     bio: _bioController.text,
                                     fcmToken: "",
                                     cubeUser: CubeUser(
-                                      id: _cubeUser?.id,
+                                      id: cubeUser0?.id,
                                       password: "1234567890",
-                                      login: _cubeUser?.login,
+                                      login: cubeUser0?.login,
                                       fullName: _usernameController.text,
                                       avatar: image,
                                     ),
@@ -751,10 +749,11 @@ _loginToCC(CubeUser user, {bool saveUser = false}) {
     print("createSession cubeSession: $cubeSession");
     var tempUser = user;
     user = cubeSession.user!..password = tempUser.password;
-    if (saveUser)
+    if (saveUser) {
       SharedPrefs.instance.init().then((sharedPrefs) {
         sharedPrefs.saveNewUser(user);
       });
+    }
 
     PushNotificationsManager.instance.init();
 

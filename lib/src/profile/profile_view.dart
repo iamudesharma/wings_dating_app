@@ -37,7 +37,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
     // logger.i(userData?.profileUrl);
 
     return DefaultTextStyle(
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       child: PlatformScaffold(
         body: CustomScrollView(
           slivers: [
@@ -87,9 +87,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                               NetworkImage(userData.profileUrl ?? ""),
                         ),
                         10.widthBox,
-                        Column(
+                        const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [],
+                          children: [],
                         ),
                         const Spacer(),
                         ElevatedButton.icon(
@@ -101,7 +101,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                             );
                           },
                           icon: const Icon(Icons.edit, size: 10),
-                          label: Text(
+                          label: const Text(
                             "Edit Profile",
                             // style: Theme.of(context).textTheme.bodySmall,
                           ),
@@ -120,7 +120,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                   children: [
                     PlatformText(
                       "About",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 25,
                       ),
                     ),
@@ -201,11 +201,11 @@ class ProfileInputCard extends StatelessWidget {
                   // mainAxisSize,
                   children: [
                     PlatformText(title,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
                         )),
                     PlatformText(value,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 15,
                         )),
                   ],

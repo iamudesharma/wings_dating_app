@@ -74,9 +74,9 @@ class _UsersViewState extends ConsumerState<UsersView>
         nullWidget = Center(
           child: Column(
             children: [
-              Text("Plase enable location service"),
+              const Text("Plase enable location service"),
               TextButton(
-                child: Text("Enable"),
+                child: const Text("Enable"),
                 onPressed: () {
                   Geolocator.openLocationSettings();
                 },
@@ -279,7 +279,7 @@ class _UsersViewState extends ConsumerState<UsersView>
                                 onTap: () {
                                   controller.openView();
                                 },
-                                child: Icon(Icons.search)),
+                                child: const Icon(Icons.search)),
 
                             suggestionsBuilder: (context, controller) {
                               final userList = ref
@@ -314,7 +314,7 @@ class _UsersViewState extends ConsumerState<UsersView>
                                                       users!.profileUrl!),
                                             ),
                                             title: Text(users.username,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     color: Colors.white)),
                                             onTap: () {
                                               // // Navigator.push(
