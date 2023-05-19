@@ -1445,6 +1445,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  reaction_askany:
+    dependency: "direct main"
+    description:
+      name: reaction_askany
+      sha256: de8917148aac175b0eb6fa6f787f0b66b31ef8989654ccd18584fabde9874e30
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   recase:
     dependency: transitive
     description:
