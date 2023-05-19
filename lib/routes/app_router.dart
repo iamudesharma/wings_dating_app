@@ -4,7 +4,6 @@ import 'package:connectycube_sdk/connectycube_sdk.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
 
 import '../src/auth/sign_options.dart';

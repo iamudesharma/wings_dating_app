@@ -1,20 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:wings_dating_app/firebase_options.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 
 import 'package:wings_dating_app/routes/app_router.dart';
 
 import '../const/pref_util.dart';
-import '../helpers/app_notification.dart';
 import '../repo/profile_repo.dart';
 import '../src/profile/controller/profile_controller.dart';
 
@@ -86,17 +82,17 @@ void _processLoginError(exception) {
   );
 }
 
-_loginToCC(CubeUser _user,
+_loginToCC(CubeUser user,
     {bool saveUser = false, required NavigationResolver resolver}) {
-  print("_loginToCC user: $_user");
+  // print("_loginToCC user: $user");
   // if (_isLoginContinues) return;
   // setState(() {
   //   _isLoginContinues = true;
   // });
 
-  CubeUser user = CubeUser(login: _user.login, password: _user.password);
+  CubeUser cubeuser = CubeUser(login: user.login, password: user.password);
 
-  createSession(user).then((cubeSession) async {
+  createSession(cubeuser).then((cubeSession) async {
     print("createSession cubeSession: $cubeSession");
     var tempUser = user;
     user = cubeSession.user!..password = tempUser.password;
@@ -107,7 +103,7 @@ _loginToCC(CubeUser _user,
     }
 
     if (!Platform.isLinux) {
-      _loginToCubeChat(_user);
+      _loginToCubeChat(user);
     }
 
     resolver.next(true);

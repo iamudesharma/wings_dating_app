@@ -531,7 +531,7 @@ class CallView extends StatefulWidget {
     return _CallViewState(_callSession, _isIncoming);
   }
 
-  const CallView(this._callSession, this._isIncoming);
+  const CallView(this._callSession, this._isIncoming, {super.key});
 }
 
 class _CallViewState extends State<CallView>
@@ -964,7 +964,7 @@ class _CallViewState extends State<CallView>
   _endCall() {
     CallManager.instance.hungUp();
     if (_isIncoming) {
-      AutoRouter.of(context).replace(DashboardRoute());
+      AutoRouter.of(context).replace(const DashboardRoute());
     } else {
       AutoRouter.of(context).pop();
     }

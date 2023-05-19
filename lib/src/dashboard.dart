@@ -58,7 +58,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                       PlatformIcons(context).home,
                     ),
                   ),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                     label: 'Chat',
                     icon: Icon(
                       CupertinoIcons.chat_bubble,

@@ -162,11 +162,11 @@ class PushNotificationsManager {
         .then((cubeSubscription) {
       log('[subscribe] subscription SUCCESS', PushNotificationsManager.TAG);
       sharedPrefs.saveSubscriptionToken(token!);
-      cubeSubscription.forEach((subscription) {
+      for (var subscription in cubeSubscription) {
         if (subscription.clientIdentificationSequence == token) {
           sharedPrefs.saveSubscriptionId(subscription.id!);
         }
-      });
+      }
     }).catchError((error) {
       log('[subscribe] subscription ERROR: $error',
           PushNotificationsManager.TAG);
