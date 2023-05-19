@@ -39,9 +39,6 @@ class AuthGuard extends AutoRouteGuard {
   void onNavigation(NavigationResolver resolver, StackRouter router) async {
     FirebaseAuth auth = FirebaseAuth.instance;
 
-    SharedPrefs? prefs = await SharedPrefs.instance.init();
-
-    // var customerController = ref.read(profileControllerProvider);
     if (auth.currentUser != null) {
       print(auth.currentUser != null);
       if (await ref.read(profileRepoProvider).checkUserDocExist()) {
@@ -59,13 +56,13 @@ class AuthGuard extends AutoRouteGuard {
           // chat.login(userModel.);
           // resolver.next(true);
         } else {
-          _loginToCC(userModel.getUser() ??
-              ref
-                  .read(ProfileController.userControllerProvider)
-                  .userModel!
-                  .cubeUser);
-
-          resolver.next(true);
+          _loginToCC(
+              resolver: resolver,
+              userModel.getUser() ??
+                  ref
+                      .read(ProfileController.userControllerProvider)
+                      .userModel!
+                      .cubeUser);
         }
       } else {
         resolver.next(false);
@@ -89,7 +86,8 @@ void _processLoginError(exception) {
   );
 }
 
-_loginToCC(CubeUser _user, {bool saveUser = false}) {
+_loginToCC(CubeUser _user,
+    {bool saveUser = false, required NavigationResolver resolver}) {
   print("_loginToCC user: $_user");
   // if (_isLoginContinues) return;
   // setState(() {
@@ -100,19 +98,23 @@ _loginToCC(CubeUser _user, {bool saveUser = false}) {
 
   createSession(user).then((cubeSession) async {
     print("createSession cubeSession: $cubeSession");
-    // var tempUser = user;
-    // user = cubeSession.user!..password = tempUser.password;
-    // if (saveUser) {
-    //   SharedPrefs.instance.init().then((sharedPrefs) {
-    //     sharedPrefs.saveNewUser(user);
-    //   });
-    // }
+    var tempUser = user;
+    user = cubeSession.user!..password = tempUser.password;
+    if (saveUser) {
+      SharedPrefs.instance.init().then((sharedPrefs) {
+        sharedPrefs.saveNewUser(user);
+      });
+    }
 
     if (!Platform.isLinux) {
       _loginToCubeChat(_user);
     }
+
+    resolver.next(true);
   }).catchError((error) {
     _processLoginError(error);
+
+    resolver.next(true);
   });
 }
 

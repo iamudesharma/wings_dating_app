@@ -95,6 +95,7 @@ dependencies:
   get_it: ^7.6.0
   flutter_platform_widgets: ^3.3.2
   platform_device_id: ^1.0.1
+  reaction_askany: ^0.1.0
   
 
 
