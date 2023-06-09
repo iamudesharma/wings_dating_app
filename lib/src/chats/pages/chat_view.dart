@@ -6,8 +6,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reaction_askany/models/emotions.dart';
 import 'package:reaction_askany/models/reaction_box_paramenters.dart';
@@ -119,8 +121,10 @@ class _ChatViewState extends ConsumerState<ChatView> {
             ? widget.cubeDialog!.occupantsIds!.last
             : widget.cubeDialog!.occupantsIds!.first));
     return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
+      bottom: true,
+      top: false,
+      child: PlatformScaffold(
+          appBar: PlatformAppBar(
             title: otherUser.when(
                 error: (error, stackTrace) => Text(error.toString()),
                 loading: () => const Text('Loading...'),
@@ -231,6 +235,7 @@ class ChatScreen extends ConsumerStatefulWidget {
   @override
   // ignore: no_logic_in_create_state
   ConsumerState createState() =>
+      // ignore: no_logic_in_create_state
       ChatScreenState(_cubeUserId, _cubeDialog, _emotions);
 }
 
@@ -260,8 +265,9 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   StreamSubscription<MessageStatus>? deliveredSubscription;
   StreamSubscription<MessageStatus>? readSubscription;
   StreamSubscription<TypingStatus>? typingSubscription;
-
+  StreamSubscription<MessageReaction>? reactionSubscription;
   StreamSubscription? lastActivitySubscription;
+  StreamSubscription<MessageStatus>? deleteMsgSubscription;
 
   final List<CubeMessage> _unreadMessages = [];
   final List<CubeMessage> _unsentMessages = [];
@@ -303,6 +309,8 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     typingSubscription?.cancel();
     textEditingController.dispose();
     connectivityStateSubscription.cancel();
+    reactionSubscription?.cancel();
+    deleteMsgSubscription?.cancel();
     super.dispose();
   }
 
@@ -360,6 +368,78 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   void onReadMessage(MessageStatus status) {
     log("onReadMessage message= ${status.messageId}");
     updateReadDeliveredStatusMessage(status, true);
+  }
+
+  void onDeleteMessage(MessageStatus status) {
+    log("onDeleteMessage message= ${status.messageId}");
+    deleteMessage(status.messageId);
+  }
+
+  void onReactionMessage(MessageReaction reaction) {
+    log("onReactionReceived message= ${reaction.messageId}");
+    _updateMessageReactions(reaction);
+  }
+
+  void _performReaction(Emoji emoji, CubeMessage message) {
+    if ((message.reactions?.own.isNotEmpty ?? false) &&
+        (message.reactions?.own.contains(emoji.emoji) ?? false)) {
+      removeMessageReaction(message.messageId!, emoji.emoji);
+      _updateMessageReactions(MessageReaction(
+          _cubeUserId, _cubeDialog!.dialogId!, message.messageId!,
+          removeReaction: emoji.emoji));
+    } else {
+      addMessageReaction(message.messageId!, emoji.emoji);
+      _updateMessageReactions(MessageReaction(
+          _cubeUserId, _cubeDialog!.dialogId!, message.messageId!,
+          addReaction: emoji.emoji));
+    }
+  }
+
+  void _updateMessageReactions(MessageReaction reaction) {
+    log('[_updateMessageReactions]');
+    setState(() {
+      CubeMessage? msg = listMessage
+          .firstWhereOrNull((msg) => msg.messageId == reaction.messageId);
+      if (msg == null) return;
+
+      if (msg.reactions == null) {
+        msg.reactions = CubeMessageReactions.fromJson({
+          'own': {if (reaction.userId == _cubeUserId) reaction.addReaction},
+          'total': {reaction.addReaction: 1}
+        });
+      } else {
+        if (reaction.addReaction != null) {
+          if (reaction.userId != _cubeUserId ||
+              !(msg.reactions?.own.contains(reaction.addReaction) ?? false)) {
+            if (reaction.userId == _cubeUserId) {
+              msg.reactions!.own.add(reaction.addReaction!);
+            }
+
+            msg.reactions!.total[reaction.addReaction!] =
+                msg.reactions!.total[reaction.addReaction] == null
+                    ? 1
+                    : msg.reactions!.total[reaction.addReaction]! + 1;
+          }
+        }
+
+        if (reaction.removeReaction != null) {
+          if (reaction.userId != _cubeUserId ||
+              (msg.reactions?.own.contains(reaction.removeReaction) ?? false)) {
+            if (reaction.userId == _cubeUserId) {
+              msg.reactions!.own.remove(reaction.removeReaction!);
+            }
+
+            msg.reactions!.total[reaction.removeReaction!] =
+                msg.reactions!.total[reaction.removeReaction] != null &&
+                        msg.reactions!.total[reaction.removeReaction]! > 0
+                    ? msg.reactions!.total[reaction.removeReaction]! - 1
+                    : 0;
+          }
+
+          msg.reactions!.total.removeWhere((key, value) => value == 0);
+        }
+      }
+    });
   }
 
   void onTypingMessage(TypingStatus status) {
@@ -486,6 +566,13 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     });
   }
 
+  deleteMessage(String message) {
+    log('[deleteMessage] message= $message');
+    setState(() {
+      listMessage.removeWhere((msg) => msg.messageId == message);
+    });
+  }
+
   addMessageToListView(CubeMessage message) {
     setState(() {
       isLoading = false;
@@ -505,26 +592,129 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: onBackPress,
-      child: Stack(
-        children: <Widget>[
-          Column(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Material(
+        color: Theme.of(context).platform == TargetPlatform.iOS
+            ? Colors.black
+            : Theme.of(context).scaffoldBackgroundColor,
+        child: WillPopScope(
+          onWillPop: onBackPress,
+          child: Stack(
             children: <Widget>[
-              // List of messages
-              buildListMessage(),
-              //Typing content
-              buildTyping(),
-              // Input content
-              buildInput(),
+              Column(
+                children: <Widget>[
+                  // List of messages
+                  buildListMessage(),
+                  //Typing content
+                  buildTyping(),
+                  // Input content
+                  buildInput(),
+                ],
+              ),
+
+              // Loading
+              buildLoading()
             ],
           ),
-
-          // Loading
-          buildLoading()
-        ],
+        ),
       ),
     );
+  }
+
+  getReactionsWidget(CubeMessage message) {
+    if (message.reactions == null) return Container();
+
+    var isOwnMessage = message.senderId == _cubeUserId;
+
+    return LayoutBuilder(builder: (context, constraints) {
+      var widgetWidth =
+          constraints.maxWidth == double.infinity ? 240 : constraints.maxWidth;
+      var maxColumns = (widgetWidth / 60).round();
+      if (message.reactions!.total.length < maxColumns) {
+        maxColumns = message.reactions!.total.length;
+      }
+
+      return SizedBox(
+          width: maxColumns * 56,
+          child: GridView.count(
+            primary: false,
+            crossAxisCount: maxColumns,
+            mainAxisSpacing: 4,
+            childAspectRatio: 2,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            children: <Widget>[
+              ...message.reactions!.total.keys.map((reaction) {
+                return GestureDetector(
+                    onTap: () => _performReaction(Emoji(reaction, ''), message),
+                    child: Padding(
+                        padding: EdgeInsets.only(
+                          left: isOwnMessage ? 1 : 0,
+                          right: isOwnMessage ? 0 : 1,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(16),
+                          ),
+                          child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4, horizontal: 6),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(reaction,
+                                      style: kIsWeb
+                                          ? const TextStyle(
+                                              color: Colors.green,
+                                              fontFamily: 'NotoColorEmoji')
+                                          : null),
+                                  Text(
+                                      ' ${message.reactions!.total[reaction].toString()}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      )),
+                                ],
+                              )),
+                        )));
+              }).toList()
+            ],
+          ));
+    });
+  }
+
+  _reactOnMessage(CubeMessage message) {
+    showDialog<Emoji>(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+              child: Container(
+                  margin: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  width: 400,
+                  height: 400,
+                  child: EmojiPicker(
+                    config: const Config(
+                      emojiTextStyle: kIsWeb
+                          ? TextStyle(
+                              color: Colors.green, fontFamily: 'NotoColorEmoji')
+                          : null,
+                      iconColorSelected: Colors.green,
+                      indicatorColor: Colors.green,
+                      bgColor: Colors.white,
+                    ),
+                    onEmojiSelected: (category, emoji) {
+                      Navigator.pop(context, emoji);
+                    },
+                  )));
+        }).then((emoji) {
+      log("onEmojiSelected emoji: ${emoji?.emoji}");
+      if (emoji != null) {
+        _performReaction(emoji, message);
+      }
+    });
   }
 
   Widget buildItem(int index, CubeMessage message) {
@@ -690,26 +880,32 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                   height: 5,
                                 ),
                                 GestureDetector(
-                                  onTapDown: (details) {
-                                    ReactionAskany.showReactionBox(
-                                      context,
-                                      offset: details.globalPosition,
-                                      boxParamenters: ReactionBoxParamenters(
-                                        brightness: Brightness.light,
-                                        iconSize: 26,
-                                        iconSpacing: 10,
-                                        paddingHorizontal: 30,
-                                        radiusBox: 40,
-                                        quantityPerPage: 6,
-                                      ),
-                                      emotionPicked: widget._emotions,
-                                      handlePressed: (Emotions emotion) {
-                                        setState(() {
-                                          emotions = emotion;
-                                        });
-                                      },
+                                  onTapDown: (TapDownDetails details) {
+                                    double left = details.globalPosition.dx;
+                                    double top = details.globalPosition.dy;
+                                    showMenu(
+                                      context: context,
+                                      items: [
+                                        PopupMenuItem<String>(
+                                          value: 'Doge',
+                                          onTap: () => _reactOnMessage(message),
+                                          child: const Text('Add reaction'),
+                                        ),
+                                        if (message.senderId == _cubeUserId)
+                                          PopupMenuItem<String>(
+                                              onTap: () async {
+                                                await _cubeDialog
+                                                    ?.deleteMessage(message);
+                                              },
+                                              value: 'Lion',
+                                              child: const Text('Delete')),
+                                      ],
+                                      position: RelativeRect.fromLTRB(
+                                          200, 280, 0, 100),
                                     );
+                                    // popUpMenu(message);
                                   },
+                                  // onLongPress: () => _reactOnMessage(message),
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -722,12 +918,9 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                           sent: true,
                                         ),
                                       ),
-                                      const ReactionWrapper(
-                                        buttonReaction: Padding(
-                                            padding: EdgeInsets.only(top: 2.0),
-                                            child: Text("👎")),
-                                        child: SizedBox(),
-                                      )
+                                      if (message.reactions != null &&
+                                          message.reactions!.total.isNotEmpty)
+                                        getReactionsWidget(message),
                                     ],
                                   ),
                                 ),
@@ -830,16 +1023,22 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   GestureDetector(
-                                    onTapDown: (details) {
-                                      var messageId = message.messageId;
-                                      var reaction = '🔥';
-
-                                      addMessageReaction(messageId!, reaction)
-                                          .then((_) {})
-                                          .catchError((onError) {});
-                                    },
+                                    onLongPress: () => _reactOnMessage(message),
                                     child: Row(
                                       children: [
+                                        // message.senderId == _cubeUserId
+                                        //     ? const SizedBox()
+                                        //     : const ReactionWrapper(
+                                        //         buttonReaction: Padding(
+                                        //             padding: EdgeInsets.only(
+                                        //                 top: 2.0),
+                                        //             child: Text("👎")),
+                                        //         child: SizedBox(),
+                                        //       ),
+
+                                        if (message.reactions != null &&
+                                            message.reactions!.total.isNotEmpty)
+                                          getReactionsWidget(message),
                                         FittedBox(
                                           child: BubbleNormal(
                                             sent: true,
@@ -1062,6 +1261,14 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     typingSubscription = CubeChatConnection
         .instance.typingStatusesManager!.isTypingStream
         .listen(onTypingMessage);
+
+    reactionSubscription = CubeChatConnection
+        .instance.messagesReactionsManager?.reactionsStream
+        .listen(onReactionMessage);
+
+    deleteMsgSubscription = CubeChatConnection
+        .instance.messagesStatusesManager?.deletedStream
+        .listen(onDeleteMessage);
   }
 
   void _initCubeChat() {
