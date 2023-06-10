@@ -395,19 +395,19 @@ class _UsersViewState extends ConsumerState<UsersView>
 
                             return UserGridItem(
                               onTapEditProfile: () async {
-                                // AutoTabsRouter.of(context).setActiveIndex(2);
+                                AutoTabsRouter.of(context).setActiveIndex(2);
 
-                                await CubeChatConnection.instance
-                                    .getLasUserActivity(7801610)
-                                    .then((value) {
-                                  final data = intToTimeLeft(value);
+                                // await CubeChatConnection.instance
+                                //     .getLasUserActivity(7801610)
+                                //     .then((value) {
+                                //   final data = intToTimeLeft(value);
 
-                                  logger.e(
-                                      "subscribeToUserLastActivityStatu $data");
-                                }).catchError((error) {
-                                  logger.e(
-                                      "subscribeToUserLastActivityStatus error $error");
-                                });
+                                //   logger.e(
+                                //       "subscribeToUserLastActivityStatu $data");
+                                // }).catchError((error) {
+                                //   logger.e(
+                                //       "subscribeToUserLastActivityStatus error $error");
+                                // });
                               },
                               isCurrentUser:
                                   users?.id == userData.id ? true : false,
