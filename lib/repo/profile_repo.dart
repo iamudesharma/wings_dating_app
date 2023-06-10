@@ -43,6 +43,13 @@ class ProfileRepo with RepositoryExceptionMixin {
         .set(userModel);
   }
 
+  // Future<void> updateUserDoc(UserModel userModel) async {
+  //   final usercollection = userCollection();
+  //   await usercollection
+  //       .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+  //       .update(userModel.toJson());
+  // }
+
   Future<UserModel> getCurrentUser() async {
     final usercollection = userCollection();
 
@@ -95,12 +102,9 @@ class ProfileRepo with RepositoryExceptionMixin {
 
   Future<void> updateUserDoc(UserModel userModel) async {
     final usercollection = userCollection();
-    await exceptionHandler<void>(
-      usercollection
-          .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-          .update(userModel.toJson())
-          .onError((error, stackTrace) => logger.e(error)),
-    );
+    await exceptionHandler<void>(usercollection
+        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+        .update(userModel.toJson()));
 
     await exceptionHandler<void>(
       updateUser(userModel.cubeUser).then((value) async {
