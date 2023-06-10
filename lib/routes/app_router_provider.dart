@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/helpers/app_notification.dart';
@@ -112,9 +113,9 @@ _loginToCubeChat(CubeUser user) {
   CubeChatConnection.instance.login(user).then((cubeUser) {
     // _isLoginContinues = false;
 
-    if (Platform.isAndroid) {
-      PushNotificationsManager.instance.init();
-    }
+    // if (!kIsWeb) {
+    PushNotificationsManager.instance.init();
+    // }
     // _goDialogScreen(context, cubeUser);
   }).catchError((error) {
     _processLoginError(error);

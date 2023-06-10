@@ -32,6 +32,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
     CallManager.instance.init(context);
     return PlatformScaffold(
       body: AutoTabsScaffold(
+          drawer: const Drawer(),
           backgroundColor: Colors.black,
           routes: const [
             UsersRoute(),

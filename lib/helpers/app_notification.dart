@@ -67,22 +67,32 @@ class PushNotificationsManager {
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('ic_launcher_foreground');
-    // final IOSInitializationSettings initializationSettingsIOS =
-    //     IOSInitializationSettings(
-    //   requestSoundPermission: true,
-    //   requestBadgePermission: true,
-    //   requestAlertPermission: true,
-    //   onDidReceiveLocalNotification: onDidReceiveLocalNotification,
-    // );
-
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
+    final DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings(
+      requestSoundPermission: true,
+      requestBadgePermission: true,
+      requestAlertPermission: true,
+      onDidReceiveLocalNotification: onDidReceiveLocalNotification,
     );
+
+    final DarwinInitializationSettings initializationSettingsMacOS =
+        DarwinInitializationSettings(
+      requestSoundPermission: true,
+      requestBadgePermission: true,
+      requestAlertPermission: true,
+      onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+    );
+
+    InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS,
+        macOS: initializationSettingsMacOS);
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: (details) => onSelectNotification(details.payload),
-     onDidReceiveBackgroundNotificationResponse: (details) =>notificationTapBackground ,
+      onDidReceiveNotificationResponse: (details) =>
+          onSelectNotification(details.payload),
+      onDidReceiveBackgroundNotificationResponse: (details) =>
+          notificationTapBackground,
     );
 
     String? token;
