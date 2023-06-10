@@ -6,6 +6,7 @@ import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 
 import 'package:wings_dating_app/routes/app_router.dart';
@@ -83,30 +84,21 @@ void _processLoginError(exception) {
 }
 
 _loginToCC(CubeUser user,
-    {bool saveUser = false, required NavigationResolver resolver}) {
-  // print("_loginToCC user: $user");
-  // if (_isLoginContinues) return;
-  // setState(() {
-  //   _isLoginContinues = true;
-  // });
-
+    {bool saveUser = true, required NavigationResolver resolver}) {
   CubeUser cubeuser = CubeUser(login: user.login, password: user.password);
 
   createSession(cubeuser).then((cubeSession) async {
     print("createSession cubeSession: $cubeSession");
-    var tempUser = user;
-    user = cubeSession.user!..password = tempUser.password;
+
+    resolver.next(true);
+
+    _loginToCubeChat(user);
+
     if (saveUser) {
       SharedPrefs.instance.init().then((sharedPrefs) {
         sharedPrefs.saveNewUser(user);
       });
     }
-
-    if (!Platform.isLinux) {
-      _loginToCubeChat(user);
-    }
-
-    resolver.next(true);
   }).catchError((error) {
     _processLoginError(error);
 
@@ -119,6 +111,10 @@ _loginToCubeChat(CubeUser user) {
   CubeChatConnectionSettings.instance.totalReconnections = 0;
   CubeChatConnection.instance.login(user).then((cubeUser) {
     // _isLoginContinues = false;
+
+    if (Platform.isAndroid) {
+      PushNotificationsManager.instance.init();
+    }
     // _goDialogScreen(context, cubeUser);
   }).catchError((error) {
     _processLoginError(error);
