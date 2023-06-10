@@ -12,12 +12,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:geolocator/geolocator.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/app_notification.dart';
+import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
+import 'package:wings_dating_app/src/model/geo_point_data.dart';
 
 import '../../const/app_const.dart';
 import '../../const/pref_util.dart';
@@ -207,19 +210,14 @@ class _UsersViewState extends ConsumerState<UsersView>
     // );
     SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
 
-    // await ref
-    //     .read(profileRepoProvider)
-    //     .updateCubeUserDoc(sharedPrefs.getUser()!);
-
+    final _currentUser =
+        ref.read(ProfileController.userControllerProvider).userModel;
     // _loginToCubeChat(sharedPrefs.getUser()!);
-
-    // await CubeChatConnection.instance
-    //     .subscribeToUserLastActivityStatus(7375047)
-    //     .then((value) {
-    //   logger.e("subscribeToUserLastActivityStatus");
-    // }).catchError((error) {
-    //   logger.e("subscribeToUserLastActivityStatus error $error");
-    // });
+    if (_currentUser?.cubeUser.id == null) {
+      await ref.read(profileRepoProvider).updateUserDoc(_currentUser!.copyWith(
+            cubeUser: sharedPrefs.getUser()!,
+          ));
+    }
   }
 
   formatedTime({required int timeInSecond}) {
@@ -234,7 +232,7 @@ class _UsersViewState extends ConsumerState<UsersView>
     print("_loginToCubeChat user $user");
     CubeChatConnectionSettings.instance.totalReconnections = 0;
     CubeChatConnection.instance.login(user).then((cubeUser) {
-      CubeChatConnection.instance.subscribeToUserLastActivityStatus(user.id!);
+      // CubeChatConnection.instance.subscribeToUserLastActivityStatus(user.id!);
     }).catchError((error) {});
   }
 
@@ -247,19 +245,38 @@ class _UsersViewState extends ConsumerState<UsersView>
     final userList = ref.watch(userListProvider);
 
     return PlatformScaffold(
-      body: LayoutBuilder(builder: (context, constraints) {
-        return RefreshIndicator(
-          onRefresh: () async => ref.refresh(userListProvider),
-          child: nullWidget ??
+      body: RefreshIndicator.adaptive(
+        onRefresh: () async {
+          final currentLocation = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
+
+          logger.d("currentLocation ${currentLocation.toJson()}");
+          final currentUser = userData?.position?.geopoint;
+
+          if (currentLocation.latitude != currentUser?.latitude &&
+              currentLocation.longitude != currentUser?.longitude) {
+            GeoFirePoint geoFirePoint = GeoFirePoint(
+                GeoPoint(currentLocation.latitude, currentLocation.longitude));
+
+            await ref
+                .read(profileRepoProvider)
+                .updateUserDoc(userData!.copyWith(
+                    position: GeoPointData(
+                  geohash: geoFirePoint.geohash,
+                  geopoint: geoFirePoint.geopoint,
+                )));
+
+            return ref.refresh(userListProvider);
+          } else {
+            return ref.refresh(userListProvider);
+          }
+        },
+        child: LayoutBuilder(builder: (context, constraints) {
+          return nullWidget ??
               CustomScrollView(
                 slivers: [
                   SliverToBoxAdapter(
                     child: PlatformAppBar(
-                      // centerTitle: true,
-                      // pinned: true,
-                      // // floating: false,
-
-                      // titleSpacing: 50,
                       leading: CircleAvatar(
                         radius: 25,
                         // radius: 2,
@@ -377,10 +394,23 @@ class _UsersViewState extends ConsumerState<UsersView>
                             final users = data[index];
 
                             return UserGridItem(
-                              onTapEditProfile: () {
-                                AutoTabsRouter.of(context).setActiveIndex(2);
+                              onTapEditProfile: () async {
+                                // AutoTabsRouter.of(context).setActiveIndex(2);
+
+                                await CubeChatConnection.instance
+                                    .getLasUserActivity(7801610)
+                                    .then((value) {
+                                  final data = intToTimeLeft(value);
+
+                                  logger.e(
+                                      "subscribeToUserLastActivityStatu $data");
+                                }).catchError((error) {
+                                  logger.e(
+                                      "subscribeToUserLastActivityStatus error $error");
+                                });
                               },
-                              // isCurrentUser: true,
+                              isCurrentUser:
+                                  users?.id == userData.id ? true : false,
                               users: users!,
                             ).animate().shake();
                           },
@@ -390,9 +420,9 @@ class _UsersViewState extends ConsumerState<UsersView>
                     ),
                   ),
                 ],
-              ),
-        );
-      }),
+              );
+        }),
+      ),
     );
   }
 }
@@ -685,12 +715,12 @@ class UserGridItem extends ConsumerWidget {
   const UserGridItem(
       {super.key,
       required this.users,
-      // this.isCurrentUser = false,
+      this.isCurrentUser = false,
       this.onTapEditProfile});
 
   final UserModel users;
 
-  // final bool? isCurrentUser;
+  final bool? isCurrentUser;
 
   final VoidCallback? onTapEditProfile;
 
@@ -698,15 +728,15 @@ class UserGridItem extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return InkWell(
       onTap: () {
-        // if (isCurrentUser!) {
-        //   AutoTabsRouter.of(context).setActiveIndex(2);
-        // } else {
-        AutoRouter.of(context).push(
-          OtherUserProfileRoute(
-            id: users.id,
-          ),
-        );
-        // }
+        if (isCurrentUser!) {
+          AutoTabsRouter.of(context).setActiveIndex(2);
+        } else {
+          AutoRouter.of(context).push(
+            OtherUserProfileRoute(
+              id: users.id,
+            ),
+          );
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -739,24 +769,20 @@ class UserGridItem extends ConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                // isCurrentUser!
-                //     ?
-
-                //     InkWell(
-                //         onTap: onTapEditProfile, child: const Icon(Icons.edit))
-                //     :
-
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircleAvatar(
-                      radius: 5,
-                      backgroundColor:
-                          users.isOnline ? Colors.green : Colors.amber,
-                    ),
-                  ),
-                ),
+                isCurrentUser!
+                    ? InkWell(
+                        onTap: onTapEditProfile, child: const Icon(Icons.edit))
+                    : Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            radius: 5,
+                            backgroundColor:
+                                users.isOnline ? Colors.green : Colors.amber,
+                          ),
+                        ),
+                      ),
               ],
             ),
           ),
@@ -818,4 +844,18 @@ class UserGridItem extends ConsumerWidget {
       ),
     );
   }
+}
+
+String intToTimeLeft(int value) {
+  int h, m, s;
+
+  h = value ~/ 3600;
+
+  m = ((value - h * 3600)) ~/ 60;
+
+  s = value - (h * 3600) - (m * 60);
+
+  String result = "$h:$m:$s";
+
+  return result;
 }
