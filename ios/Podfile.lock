@@ -608,7 +608,7 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.24):
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
-  - cloud_firestore (4.7.1):
+  - cloud_firestore (4.8.0):
     - Firebase/Firestore (= 10.9.0)
     - firebase_core
     - Flutter
@@ -616,7 +616,7 @@ PODS:
   - connectivity_plus (0.0.1):
     - Flutter
     - ReachabilitySwift
-  - connectycube_flutter_call_kit (2.2.4):
+  - connectycube_flutter_call_kit (2.3.0):
     - Flutter
   - desktop_webview_auth (0.0.1):
     - Flutter
@@ -655,6 +655,8 @@ PODS:
   - DKPhotoGallery/Resource (0.0.17):
     - SDWebImage
     - SwiftyGif
+  - emoji_picker_flutter (0.0.1):
+    - Flutter
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
     - Flutter
@@ -683,30 +685,30 @@ PODS:
   - Firebase/Storage (10.9.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 10.9.0)
-  - firebase_analytics (10.4.1):
+  - firebase_analytics (10.4.2):
     - Firebase/Analytics (= 10.9.0)
     - firebase_core
     - Flutter
-  - firebase_auth (4.6.1):
+  - firebase_auth (4.6.2):
     - Firebase/Auth (= 10.9.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.13.0):
+  - firebase_core (2.13.1):
     - Firebase/CoreOnly (= 10.9.0)
     - Flutter
-  - firebase_crashlytics (3.3.1):
+  - firebase_crashlytics (3.3.2):
     - Firebase/Crashlytics (= 10.9.0)
     - firebase_core
     - Flutter
-  - firebase_dynamic_links (5.3.1):
+  - firebase_dynamic_links (5.3.2):
     - Firebase/DynamicLinks (= 10.9.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (14.6.1):
+  - firebase_messaging (14.6.2):
     - Firebase/Messaging (= 10.9.0)
     - firebase_core
     - Flutter
-  - firebase_storage (11.2.1):
+  - firebase_storage (11.2.2):
     - Firebase/Storage (= 10.9.0)
     - firebase_core
     - Flutter
@@ -800,9 +802,9 @@ PODS:
     - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
-  - flutter_webrtc (0.9.25):
+  - flutter_webrtc (0.9.31):
     - Flutter
-    - WebRTC-SDK (= 104.5112.16)
+    - WebRTC-SDK (= 104.5112.17)
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
@@ -952,7 +954,7 @@ PODS:
     - FMDB (>= 2.7.5)
   - SwiftyGif (5.4.4)
   - Toast (4.0.0)
-  - WebRTC-SDK (104.5112.16)
+  - WebRTC-SDK (104.5112.17)
 
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -961,6 +963,7 @@ DEPENDENCIES:
   - desktop_webview_auth (from `.symlinks/plugins/desktop_webview_auth/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
+  - emoji_picker_flutter (from `.symlinks/plugins/emoji_picker_flutter/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
@@ -1038,6 +1041,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/device_info/ios"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
+  emoji_picker_flutter:
+    :path: ".symlinks/plugins/emoji_picker_flutter/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   firebase_analytics:
@@ -1085,23 +1090,24 @@ SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
   AppAuth: e48b432bb4ba88b10cb2bcc50d7f3af21e78b9c2
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
-  cloud_firestore: f9951b7475ab483af80514228921edbef7109fff
+  cloud_firestore: cc13d04d075c95f45f6a31640e6a3591ae5895fb
   connectivity_plus: 07c49e96d7fc92bc9920617b83238c4d178b446a
-  connectycube_flutter_call_kit: 038f42559fc4f2ee60f4c1027385c40f873451ba
+  connectycube_flutter_call_kit: e1e6bcf89ce9b3f1e7a0fdd70e9471260fc222ef
   desktop_webview_auth: d645139460ef203d50bd0cdb33356785dd939cce
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   device_info_plus: 7545d84d8d1b896cb16a4ff98c19f07ec4b298ea
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
+  emoji_picker_flutter: df19dac03a2b39ac667dc8d1da939ef3a9e21347
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
   Firebase: bd152f0f3d278c4060c5c71359db08ebcfd5a3e2
-  firebase_analytics: 24c9089f960ea2255654488d219cb15a913adf8e
-  firebase_auth: 202fb0b14e267d2a91d83b75d0ce064ef2063383
-  firebase_core: fc68c0f9eec4e800b9418deff14a7e0a504016f3
-  firebase_crashlytics: 6c82b5f80f225b2429ebc5fdadde5b7e7735ed4e
-  firebase_dynamic_links: cf9f52378c722d7aa4563437feedee9160d5257c
-  firebase_messaging: ffb4e7c95d4daca8cef4eca0283f0ddd2b365d40
-  firebase_storage: 09fe224b1ae65ffb74241f2e3e89c8ebabbaa5cb
+  firebase_analytics: 48ed4a230abf9f585f7e7b477791effe96f5a791
+  firebase_auth: 3b4b3d296a504a24c0f518ec1a2dcc43e7b6ed81
+  firebase_core: ce64b0941c6d87c6ef5022ae9116a158236c8c94
+  firebase_crashlytics: 9b80d1944507cc07fa1c4455797f7d2eb7c8873f
+  firebase_dynamic_links: db9f2ebcc3ea646e76a1d3ee37e9e57890ff0a83
+  firebase_messaging: 42912365e62efc1ea3e00724e5eecba6068ddb88
+  firebase_storage: 7e99be67d69a310a307f7be32b93c7412ffc2282
   FirebaseAnalytics: 5ea0db4893825e7b0149d575352cd838236313dc
   FirebaseAppCheckInterop: 7d3521f56872cf74a01792c0a095a30e054ff6ae
   FirebaseAuth: 21d5e902fcea44d0d961540fc4742966ae6118cc
@@ -1119,7 +1125,7 @@ SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_isolate: 0edf5081826d071adf21759d1eb10ff5c24503b5
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
-  flutter_webrtc: ae7ab6f74d3c4f186594a74863f11433e7ab148a
+  flutter_webrtc: 02c023207f972145a3bc8c7aada86754f264d563
   fluttertoast: eb263d302cc92e04176c053d2385237e9f43fad0
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
@@ -1147,7 +1153,7 @@ SPEC CHECKSUMS:
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  WebRTC-SDK: 566e58d2916cb79d770350169a449ea523f5db7c
+  WebRTC-SDK: 082ae4893212534a779ca233f19a9df8efd5f3bd
 
 PODFILE CHECKSUM: 5d289dd0c42447aaed50114c33b8597068ea338f
 
