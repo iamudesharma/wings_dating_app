@@ -203,11 +203,6 @@ class _UsersViewState extends ConsumerState<UsersView>
   void didChangeDependencies() async {
     super.didChangeDependencies();
 
-    // await init(
-    //   AppConst.cubeappId,
-    //   AppConst.authKey,
-    //   AppConst.authSecret,
-    // );
     SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
 
     final _currentUser =

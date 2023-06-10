@@ -4,7 +4,7 @@ import 'package:connectycube_sdk/connectycube_sdk.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,37 +30,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
-    // The following lines are the same as previously explained in "Handling uncaught errors"
-    if (!kIsWeb) {
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-    }
-    // FirebaseMessaging.onBackgroundMessage((message) async {
-    //   showNotification(message);
-    // });
-
-    FirebaseUIAuth.configureProviders([
-      EmailAuthProvider(),
-      PhoneAuthProvider(),
-      GoogleProvider(
-        clientId:
-            "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
-      ),
-    ]);
-
-    runApp(const ProviderScope(child: MyApp()));
-  }, (error, stack) {
-    if (!kIsWeb) {
-      FirebaseCrashlytics.instance.recordError(error, stack);
-    } else {
-      if (kDebugMode) {
-        print(error);
-      }
-    }
-  });
-  // runZonedGuarded( ProviderScope(child: MyApp()),((error, stack) => FirebaseCrashlytics.instance.recordError(error, stack)));
+  FirebaseUIAuth.configureProviders([
+    EmailAuthProvider(),
+    PhoneAuthProvider(),
+    GoogleProvider(
+      clientId:
+          "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
+    ),
+  ]);
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {
