@@ -61,6 +61,7 @@ class AuthGuard extends AutoRouteGuard {
                       .read(ProfileController.userControllerProvider)
                       .userModel!
                       .cubeUser);
+          resolver.next(true);
         }
       } else {
         resolver.next(false);

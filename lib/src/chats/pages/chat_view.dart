@@ -9,7 +9,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reaction_askany/models/emotions.dart';
 import 'package:reaction_askany/models/reaction_box_paramenters.dart';
@@ -123,8 +122,8 @@ class _ChatViewState extends ConsumerState<ChatView> {
     return SafeArea(
       bottom: true,
       top: false,
-      child: PlatformScaffold(
-          appBar: PlatformAppBar(
+      child: Scaffold(
+          appBar: AppBar(
             title: otherUser.when(
                 error: (error, stackTrace) => Text(error.toString()),
                 loading: () => const Text('Loading...'),
@@ -1498,50 +1497,35 @@ class MessageBar extends StatelessWidget {
                   ...actions,
                   Expanded(
                     child: Container(
-                      child: PlatformTextField(
+                      child: TextField(
                         controller: _textController,
                         keyboardType: TextInputType.multiline,
                         textCapitalization: TextCapitalization.sentences,
                         minLines: 1,
                         maxLines: 3,
                         onChanged: onTextChanged,
-                        cupertino: (context, platform) =>
-                            CupertinoTextFieldData(
-                                placeholder: "Type your message here",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.white,
-                                  ),
-                                  borderRadius: BorderRadius.circular(30.0),
-                                )),
-                        material: (context, platform) => MaterialTextFieldData(
-                          decoration: InputDecoration(
-                            hintText: "Type your message here",
-                            hintMaxLines: 1,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 10),
-                            hintStyle: TextStyle(
-                              fontSize: 16,
+                        decoration: InputDecoration(
+                          hintText: "Type your message here",
+                          hintMaxLines: 1,
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 10),
+                          hintStyle: TextStyle(
+                            fontSize: 16,
+                          ),
+                          // fillColor: Colors.white,
+                          // filled: true,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            borderSide: const BorderSide(
+                              color: Colors.white,
+                              width: 0.2,
                             ),
-                            // fillColor: Colors.white,
-                            // filled: true,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              borderSide: const BorderSide(
-                                color: Colors.white,
-                                width: 0.2,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              borderSide: const BorderSide(
-                                color: Colors.black26,
-                                width: 0.2,
-                              ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            borderSide: const BorderSide(
+                              color: Colors.black26,
+                              width: 0.2,
                             ),
                           ),
                         ),

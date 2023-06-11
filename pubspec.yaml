@@ -92,7 +92,6 @@ dependencies:
     sdk: flutter
   firebase_ui_localizations: ^1.5.0
   get_it: ^7.6.0
-  flutter_platform_widgets: ^3.3.5
   platform_device_id: ^1.0.1
   reaction_askany: ^0.1.0
   emoji_picker_flutter: ^1.6.1

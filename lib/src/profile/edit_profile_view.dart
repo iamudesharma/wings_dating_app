@@ -11,7 +11,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
@@ -120,14 +119,14 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(ProfileController.userControllerProvider);
-    return PlatformScaffold(
+    return Scaffold(
       // appBar: AppBar(
       //   title: Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
       // ),
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: PlatformAppBar(
+            child: AppBar(
               title:
                   Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
             ),
@@ -171,9 +170,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         height: 20,
                       ),
                       Builder(builder: (context) {
-                        return PlatformElevatedButton(
+                        return ElevatedButton(
                           onPressed: () async {
-                            showPlatformModalSheet(
+                            showModalBottomSheet(
                                 // cupertino: CupertinoModalSheetData(),
                                 context: context,
                                 builder: (context) {
@@ -220,40 +219,24 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       const SizedBox(
                         height: 20,
                       ),
-                      PlatformTextFormField(
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Please enter a Username";
-                            } else {
-                              return null;
-                            }
-                          },
-                          controller: _usernameController,
-                          cupertino: (context, platform) =>
-                              CupertinoTextFormFieldData(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: CupertinoColors.systemGrey,
-                                    width: 0.0, // One physical pixel.
-                                    style: BorderStyle.solid,
-                                  ),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 12),
-                                placeholder: "username",
-                              ),
-                          material: (context, platform) =>
-                              MaterialTextFormFieldData(
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                  hintText: "Username",
-                                ),
-                              )),
+                      TextFormField(
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter a Username";
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          isDense: true,
+                          hintText: "Username",
+                        ),
+                        controller: _usernameController,
+                      ),
                       const SizedBox(
                         height: 10,
                       ),
-                      PlatformTextFormField(
+                      TextFormField(
                         validator: ((value) {
                           if (value!.isEmpty) {
                             return "Please enter a nickname";
@@ -261,77 +244,35 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                             return null;
                           }
                         }),
+                        decoration: const InputDecoration(
+                          isDense: true,
+                          hintText: "Date of Birth",
+                        ),
                         controller: _dobController,
-                        cupertino: (context, platform) =>
-                            CupertinoTextFormFieldData(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: CupertinoColors.systemGrey,
-                              width: 0.0, // One physical pixel.
-                              style: BorderStyle.solid,
-                            ),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 12),
-                          placeholder: "Date of Birth",
-                        ),
-                        material: (context, platform) =>
-                            MaterialTextFormFieldData(
-                          decoration: const InputDecoration(
-                            isDense: true,
-                            hintText: "Date of Birth",
-                          ),
-                        ),
                         readOnly: true,
                         onTap: () async {
                           // if (Platform.isIOS) {
-                          await showPlatformDatePicker(
-                              material: (context, platform) =>
-                                  MaterialDatePickerData(
-                                    cancelText: "Cancel",
-                                    confirmText: "Done",
-                                    helpText: "Select Date of Birth",
-                                    errorFormatText: "Enter valid date",
-                                    errorInvalidText:
-                                        "Enter date in valid range",
-                                    fieldHintText: "MM/DD/YYYY",
-                                    fieldLabelText: "Date of Birth",
-                                    lastDate: DateTime.now().subtract(
-                                      const Duration(
-                                        days: 6570,
-                                      ),
-                                    ),
-                                  ),
-                              context: context,
-                              initialDate: DateTime.now().subtract(
-                                const Duration(
-                                  days: 6570,
-                                ),
+                          await showDatePicker(
+                            cancelText: "Cancel",
+                            confirmText: "Done",
+                            helpText: "Select Date of Birth",
+                            errorFormatText: "Enter valid date",
+                            errorInvalidText: "Enter date in valid range",
+                            fieldHintText: "MM/DD/YYYY",
+                            fieldLabelText: "Date of Birth",
+                            lastDate: DateTime.now().subtract(
+                              const Duration(
+                                days: 6570,
                               ),
-                              firstDate: DateTime(1960),
-                              lastDate: DateTime.now().subtract(
-                                const Duration(
-                                  days: 6570,
-                                ),
+                            ),
+                            context: context,
+                            initialDate: DateTime.now().subtract(
+                              const Duration(
+                                days: 6570,
                               ),
-                              cupertino: (context, platform) =>
-                                  CupertinoDatePickerData(
-                                    dateOrder: DatePickerDateOrder.dmy,
-                                    backgroundColor: Colors.black,
-                                    onDateTimeChanged: (value) {
-                                      _dobController.text =
-                                          DateFormat.yMd().format(value);
-
-                                      _selectedDate = value;
-
-                                      setState(() {});
-                                    },
-                                    // maximumYear: ,
-                                    maximumYear: DateTime.now().year - 18,
-                                    minimumYear: 1960,
-                                    mode: CupertinoDatePickerMode.date,
-                                  )).then((value) {
+                            ),
+                            firstDate: DateTime(1960),
+                          ).then((value) {
                             print(value);
                             if (value != null) {
                               setState(() {
@@ -402,7 +343,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       const SizedBox(
                         height: 10,
                       ),
-                      PlatformTextFormField(
+                      TextFormField(
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please enter a nickname";
@@ -412,26 +353,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         },
                         maxLines: 2,
                         controller: _bioController,
-                        cupertino: (context, platform) =>
-                            CupertinoTextFormFieldData(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: CupertinoColors.systemGrey,
-                              width: 0.0, // One physical pixel.
-                              style: BorderStyle.solid,
-                            ),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 12),
-                          placeholder: "Bio",
-                        ),
-                        material: (context, platform) =>
-                            MaterialTextFormFieldData(
-                          decoration: const InputDecoration(
-                            isDense: true,
-                            hintText: "Bio",
-                          ),
+                        decoration: const InputDecoration(
+                          isDense: true,
+                          hintText: "Bio",
                         ),
                       ),
                       const SizedBox(
@@ -458,7 +382,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         curve: Curves.easeInOut,
                         child: Visibility(
                           visible: _loading,
-                          replacement: PlatformElevatedButton(
+                          replacement: ElevatedButton(
                             onPressed: () async {
                               final route = AutoRouter.of(context);
 
@@ -626,12 +550,12 @@ class ImagePickerWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           ListTile(
-            leading: Icon(PlatformIcons(context).photoCamera),
+            leading: Icon(Icons.camera_alt),
             title: const Text("Camera"),
             onTap: camera,
           ),
           ListTile(
-            leading: Icon(PlatformIcons(context).folderSolid),
+            leading: Icon(Icons.photo_album),
             title: const Text("Gallery"),
             onTap: gallery,
           ),

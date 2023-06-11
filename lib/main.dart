@@ -12,8 +12,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-
+//
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:isolate_flutter/isolate_flutter.dart';
@@ -77,96 +76,56 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     final cupertinoLightTheme = MaterialBasedCupertinoThemeData(
       materialTheme: materialDarkTheme.copyWith(
-          useMaterial3: true,
-          brightness: Brightness.dark,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: FlexColor.redDarkPrimary,
-          )),
+        // useMaterial3: true,
+        // brightness: Brightness.dark,
+        primaryColor: Colors.teal,
+        primaryColorDark: Colors.teal,
+        primaryColorLight: Colors.teal,
+      ),
     );
 
     final appRouter = ref.watch(appRouteProvider);
-    return PlatformProvider(
-      settings: PlatformSettingsData(),
-      builder: (context) => PlatformApp.router(
-        material: (context, platform) => MaterialAppRouterData(
-          theme: FlexThemeData.light(
-            scheme: FlexScheme.aquaBlue,
-            surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-            blendLevel: 20,
-            appBarOpacity: 0.95,
-            subThemesData: const FlexSubThemesData(
-              blendOnLevel: 20,
-              blendOnColors: false,
-              inputDecoratorRadius: 12.0,
-            ),
-            visualDensity: FlexColorScheme.comfortablePlatformDensity,
-            useMaterial3: true,
-            // To use the playground font, add GoogleFonts package and uncomment
-            fontFamily: GoogleFonts.notoSans().fontFamily,
-          ),
-          darkTheme: FlexThemeData.dark(
-            scheme: FlexScheme.aquaBlue,
-            surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-            blendLevel: 15,
-            appBarOpacity: 0.90,
-            subThemesData: const FlexSubThemesData(
-              blendOnLevel: 30,
-              inputDecoratorRadius: 12.0,
-            ),
-            visualDensity: FlexColorScheme.comfortablePlatformDensity,
-            useMaterial3: true,
-            // To use the playground font, add GoogleFonts package and uncomment
-            fontFamily: GoogleFonts.notoSans().fontFamily,
-          ),
-          themeMode: ThemeMode.dark,
-        ),
-        cupertino: (context, platform) => CupertinoAppRouterData(
-          theme: cupertinoLightTheme.copyWith(
-            applyThemeToAll: true,
-            scaffoldBackgroundColor: Colors.black,
-            // primaryColor: Colors.teal,
-            // primaryContrastingColor: Colors.tealAccent,
-            barBackgroundColor: FlexColor.tealM3DarkPrimary,
-          ),
-          // theme: cupertinoLightTheme
-          // theme: cupertinoDarkTheme,
-        ),
+    return Builder(
+      builder: (context) => MaterialApp.router(
+        // theme: cupertinoLightTheme
+        // theme: cupertinoDarkTheme,
+
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           DefaultMaterialLocalizations.delegate,
           DefaultWidgetsLocalizations.delegate,
           DefaultCupertinoLocalizations.delegate,
         ],
 
-        // theme: FlexThemeData.light(
-        //   scheme: FlexScheme.aquaBlue,
-        //   surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        //   blendLevel: 20,
-        //   appBarOpacity: 0.95,
-        //   subThemesData: const FlexSubThemesData(
-        //     blendOnLevel: 20,
-        //     blendOnColors: false,
-        //     inputDecoratorRadius: 12.0,
-        //   ),
-        //   visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        //   useMaterial3: true,
-        //   // To use the playground font, add GoogleFonts package and uncomment
-        //   fontFamily: GoogleFonts.notoSans().fontFamily,
-        // ),
-        // darkTheme: FlexThemeData.dark(
-        //   scheme: FlexScheme.aquaBlue,
-        //   surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        //   blendLevel: 15,
-        //   appBarOpacity: 0.90,
-        //   subThemesData: const FlexSubThemesData(
-        //     blendOnLevel: 30,
-        //     inputDecoratorRadius: 12.0,
-        //   ),
-        //   visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        //   useMaterial3: true,
-        //   // To use the playground font, add GoogleFonts package and uncomment
-        //   fontFamily: GoogleFonts.notoSans().fontFamily,
-        // ),
-        // themeMode: ThemeMode.dark,
+        theme: FlexThemeData.light(
+          scheme: FlexScheme.aquaBlue,
+          surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+          blendLevel: 20,
+          appBarOpacity: 0.95,
+          subThemesData: const FlexSubThemesData(
+            blendOnLevel: 20,
+            blendOnColors: false,
+            inputDecoratorRadius: 12.0,
+          ),
+          visualDensity: FlexColorScheme.comfortablePlatformDensity,
+          useMaterial3: true,
+          // To use the playground font, add GoogleFonts package and uncomment
+          fontFamily: GoogleFonts.notoSans().fontFamily,
+        ),
+        darkTheme: FlexThemeData.dark(
+          scheme: FlexScheme.aquaBlue,
+          surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+          blendLevel: 15,
+          appBarOpacity: 0.90,
+          subThemesData: const FlexSubThemesData(
+            blendOnLevel: 30,
+            inputDecoratorRadius: 12.0,
+          ),
+          visualDensity: FlexColorScheme.comfortablePlatformDensity,
+          useMaterial3: true,
+          // To use the playground font, add GoogleFonts package and uncomment
+          fontFamily: GoogleFonts.notoSans().fontFamily,
+        ),
+        themeMode: ThemeMode.dark,
         routerDelegate: appRouter.delegate(
           navigatorObservers: () => [
             MyObserver(),
