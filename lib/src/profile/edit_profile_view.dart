@@ -507,6 +507,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                           login: _usernameController.text
                                               .toLowerCase()),
                                       ref);
+
+                                  await route
+                                      .popAndPush(const DashboardRoute());
                                 }
                               }
                             },
