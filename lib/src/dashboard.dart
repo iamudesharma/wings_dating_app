@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/chats/services/call_manager.dart';
 
@@ -31,7 +32,8 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
   Widget build(BuildContext context) {
     CallManager.instance.init(context);
     return Scaffold(
-      body: AutoTabsScaffold(
+      body: ResponsiveBuilder(builder: (context, size) {
+        return AutoTabsScaffold(
           drawer: const Drawer(),
           backgroundColor: Colors.black,
           routes: const [
@@ -39,34 +41,38 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
             ChatListRoute(),
             ProfileRoute(),
           ],
-          bottomNavigationBuilder: (_, tabsRouter) {
-            return NavigationBar(
-              backgroundColor: Colors.black,
-        
-             selectedIndex: tabsRouter.activeIndex,
-             onDestinationSelected: (value) => tabsRouter.setActiveIndex(value),
-              destinations: const [
-                NavigationDestination(
-                  label: 'Home',
-                  icon: Icon(
-                    Icons.home_outlined,
-                  ),
-                ),
-                NavigationDestination(
-                  label: 'Chat',
-                  icon: Icon(
-                    Icons.chat_bubble_outline,
-                  ),
-                ),
-                NavigationDestination(
-                  label: 'Profile',
-                  icon: Icon(
-                    Icons.person_2_outlined,
-                  ),
-                ),
-              ],
-            );
-          }),
+          bottomNavigationBuilder: size.isMobile
+              ? (_, tabsRouter) {
+                  return NavigationBar(
+                    backgroundColor: Colors.black,
+                    selectedIndex: tabsRouter.activeIndex,
+                    onDestinationSelected: (value) =>
+                        tabsRouter.setActiveIndex(value),
+                    destinations: const [
+                      NavigationDestination(
+                        label: 'Home',
+                        icon: Icon(
+                          Icons.home_outlined,
+                        ),
+                      ),
+                      NavigationDestination(
+                        label: 'Chat',
+                        icon: Icon(
+                          Icons.chat_bubble_outline,
+                        ),
+                      ),
+                      NavigationDestination(
+                        label: 'Profile',
+                        icon: Icon(
+                          Icons.person_2_outlined,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              : (context, tabsRouter) => SizedBox(),
+        );
+      }),
     );
   }
 }
