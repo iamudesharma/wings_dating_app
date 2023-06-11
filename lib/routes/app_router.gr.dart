@@ -101,6 +101,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CallView(
           args.callSession,
           args.isIncoming,
+          key: args.key,
         ),
       );
     },
@@ -349,12 +350,14 @@ class CallRoute extends PageRouteInfo<CallRouteArgs> {
   CallRoute({
     required P2PSession callSession,
     required bool isIncoming,
+    Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           CallRoute.name,
           args: CallRouteArgs(
             callSession: callSession,
             isIncoming: isIncoming,
+            key: key,
           ),
           initialChildren: children,
         );
@@ -368,14 +371,17 @@ class CallRouteArgs {
   const CallRouteArgs({
     required this.callSession,
     required this.isIncoming,
+    this.key,
   });
 
   final P2PSession callSession;
 
   final bool isIncoming;
 
+  final Key? key;
+
   @override
   String toString() {
-    return 'CallRouteArgs{callSession: $callSession, isIncoming: $isIncoming}';
+    return 'CallRouteArgs{callSession: $callSession, isIncoming: $isIncoming, key: $key}';
   }
 }
