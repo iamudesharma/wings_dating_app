@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:wings_dating_app/src/model/user_models.dart';
@@ -38,11 +37,11 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
 
     return DefaultTextStyle(
       style: const TextStyle(color: Colors.white),
-      child: PlatformScaffold(
+      child: Scaffold(
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: PlatformAppBar(
+              child: AppBar(
                 // flexibleSpace: FlexibleSpaceBar(
                 //   centerTitle: true,
                 //   title: Text(
@@ -58,9 +57,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                 //   ),
                 // ),
 
-                trailingActions: [
-                  PlatformIconButton(
-                    icon: Icon(PlatformIcons(context).fullscreenExit),
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.app_blocking),
                     onPressed: () {
                       context.router.push(
                         const UserBlockListRoute(),
@@ -118,7 +117,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    PlatformText(
+                    SelectableText(
                       "About",
                       style: const TextStyle(
                         fontSize: 25,
@@ -200,11 +199,11 @@ class ProfileInputCard extends StatelessWidget {
                   // mainAxisSize: MainAxisSize.min,
                   // mainAxisSize,
                   children: [
-                    PlatformText(title,
+                    SelectableText(title,
                         style: const TextStyle(
                           fontSize: 20,
                         )),
-                    PlatformText(value,
+                    SelectableText(value,
                         style: const TextStyle(
                           fontSize: 15,
                         )),

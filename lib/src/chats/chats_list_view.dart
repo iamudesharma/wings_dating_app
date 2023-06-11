@@ -4,7 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -45,8 +44,8 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
         const Duration(seconds: 1),
         () => ref.refresh(chatListProvider),
       ),
-      child: PlatformScaffold(
-        appBar: PlatformAppBar(
+      child: Scaffold(
+        appBar: AppBar(
           title: const Text("Chats"),
         ),
         body: value.when(

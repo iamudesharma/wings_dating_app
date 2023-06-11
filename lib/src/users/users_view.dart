@@ -10,7 +10,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:geolocator/geolocator.dart';
@@ -239,7 +238,7 @@ class _UsersViewState extends ConsumerState<UsersView>
         ref.watch(ProfileController.userControllerProvider).userModel;
     final userList = ref.watch(userListProvider);
 
-    return PlatformScaffold(
+    return Scaffold(
       body: RefreshIndicator.adaptive(
         onRefresh: () async {
           final currentLocation = await Geolocator.getCurrentPosition(
@@ -271,7 +270,7 @@ class _UsersViewState extends ConsumerState<UsersView>
               CustomScrollView(
                 slivers: [
                   SliverToBoxAdapter(
-                    child: PlatformAppBar(
+                    child: AppBar(
                       leading: CircleAvatar(
                         radius: 25,
                         // radius: 2,
@@ -280,7 +279,7 @@ class _UsersViewState extends ConsumerState<UsersView>
                             "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                       ),
                       title: Text(userData.username),
-                      trailingActions: [
+                      actions: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SearchAnchor(
@@ -298,7 +297,7 @@ class _UsersViewState extends ConsumerState<UsersView>
                                   .watch(searchUsersProvider(controller.text));
 
                               return [
-                                PlatformScaffold(
+                                Scaffold(
                                   body: userList.when(
                                     loading: () => const Center(
                                       child: CircularProgressIndicator(),
