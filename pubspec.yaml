@@ -95,6 +95,7 @@ dependencies:
   platform_device_id: ^1.0.1
   reaction_askany: ^0.1.0
   emoji_picker_flutter: ^1.6.1
+  responsive_builder: ^0.7.0
 
 dev_dependencies:
   flutter_test:

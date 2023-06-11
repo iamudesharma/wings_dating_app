@@ -13,6 +13,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -265,7 +266,7 @@ class _UsersViewState extends ConsumerState<UsersView>
             return ref.refresh(userListProvider);
           }
         },
-        child: LayoutBuilder(builder: (context, constraints) {
+        child: ResponsiveBuilder(builder: (context, sizingInformation) {
           return nullWidget ??
               CustomScrollView(
                 slivers: [
@@ -297,8 +298,8 @@ class _UsersViewState extends ConsumerState<UsersView>
                                   .watch(searchUsersProvider(controller.text));
 
                               return [
-                                Scaffold(
-                                  body: userList.when(
+                                Container(
+                                  child: userList.when(
                                     loading: () => const Center(
                                       child: CircularProgressIndicator(),
                                     ),
@@ -345,7 +346,8 @@ class _UsersViewState extends ConsumerState<UsersView>
                                 )
                               ];
                             },
-                            isFullScreen: true,
+                            isFullScreen:
+                                sizingInformation.isMobile ? true : false,
 
                             // context: context,
                             // delegate: UsersSearchDelegate(ref),
@@ -356,60 +358,99 @@ class _UsersViewState extends ConsumerState<UsersView>
                   ),
                   SliverPadding(
                     padding: const EdgeInsets.all(10),
-                    sliver: userList.when(
-                      loading: () => const SliverToBoxAdapter(
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                      error: (error, stackTrace) => (error is Exception)
-                          ? SliverToBoxAdapter(
-                              child: Center(
-                                child: Text(error.toString()),
+                    sliver: SliverToBoxAdapter(
+                      child: Row(
+                        children: [
+                          if (!sizingInformation.isMobile)
+                            Expanded(
+                              child: SizedBox(
+                                  height: sizingInformation.screenSize.height,
+                                  child: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: NavigationRail(
+                                        selectedIndex:
+                                            AutoTabsRouter.of(context)
+                                                .activeIndex,
+                                        extended: sizingInformation.isTablet
+                                            ? false
+                                            : true,
+                                        onDestinationSelected: (value) {
+                                          AutoTabsRouter.of(context)
+                                              .setActiveIndex(value);
+                                        },
+                                        destinations: const [
+                                          NavigationRailDestination(
+                                              icon: Icon(Icons.home),
+                                              label: Text("Users")),
+                                          NavigationRailDestination(
+                                              icon: Icon(Icons.chat_bubble),
+                                              label: Text("Chat")),
+                                          NavigationRailDestination(
+                                            icon: Icon(Icons.person),
+                                            label: Text("Profile"),
+                                          ),
+                                        ],
+                                      ))),
+                            ),
+                          Expanded(
+                            flex: 4,
+                            child: userList.when(
+                              loading: () => const Center(
+                                child: CircularProgressIndicator.adaptive(),
                               ),
-                            )
-                          : SliverToBoxAdapter(
-                              child: Center(
-                                child: Text(error.toString()),
+                              error: (error, stackTrace) => (error is Exception)
+                                  ? Center(
+                                      child: Text(error.toString()),
+                                    )
+                                  : Center(
+                                      child: Text(error.toString()),
+                                    ),
+                              data: (data) => SizedBox(
+                                height: sizingInformation.screenSize.height,
+                                width: sizingInformation.screenSize.width,
+                                child: GridView.builder(
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: sizingInformation.isMobile
+                                        ? 3
+                                        : sizingInformation.isTablet
+                                            ? 4
+                                            : 5,
+                                    mainAxisSpacing: 10,
+                                    crossAxisSpacing: 10,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    final users = data[index];
+
+                                    return UserGridItem(
+                                      onTapEditProfile: () async {
+                                        AutoTabsRouter.of(context)
+                                            .setActiveIndex(2);
+
+                                        // await CubeChatConnection.instance
+                                        //     .getLasUserActivity(7801610)
+                                        //     .then((value) {
+                                        //   final data = intToTimeLeft(value);
+
+                                        //   logger.e(
+                                        //       "subscribeToUserLastActivityStatu $data");
+                                        // }).catchError((error) {
+                                        //   logger.e(
+                                        //       "subscribeToUserLastActivityStatus error $error");
+                                        // });
+                                      },
+                                      isCurrentUser: users?.id == userData.id
+                                          ? true
+                                          : false,
+                                      users: users!,
+                                    ).animate().shake();
+                                  },
+                                  itemCount: data!.length,
+                                ),
                               ),
                             ),
-                      data: (data) => SliverGrid(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: constraints.isMobile
-                              ? 3
-                              : constraints.isTablet
-                                  ? 4
-                                  : 5,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                        ),
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final users = data[index];
-
-                            return UserGridItem(
-                              onTapEditProfile: () async {
-                                AutoTabsRouter.of(context).setActiveIndex(2);
-
-                                // await CubeChatConnection.instance
-                                //     .getLasUserActivity(7801610)
-                                //     .then((value) {
-                                //   final data = intToTimeLeft(value);
-
-                                //   logger.e(
-                                //       "subscribeToUserLastActivityStatu $data");
-                                // }).catchError((error) {
-                                //   logger.e(
-                                //       "subscribeToUserLastActivityStatus error $error");
-                                // });
-                              },
-                              isCurrentUser:
-                                  users?.id == userData.id ? true : false,
-                              users: users!,
-                            ).animate().shake();
-                          },
-                          childCount: data!.length,
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
