@@ -415,7 +415,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     fcmToken: "",
                                     cubeUser: CubeUser(
                                       id: cubeUser0?.id,
-                                      password: "1234567890",
+                                      password: cubeUser0?.password,
                                       login: cubeUser0?.login,
                                       fullName: _usernameController.text,
                                       avatar: image,

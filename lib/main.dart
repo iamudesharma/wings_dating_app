@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 //
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:meta_seo/meta_seo.dart';
+import 'package:url_strategy/url_strategy.dart';
 // import 'package:isolate_flutter/isolate_flutter.dart';
 import 'package:wings_dating_app/const/app_const.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
@@ -25,6 +27,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // setPathUrlStrategy();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -37,6 +40,10 @@ void main() async {
           "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
     ),
   ]);
+
+  if (kIsWeb) {
+    MetaSEO().config();
+  }
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -67,35 +74,15 @@ class _MyAppState extends ConsumerState<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // final materialDarkTheme = ThemeData.dark();
-
-    // final cupertinoLightTheme =
-    //     MaterialBasedCupertinoThemeData(materialTheme: materialLightTheme);
-
-    final materialDarkTheme = ThemeData.dark();
-
-    final cupertinoLightTheme = MaterialBasedCupertinoThemeData(
-      materialTheme: materialDarkTheme.copyWith(
-        // useMaterial3: true,
-        // brightness: Brightness.dark,
-        primaryColor: Colors.teal,
-        primaryColorDark: Colors.teal,
-        primaryColorLight: Colors.teal,
-      ),
-    );
-
     final appRouter = ref.watch(appRouteProvider);
     return Builder(
       builder: (context) => MaterialApp.router(
-        // theme: cupertinoLightTheme
-        // theme: cupertinoDarkTheme,
-
+        routerConfig: appRouter.config(),
         localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
           DefaultMaterialLocalizations.delegate,
           DefaultWidgetsLocalizations.delegate,
           DefaultCupertinoLocalizations.delegate,
         ],
-
         theme: FlexThemeData.light(
           scheme: FlexScheme.aquaBlue,
           surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
@@ -122,21 +109,10 @@ class _MyAppState extends ConsumerState<MyApp> {
           ),
           visualDensity: FlexColorScheme.comfortablePlatformDensity,
           useMaterial3: true,
-          // To use the playground font, add GoogleFonts package and uncomment
           fontFamily: GoogleFonts.notoSans().fontFamily,
         ),
         themeMode: ThemeMode.dark,
-        routerDelegate: appRouter.delegate(
-          navigatorObservers: () => [
-            MyObserver(),
-          ],
-          placeholder: (context) => Scaffold(
-              body: Center(
-            child: Image.asset("assets/logo.png"),
-          )),
-        ),
-        routeInformationParser: appRouter.defaultRouteParser(),
-        title: 'Wings',
+        title: 'Wings Dating App',
       ),
     );
   }

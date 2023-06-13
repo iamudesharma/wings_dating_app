@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
@@ -48,36 +49,85 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
         appBar: AppBar(
           title: const Text("Chats"),
         ),
-        body: value.when(
-            error: (error, stackTrace) => Center(child: Text(error.toString())),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            data: (data) {
-              final dialogList = data!.items;
+        body: ResponsiveBuilder(builder: (context, sizingInformation) {
+          return Row(
+            children: [
+              if (!sizingInformation.isMobile)
+                Expanded(
+                  child: SizedBox(
+                      height: sizingInformation.screenSize.height,
+                      child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: NavigationRail(
+                            selectedIndex:
+                                AutoTabsRouter.of(context).activeIndex,
+                            extended: sizingInformation.isTablet ? false : true,
+                            onDestinationSelected: (value) {
+                              AutoTabsRouter.of(context).setActiveIndex(value);
+                            },
+                            destinations: const [
+                              NavigationRailDestination(
+                                  icon: Icon(Icons.home), label: Text("Users")),
+                              NavigationRailDestination(
+                                  icon: Icon(Icons.chat_bubble),
+                                  label: Text("Chat")),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.person),
+                                label: Text("Profile"),
+                              ),
+                            ],
+                          ))),
+                ),
+              Expanded(
+                flex: 4,
+                child: value.when(
+                    error: (error, stackTrace) =>
+                        Center(child: Text(error.toString())),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    data: (data) {
+                      final dialogList = data!.items;
 
-              if (dialogList.isEmpty) {
-                return const Center(
-                  child: Text(
-                    "No user for chat",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
-                        // color: Colors.white,
-                        ),
-                  ),
-                );
-              } else {
-                return ListView.separated(
-                  itemCount: dialogList.length,
-                  itemBuilder: (context, index) {
-                    return _getListItemTile(context, index, dialogList);
-                  },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox();
-                  },
-                );
-              }
-            }),
+                      if (dialogList.isEmpty) {
+                        return const Center(
+                          child: Text(
+                            "No user for chat",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white
+                                // color: Colors.white,
+                                ),
+                          ),
+                        );
+                      } else {
+                        return Row(
+                          children: [
+                            Expanded(
+                              flex: 4,
+                              child: SizedBox(
+                                height: sizingInformation.screenSize.height,
+                                width: sizingInformation.screenSize.width,
+                                child: ListView.separated(
+                                  itemCount: dialogList.length,
+                                  itemBuilder: (context, index) {
+                                    return _getListItemTile(
+                                        context, index, dialogList);
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return const SizedBox();
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    }),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }

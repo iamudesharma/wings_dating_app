@@ -72,7 +72,7 @@ dependencies:
   flutter_local_notifications: ^14.1.1
 
   # firebase_crashlytics: ^3.3.2
-  # firebase_analytics: ^10.4.2
+  # firebase_analytics: ^10.4.2po
   flutter_animate: ^4.1.1+1
   geolocator: ^9.0.2
   connectycube_flutter_call_kit: ^2.3.0
@@ -96,6 +96,8 @@ dependencies:
   reaction_askany: ^0.1.0
   emoji_picker_flutter: ^1.6.1
   responsive_builder: ^0.7.0
+  meta_seo: ^3.0.5
+  url_strategy: ^0.2.0
 
 dev_dependencies:
   flutter_test:

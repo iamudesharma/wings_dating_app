@@ -2,6 +2,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 import 'package:wings_dating_app/src/model/user_models.dart';
 
@@ -38,10 +39,10 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
     return DefaultTextStyle(
       style: const TextStyle(color: Colors.white),
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: AppBar(
+        body: ResponsiveBuilder(builder: (context, sizingInformation) {
+          return ListView(
+            children: [
+              AppBar(
                 // flexibleSpace: FlexibleSpaceBar(
                 //   centerTitle: true,
                 //   title: Text(
@@ -70,103 +71,145 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                 // centerTitle: true,
                 title: Text(userData!.username),
               ),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    20.heightBox,
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
+                children: [
+                  if (!sizingInformation.isMobile)
+                    Expanded(
+                      child: SizedBox(
+                          height: sizingInformation.screenSize.height,
+                          child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: NavigationRail(
+                                selectedIndex:
+                                    AutoTabsRouter.of(context).activeIndex,
+                                extended:
+                                    sizingInformation.isTablet ? false : true,
+                                onDestinationSelected: (value) {
+                                  AutoTabsRouter.of(context)
+                                      .setActiveIndex(value);
+                                },
+                                destinations: const [
+                                  NavigationRailDestination(
+                                      icon: Icon(Icons.home),
+                                      label: Text("Users")),
+                                  NavigationRailDestination(
+                                      icon: Icon(Icons.chat_bubble),
+                                      label: Text("Chat")),
+                                  NavigationRailDestination(
+                                    icon: Icon(Icons.person),
+                                    label: Text("Profile"),
+                                  ),
+                                ],
+                              ))),
+                    ),
+                  Expanded(
+                    flex: 4,
+                    child: Column(
                       children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                              NetworkImage(userData.profileUrl ?? ""),
-                        ),
-                        10.widthBox,
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [],
-                        ),
-                        const Spacer(),
-                        ElevatedButton.icon(
-                          onPressed: () async {
-                            // await ref.read(profileRepoProvider).getUserList();
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              20.heightBox,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage:
+                                        NetworkImage(userData.profileUrl ?? ""),
+                                  ),
+                                  10.widthBox,
+                                  const Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [],
+                                  ),
+                                  const Spacer(),
+                                  ElevatedButton.icon(
+                                    onPressed: () async {
+                                      // await ref.read(profileRepoProvider).getUserList();
 
-                            context.router.push(
-                              EditProfileRoute(isEditProfile: true),
-                            );
-                          },
-                          icon: const Icon(Icons.edit, size: 10),
-                          label: const Text(
-                            "Edit Profile",
-                            // style: Theme.of(context).textTheme.bodySmall,
+                                      context.router.push(
+                                        EditProfileRoute(isEditProfile: true),
+                                      );
+                                    },
+                                    icon: const Icon(Icons.edit, size: 10),
+                                    label: const Text(
+                                      "Edit Profile",
+                                      // style: Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SelectableText(
+                                "About",
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                ),
+                              ),
+                              10.heightBox,
+                              Text(
+                                userData.bio ?? "",
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                              20.heightBox,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ProfileInputCard(
+                                      title: "Role",
+                                      value: userData.role.value),
+                                  Divider(),
+                                  ProfileInputCard(
+                                      title: "Body Type",
+                                      value: userData.bodyType.value),
+                                  Divider(),
+                                  ProfileInputCard(
+                                      title: "Ethnicity",
+                                      value: userData.ethnicity.value),
+                                  Divider(),
+                                  ProfileInputCard(
+                                      title: "Relationship Status",
+                                      value: userData.relationshipStatus.value),
+                                  Divider(),
+                                  ProfileInputCard(
+                                      title: "Looking for",
+                                      value: userData.lookingFor.value),
+                                  Divider(),
+                                  ProfileInputCard(
+                                      title: "Where to meet",
+                                      value: userData.whereToMeet.value),
+                                  Divider(),
+                                  ProfileInputCard(
+                                      title: "Height",
+                                      value: userData.height ?? "Do not Show"),
+                                  Divider(),
+                                  ProfileInputCard(
+                                      title: "Weight",
+                                      value: userData.weight ?? "Do not Show"),
+                                  Divider(),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SelectableText(
-                      "About",
-                      style: const TextStyle(
-                        fontSize: 25,
-                      ),
-                    ),
-                    10.heightBox,
-                    Text(
-                      userData.bio ?? "",
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    20.heightBox,
-                    Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ProfileInputCard(
-                                title: "Role", value: userData.role.value),
-                            ProfileInputCard(
-                                title: "Body Type",
-                                value: userData.bodyType.value),
-                            ProfileInputCard(
-                                title: "Ethnicity",
-                                value: userData.ethnicity.value),
-                            ProfileInputCard(
-                                title: "Relationship Status",
-                                value: userData.relationshipStatus.value),
-                            ProfileInputCard(
-                                title: "Looking for",
-                                value: userData.lookingFor.value),
-                            ProfileInputCard(
-                                title: "Where to meet",
-                                value: userData.whereToMeet.value),
-                            ProfileInputCard(
-                                title: "Height",
-                                value: userData.height ?? "Do not Show"),
-                            ProfileInputCard(
-                                title: "Weight",
-                                value: userData.weight ?? "Do not Show"),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+            ],
+          );
+        }),
       ),
     );
   }
@@ -189,26 +232,22 @@ class ProfileInputCard extends StatelessWidget {
         ? const SizedBox.shrink()
         : SizedBox(
             height: 50,
-            width: context.screenWidth - 20,
-            child: Column(
+            // width: context.screenWidth - 300,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+              // mainAxisSize: MainAxisSize.min,
+              // mainAxisSize,
               children: [
-                const Divider(),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  // mainAxisSize: MainAxisSize.min,
-                  // mainAxisSize,
-                  children: [
-                    SelectableText(title,
-                        style: const TextStyle(
-                          fontSize: 20,
-                        )),
-                    SelectableText(value,
-                        style: const TextStyle(
-                          fontSize: 15,
-                        )),
-                  ],
-                ),
+                Text(title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                    )),
+                Text(value,
+                    style: const TextStyle(
+                      fontSize: 15,
+                    )),
               ],
             ),
           );
