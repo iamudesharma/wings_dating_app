@@ -1149,6 +1149,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  meta_seo:
+    dependency: "direct main"
+    description:
+      name: meta_seo
+      sha256: e8dcda6a0dc8730a2d86b6c2a8257f88f7507c3911281d438ee2a82edbf72b21
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.5"
   mime:
     dependency: transitive
     description:
@@ -1719,6 +1727,14 @@ packages:
     description:
       name: unorm_dart
       sha256: "5b35bff83fce4d76467641438f9e867dc9bcfdb8c1694854f230579d68cd8f4b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
+  url_strategy:
+    dependency: "direct main"
+    description:
+      name: url_strategy
+      sha256: "42b68b42a9864c4d710401add17ad06e28f1c1d5500c93b98c431f6b0ea4ab87"
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"

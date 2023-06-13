@@ -61,7 +61,6 @@ class AuthGuard extends AutoRouteGuard {
                       .read(ProfileController.userControllerProvider)
                       .userModel!
                       .cubeUser);
-          resolver.next(true);
         }
       } else {
         resolver.next(false);
@@ -92,9 +91,9 @@ _loginToCC(CubeUser user,
   createSession(cubeuser).then((cubeSession) async {
     print("createSession cubeSession: $cubeSession");
 
-    resolver.next(true);
-
     _loginToCubeChat(user);
+
+    resolver.next(true);
 
     if (saveUser) {
       SharedPrefs.instance.init().then((sharedPrefs) {

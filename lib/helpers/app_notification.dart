@@ -56,7 +56,7 @@ class PushNotificationsManager {
   }
 
   init() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (Platform.isAndroid) {
       await initCall();
     }
 

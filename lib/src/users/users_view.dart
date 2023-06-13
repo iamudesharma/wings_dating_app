@@ -13,6 +13,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:meta_seo/meta_seo.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -235,6 +236,15 @@ class _UsersViewState extends ConsumerState<UsersView>
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) {
+      // Define MetaSEO object
+      MetaSEO meta = MetaSEO();
+      // add meta seo data for web app as you want
+      meta.author(author: 'Eng Mouaz M AlShahmeh');
+      meta.description(description: 'Meta SEO Web Example');
+      meta.keywords(keywords: 'Flutter, Dart, SEO, Meta, Web');
+    }
+
     final userData =
         ref.watch(ProfileController.userControllerProvider).userModel;
     final userList = ref.watch(userListProvider);
