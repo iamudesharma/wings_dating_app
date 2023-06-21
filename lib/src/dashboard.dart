@@ -47,7 +47,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                     backgroundColor: Colors.black,
                     selectedIndex: tabsRouter.activeIndex,
                     onDestinationSelected: (value) =>
-                        tabsRouter.setActiveIndex(value),
+                        tabsRouter.setActiveIndex(value, notify: true),
                     destinations: const [
                       NavigationDestination(
                         label: 'Home',

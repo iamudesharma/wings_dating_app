@@ -20,7 +20,7 @@ import 'package:url_strategy/url_strategy.dart';
 // import 'package:isolate_flutter/isolate_flutter.dart';
 import 'package:wings_dating_app/const/app_const.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
-import 'package:wings_dating_app/routes/navigation_observers.dart';
+// import 'package:wings_dating_app/routes/navigation_observers.dart';
 
 import 'firebase_options.dart';
 
@@ -75,45 +75,46 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     final appRouter = ref.watch(appRouteProvider);
-    return Builder(
-      builder: (context) => MaterialApp.router(
-        routerConfig: appRouter.config(),
-        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-          DefaultMaterialLocalizations.delegate,
-          DefaultWidgetsLocalizations.delegate,
-          DefaultCupertinoLocalizations.delegate,
-        ],
-        theme: FlexThemeData.light(
-          scheme: FlexScheme.aquaBlue,
-          surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-          blendLevel: 20,
-          appBarOpacity: 0.95,
-          subThemesData: const FlexSubThemesData(
-            blendOnLevel: 20,
-            blendOnColors: false,
-            inputDecoratorRadius: 12.0,
-          ),
-          visualDensity: FlexColorScheme.comfortablePlatformDensity,
-          useMaterial3: true,
-          // To use the playground font, add GoogleFonts package and uncomment
-          fontFamily: GoogleFonts.notoSans().fontFamily,
+    return MaterialApp.router(
+      routerConfig: appRouter.config(),
+      localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+        DefaultMaterialLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+      ],
+      theme: FlexThemeData.light(
+        lightIsWhite: true,
+        scheme: FlexScheme.deepPurple,
+        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+        blendLevel: 20,
+        appBarOpacity: 0.95,
+        subThemesData: const FlexSubThemesData(
+          blendOnLevel: 20,
+          blendOnColors: false,
+          inputDecoratorRadius: 12.0,
+          blendTextTheme: true,
         ),
-        darkTheme: FlexThemeData.dark(
-          scheme: FlexScheme.aquaBlue,
-          surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-          blendLevel: 15,
-          appBarOpacity: 0.90,
-          subThemesData: const FlexSubThemesData(
-            blendOnLevel: 30,
-            inputDecoratorRadius: 12.0,
-          ),
-          visualDensity: FlexColorScheme.comfortablePlatformDensity,
-          useMaterial3: true,
-          fontFamily: GoogleFonts.notoSans().fontFamily,
-        ),
-        themeMode: ThemeMode.dark,
-        title: 'Wings Dating App',
+        visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        useMaterial3: true,
+        // To use the playground font, add GoogleFonts package and uncomment
+        fontFamily: GoogleFonts.notoSans().fontFamily,
       ),
+      darkTheme: FlexThemeData.dark(
+        darkIsTrueBlack: true,
+        scheme: FlexScheme.pinkM3,
+        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+        blendLevel: 7,
+        appBarOpacity: 0.90,
+        subThemesData: const FlexSubThemesData(
+            blendOnLevel: 30, inputDecoratorRadius: 20.0, cardRadius: 20),
+        visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        useMaterial3: true,
+        fontFamily: GoogleFonts.notoSans().fontFamily,
+        appBarStyle: FlexAppBarStyle.material,
+        useMaterial3ErrorColors: true,
+      ),
+      themeMode: ThemeMode.dark,
+      title: 'Wings Dating App',
     );
   }
 }
