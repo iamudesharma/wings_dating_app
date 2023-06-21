@@ -311,7 +311,7 @@ class _UsersViewState extends ConsumerState<UsersView>
                                 Container(
                                   child: userList.when(
                                     loading: () => const Center(
-                                      child: CircularProgressIndicator(),
+                                      child: CircularProgressIndicator.adaptive(),
                                     ),
                                     error: (error, stackTrace) =>
                                         (error is Exception)
@@ -510,7 +510,7 @@ class UsersSearchDelegate extends SearchDelegate {
 
     return userList.when(
       loading: () => const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       ),
       error: (error, stackTrace) => (error is Exception)
           ? Center(
@@ -541,7 +541,7 @@ class UsersSearchDelegate extends SearchDelegate {
 
     return userList.when(
       loading: () => const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       ),
       error: (error, stackTrace) => (error is Exception)
           ? Center(

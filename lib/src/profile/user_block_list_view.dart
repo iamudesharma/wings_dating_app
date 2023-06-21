@@ -27,7 +27,7 @@ class UserBlockListView extends ConsumerWidget {
           child: Text(error.toString()),
         ),
         loading: () => const Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator.adaptive(),
         ),
         data: (data) => Padding(
           padding: const EdgeInsets.all(15.0),

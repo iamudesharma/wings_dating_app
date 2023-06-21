@@ -40,7 +40,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
     return Scaffold(
       body: otherUser.when(
         loading: () => const Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator.adaptive(),
         ),
         error: (error, stackTrace) => (error is Exception)
             ? const Center(

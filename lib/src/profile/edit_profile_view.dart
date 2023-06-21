@@ -518,7 +518,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                             ),
                           ),
                           child: const Center(
-                            child: CircularProgressIndicator(),
+                            child: CircularProgressIndicator.adaptive(),
                           ),
                         ),
                       ),

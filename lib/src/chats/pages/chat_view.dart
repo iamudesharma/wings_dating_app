@@ -129,7 +129,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
                 loading: () => const Text('Loading...'),
                 data: (users) => isLoading
                     ? const Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator.adaptive(),
                       )
                     : Row(
                         children: [
@@ -833,7 +833,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                         Radius.circular(8.0),
                                       ),
                                     ),
-                                    child: const CircularProgressIndicator(
+                                    child: const CircularProgressIndicator.adaptive(
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                           Colors.blue),
                                     ),
@@ -1098,7 +1098,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   Widget buildLoading() {
     return Positioned(
-      child: isLoading ? const CircularProgressIndicator() : Container(),
+      child: isLoading ? const CircularProgressIndicator.adaptive() : Container(),
     );
   }
 
@@ -1168,7 +1168,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
-                child: CircularProgressIndicator(
+                child: CircularProgressIndicator.adaptive(
                     valueColor: AlwaysStoppedAnimation<Color>(
                         Theme.of(context).primaryColor)));
           } else {
