@@ -84,7 +84,7 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
                     error: (error, stackTrace) =>
                         Center(child: Text(error.toString())),
                     loading: () =>
-                        const Center(child: CircularProgressIndicator()),
+                        const Center(child: CircularProgressIndicator.adaptive()),
                     data: (data) {
                       final dialogList = data!.items;
 
@@ -154,7 +154,7 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
                 Radius.circular(8.0),
               ),
             ),
-            child: const CircularProgressIndicator(
+            child: const CircularProgressIndicator.adaptive(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
             ),
           ),

@@ -108,7 +108,7 @@ class LoginPageState extends State<LoginPage> {
               width: 18,
               child: Visibility(
                 visible: _isLoginContinues,
-                child: const CircularProgressIndicator(
+                child: const CircularProgressIndicator.adaptive(
                   strokeWidth: 2,
                 ),
               ),
