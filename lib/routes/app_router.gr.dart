@@ -28,8 +28,10 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     OtherUserProfileRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
       final args = routeData.argsAs<OtherUserProfileRouteArgs>(
-          orElse: () => const OtherUserProfileRouteArgs());
+          orElse: () =>
+              OtherUserProfileRouteArgs(id: pathParams.optString('id')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: OtherUserProfileView(
@@ -80,8 +82,10 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     ChatRoute.name: (routeData) {
-      final args =
-          routeData.argsAs<ChatRouteArgs>(orElse: () => const ChatRouteArgs());
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<ChatRouteArgs>(
+          orElse: () =>
+              ChatRouteArgs(cubeUserId: pathParams.optInt('cubeUserId')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ChatView(
@@ -151,6 +155,7 @@ class OtherUserProfileRoute extends PageRouteInfo<OtherUserProfileRouteArgs> {
             id: id,
             isCurrentUser: isCurrentUser,
           ),
+          rawPathParams: {'id': id},
           initialChildren: children,
         );
 
@@ -308,6 +313,7 @@ class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
             dialogId: dialogId,
             cubeUserId: cubeUserId,
           ),
+          rawPathParams: {'cubeUserId': cubeUserId},
           initialChildren: children,
         );
 

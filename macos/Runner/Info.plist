@@ -35,5 +35,17 @@
 	</dict>
 	<key>NSLocationUsageDescription</key>
 	<string>This app needs access to location.</string>
+	<key>NSCameraUsageDescription</key>
+		<string>Used to demonstrate image picker plugin</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Used to capture audio for image picker plugin</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Used to demonstrate image picker plugin</string>
+		<key>UIApplicationSupportsIndirectInputEvents</key>
+		<true/>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>The app needs it</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>The app needs it</string>
 </dict>
 </plist>
