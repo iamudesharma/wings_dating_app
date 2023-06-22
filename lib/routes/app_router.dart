@@ -27,20 +27,32 @@ class AppRouter extends _$AppRouter {
 
   AppRouter(this.ref);
 
+@override      
+RouteType get defaultRouteType => const RouteType.adaptive();
+
+
   @override
   late final List<AutoRoute> routes = [
     AutoRoute(
       page: DashboardRoute.page,
+      type: const RouteType.adaptive(),
       path: "/",
       children: [
         AutoRoute(
           page: UsersRoute.page,
+          path: "users",
         ),
-        AutoRoute(
-          page: ChatListRoute.page,
-        ),
+        AutoRoute(page: ChatListRoute.page, path: "chats", children: [
+          AutoRoute(
+            page: ChatRoute.page,
+            path: "chat/:id",
+            type: const RouteType.adaptive(),
+            
+          ),
+        ]),
         AutoRoute(
           page: ProfileRoute.page,
+          path: "profile",
         ),
       ],
       guards: [
@@ -50,32 +62,29 @@ class AppRouter extends _$AppRouter {
     ),
     AutoRoute(
       page: SignOptionsRoute.page,
-      type: const RouteType.material(),
-    ),
-    AutoRoute(
-      page: ChatRoute.page,
-      type: const RouteType.material(),
+      type: const RouteType.adaptive(),
     ),
     AutoRoute(
       page: OtherUserProfileRoute.page,
-      type: const RouteType.material(),
+      type: const RouteType.adaptive(),
+      path: "/user/:id",
     ),
     AutoRoute(
-      page: AddAdditionalInformationRoute.page,
-      type: const RouteType.material(),
-    ),
+        page: AddAdditionalInformationRoute.page,
+        type: const RouteType.adaptive(),
+        path: "/add-additional-information"),
     AutoRoute(
-      page: EditProfileRoute.page,
-      type: const RouteType.material(),
-    ),
+        page: EditProfileRoute.page,
+        type: const RouteType.adaptive(),
+        path: "/edit-profile"),
     AutoRoute(
       page: CallRoute.page,
-      type: const RouteType.material(),
+      type: const RouteType.adaptive(),
     ),
     AutoRoute(
-      page: UserBlockListRoute.page,
-      type: const RouteType.material(),
-    ),
+        page: UserBlockListRoute.page,
+        type: const RouteType.adaptive(),
+        path: "/user-block-list"),
   ];
 }
 

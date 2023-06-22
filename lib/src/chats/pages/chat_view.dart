@@ -67,7 +67,7 @@ class ChatView extends ConsumerStatefulWidget {
     this.cubeDialog,
     this.chatUserCubeId,
     this.dialogId,
-    this.cubeUserId,
+    @pathParam this.cubeUserId,
   });
 
   @override
@@ -833,7 +833,8 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                         Radius.circular(8.0),
                                       ),
                                     ),
-                                    child: const CircularProgressIndicator.adaptive(
+                                    child: const CircularProgressIndicator
+                                        .adaptive(
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                           Colors.blue),
                                     ),
@@ -1098,7 +1099,8 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   Widget buildLoading() {
     return Positioned(
-      child: isLoading ? const CircularProgressIndicator.adaptive() : Container(),
+      child:
+          isLoading ? const CircularProgressIndicator.adaptive() : Container(),
     );
   }
 
@@ -1559,6 +1561,3 @@ class MessageBar extends StatelessWidget {
     );
   }
 }
-
-
-

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 
@@ -102,8 +103,25 @@ class _UsersViewState extends ConsumerState<UsersView>
     };
   }
 
+  _loginToCubeChat() async {
+    final user = await SharedPrefs.instance.getUser();
+
+    print("_loginToCubeChat user $user");
+    CubeChatConnectionSettings.instance.totalReconnections = 0;
+    CubeChatConnection.instance.login(user!).then((cubeUser) {
+      // _isLoginContinues = false;
+
+      // if (!kIsWeb) {
+      PushNotificationsManager.instance.init();
+      // }
+      // _goDialogScreen(context, cubeUser);
+    }).catchError((error) {});
+  }
+
   @override
   void initState() {
+    // _loginToCubeChat(); s
+
     init(AppConst.cubeappId, AppConst.authKey, AppConst.authSecret,
         onSessionRestore: () async {
       SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
@@ -111,17 +129,19 @@ class _UsersViewState extends ConsumerState<UsersView>
 
       return createSession(user);
     });
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
+    if (!kIsWeb) {
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        print('Got a message whilst in the foreground!');
+        print('Message data: ${message.data}');
 
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
+        if (message.notification != null) {
+          print(
+              'Message also contained a notification: ${message.notification}');
 
-        showNotification(message);
-      }
-    });
-
+          showNotification(message);
+        }
+      });
+    }
     WidgetsBinding.instance.addObserver(this);
 
     super.initState();
@@ -224,13 +244,13 @@ class _UsersViewState extends ConsumerState<UsersView>
     return "$minute : $second";
   }
 
-  _loginToCubeChat(CubeUser user) {
-    print("_loginToCubeChat user $user");
-    CubeChatConnectionSettings.instance.totalReconnections = 0;
-    CubeChatConnection.instance.login(user).then((cubeUser) {
-      // CubeChatConnection.instance.subscribeToUserLastActivityStatus(user.id!);
-    }).catchError((error) {});
-  }
+  // _loginToCubeChat(CubeUser user) {
+  //   print("_loginToCubeChat user $user");
+  //   CubeChatConnectionSettings.instance.totalReconnections = 0;
+  //   CubeChatConnection.instance.login(user).then((cubeUser) {
+  //     // CubeChatConnection.instance.subscribeToUserLastActivityStatus(user.id!);
+  //   }).catchError((error) {});
+  // }
 
   bool? isOnline = false;
 
@@ -311,7 +331,8 @@ class _UsersViewState extends ConsumerState<UsersView>
                                 Container(
                                   child: userList.when(
                                     loading: () => const Center(
-                                      child: CircularProgressIndicator.adaptive(),
+                                      child:
+                                          CircularProgressIndicator.adaptive(),
                                     ),
                                     error: (error, stackTrace) =>
                                         (error is Exception)
@@ -756,7 +777,13 @@ List<String> heightList = [
   "210 cm",
 ];
 
-class UserGridItem extends ConsumerWidget {
+final userLastActiveProvider =
+    FutureProvider.family<int, int>((ref, cubeId) async {
+  await CubeChatConnection.instance.subscribeToUserLastActivityStatus(cubeId);
+  return CubeChatConnection.instance.getLasUserActivity(cubeId);
+});
+
+class UserGridItem extends ConsumerStatefulWidget {
   const UserGridItem(
       {super.key,
       required this.users,
@@ -770,15 +797,23 @@ class UserGridItem extends ConsumerWidget {
   final VoidCallback? onTapEditProfile;
 
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<UserGridItem> createState() => _UserGridItemState();
+}
+
+class _UserGridItemState extends ConsumerState<UserGridItem> {
+  @override
+  Widget build(BuildContext context) {
+    final userActive =
+        ref.watch(userLastActiveProvider(widget.users.cubeUser.id!));
+
     return InkWell(
       onTap: () {
-        if (isCurrentUser!) {
+        if (widget.isCurrentUser!) {
           AutoTabsRouter.of(context).setActiveIndex(2);
         } else {
           AutoRouter.of(context).push(
             OtherUserProfileRoute(
-              id: users.id,
+              id: widget.users.id,
             ),
           );
         }
@@ -786,7 +821,7 @@ class UserGridItem extends ConsumerWidget {
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: CachedNetworkImageProvider(users.profileUrl ??
+            image: CachedNetworkImageProvider(widget.users.profileUrl ??
                 "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
             fit: BoxFit.cover,
           ),
@@ -804,8 +839,8 @@ class UserGridItem extends ConsumerWidget {
                       .read(ProfileController.userControllerProvider)
                       .getDistance(
                         GeoPoint(
-                          users.position!.geopoint.latitude,
-                          users.position!.geopoint.longitude,
+                          widget.users.position!.geopoint.latitude,
+                          widget.users.position!.geopoint.longitude,
                         ),
                       ),
                   style: const TextStyle(
@@ -814,17 +849,19 @@ class UserGridItem extends ConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                isCurrentUser!
+                widget.isCurrentUser!
                     ? InkWell(
-                        onTap: onTapEditProfile, child: const Icon(Icons.edit))
+                        onTap: widget.onTapEditProfile,
+                        child: const Icon(Icons.edit))
                     : Align(
                         alignment: Alignment.topRight,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CircleAvatar(
                             radius: 5,
-                            backgroundColor:
-                                users.isOnline ? Colors.green : Colors.amber,
+                            backgroundColor: widget.users.isOnline
+                                ? Colors.green
+                                : Colors.amber,
                           ),
                         ),
                       ),
@@ -842,7 +879,7 @@ class UserGridItem extends ConsumerWidget {
                     SizedBox(
                       width: 50,
                       child: Text(
-                        users.username,
+                        widget.users.username,
                         maxLines: 2,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
@@ -852,7 +889,7 @@ class UserGridItem extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      users.age.toString(),
+                      widget.users.age.toString(),
                       style: const TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 10,
@@ -864,22 +901,40 @@ class UserGridItem extends ConsumerWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    users.height == null
+                    widget.users.height == null
                         ? const SizedBox.shrink()
                         : Text(
-                            users.height!,
+                            widget.users.height!,
                             style: const TextStyle(
                               fontSize: 10,
                             ),
                           ),
-                    users.weight == null
+                    widget.users.weight == null
                         ? const SizedBox.shrink()
                         : Text(
-                            users.weight!,
+                            widget.users.weight!,
                             style: const TextStyle(
                               fontSize: 10,
                             ),
                           ),
+                    // if (!widget.isCurrentUser!)
+                    userActive.when(
+                      data: (value) {
+                        return Text(
+                          DateTime.fromMillisecondsSinceEpoch(value)
+                              .day
+                              .toString(),
+                          style: const TextStyle(
+                            fontSize: 10,
+                          ),
+                        );
+                      },
+                      loading: () => const SizedBox.shrink(),
+                      error: (error, stack) {
+                        // print(error);
+                        return const SizedBox.shrink();
+                      },
+                    )
                   ],
                 ),
               ],

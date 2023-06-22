@@ -229,6 +229,8 @@ class ProfileRepo with RepositoryExceptionMixin {
     return users;
   }
 
+  
+
   Future<void> addToBlockList({required String id, CubeUser? cube}) async {
     final usercollection = userCollection();
 
@@ -250,6 +252,8 @@ class ProfileRepo with RepositoryExceptionMixin {
         .update({
       "blockList": FieldValue.arrayUnion([id])
     });
+
+    
   }
 
   void removeToBlockList({required List<String> id}) async {
