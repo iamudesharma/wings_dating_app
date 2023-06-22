@@ -61,10 +61,10 @@ class PushNotificationsManager {
     }
 
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-
-    await firebaseMessaging.requestPermission(
-        alert: true, badge: true, sound: true);
-
+    if (Platform.isAndroid) {
+      await firebaseMessaging.requestPermission(
+          alert: true, badge: true, sound: true);
+    }
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('ic_launcher_foreground');
     final DarwinInitializationSettings initializationSettingsIOS =
