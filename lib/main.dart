@@ -101,9 +101,10 @@ class _MyAppState extends ConsumerState<MyApp> {
       ),
       darkTheme: FlexThemeData.dark(
         darkIsTrueBlack: true,
-        scheme: FlexScheme.pinkM3,
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 7,
+        scheme: FlexScheme.deepPurple,
+        surfaceMode: FlexSurfaceMode.highBackgroundLowScaffold,
+        tones: FlexTones.jolly(Brightness.dark),
+        blendLevel: 15,
         appBarOpacity: 0.90,
         subThemesData: const FlexSubThemesData(
             blendOnLevel: 30, inputDecoratorRadius: 20.0, cardRadius: 20),

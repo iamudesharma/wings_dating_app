@@ -46,7 +46,9 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
         () => ref.refresh(chatListProvider),
       ),
       child: Scaffold(
+        
         appBar: AppBar(
+          // leading: const AutoLeadingButton(),
           title: const Text("Chats"),
         ),
         body: ResponsiveBuilder(builder: (context, sizingInformation) {

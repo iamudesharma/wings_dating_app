@@ -11,8 +11,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reaction_askany/models/emotions.dart';
-import 'package:reaction_askany/models/reaction_box_paramenters.dart';
-import 'package:reaction_askany/reaction_askany.dart';
+
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
 // ignore: depend_on_referenced_packages
 import 'package:universal_io/io.dart';
@@ -682,32 +681,34 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     });
   }
 
-  _reactOnMessage(CubeMessage message) {
+  Emoji? _reactOnMessage(CubeMessage message) {
     showDialog<Emoji>(
         context: context,
         builder: (BuildContext context) {
           return Dialog(
-              child: Container(
-                  margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  width: 400,
-                  height: 400,
-                  child: EmojiPicker(
-                    config: const Config(
-                      emojiTextStyle: kIsWeb
-                          ? TextStyle(
-                              color: Colors.green, fontFamily: 'NotoColorEmoji')
-                          : null,
-                      iconColorSelected: Colors.green,
-                      indicatorColor: Colors.green,
-                      bgColor: Colors.white,
-                    ),
-                    onEmojiSelected: (category, emoji) {
-                      Navigator.pop(context, emoji);
-                    },
-                  )));
+              child: Material(
+            child: Container(
+                margin: const EdgeInsets.all(8),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+                width: 400,
+                height: 400,
+                child: EmojiPicker(
+                  config: const Config(
+                    checkPlatformCompatibility: true,
+                    emojiTextStyle: kIsWeb
+                        ? TextStyle(
+                            color: Colors.green, fontFamily: 'NotoColorEmoji')
+                        : null,
+                    iconColorSelected: Colors.green,
+                    indicatorColor: Colors.green,
+                    bgColor: Colors.white,
+                  ),
+                  onEmojiSelected: (category, emoji) {
+                    Navigator.pop(context, emoji);
+                  },
+                )),
+          ));
         }).then((emoji) {
       log("onEmojiSelected emoji: ${emoji?.emoji}");
       if (emoji != null) {
@@ -809,64 +810,79 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
             // ignore: sort_child_properties_last
             children: <Widget>[
               message.attachments?.isNotEmpty ?? false
-                  // Image
                   ? Container(
-                      margin: EdgeInsets.only(
-                          bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                          right: 10.0),
-                      child: TextButton(
-                        child: Material(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(8.0)),
-                          clipBehavior: Clip.hardEdge,
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
-                                    width: 200.0,
-                                    height: 200.0,
-                                    padding: const EdgeInsets.all(70.0),
-                                    decoration: const BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(8.0),
-                                      ),
-                                    ),
-                                    child: const CircularProgressIndicator
-                                        .adaptive(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.blue),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Material(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                    clipBehavior: Clip.hardEdge,
-                                    child: Image.asset(
-                                      'images/img_not_available.jpeg',
+                      margin: const EdgeInsets.only(left: 10.0),
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onLongPress: () => _reactOnMessage(message),
+                          child: Material(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (message.reactions != null &&
+                                      message.reactions!.total.isNotEmpty)
+                                    getReactionsWidget(message),
+                                  CachedNetworkImage(
+                                    placeholder: (context, url) => Container(
                                       width: 200.0,
                                       height: 200.0,
-                                      fit: BoxFit.cover,
+                                      padding: const EdgeInsets.all(70.0),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Theme.of(context).primaryColorLight,
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(20.0),
+                                        ),
+                                      ),
+                                      child: CircularProgressIndicator.adaptive(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Theme.of(context).primaryColor),
+                                      ),
                                     ),
+                                    errorWidget: (context, url, error) =>
+                                        Material(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(8.0),
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
+                                      child: Image.asset(
+                                        'images/img_not_available.jpeg',
+                                        width: 200.0,
+                                        height: 200.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    imageUrl: message.attachments!.first.url!,
+                                    width: 200.0,
+                                    height: 200.0,
+                                    fit: BoxFit.cover,
                                   ),
-                                  imageUrl: message.attachments!.first.url!,
-                                  width: 200.0,
-                                  height: 200.0,
-                                  fit: BoxFit.cover,
+                                  getDateWidget(),
+                                ]),
+                          ),
+                          onTap: () {
+                            AutoRouter.of(context).pushWidget(
+                              fullscreenDialog: true,
+                              Scaffold(
+                                appBar: AppBar(),
+                                body: PageView.builder(
+                                  itemBuilder: (context, index) =>
+                                      CachedNetworkImage(
+                                          imageUrl:
+                                              message.attachments![index].url!),
+                                  itemCount: message.attachments!.length,
                                 ),
-                                getDateWidget(),
-                              ]),
+                              ),
+                            );
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => FullPhoto(
+                            //             url: message.attachments!.first.url!)));
+                          },
                         ),
-                        onPressed: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => FullPhoto(
-                          //             url: message.attachments!.first.url!)));
-                        },
                       ),
                     )
                   : message.body != null && message.body!.isNotEmpty
@@ -879,49 +895,59 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                GestureDetector(
-                                  onTapDown: (TapDownDetails details) {
-                                    double left = details.globalPosition.dx;
-                                    double top = details.globalPosition.dy;
-                                    showMenu(
-                                      context: context,
-                                      items: [
-                                        PopupMenuItem<String>(
-                                          value: 'Doge',
-                                          onTap: () => _reactOnMessage(message),
-                                          child: const Text('Add reaction'),
-                                        ),
-                                        if (message.senderId == _cubeUserId)
+                                MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                    onTapDown: (TapDownDetails details) {
+                                      double left = details.globalPosition.dx;
+                                      double top = details.globalPosition.dy;
+                                      showMenu(
+                                        context: context,
+                                        items: [
                                           PopupMenuItem<String>(
-                                              onTap: () async {
-                                                await _cubeDialog
-                                                    ?.deleteMessage(message);
-                                              },
-                                              value: 'Lion',
-                                              child: const Text('Delete')),
-                                      ],
-                                      position: RelativeRect.fromLTRB(
-                                          200, 280, 0, 100),
-                                    );
-                                    // popUpMenu(message);
-                                  },
-                                  // onLongPress: () => _reactOnMessage(message),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: BubbleNormal(
-                                          text: message.body ?? "",
-                                          isSender: isLastMessageRight(index),
-                                          seen: messageIsRead(),
-                                          delivered: messageIsDelivered(),
-                                          tail: true,
-                                          sent: true,
+                                            value: 'Doge',
+                                            onTap: () async {
+                                              await Future.delayed(
+                                                  const Duration(
+                                                      milliseconds: 200));
+                                              _reactOnMessage(message);
+                                            },
+                                            child: const Text('Add reaction'),
+                                          ),
+                                          if (message.senderId == _cubeUserId)
+                                            PopupMenuItem<String>(
+                                                onTap: () async {
+                                                  await _cubeDialog
+                                                      ?.deleteMessage(message);
+                                                },
+                                                value: 'Lion',
+                                                child: const Text('Delete')),
+                                        ],
+                                        position: const RelativeRect.fromLTRB(
+                                            200, 280, 0, 100),
+                                      );
+                                      // popUpMenu(message);
+                                    },
+                                    // onLongPress: () => _reactOnMessage(message),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: BubbleNormal(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            text: message.body ?? "",
+                                            isSender: isLastMessageRight(index),
+                                            seen: messageIsRead(),
+                                            delivered: messageIsDelivered(),
+                                            tail: true,
+                                            sent: true,
+                                          ),
                                         ),
-                                      ),
-                                      if (message.reactions != null &&
-                                          message.reactions!.total.isNotEmpty)
-                                        getReactionsWidget(message),
-                                    ],
+                                        if (message.reactions != null &&
+                                            message.reactions!.total.isNotEmpty)
+                                          getReactionsWidget(message),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ]),
@@ -962,59 +988,78 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                 message.attachments?.isNotEmpty ?? false
                     ? Container(
                         margin: const EdgeInsets.only(left: 10.0),
-                        child: TextButton(
-                          child: Material(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(8.0)),
-                            clipBehavior: Clip.hardEdge,
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CachedNetworkImage(
-                                    placeholder: (context, url) => Container(
-                                      width: 200.0,
-                                      height: 200.0,
-                                      padding: const EdgeInsets.all(70.0),
-                                      decoration: const BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(8.0),
-                                        ),
-                                      ),
-                                      child: const CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.blue),
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        Material(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(8.0),
-                                      ),
-                                      clipBehavior: Clip.hardEdge,
-                                      child: Image.asset(
-                                        'images/img_not_available.jpeg',
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onLongPress: () => _reactOnMessage(message),
+                            child: Material(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (message.reactions != null &&
+                                        message.reactions!.total.isNotEmpty)
+                                      getReactionsWidget(message),
+                                    CachedNetworkImage(
+                                      placeholder: (context, url) => Container(
                                         width: 200.0,
                                         height: 200.0,
-                                        fit: BoxFit.cover,
+                                        padding: const EdgeInsets.all(70.0),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(20.0),
+                                          ),
+                                        ),
+                                        child:
+                                            CircularProgressIndicator.adaptive(
+                                          valueColor: AlwaysStoppedAnimation<
+                                                  Color>(
+                                              Theme.of(context).primaryColor),
+                                        ),
                                       ),
+                                      errorWidget: (context, url, error) =>
+                                          Material(
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(8.0),
+                                        ),
+                                        clipBehavior: Clip.hardEdge,
+                                        child: Image.asset(
+                                          'images/img_not_available.jpeg',
+                                          width: 200.0,
+                                          height: 200.0,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      imageUrl: message.attachments!.first.url!,
+                                      width: 200.0,
+                                      height: 200.0,
+                                      fit: BoxFit.cover,
                                     ),
-                                    imageUrl: message.attachments!.first.url!,
-                                    width: 200.0,
-                                    height: 200.0,
-                                    fit: BoxFit.cover,
+                                    getDateWidget(),
+                                  ]),
+                            ),
+                            onTap: () {
+                              AutoRouter.of(context).pushWidget(
+                                fullscreenDialog: true,
+                                Scaffold(
+                                  appBar: AppBar(),
+                                  body: PageView.builder(
+                                    itemBuilder: (context, index) =>
+                                        CachedNetworkImage(
+                                            imageUrl: message
+                                                .attachments![index].url!),
+                                    itemCount: message.attachments!.length,
                                   ),
-                                  getDateWidget(),
-                                ]),
+                                ),
+                              );
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => FullPhoto(
+                              //             url: message.attachments!.first.url!)));
+                            },
                           ),
-                          onPressed: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => FullPhoto(
-                            //             url: message.attachments!.first.url!)));
-                          },
                         ),
                       )
                     : message.body != null && message.body!.isNotEmpty
@@ -1022,34 +1067,43 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  GestureDetector(
-                                    onLongPress: () => _reactOnMessage(message),
-                                    child: Row(
-                                      children: [
-                                        // message.senderId == _cubeUserId
-                                        //     ? const SizedBox()
-                                        //     : const ReactionWrapper(
-                                        //         buttonReaction: Padding(
-                                        //             padding: EdgeInsets.only(
-                                        //                 top: 2.0),
-                                        //             child: Text("👎")),
-                                        //         child: SizedBox(),
-                                        //       ),
+                                  MouseRegion(
+                                    cursor: SystemMouseCursors.click,
+                                    child: GestureDetector(
+                                      onLongPress: () =>
+                                          _reactOnMessage(message),
+                                      child: Row(
+                                        children: [
+                                          // message.senderId == _cubeUserId
+                                          //     ? const SizedBox()
+                                          //     : const ReactionWrapper(
+                                          //         buttonReaction: Padding(
+                                          //             padding: EdgeInsets.only(
+                                          //                 top: 2.0),
+                                          //             child: Text("👎")),
+                                          //         child: SizedBox(),
+                                          //       ),
 
-                                        if (message.reactions != null &&
-                                            message.reactions!.total.isNotEmpty)
-                                          getReactionsWidget(message),
-                                        FittedBox(
-                                          child: BubbleNormal(
-                                            sent: true,
-                                            isSender: isLastMessageLeft(index),
-                                            text: message.body!,
-                                            seen: messageIsRead(),
-                                            delivered: messageIsDelivered(),
-                                            tail: true,
+                                          if (message.reactions != null &&
+                                              message
+                                                  .reactions!.total.isNotEmpty)
+                                            getReactionsWidget(message),
+                                          FittedBox(
+                                            child: BubbleNormal(
+                                              color: Theme.of(context)
+                                                  .primaryColor
+                                                  .withOpacity(0.7),
+                                              sent: true,
+                                              isSender:
+                                                  isLastMessageLeft(index),
+                                              text: message.body!,
+                                              seen: messageIsRead(),
+                                              delivered: messageIsDelivered(),
+                                              tail: true,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   // getDateWidget(),
