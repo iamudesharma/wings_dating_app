@@ -80,7 +80,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                           //     .addToBlockList(userData!.id);
 
                           // ignore: use_build_context_synchronously
-                          Navigator.of(context).pop();
+                          context.router.pop();
                           // AutoRouter.of(context).replace(const DashboardRoute());
                         },
                         value: 1,
@@ -124,12 +124,13 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
-                    height: 300,
+                    height: 250,
                     width: MediaQuery.of(context).size.width,
                     child: CachedNetworkImage(
+                      color: Colors.white,
                       imageUrl: (userData.profileUrl ??
                           "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
@@ -150,36 +151,32 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       20.heightBox,
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ProfileInputCard(
-                                  title: "Role", value: userData.role.value),
-                              ProfileInputCard(
-                                  title: "Body Type",
-                                  value: userData.bodyType.value),
-                              ProfileInputCard(
-                                  title: "Ethnicity",
-                                  value: userData.ethnicity.value),
-                              ProfileInputCard(
-                                  title: "Relationship Status",
-                                  value: userData.relationshipStatus.value),
-                              ProfileInputCard(
-                                  title: "Looking for",
-                                  value: userData.lookingFor.value),
-                              ProfileInputCard(
-                                  title: "Where to meet",
-                                  value: userData.whereToMeet.value),
-                              ProfileInputCard(
-                                  title: "Height",
-                                  value: userData.height ?? "Do not Show"),
-                              ProfileInputCard(
-                                  title: "Weight",
-                                  value: userData.weight ?? "Do not Show"),
-                            ],
-                          ),
+                          ProfileInputCard(
+                              title: "Role", value: userData.role.value),
+                          ProfileInputCard(
+                              title: "Body Type",
+                              value: userData.bodyType.value),
+                          ProfileInputCard(
+                              title: "Ethnicity",
+                              value: userData.ethnicity.value),
+                          ProfileInputCard(
+                              title: "Relationship Status",
+                              value: userData.relationshipStatus.value),
+                          ProfileInputCard(
+                              title: "Looking for",
+                              value: userData.lookingFor.value),
+                          ProfileInputCard(
+                              title: "Where to meet",
+                              value: userData.whereToMeet.value),
+                          ProfileInputCard(
+                              title: "Height",
+                              value: userData.height ?? "Do not Show"),
+                          ProfileInputCard(
+                              title: "Weight",
+                              value: userData.weight ?? "Do not Show"),
                         ],
                       ),
                     ],

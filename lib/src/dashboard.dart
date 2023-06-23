@@ -7,6 +7,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/chats/services/call_manager.dart';
 
+import '../routes/app_router_provider.dart';
 import 'chats/chats_list_view.dart';
 
 @RoutePage()
@@ -34,6 +35,8 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
     return Scaffold(
       body: ResponsiveBuilder(builder: (context, size) {
         return AutoTabsScaffold(
+          homeIndex: 0,
+          lazyLoad: true,
           drawer: const Drawer(),
           backgroundColor: Colors.black,
           routes: const [
@@ -43,34 +46,38 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
           ],
           bottomNavigationBuilder: size.isMobile
               ? (_, tabsRouter) {
-                  return NavigationBar(
-                    backgroundColor: Colors.black,
-                    selectedIndex: tabsRouter.activeIndex,
-                    onDestinationSelected: (value) =>
-                        tabsRouter.setActiveIndex(value, notify: true),
-                    destinations: const [
-                      NavigationDestination(
-                        label: 'Home',
-                        icon: Icon(
-                          Icons.home_outlined,
-                        ),
-                      ),
-                      NavigationDestination(
-                        label: 'Chat',
-                        icon: Icon(
-                          Icons.chat_bubble_outline,
-                        ),
-                      ),
-                      NavigationDestination(
-                        label: 'Profile',
-                        icon: Icon(
-                          Icons.person_2_outlined,
-                        ),
-                      ),
-                    ],
+                  return Consumer(
+                    builder: (context, ref, child) {
+                      return NavigationBar(
+                        backgroundColor: Colors.black,
+                        selectedIndex: tabsRouter.activeIndex,
+                        onDestinationSelected: (value) =>
+                            tabsRouter.setActiveIndex(value, notify: true),
+                        destinations: const [
+                          NavigationDestination(
+                            label: 'Home',
+                            icon: Icon(
+                              Icons.home_outlined,
+                            ),
+                          ),
+                          NavigationDestination(
+                            label: 'Chat',
+                            icon: Icon(
+                              Icons.chat_bubble_outline,
+                            ),
+                          ),
+                          NavigationDestination(
+                            label: 'Profile',
+                            icon: Icon(
+                              Icons.person_2_outlined,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   );
                 }
-              : (context, tabsRouter) => SizedBox(),
+              : (context, tabsRouter) => const SizedBox(),
         );
       }),
     );

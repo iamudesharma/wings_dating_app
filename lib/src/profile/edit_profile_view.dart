@@ -30,6 +30,7 @@ import 'package:wings_dating_app/routes/app_router_provider.dart';
 // / / /  / / import 'package:wings_dating_app/src/model/geo_point.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
+import 'package:wings_dating_app/src/profile/profile_view.dart';
 
 import '../../helpers/responsive_layout.dart';
 import '../model/geo_point_data.dart';
@@ -58,6 +59,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Geolocator location = Geolocator();
+  bool isImageUpdate = false;
   // final geo = GeoFlutterFire();
 
   @override
@@ -146,23 +148,23 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                       profile.profileImage != null
                           ? kIsWeb
                               ? CircleAvatar(
-                                  radius: 35,
-                                  backgroundImage: NetworkImage(
+                                  radius: 45,
+                                  backgroundImage: CachedNetworkImageProvider(
                                     profile.profileImage!,
                                   ),
                                 )
                               : CircleAvatar(
-                                  radius: 35,
+                                  radius: 45,
                                   backgroundImage: FileImage(
                                     File(profile.profileImage!),
                                   ),
                                 )
                           : !widget.isEditProfile
                               ? const CircleAvatar(
-                                  radius: 35,
+                                  radius: 45,
                                 )
                               : CircleAvatar(
-                                  radius: 35,
+                                  radius: 45,
                                   backgroundImage: CachedNetworkImageProvider(
                                       profile.userModel?.profileUrl ?? ""),
                                 ),
@@ -181,6 +183,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   }, builder: (context) {
                                     return ImagePickerWidget(
                                       camera: () async {
+                                        setState(() {
+                                          isImageUpdate = true;
+                                        });
                                         await ref
                                             .read(ProfileController
                                                 .userControllerProvider)
@@ -193,16 +198,23 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                             .updateImage(profile.profileImage!);
                                       },
                                       gallery: () async {
-                                        await ref
-                                            .read(ProfileController
-                                                .userControllerProvider)
-                                            .pickImage(
-                                              imageSource: ImageSource.gallery,
-                                            );
+                                        if (widget.isEditProfile) {
+                                          setState(() {
+                                            isImageUpdate = true;
+                                          });
+                                          await ref
+                                              .read(ProfileController
+                                                  .userControllerProvider)
+                                              .pickImage(
+                                                imageSource:
+                                                    ImageSource.gallery,
+                                              );
 
-                                        await ref
-                                            .read(profileRepoProvider)
-                                            .updateImage(profile.profileImage!);
+                                          await ref
+                                              .read(profileRepoProvider)
+                                              .updateImage(
+                                                  profile.profileImage!);
+                                        }
                                       },
                                     );
                                   });
@@ -284,60 +296,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               });
                             }
                           });
-                          // builder: (_) => Builder(builder: (context) {
-                          //       return Container(
-                          //         height: 190,
-                          //         color: const Color.fromARGB(
-                          //             255, 255, 255, 255),
-                          //         child: Column(
-                          //           children: [
-                          //             SizedBox(
-                          //               height: 180,
-                          //               child: CupertinoDatePicker(
-                          //                 dateOrder:
-                          //                     DatePickerDateOrder.dmy,
-                          //                 backgroundColor: Theme.of(
-                          //                         context)
-                          //                     .scaffoldBackgroundColor,
-                          //                 onDateTimeChanged: (value) {
-                          //                   _dobController.text =
-                          //                       DateFormat.yMd()
-                          //                           .format(value);
-
-                          //                   _selectedDate = value;
-
-                          //                   setState(() {});
-                          //                 },
-                          //                 initialDateTime: DateTime(
-                          //                     DateTime.now().year - 18),
-                          //                 // maximumYear: ,
-                          //                 maximumYear:
-                          //                     DateTime.now().year - 18,
-                          //                 minimumYear: 1960,
-                          //                 mode: CupertinoDatePickerMode
-                          //                     .date,
-                          //               ),
-                          //             ),
-                          //           ],
-                          //         ),
-                          //       );
-                          //     }));
-                          // } else {
-                          //   await showDatePicker(
-                          //     context: context,
-                          //     initialDate: DateTime(2004),
-                          //     firstDate: DateTime(1960),
-                          //     lastDate: DateTime(2004),
-                          //   ).then((value) {
-                          //     logger.i(value);
-
-                          //     _dobController.text =
-                          //         DateFormat.yMd().format(value!);
-
-                          //     _selectedDate = value;
-                          //     setState(() {});
-                          //   });
-                          // }
                         },
                       ),
                       const SizedBox(
@@ -402,6 +360,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
                               if (_formKey.currentState!.validate()) {
                                 CubeUser? cubeUser0 = sharedPrefs.getUser();
+
                                 final image = await ref
                                     .read(ProfileController
                                         .userControllerProvider)
@@ -418,10 +377,14 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       password: cubeUser0?.password,
                                       login: cubeUser0?.login,
                                       fullName: _usernameController.text,
-                                      avatar: image,
+                                      avatar: isImageUpdate
+                                          ? image
+                                          : profile.userModel?.cubeUser.avatar,
                                     ),
                                     username: _usernameController.text,
-                                    profileUrl: image,
+                                    profileUrl: isImageUpdate
+                                        ? image
+                                        : profile.userModel?.cubeUser.avatar,
                                     birthday: _dobController.text,
                                   );
                                   logger.i(user?.toJson());
@@ -445,11 +408,13 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   //   fullName: _usernameController.text,
                                   //   avatar: image,
                                   //   phone: _cubeUser!.phone,
-                                  // ));
+                                  ref.invalidate(getUserByIdProvider(
+                                      profile.userModel!.id)); // ));
 
                                   setState(() {
                                     _loading = false;
                                   });
+
                                   await route.pop();
                                 } else {
                                   final sharedPrefs =

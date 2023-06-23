@@ -152,8 +152,10 @@ class ProfileRepo with RepositoryExceptionMixin {
     final Stream<List<DocumentSnapshot<UserModel?>>> stream =
         GeoCollectionReference<UserModel?>(usercollection).subscribeWithin(
             center: GeoFirePoint(center),
-            radiusInKm: 100000,
+            radiusInKm: 100,
             field: "position",
+            asBroadcastStream: true,
+            strictMode: true,
             geopointFrom: geopointFrom);
 
     final userListRaw = stream.map((event) {
@@ -229,8 +231,6 @@ class ProfileRepo with RepositoryExceptionMixin {
     return users;
   }
 
-  
-
   Future<void> addToBlockList({required String id, CubeUser? cube}) async {
     final usercollection = userCollection();
 
@@ -252,8 +252,6 @@ class ProfileRepo with RepositoryExceptionMixin {
         .update({
       "blockList": FieldValue.arrayUnion([id])
     });
-
-    
   }
 
   void removeToBlockList({required List<String> id}) async {

@@ -27,32 +27,26 @@ class AppRouter extends _$AppRouter {
 
   AppRouter(this.ref);
 
-@override      
-RouteType get defaultRouteType => const RouteType.adaptive();
+  @override
+  RouteType get defaultRouteType => const RouteType.adaptive();
 
-
+  @override
   @override
   late final List<AutoRoute> routes = [
     AutoRoute(
+      keepHistory: true,
       page: DashboardRoute.page,
       type: const RouteType.adaptive(),
       path: "/",
       children: [
+        AutoRoute(page: UsersRoute.page, initial: true),
         AutoRoute(
-          page: UsersRoute.page,
-          path: "users",
+          page: ChatListRoute.page,
+          keepHistory: true,
         ),
-        AutoRoute(page: ChatListRoute.page, path: "chats", children: [
-          AutoRoute(
-            page: ChatRoute.page,
-            path: "chat/:id",
-            type: const RouteType.adaptive(),
-            
-          ),
-        ]),
         AutoRoute(
           page: ProfileRoute.page,
-          path: "profile",
+          keepHistory: true,
         ),
       ],
       guards: [
@@ -62,12 +56,19 @@ RouteType get defaultRouteType => const RouteType.adaptive();
     ),
     AutoRoute(
       page: SignOptionsRoute.page,
+      keepHistory: true,
       type: const RouteType.adaptive(),
     ),
     AutoRoute(
       page: OtherUserProfileRoute.page,
+      keepHistory: true,
       type: const RouteType.adaptive(),
       path: "/user/:id",
+    ),
+    AutoRoute(
+      page: ChatRoute.page,
+      path: "/chat/:cubeUserId",
+      keepHistory: true,
     ),
     AutoRoute(
         page: AddAdditionalInformationRoute.page,

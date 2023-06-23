@@ -103,24 +103,11 @@ class _UsersViewState extends ConsumerState<UsersView>
     };
   }
 
-  _loginToCubeChat() async {
-    final user = await SharedPrefs.instance.getUser();
-
-    print("_loginToCubeChat user $user");
-    CubeChatConnectionSettings.instance.totalReconnections = 0;
-    CubeChatConnection.instance.login(user!).then((cubeUser) {
-      // _isLoginContinues = false;
-
-      // if (!kIsWeb) {
-      PushNotificationsManager.instance.init();
-      // }
-      // _goDialogScreen(context, cubeUser);
-    }).catchError((error) {});
-  }
-
   @override
   void initState() {
     // _loginToCubeChat(); s
+
+    checkIfService();
 
     init(AppConst.cubeappId, AppConst.authKey, AppConst.authSecret,
         onSessionRestore: () async {
@@ -826,7 +813,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
             fit: BoxFit.cover,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: Colors.blueGrey.shade400,
+          color: Theme.of(context).primaryColor.withOpacity(0.6),
         ),
         // ignore: prefer_const_literals_to_create_immutables
         child: Column(children: [
