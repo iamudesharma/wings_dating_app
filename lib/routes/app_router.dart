@@ -39,15 +39,20 @@ class AppRouter extends _$AppRouter {
       type: const RouteType.adaptive(),
       path: "/",
       children: [
-        AutoRoute(page: UsersRoute.page, initial: true),
-        AutoRoute(
-          page: ChatListRoute.page,
-          keepHistory: true,
-        ),
-        AutoRoute(
-          page: ProfileRoute.page,
-          keepHistory: true,
-        ),
+        RedirectRoute(path: '', redirectTo: 'books'),
+        AutoRoute(page: BooksTab.page, path: "user", children: [
+          AutoRoute(page: UsersRoute.page, path: "", initial: true),
+          AutoRoute(
+            page: ChatListRoute.page,
+            path: "",
+            keepHistory: true,
+          ),
+          AutoRoute(
+            page: ProfileRoute.page,
+            keepHistory: true,
+            path: "",
+          ),
+        ])
       ],
       guards: [
         // AuthGuard(),
@@ -89,6 +94,10 @@ class AppRouter extends _$AppRouter {
   ];
 }
 
+@RoutePage(name: 'BooksTab')
+class BooksTabView extends AutoRouter {
+  const BooksTabView({super.key});
+}
 // @MaterialAutoRouter(
 //   replaceInRouteName: 'View,Route',
 //   routes: <AutoRoute>[
