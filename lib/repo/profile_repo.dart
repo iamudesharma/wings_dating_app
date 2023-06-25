@@ -137,7 +137,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     );
   }
 
-  Stream<List<UserModel?>?> getUserList() {
+  Stream<List<UserModel?>?> getUserList({int limit = 10}) {
     final usercollection = userCollection();
 
     final userModel =
@@ -156,6 +156,7 @@ class ProfileRepo with RepositoryExceptionMixin {
             field: "position",
             asBroadcastStream: true,
             strictMode: true,
+            queryBuilder: (query) => query.limit(limit),
             geopointFrom: geopointFrom);
 
     final userListRaw = stream.map((event) {

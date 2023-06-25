@@ -15,6 +15,12 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    BooksTab.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const BooksTabView(),
+      );
+    },
     SignOptionsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -110,6 +116,20 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
   };
+}
+
+/// generated route for
+/// [BooksTabView]
+class BooksTab extends PageRouteInfo<void> {
+  const BooksTab({List<PageRouteInfo>? children})
+      : super(
+          BooksTab.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BooksTab';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
