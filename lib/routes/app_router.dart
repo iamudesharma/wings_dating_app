@@ -36,10 +36,9 @@ class AppRouter extends _$AppRouter {
     AutoRoute(
       keepHistory: true,
       page: DashboardRoute.page,
-      type: const RouteType.adaptive(),
       path: "/",
       children: [
-        RedirectRoute(path: '', redirectTo: 'books'),
+        RedirectRoute(path: '', redirectTo: 'users'),
         AutoRoute(page: BooksTab.page, path: "user", children: [
           AutoRoute(page: UsersRoute.page, path: "", initial: true),
           AutoRoute(
@@ -55,7 +54,6 @@ class AppRouter extends _$AppRouter {
         ])
       ],
       guards: [
-        // AuthGuard(),
         AuthGuard(ref: ref),
       ],
     ),
@@ -98,63 +96,3 @@ class AppRouter extends _$AppRouter {
 class BooksTabView extends AutoRouter {
   const BooksTabView({super.key});
 }
-// @MaterialAutoRouter(
-//   replaceInRouteName: 'View,Route',
-//   routes: <AutoRoute>[
-//     // AutoRoute(page: BookListPage, initial: true),
-//     // AutoRoute(
-//     //   page: SignOptionsView,
-//     // ),
-//     AutoRoute(page: [])
-
-//     // AutoRoute(
-//     //   page: DashboardView,
-//     //   initial: true,
-//     //   guards: [
-//     //     AuthGuard,
-//     //     // ProfileDocGuard,
-//     //   ],
-//     //   children: [
-//     //     AutoRoute(
-//     //       page: UsersView,
-//     //     ),
-//     //     AutoRoute(
-//     //       page: ChatListView,
-//     //     ),
-//     //     AutoRoute(
-//     //       page: ProfileView,
-//     //     ),
-//     //   ],
-//     // ),
-//     // AutoRoute(
-//     //   page: ChatView,
-//     // ),
-//     // AutoRoute(
-//     //   page: OtherUserProfileView,
-//     // ),
-//     // AutoRoute(
-//     //   page: AddAdditionalInformationView,
-//     // ),
-
-//     // AutoRoute(
-//     //   page: CallView,
-//     // ),
-
-//     // AutoRoute(page: EditProfileView),
-//     // AutoRoute(page: UserBlockListView),
-//     // AutoRoute(page: VideoCallView),
-
-//     // AutoRoute(
-//     //   page: LoginView,
-//     // ),
-//   ],
-// )
-// // extend the generated private router
-// class AppRouter extends _$AppRouter {
-//   AppRouter({required super.authGuard});
-// }
-
-// class MaterialAutoRouter {
-//   const MaterialAutoRouter(
-//       {required String replaceInRouteName, required List<AutoRoute> routes});
-// }
