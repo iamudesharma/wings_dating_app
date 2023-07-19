@@ -156,14 +156,17 @@ class ProfileRepo with RepositoryExceptionMixin {
             field: "position",
             asBroadcastStream: true,
             strictMode: true,
-            queryBuilder: (query) => query.limit(limit),
+            // queryBuilder: (query) =>
+            //     query.where("blockList", whereNotIn: [userModel.blockList]),
             geopointFrom: geopointFrom);
 
     final userListRaw = stream.map((event) {
       logger.i(event.length);
+
       return event.map((e) {
         return e.data();
-      }).toList();
+      }).toList()
+        ..removeWhere((element) => userModel.blockList.contains(element!.id));
     });
 
     return userListRaw;
@@ -253,14 +256,32 @@ class ProfileRepo with RepositoryExceptionMixin {
         .update({
       "blockList": FieldValue.arrayUnion([id])
     });
+    ref
+        .read(ProfileController.userControllerProvider.notifier)
+        .userModel!
+        .blockList
+        .add(id);
   }
 
   void removeToBlockList({required List<String> id}) async {
     final usercollection = userCollection();
 
-    await usercollection
-        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-        .update({"blockList": FieldValue.arrayRemove(id)});
+    var listName = 'blockList';
+
+    // var items = [
+    //   // CubePrivacyListItem(cube!.id!, CubePrivacyAction.deny, isMutual: true),
+    // ];
+    // CubeChatConnection.instance.privacyListsManager
+    //     ?.declineDefaultList()
+    //     .then((voidResult) => CubeChatConnection.instance.privacyListsManager
+    //         ?.createList(listName, items))
+    //     .then((list) => CubeChatConnection.instance.privacyListsManager
+    //         ?.setDefaultList(listName))
+    //     .then((updatedList) {});
+
+    // await usercollection
+    //     .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+    //     .update({"blockList": FieldValue.arrayRemove(id)});
   }
 
   Future<List<UserModel?>> getBlockList() async {

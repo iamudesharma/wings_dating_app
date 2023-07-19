@@ -461,20 +461,32 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       .read(Dependency.profileProvider)
                                       .createUserDoc(user);
 
-                                  _signInCC(
-                                      CubeUser(
-                                          avatar: await ref
-                                              .read(ProfileController
-                                                  .userControllerProvider)
-                                              .uploadImage(),
-                                          fullName: _usernameController.text,
-                                          password: password.toString(),
-                                          login: _usernameController.text
-                                              .toLowerCase()),
-                                      ref);
+                                  try {
+                                    _signInCC(
+                                        CubeUser(
+                                            avatar: await ref
+                                                .read(ProfileController
+                                                    .userControllerProvider)
+                                                .uploadImage(),
+                                            fullName: _usernameController.text,
+                                            password: password.toString(),
+                                            login: _usernameController.text
+                                                .toLowerCase()),
+                                        ref);
 
-                                  await route
-                                      .popAndPush(const DashboardRoute());
+                                    await route
+                                        .popAndPush(const DashboardRoute());
+                                  } on Exception catch (e) {
+                                    logger.e(e);
+                                    _bioController.clear();
+                                    _usernameController.clear();
+                                    _dobController.clear();
+                                    _formKey.currentState!.reset();
+
+                                    setState(() {
+                                      _loading = false;
+                                    });
+                                  }
                                 }
                               }
                             },
@@ -532,75 +544,6 @@ class ImagePickerWidget extends StatelessWidget {
     );
   }
 }
-
-// Future<void> _signInCC(CubeUser user, WidgetRef ref,
-//     {UserModel? userModel}) async {
-//   if (!CubeSessionManager.instance.isActiveSessionValid()) {
-//     try {
-//       await createSession();
-//     } on Exception catch (e) {
-//       logger.e("createSession error $e");
-//     }
-//   }
-//   SharedPrefs sharedPrefs = SharedPrefs.instance;
-
-//   await sharedPrefs.init();
-
-//   await signUp(user).then((newUser) {
-//     logger.i("signUp newUser $newUser");
-//     user.id = newUser.id;
-//     SharedPrefs.instance.saveNewUser(user);
-//     signIn(user).then((result) {
-//       _loginToCubeChat(user);
-//     });
-//   }).catchError((exception) {
-//     logger.e("signUp exception $exception");
-//     // _processLoginError(exception);
-//   });
-
-//   // // try {
-//   // //   signUp(user).then((newUser) async {
-//   // //     logger.i("signUp newUser $newUser");
-//   // //     user.id = newUser.id;
-//   // //     await sharedPrefs.saveNewUser(user);
-
-//   // //     final cube = sharedPrefs.getUser();
-
-//   // //     final user0 = userModel?.copyWith(
-//   // //       cubeUser: cube!,
-//   // //     );
-
-//   // //     await signIn(user).then((result) async {
-//   // //       logger.i("signIn result $result");
-//   // //       _loginToCubeChat(user);
-
-//   // //       await ref.read(Dependency.profileProvider).updateUserDoc(user0!);
-//   // //     });
-//   // //   }).catchError((exception) {
-//   // //     logger.e("signUp exception $exception");
-//   // //     // _processLoginError(exception);
-//   // //   });
-//   // } catch (error) {
-//   //   logger.e("createSession error $error");
-//   // }
-// }
-
-// _loginToCubeChat(CubeUser user) {
-//   logger.i("_loginToCubeChat user $user");
-//   CubeChatConnectionSettings.instance.totalReconnections = 0;
-//   CubeChatConnection.instance.login(user).then((cubeUser) async {
-//     logger.i("login cubeUser $cubeUser");
-
-//     await CubeChatConnection.instance
-//         .subscribeToUserLastActivityStatus(user.id!);
-
-//     if (!Platform.isIOS) {
-//       PushNotificationsManager.instance.init();
-//     }
-//   }).catchError((error) {
-//     logger.e("login error $error");
-//   });
-// }
 
 _signInCC(CubeUser user, WidgetRef ref) async {
   // if (_isLoginContinues) return;
