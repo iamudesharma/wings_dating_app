@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wings_dating_app/repo/profile_repo.dart';
 
 import 'package:wings_dating_app/src/model/user_models.dart';
 
@@ -101,6 +102,19 @@ class ProfileController extends ChangeNotifier {
 
     return meterToKm(data);
   }
+
+  Future<void> removeFromBlockList(
+      {required String id, required int cubeId}) async {
+    await ref
+        .read(Dependency.profileProvider)
+        .removeToBlockList(id: id, cubeId: cubeId);
+  }
+
+  Future<void> addToBlockList({required String id, required int cubeId}) async {
+    await ref
+        .read(Dependency.profileProvider)
+        .addToBlockList(id: id, cubeId: cubeId);
+  }
 }
 
 String meterToKm(double meter) {
@@ -133,10 +147,10 @@ final ethnicityProvider = StateProvider<Ethnicity>((ref) {
 });
 final lookingForProvider = StateProvider<LookingFor>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.lookingFor ?? LookingFor.doNotShow;
+  return userdata!.lookingFor;
 });
 
 final whereToMeetProvider = StateProvider<WhereToMeet>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.whereToMeet ?? WhereToMeet.doNotShow;
+  return userdata!.whereToMeet;
 });
