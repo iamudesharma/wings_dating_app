@@ -235,13 +235,13 @@ class ProfileRepo with RepositoryExceptionMixin {
     return users;
   }
 
-  Future<void> addToBlockList({required String id, CubeUser? cube}) async {
+  Future<void> addToBlockList({required String id, required int cubeId}) async {
     final usercollection = userCollection();
 
     var listName = 'blockList';
 
     var items = [
-      CubePrivacyListItem(cube!.id!, CubePrivacyAction.deny, isMutual: true),
+      CubePrivacyListItem(cubeId, CubePrivacyAction.deny, isMutual: true),
     ];
 
     CubeChatConnection.instance.privacyListsManager
@@ -263,25 +263,35 @@ class ProfileRepo with RepositoryExceptionMixin {
         .add(id);
   }
 
-  void removeToBlockList({required List<String> id}) async {
-    final usercollection = userCollection();
+  Future removeToBlockList({required String id, required int cubeId}) async {
+    try {
+      final usercollection = userCollection();
 
-    var listName = 'blockList';
+      var listName = 'blockList';
 
-    // var items = [
-    //   // CubePrivacyListItem(cube!.id!, CubePrivacyAction.deny, isMutual: true),
-    // ];
-    // CubeChatConnection.instance.privacyListsManager
-    //     ?.declineDefaultList()
-    //     .then((voidResult) => CubeChatConnection.instance.privacyListsManager
-    //         ?.createList(listName, items))
-    //     .then((list) => CubeChatConnection.instance.privacyListsManager
-    //         ?.setDefaultList(listName))
-    //     .then((updatedList) {});
+      var items = [
+        CubePrivacyListItem(cubeId, CubePrivacyAction.deny,
+            isMutual: true),
+      ];
 
-    // await usercollection
-    //     .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-    //     .update({"blockList": FieldValue.arrayRemove(id)});
+      CubeChatConnection.instance.privacyListsManager
+          ?.declineDefaultList()
+          .then((voidResult) => CubeChatConnection.instance.privacyListsManager
+              ?.createList(listName, items))
+          .then((list) => CubeChatConnection.instance.privacyListsManager
+              ?.setDefaultList(listName))
+          .then((updatedList) {});
+
+      await usercollection
+          .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+          .update({
+        "blockList": FieldValue.arrayRemove(
+          [id],
+        ),
+      });
+    } catch (e) {
+      throw e;
+    }
   }
 
   Future<List<UserModel?>> getBlockList() async {

@@ -51,9 +51,9 @@ class UserListNotifier extends AsyncNotifier<List<UserModel?>?> {
     return build();
   }
 
-  addToBlockList(String id) async {
-    await ref.read(profileRepoProvider).addToBlockList(id: id);
-  }
+  // addToBlockList(int id) async {
+  //   await ref.read(profileRepoProvider).addToBlockList(id: id);
+  // }
 }
 
 @RoutePage()

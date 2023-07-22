@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
+import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
 import '../users/users_view.dart';
 
@@ -36,16 +38,33 @@ class UserBlockListView extends ConsumerWidget {
                   child:
                       const Text("No Users In Block List").animate().fadeIn(),
                 )
-              : GridView.builder(
+              : ListView.builder(
                   itemCount: data.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
                   itemBuilder: (context, index) {
-                    return UserGridItem(
-                      users: data[index]!,
+                    final user = data[index]!;
+                    return ListTile(
+                      trailing: TextButton(
+                        onPressed: () async {
+                          await ref
+                              .read(ProfileController.userControllerProvider)
+                              .removeFromBlockList(
+                                id: user.id,
+                                cubeId: user.cubeUser.id!,
+                              );
+
+                          ref.invalidate(getUserBlockListProvider);
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.red,
+                        ),
+                        child: const Text("Remove"),
+                      ),
+                      leading: CircleAvatar(
+                        backgroundImage: CachedNetworkImageProvider(
+                          user.profileUrl!,
+                        ),
+                      ),
+                      title: Text(user.username),
                     ).animate().shake();
                   },
                 ),
