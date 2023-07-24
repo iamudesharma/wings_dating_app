@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
 // import 'package:chat_sample/src/utils/api_utils.dart';
@@ -29,17 +30,22 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/chats/chats_list_view.dart';
+import 'package:wings_dating_app/src/chats/pages/chat_settings_view.dart';
 import 'package:wings_dating_app/src/chats/services/call_manager.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
 import '../../../const/pref_util.dart';
+import 'package:rxdart/rxdart.dart' as rx;
 
 int? time;
 const int messagesPerPage = 50;
 int lastPartSize = 0;
-final _chatUserData = FutureProvider.family<UserModel?, int>(
-    (ref, id) => ref.read(profileRepoProvider).getUserByCubeId(id));
+final _chatUserData =
+    FutureProvider.autoDispose.family<UserModel?, int>((ref, id) {
+  ref.keepAlive();
+  return ref.read(profileRepoProvider).getUserByCubeId(id);
+});
 
 // final getMessageListProvider =
 //     StreamProvider<PagedResult<CubeMessage?>?>((ref) {
@@ -130,41 +136,52 @@ class _ChatViewState extends ConsumerState<ChatView> {
                     ? const Center(
                         child: CircularProgressIndicator.adaptive(),
                       )
-                    : Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: CachedNetworkImageProvider(
-                              users!.profileUrl!,
+                    : GestureDetector(
+                        onTap: () {
+                          context.router.pushWidget(
+                            ChatSettingPage(
+                              dialogId: widget.dialogId ?? "wjknwjk",
+                              user: users,
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                users.username,
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: CachedNetworkImageProvider(
+                                users!.profileUrl!,
                               ),
-                              Text(
-                                ref
-                                    .read(ProfileController
-                                        .userControllerProvider)
-                                    .getDistance(
-                                      GeoPoint(
-                                        users.position!.geopoint.latitude,
-                                        users.position!.geopoint.longitude,
-                                      ),
-                                    ),
-                                style: const TextStyle(
-                                  fontSize: 10,
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  users.username,
                                 ),
-                              )
-                            ],
-                          ),
-                          time == null
-                              ? const SizedBox()
-                              : Text(DateTime.fromMicrosecondsSinceEpoch(time!)
-                                  .timeAgo())
-                        ],
+                                Text(
+                                  ref
+                                      .read(ProfileController
+                                          .userControllerProvider)
+                                      .getDistance(
+                                        GeoPoint(
+                                          users.position!.geopoint.latitude,
+                                          users.position!.geopoint.longitude,
+                                        ),
+                                      ),
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                  ),
+                                )
+                              ],
+                            ),
+                            time == null
+                                ? const SizedBox()
+                                : Text(
+                                    DateTime.fromMicrosecondsSinceEpoch(time!)
+                                        .timeAgo())
+                          ],
+                        ),
                       )),
           ),
           body: ChatScreen(widget.cubeUserId!, widget.cubeDialog, _emotions)),
@@ -246,7 +263,8 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   late bool isLoading;
   late StreamSubscription<ConnectivityResult> connectivityStateSubscription;
   String? imageUrl;
-  List<CubeMessage> listMessage = [];
+  // List<CubeMessage> listMessage = [];
+
   Timer? typingTimer;
   bool isTyping = false;
   String userStatus = '';
@@ -267,6 +285,10 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   StreamSubscription? lastActivitySubscription;
   StreamSubscription<MessageStatus>? deleteMsgSubscription;
 
+  rx.BehaviorSubject<List<CubeMessage>> listMessageSubject =
+      rx.BehaviorSubject<List<CubeMessage>>.seeded([]);
+
+
   final List<CubeMessage> _unreadMessages = [];
   final List<CubeMessage> _unsentMessages = [];
 
@@ -280,6 +302,8 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   void initState() {
     super.initState();
+
+    listMessageSubject.stream;
 
     if (_cubeDialog != null) {
       _initCubeChat();
@@ -309,6 +333,15 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     connectivityStateSubscription.cancel();
     reactionSubscription?.cancel();
     deleteMsgSubscription?.cancel();
+    lastActivitySubscription?.cancel();
+    listScrollController.dispose();
+    listMessageSubject.close();
+    
+    _sendStopTypingTimer?.cancel();
+    _sendStopTypingTimer = null;
+    typingTimer?.cancel();
+    // connectivityStateSubscription.cancel();
+
     super.dispose();
   }
 
@@ -396,7 +429,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   void _updateMessageReactions(MessageReaction reaction) {
     log('[_updateMessageReactions]');
     setState(() {
-      CubeMessage? msg = listMessage
+      CubeMessage? msg = listMessageSubject.value
           .firstWhereOrNull((msg) => msg.messageId == reaction.messageId);
       if (msg == null) return;
 
@@ -527,27 +560,27 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
       //more standard parameters you can found by link https://developers.connectycube.com/server/push_notifications?id=universal-push-notifications
     };
 
-    params.notificationType = NotificationType.PUSH;
+    // params.notificationType = NotificationType.PUSH;
 
-    params.environment =
-        isProduction ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
-    params.usersIds = [
-      _cubeDialog!.occupantsIds!
-          .where((element) => element != _cubeUserId)
-          .first
-    ];
+    // params.environment =
+    //     isProduction ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
+    // params.usersIds = [
+    //   _cubeDialog!.occupantsIds!
+    //       .where((element) => element != _cubeUserId)
+    //       .first
+    // ];
 
-    //  if(Platform.isAndroid){
-    createEvent(params.getEventForRequest())
-        .then((cubeEvent) {})
-        .catchError((error) {});
-    //  }
+    // //  if(Platform.isAndroid){
+    // createEvent(params.getEventForRequest())
+    //     .then((cubeEvent) {})
+    //     .catchError((error) {});
+    // //  }
   }
 
   updateReadDeliveredStatusMessage(MessageStatus status, bool isRead) {
     log('[updateReadDeliveredStatusMessage]');
     setState(() {
-      CubeMessage? msg = listMessage
+      CubeMessage? msg = listMessageSubject.value
           .firstWhereOrNull((msg) => msg.messageId == status.messageId);
       if (msg == null) return;
       if (isRead) {
@@ -567,21 +600,22 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   deleteMessage(String message) {
     log('[deleteMessage] message= $message');
     setState(() {
-      listMessage.removeWhere((msg) => msg.messageId == message);
+      listMessageSubject.value.removeWhere((msg) => msg.messageId == message);
     });
   }
 
   addMessageToListView(CubeMessage message) {
     setState(() {
       isLoading = false;
-      int existMessageIndex = listMessage.indexWhere((cubeMessage) {
+      int existMessageIndex =
+          listMessageSubject.value.indexWhere((cubeMessage) {
         return cubeMessage.messageId == message.messageId;
       });
 
       if (existMessageIndex != -1) {
-        listMessage[existMessageIndex] = message;
+        listMessageSubject.value[existMessageIndex] = message;
       } else {
-        listMessage.insert(0, message);
+        listMessageSubject.value.insert(0, message);
       }
     });
   }
@@ -791,10 +825,10 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     bool isHeaderView() {
       int headerId = int.parse(DateFormat('ddMMyyyy').format(
           DateTime.fromMillisecondsSinceEpoch(message.dateSent! * 1000)));
-      if (index >= listMessage.length - 1) {
+      if (index >= listMessageSubject.value.length - 1) {
         return false;
       }
-      var msgPrev = listMessage[index + 1];
+      var msgPrev = listMessageSubject.value[index + 1];
       int nextItemHeaderId = int.parse(DateFormat('ddMMyyyy').format(
           DateTime.fromMillisecondsSinceEpoch(msgPrev.dateSent! * 1000)));
       var result = headerId != nextItemHeaderId;
@@ -1136,7 +1170,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   bool isLastMessageLeft(int index) {
-    if ((listMessage[index].id == _cubeUserId)) {
+    if ((listMessageSubject.value[index].id == _cubeUserId)) {
       return true;
     } else {
       return false;
@@ -1144,7 +1178,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   bool isLastMessageRight(int index) {
-    if ((listMessage[index].id != _cubeUserId)) {
+    if ((listMessageSubject.value[index].id != _cubeUserId)) {
       return true;
     } else {
       return false;
@@ -1228,8 +1262,8 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                     valueColor: AlwaysStoppedAnimation<Color>(
                         Theme.of(context).primaryColor)));
           } else {
-            listMessage = snapshot.data ?? [];
-            return getWidgetMessages(listMessage);
+            listMessageSubject.add(snapshot.data ?? []);
+            return getWidgetMessages(listMessageSubject.value);
           }
         },
       ),
@@ -1237,7 +1271,8 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Future<List<CubeMessage>> getMessagesList() async {
-    if (listMessage.isNotEmpty) return Future.value(listMessage);
+    if (listMessageSubject.value.isNotEmpty)
+      return Future.value(listMessageSubject.value);
 
     Completer<List<CubeMessage>> completer = Completer();
     List<CubeMessage>? messages;
@@ -1267,27 +1302,27 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
         if (oldMessages.isNotEmpty) {
           getMessagesBetweenDates(
                   oldMessages.first.dateSent ?? 0,
-                  listMessage.last.dateSent ??
+                  listMessageSubject.value.last.dateSent ??
                       DateTime.now().millisecondsSinceEpoch ~/ 1000)
               .then((newMessages) {
             setState(() {
               isLoading = false;
 
-              listMessage.addAll(newMessages);
+              listMessageSubject.add(newMessages);
 
               if (newMessages.length < messagesPerPage) {
-                oldMessages.insertAll(0, listMessage);
-                listMessage = List.from(oldMessages);
+                oldMessages.insertAll(0, listMessageSubject.value);
+                listMessageSubject.value = List.from(oldMessages);
                 oldMessages.clear();
               }
             });
           });
         } else {
-          getMessagesByDate(listMessage.last.dateSent ?? 0, false)
+          getMessagesByDate(listMessageSubject.value.last.dateSent ?? 0, false)
               .then((messages) {
             setState(() {
               isLoading = false;
-              listMessage.addAll(messages);
+              listMessageSubject.add(messages);
             });
           });
         }
@@ -1418,15 +1453,15 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
         isLoading = true;
       });
 
-      getMessagesBetweenDates(listMessage.first.dateSent ?? 0,
+      getMessagesBetweenDates(listMessageSubject.value.first.dateSent ?? 0,
               DateTime.now().millisecondsSinceEpoch ~/ 1000)
           .then((newMessages) {
         setState(() {
           if (newMessages.length == messagesPerPage) {
-            oldMessages = List.from(listMessage);
-            listMessage = newMessages;
+            oldMessages = List.from(listMessageSubject.value);
+            listMessageSubject.value = newMessages;
           } else {
-            listMessage.insertAll(0, newMessages);
+            listMessageSubject.value.insertAll(0, newMessages);
           }
         });
       }).whenComplete(() {
@@ -1613,5 +1648,45 @@ class MessageBar extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+final connectivityStateSubscriptionProvider =
+    StreamProvider.autoDispose<ConnectivityResult>((ref) async* {
+  ref.keepAlive();
+  yield* Connectivity().onConnectivityChanged;
+});
+
+// class MsgSubscriptionNotifier extends StreamNotifier<List<CubeMessage>> {
+//   @override
+//   Stream<List<CubeMessage>> build() {
+//      CubeChatConnection.instance.chatMessagesManager!.chatMessagesStream.listen((event) {
+//        state.value?.add(event);
+
+//        return state.value??[];
+//     },);
+//   }
+// }
+
+@RoutePage()
+class ChatViewProvider extends StatelessWidget {
+  const ChatViewProvider({
+    Key? key,
+    this.cubeUser,
+    this.cubeDialog,
+    this.chatUserCubeId,
+    this.dialogId,
+    @pathParam this.cubeUserId,
+  }) : super(key: key);
+
+  final CubeUser? cubeUser;
+  final CubeDialog? cubeDialog;
+  final int? chatUserCubeId;
+  final String? dialogId;
+  final int? cubeUserId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
   }
 }

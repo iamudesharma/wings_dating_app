@@ -246,7 +246,10 @@ class ProfileRepo with RepositoryExceptionMixin {
 
     CubeChatConnection.instance.privacyListsManager
         ?.createList(listName, items)
-        .then((users) {})
+        .then((users) {
+          
+      // privacy list created
+        })
         .catchError((exception) {
       // error occurred during creation privacy list
     });
