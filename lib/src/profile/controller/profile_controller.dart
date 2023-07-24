@@ -113,7 +113,7 @@ class ProfileController extends ChangeNotifier {
   Future<void> addToBlockList({required String id, required int cubeId}) async {
     await ref
         .read(Dependency.profileProvider)
-        .addToBlockList(id: id, cubeId: cubeId);
+        .removeToBlockList(id: id, cubeId: cubeId);
   }
 }
 

@@ -780,8 +780,6 @@ PODS:
     - FirebaseCoreExtension (~> 10.0)
     - GTMSessionFetcher/Core (< 4.0, >= 2.1)
   - Flutter (1.0.0)
-  - flutter_isolate (0.0.1):
-    - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
   - flutter_webrtc (0.9.31):
@@ -933,7 +931,6 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
-  - flutter_isolate (from `.symlinks/plugins/flutter_isolate/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_webrtc (from `.symlinks/plugins/flutter_webrtc/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
@@ -1011,8 +1008,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
-  flutter_isolate:
-    :path: ".symlinks/plugins/flutter_isolate/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_webrtc:
@@ -1068,7 +1063,6 @@ SPEC CHECKSUMS:
   FirebaseMessaging: bb2c4f6422a753038fe137d90ae7c1af57251316
   FirebaseStorage: 1d7ca8c8953fc61ccacaa7c612696b5402968a0d
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_isolate: 0edf5081826d071adf21759d1eb10ff5c24503b5
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_webrtc: 02c023207f972145a3bc8c7aada86754f264d563
   fluttertoast: fafc4fa4d01a6a9e4f772ecd190ffa525e9e2d9c
