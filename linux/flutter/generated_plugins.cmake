@@ -8,6 +8,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_linux
   flutter_webrtc
   platform_device_id_linux
+  url_launcher_linux
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
