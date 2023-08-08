@@ -527,7 +527,7 @@ class UsersSearchDelegate extends SearchDelegate {
           : Center(
               child: Text(error.toString()),
             ),
-      data: (data) => ListView.builder(
+      data: (data) => ListView.builder( 
         itemCount: data!.length,
         itemBuilder: (context, index) {
           final users = data[index];
