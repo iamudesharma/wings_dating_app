@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 
@@ -18,7 +17,6 @@ import 'package:meta_seo/meta_seo.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
@@ -298,178 +296,168 @@ class _UsersViewState extends ConsumerState<UsersView>
                       ),
                       title: Text(userData.username),
                       actions: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SearchAnchor(
-                            viewBackgroundColor:
-                                Theme.of(context).scaffoldBackgroundColor,
-                            viewSurfaceTintColor: Colors.black,
-                            builder: (context, controller) => InkWell(
-                                onTap: () {
-                                  controller.openView();
-                                },
-                                child: const Icon(Icons.search)),
+                        SearchAnchor(
+                          viewBackgroundColor:
+                              Theme.of(context).scaffoldBackgroundColor,
+                          viewSurfaceTintColor: Colors.black,
+                          builder: (context, controller) => InkWell(
+                              onTap: () {
+                                controller.openView();
+                              },
+                              child: const Icon(Icons.search)),
 
-                            suggestionsBuilder: (context, controller) {
-                              final userList = ref
-                                  .watch(searchUsersProvider(controller.text));
+                          suggestionsBuilder: (context, controller) {
+                            final userList =
+                                ref.watch(searchUsersProvider(controller.text));
 
-                              return [
-                                Container(
-                                  child: userList.when(
-                                    loading: () => const Center(
-                                      child:
-                                          CircularProgressIndicator.adaptive(),
-                                    ),
-                                    error: (error, stackTrace) =>
-                                        (error is Exception)
-                                            ? Center(
-                                                child: Text(error.toString()),
-                                              )
-                                            : Center(
-                                                child: Text(error.toString()),
-                                              ),
-                                    data: (data) => SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height,
-                                      width: MediaQuery.of(context).size.width,
-                                      child: ListView.builder(
-                                        itemCount: data!.length,
-                                        itemBuilder: (context, index) {
-                                          final users = data[index];
-                                          return ListTile(
-                                            leading: CircleAvatar(
-                                              backgroundImage:
-                                                  CachedNetworkImageProvider(
-                                                      users!.profileUrl!),
+                            return [
+                              Container(
+                                child: userList.when(
+                                  loading: () => const Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  ),
+                                  error: (error, stackTrace) =>
+                                      (error is Exception)
+                                          ? Center(
+                                              child: Text(error.toString()),
+                                            )
+                                          : Center(
+                                              child: Text(error.toString()),
                                             ),
-                                            title: Text(users.username,
-                                                style: const TextStyle(
-                                                    color: Colors.white)),
-                                            onTap: () {
-                                              // // Navigator.push(
-                                              // //   context,
-                                              // //   MaterialPageRoute(
-                                              // //     builder: (context) => ProfileScreen(
-                                              // //       userId: users.id,
-                                              // //     ),
-                                              // //   ),
-                                              // );
-                                            },
-                                          );
-                                        },
-                                      ),
+                                  data: (data) => SizedBox(
+                                    height: MediaQuery.of(context).size.height,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ListView.builder(
+                                      itemCount: data!.length,
+                                      itemBuilder: (context, index) {
+                                        final users = data[index];
+                                        return ListTile(
+                                          leading: CircleAvatar(
+                                            backgroundImage:
+                                                CachedNetworkImageProvider(
+                                                    users!.profileUrl!),
+                                          ),
+                                          title: Text(users.username,
+                                              style: const TextStyle(
+                                                  color: Colors.white)),
+                                          onTap: () {
+                                            // // Navigator.push(
+                                            // //   context,
+                                            // //   MaterialPageRoute(
+                                            // //     builder: (context) => ProfileScreen(
+                                            // //       userId: users.id,
+                                            // //     ),
+                                            // //   ),
+                                            // );
+                                          },
+                                        );
+                                      },
                                     ),
                                   ),
-                                )
-                              ];
-                            },
-                            isFullScreen:
-                                sizingInformation.isMobile ? true : false,
+                                ),
+                              )
+                            ];
+                          },
+                          isFullScreen:
+                              sizingInformation.isMobile ? true : false,
 
-                            // context: context,
-                            // delegate: UsersSearchDelegate(ref),
-                          ),
+                          // context: context,
+                          // delegate: UsersSearchDelegate(ref),
                         ),
                       ],
                     ),
                   ),
-                  SliverPadding(
-                    padding: const EdgeInsets.all(10),
-                    sliver: SliverToBoxAdapter(
-                      child: Row(
-                        children: [
-                          if (!sizingInformation.isMobile)
-                            Expanded(
-                              child: SizedBox(
-                                  height: sizingInformation.screenSize.height,
-                                  child: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: NavigationRail(
-                                        selectedIndex:
-                                            AutoTabsRouter.of(context)
-                                                .activeIndex,
-                                        extended: sizingInformation.isTablet
-                                            ? false
-                                            : true,
-                                        onDestinationSelected: (value) {
-                                          AutoTabsRouter.of(context)
-                                              .setActiveIndex(value);
-                                        },
-                                        destinations: const [
-                                          NavigationRailDestination(
-                                              icon: Icon(Icons.home),
-                                              label: Text("Users")),
-                                          NavigationRailDestination(
-                                              icon: Icon(Icons.chat_bubble),
-                                              label: Text("Chat")),
-                                          NavigationRailDestination(
-                                            icon: Icon(Icons.person),
-                                            label: Text("Profile"),
-                                          ),
-                                        ],
-                                      ))),
-                            ),
+                  SliverToBoxAdapter(
+                    child: Row(
+                      children: [
+                        if (!sizingInformation.isMobile)
                           Expanded(
-                            flex: 4,
-                            child: userList.when(
-                              loading: () => const Center(
-                                child: CircularProgressIndicator.adaptive(),
-                              ),
-                              error: (error, stackTrace) => (error is Exception)
-                                  ? Center(
-                                      child: Text(error.toString()),
-                                    )
-                                  : Center(
-                                      child: Text(error.toString()),
-                                    ),
-                              data: (data) => SizedBox(
+                            child: SizedBox(
                                 height: sizingInformation.screenSize.height,
-                                width: sizingInformation.screenSize.width,
-                                child: GridView.builder(
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: sizingInformation.isMobile
-                                        ? 3
-                                        : sizingInformation.isTablet
-                                            ? 4
-                                            : 5,
-                                    mainAxisSpacing: 10,
-                                    crossAxisSpacing: 10,
-                                  ),
-                                  itemBuilder: (context, index) {
-                                    final users = data[index];
-
-                                    return UserGridItem(
-                                      onTapEditProfile: () async {
+                                child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: NavigationRail(
+                                      selectedIndex: AutoTabsRouter.of(context)
+                                          .activeIndex,
+                                      extended: sizingInformation.isTablet
+                                          ? false
+                                          : true,
+                                      onDestinationSelected: (value) {
                                         AutoTabsRouter.of(context)
-                                            .setActiveIndex(2);
-
-                                        // await CubeChatConnection.instance
-                                        //     .getLasUserActivity(7801610)
-                                        //     .then((value) {
-                                        //   final data = intToTimeLeft(value);
-
-                                        //   logger.e(
-                                        //       "subscribeToUserLastActivityStatu $data");
-                                        // }).catchError((error) {
-                                        //   logger.e(
-                                        //       "subscribeToUserLastActivityStatus error $error");
-                                        // });
+                                            .setActiveIndex(value);
                                       },
-                                      isCurrentUser: users?.id == userData.id
-                                          ? true
-                                          : false,
-                                      users: users!,
-                                    ).animate().shake();
-                                  },
-                                  itemCount: data!.length,
+                                      destinations: const [
+                                        NavigationRailDestination(
+                                            icon: Icon(Icons.home),
+                                            label: Text("Users")),
+                                        NavigationRailDestination(
+                                            icon: Icon(Icons.chat_bubble),
+                                            label: Text("Chat")),
+                                        NavigationRailDestination(
+                                          icon: Icon(Icons.person),
+                                          label: Text("Profile"),
+                                        ),
+                                      ],
+                                    ))),
+                          ),
+                        Expanded(
+                          flex: 5,
+                          child: userList.when(
+                            loading: () => const Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            ),
+                            error: (error, stackTrace) => (error is Exception)
+                                ? Center(
+                                    child: Text(error.toString()),
+                                  )
+                                : Center(
+                                    child: Text(error.toString()),
+                                  ),
+                            data: (data) => SizedBox(
+                              height: sizingInformation.screenSize.height,
+                              width: sizingInformation.screenSize.width,
+                              child: GridView.builder(
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: sizingInformation.isMobile
+                                      ? 3
+                                      : sizingInformation.isTablet
+                                          ? 4
+                                          : 5,
+                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 10,
                                 ),
+                                itemBuilder: (context, index) {
+                                  final users = data[index];
+
+                                  return UserGridItem(
+                                    onTapEditProfile: () async {
+                                      AutoTabsRouter.of(context)
+                                          .setActiveIndex(2);
+
+                                      // await CubeChatConnection.instance
+                                      //     .getLasUserActivity(7801610)
+                                      //     .then((value) {
+                                      //   final data = intToTimeLeft(value);
+
+                                      //   logger.e(
+                                      //       "subscribeToUserLastActivityStatu $data");
+                                      // }).catchError((error) {
+                                      //   logger.e(
+                                      //       "subscribeToUserLastActivityStatus error $error");
+                                      // });
+                                    },
+                                    isCurrentUser:
+                                        users?.id == userData.id ? true : false,
+                                    users: users!,
+                                  ).animate().shake();
+                                },
+                                itemCount: data!.length,
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

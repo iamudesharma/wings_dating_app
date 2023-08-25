@@ -55,7 +55,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDcHVq9mSbSRUWDHe_jmSVafTr_BvXSfkE',
-    appId: '1:546119961072:android:ccd2092af11903ccd9b535',
+    appId: '1:546119961072:android:88eb4c91265e8e23d9b535',
     messagingSenderId: '546119961072',
     projectId: 'wings-dating-951ed',
     storageBucket: 'wings-dating-951ed.appspot.com',
@@ -63,23 +63,23 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCUM6PqbnYqoNGngQ3TfvFG3udHqAKbypc',
-    appId: '1:546119961072:ios:ef020db2491cf562d9b535',
+    appId: '1:546119961072:ios:e18673a382af989fd9b535',
     messagingSenderId: '546119961072',
     projectId: 'wings-dating-951ed',
     storageBucket: 'wings-dating-951ed.appspot.com',
     androidClientId: '546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com',
-    iosClientId: '546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com',
-    iosBundleId: 'com.example.wingsDatingApp',
+    iosClientId: '546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com',
+    iosBundleId: 'com.wings.wingsdating',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyCUM6PqbnYqoNGngQ3TfvFG3udHqAKbypc',
-    appId: '1:546119961072:ios:ef020db2491cf562d9b535',
+    appId: '1:546119961072:ios:e18673a382af989fd9b535',
     messagingSenderId: '546119961072',
     projectId: 'wings-dating-951ed',
     storageBucket: 'wings-dating-951ed.appspot.com',
     androidClientId: '546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com',
-    iosClientId: '546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com',
-    iosBundleId: 'com.example.wingsDatingApp',
+    iosClientId: '546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com',
+    iosBundleId: 'com.wings.wingsdating',
   );
 }

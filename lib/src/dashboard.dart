@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:wings_dating_app/services/ad_helper.dart';
 import 'package:wings_dating_app/src/chats/services/call_manager.dart';
 
 import '../routes/app_router_provider.dart';
@@ -33,6 +34,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
   Widget build(BuildContext context) {
     CallManager.instance.init(context);
     return Scaffold(
+      bottomNavigationBar: const SizedBox(height: 50, child: BannerExample()),
       body: ResponsiveBuilder(builder: (context, size) {
         return AutoTabsScaffold(
           homeIndex: 0,
