@@ -20,9 +20,11 @@ GeoPointData _$GeoPointDataFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$GeoPointData {
+  @JsonSerializable(explicitToJson: true, createFieldMap: true)
   @GeoPointConverter()
   @JsonKey(name: "geopoint")
-  GeoPoint get geopoint => throw _privateConstructorUsedError;
+  GeoPoint get geopoint =>
+      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
   @JsonKey(name: "geohash")
   String get geohash => throw _privateConstructorUsedError;
 
@@ -55,7 +57,10 @@ abstract class $GeoPointDataCopyWith<$Res> {
       _$GeoPointDataCopyWithImpl<$Res, GeoPointData>;
   @useResult
   $Res call(
-      {@GeoPointConverter() @JsonKey(name: "geopoint") GeoPoint geopoint,
+      {@JsonSerializable(explicitToJson: true, createFieldMap: true)
+      @GeoPointConverter()
+      @JsonKey(name: "geopoint")
+      GeoPoint geopoint,
       @JsonKey(name: "geohash") String geohash});
 }
 
@@ -97,7 +102,10 @@ abstract class _$$_GeoPointDataCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@GeoPointConverter() @JsonKey(name: "geopoint") GeoPoint geopoint,
+      {@JsonSerializable(explicitToJson: true, createFieldMap: true)
+      @GeoPointConverter()
+      @JsonKey(name: "geopoint")
+      GeoPoint geopoint,
       @JsonKey(name: "geohash") String geohash});
 }
 
@@ -132,16 +140,21 @@ class __$$_GeoPointDataCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_GeoPointData implements _GeoPointData {
   const _$_GeoPointData(
-      {@GeoPointConverter() @JsonKey(name: "geopoint") required this.geopoint,
+      {@JsonSerializable(explicitToJson: true, createFieldMap: true)
+      @GeoPointConverter()
+      @JsonKey(name: "geopoint")
+      required this.geopoint,
       @JsonKey(name: "geohash") required this.geohash});
 
   factory _$_GeoPointData.fromJson(Map<String, dynamic> json) =>
       _$$_GeoPointDataFromJson(json);
 
   @override
+  @JsonSerializable(explicitToJson: true, createFieldMap: true)
   @GeoPointConverter()
   @JsonKey(name: "geopoint")
   final GeoPoint geopoint;
+// ignore: invalid_annotation_target
   @override
   @JsonKey(name: "geohash")
   final String geohash;
@@ -209,20 +222,22 @@ class _$_GeoPointData implements _GeoPointData {
 
 abstract class _GeoPointData implements GeoPointData {
   const factory _GeoPointData(
-      {@GeoPointConverter()
-      @JsonKey(name: "geopoint")
+          {@JsonSerializable(explicitToJson: true, createFieldMap: true)
+          @GeoPointConverter()
+          @JsonKey(name: "geopoint")
           required final GeoPoint geopoint,
-      @JsonKey(name: "geohash")
-          required final String geohash}) = _$_GeoPointData;
+          @JsonKey(name: "geohash") required final String geohash}) =
+      _$_GeoPointData;
 
   factory _GeoPointData.fromJson(Map<String, dynamic> json) =
       _$_GeoPointData.fromJson;
 
   @override
+  @JsonSerializable(explicitToJson: true, createFieldMap: true)
   @GeoPointConverter()
   @JsonKey(name: "geopoint")
   GeoPoint get geopoint;
-  @override
+  @override // ignore: invalid_annotation_target
   @JsonKey(name: "geohash")
   String get geohash;
   @override

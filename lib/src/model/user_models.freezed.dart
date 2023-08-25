@@ -45,24 +45,8 @@ mixin _$UserModel {
   List<String> get blockList => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
   String get fcmToken => throw _privateConstructorUsedError;
-  CubeUser get cubeUser => throw _privateConstructorUsedError;
+  cube.CubeUser get cubeUser => throw _privateConstructorUsedError;
 
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_UserModel value) $default,
-  ) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_UserModel value)? $default,
-  ) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_UserModel value)? $default, {
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $UserModelCopyWith<UserModel> get copyWith =>
@@ -98,7 +82,7 @@ abstract class $UserModelCopyWith<$Res> {
       List<String> blockList,
       String id,
       String fcmToken,
-      CubeUser cubeUser});
+      cube.CubeUser cubeUser});
 
   $GeoPointDataCopyWith<$Res>? get position;
 }
@@ -237,7 +221,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
       cubeUser: null == cubeUser
           ? _value.cubeUser
           : cubeUser // ignore: cast_nullable_to_non_nullable
-              as CubeUser,
+              as cube.CubeUser,
     ) as $Val);
   }
 
@@ -285,7 +269,7 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       List<String> blockList,
       String id,
       String fcmToken,
-      CubeUser cubeUser});
+      cube.CubeUser cubeUser});
 
   @override
   $GeoPointDataCopyWith<$Res>? get position;
@@ -423,13 +407,14 @@ class __$$_UserModelCopyWithImpl<$Res>
       cubeUser: null == cubeUser
           ? _value.cubeUser
           : cubeUser // ignore: cast_nullable_to_non_nullable
-              as CubeUser,
+              as cube.CubeUser,
     ));
   }
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true, createFieldMap: true)
 class _$_UserModel implements _UserModel {
   _$_UserModel(
       {required this.username,
@@ -536,7 +521,7 @@ class _$_UserModel implements _UserModel {
   @override
   final String fcmToken;
   @override
-  final CubeUser cubeUser;
+  final cube.CubeUser cubeUser;
 
   @override
   String toString() {
@@ -626,34 +611,6 @@ class _$_UserModel implements _UserModel {
       __$$_UserModelCopyWithImpl<_$_UserModel>(this, _$identity);
 
   @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_UserModel value) $default,
-  ) {
-    return $default(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_UserModel value)? $default,
-  ) {
-    return $default?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_UserModel value)? $default, {
-    required TResult orElse(),
-  }) {
-    if ($default != null) {
-      return $default(this);
-    }
-    return orElse();
-  }
-
-  @override
   Map<String, dynamic> toJson() {
     return _$$_UserModelToJson(
       this,
@@ -686,7 +643,7 @@ abstract class _UserModel implements UserModel {
       final List<String> blockList,
       required final String id,
       required final String fcmToken,
-      required final CubeUser cubeUser}) = _$_UserModel;
+      required final cube.CubeUser cubeUser}) = _$_UserModel;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$_UserModel.fromJson;
@@ -739,7 +696,7 @@ abstract class _UserModel implements UserModel {
   @override
   String get fcmToken;
   @override
-  CubeUser get cubeUser;
+  cube.CubeUser get cubeUser;
   @override
   @JsonKey(ignore: true)
   _$$_UserModelCopyWith<_$_UserModel> get copyWith =>
