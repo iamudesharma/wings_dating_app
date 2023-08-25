@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 //
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:meta_seo/meta_seo.dart';
 import 'package:url_strategy/url_strategy.dart';
 // import 'package:isolate_flutter/isolate_flutter.dart';
@@ -27,7 +28,10 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  setPathUrlStrategy();
+  if (kIsWeb) {
+    setPathUrlStrategy();
+  }
+  MobileAds.instance.initialize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
