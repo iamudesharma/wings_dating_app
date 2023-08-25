@@ -48,6 +48,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546119961072:android:88eb4c91265e8e23d9b535",
+        "android_client_info": {
+          "package_name": "com.wings.wingsdating"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "546119961072-3jrbpt2k3jdm649jqumspdt3rpt7crnm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcHVq9mSbSRUWDHe_jmSVafTr_BvXSfkE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "546119961072-3jrbpt2k3jdm649jqumspdt3rpt7crnm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.wingsDatingApp"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
