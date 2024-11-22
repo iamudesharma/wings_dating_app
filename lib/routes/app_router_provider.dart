@@ -101,7 +101,7 @@ _loginToCubeChat(CubeUser user) {
     // _isLoginContinues = false;
 
     // if (!kIsWeb) {
-    PushNotificationsManager.instance.init();
+    // PushNotificationsManager.instance.init();
     // }
     // _goDialogScreen(context, cubeUser);
   }).catchError((error) {

@@ -286,7 +286,7 @@ abstract class UserModelDocumentReference
     FieldValue idFieldValue,
     String fcmToken,
     FieldValue fcmTokenFieldValue,
-    cube.CubeUser cubeUser,
+     cube.CubeUser cubeUser,
     FieldValue cubeUserFieldValue,
   });
 
@@ -341,7 +341,7 @@ abstract class UserModelDocumentReference
     FieldValue idFieldValue,
     String fcmToken,
     FieldValue fcmTokenFieldValue,
-    cube.CubeUser cubeUser,
+     cube.CubeUser cubeUser,
     FieldValue cubeUserFieldValue,
   });
 
@@ -396,7 +396,7 @@ abstract class UserModelDocumentReference
     FieldValue idFieldValue,
     String fcmToken,
     FieldValue fcmTokenFieldValue,
-    cube.CubeUser cubeUser,
+     cube.CubeUser cubeUser,
     FieldValue cubeUserFieldValue,
   });
 }
@@ -949,7 +949,7 @@ class _$UserModelDocumentReference
         _$$UserModelImplFieldMap['fcmToken']!: fcmTokenFieldValue,
       if (cubeUser != _sentinel)
         _$$UserModelImplFieldMap['cubeUser']!:
-            _$$UserModelImplPerFieldToJson.cubeUser(cubeUser as cube.CubeUser),
+            _$$UserModelImplPerFieldToJson.cubeUser(cubeUser as  cube.CubeUser),
       if (cubeUserFieldValue != null)
         _$$UserModelImplFieldMap['cubeUser']!: cubeUserFieldValue,
     };
@@ -1223,7 +1223,7 @@ class _$UserModelDocumentReference
         _$$UserModelImplFieldMap['fcmToken']!: fcmTokenFieldValue,
       if (cubeUser != _sentinel)
         _$$UserModelImplFieldMap['cubeUser']!:
-            _$$UserModelImplPerFieldToJson.cubeUser(cubeUser as cube.CubeUser),
+            _$$UserModelImplPerFieldToJson.cubeUser(cubeUser as  cube.CubeUser),
       if (cubeUserFieldValue != null)
         _$$UserModelImplFieldMap['cubeUser']!: cubeUserFieldValue,
     };
@@ -1497,7 +1497,7 @@ class _$UserModelDocumentReference
         _$$UserModelImplFieldMap['fcmToken']!: fcmTokenFieldValue,
       if (cubeUser != _sentinel)
         _$$UserModelImplFieldMap['cubeUser']!:
-            _$$UserModelImplPerFieldToJson.cubeUser(cubeUser as cube.CubeUser),
+            _$$UserModelImplPerFieldToJson.cubeUser(cubeUser as  cube.CubeUser),
       if (cubeUserFieldValue != null)
         _$$UserModelImplFieldMap['cubeUser']!: cubeUserFieldValue,
     };
@@ -1846,14 +1846,14 @@ abstract class UserModelQuery
   });
 
   UserModelQuery whereCubeUser({
-    cube.CubeUser? isEqualTo,
-    cube.CubeUser? isNotEqualTo,
-    cube.CubeUser? isLessThan,
-    cube.CubeUser? isLessThanOrEqualTo,
-    cube.CubeUser? isGreaterThan,
-    cube.CubeUser? isGreaterThanOrEqualTo,
-    List<cube.CubeUser>? whereIn,
-    List<cube.CubeUser>? whereNotIn,
+     cube.CubeUser? isEqualTo,
+     cube.CubeUser? isNotEqualTo,
+     cube.CubeUser? isLessThan,
+     cube.CubeUser? isLessThanOrEqualTo,
+     cube.CubeUser? isGreaterThan,
+     cube.CubeUser? isGreaterThanOrEqualTo,
+    List< cube.CubeUser>? whereIn,
+    List< cube.CubeUser>? whereNotIn,
     bool? isNull,
   });
 
@@ -2180,10 +2180,10 @@ abstract class UserModelQuery
 
   UserModelQuery orderByCubeUser({
     bool descending = false,
-    cube.CubeUser startAt,
-    cube.CubeUser startAfter,
-    cube.CubeUser endAt,
-    cube.CubeUser endBefore,
+     cube.CubeUser startAt,
+     cube.CubeUser startAfter,
+     cube.CubeUser endAt,
+     cube.CubeUser endBefore,
     UserModelDocumentSnapshot? startAtDocument,
     UserModelDocumentSnapshot? endAtDocument,
     UserModelDocumentSnapshot? endBeforeDocument,
@@ -3437,8 +3437,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     Object? isLessThanOrEqualTo,
     Object? isGreaterThan,
     Object? isGreaterThanOrEqualTo,
-    List<cube.CubeUser>? whereIn,
-    List<cube.CubeUser>? whereNotIn,
+    List< cube.CubeUser>? whereIn,
+    List< cube.CubeUser>? whereNotIn,
     bool? isNull,
   }) {
     return _$UserModelQuery(
@@ -3446,24 +3446,24 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$$UserModelImplFieldMap['cubeUser']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.cubeUser(isEqualTo as cube.CubeUser)
+            ? _$$UserModelImplPerFieldToJson.cubeUser(isEqualTo as  cube.CubeUser)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.cubeUser(isNotEqualTo as cube.CubeUser)
+            ? _$$UserModelImplPerFieldToJson.cubeUser(isNotEqualTo as  cube.CubeUser)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.cubeUser(isLessThan as cube.CubeUser)
+            ? _$$UserModelImplPerFieldToJson.cubeUser(isLessThan as  cube.CubeUser)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$$UserModelImplPerFieldToJson
-                .cubeUser(isLessThanOrEqualTo as cube.CubeUser)
+                .cubeUser(isLessThanOrEqualTo as  cube.CubeUser)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.cubeUser(isGreaterThan as cube.CubeUser)
+            ? _$$UserModelImplPerFieldToJson.cubeUser(isGreaterThan as  cube.CubeUser)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$$UserModelImplPerFieldToJson
-                .cubeUser(isGreaterThanOrEqualTo as cube.CubeUser)
+                .cubeUser(isGreaterThanOrEqualTo as  cube.CubeUser)
             : null,
         whereIn:
             whereIn?.map((e) => _$$UserModelImplPerFieldToJson.cubeUser(e)),
@@ -5523,7 +5523,7 @@ _$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
           const [],
       id: json['id'] as String,
       fcmToken: json['fcmToken'] as String,
-      cubeUser: cube.CubeUser.fromJson(json['cubeUser'] as Map<String, dynamic>),
+      cubeUser:  cube.CubeUser.fromJson(json['cubeUser'] as Map<String, dynamic>),
     );
 
 const _$$UserModelImplFieldMap = <String, String>{
@@ -5568,7 +5568,7 @@ abstract class _$$UserModelImplPerFieldToJson {
   // ignore: unused_element
   static Object? age(int? instance) => instance;
   // ignore: unused_element
-  static Object? position(GeoPointData? instance) => instance;
+  static Object? position(GeoPointData? instance) => instance?.toJson();
   // ignore: unused_element
   static Object? dob(String? instance) => instance;
   // ignore: unused_element
@@ -5605,7 +5605,7 @@ abstract class _$$UserModelImplPerFieldToJson {
   // ignore: unused_element
   static Object? fcmToken(String instance) => instance;
   // ignore: unused_element
-  static Object? cubeUser(cube.CubeUser instance) => instance;
+  static Object? cubeUser( cube.CubeUser instance) => instance.toJson();
 }
 
 Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
@@ -5616,7 +5616,7 @@ Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
       'profileUrl': instance.profileUrl,
       'birthday': instance.birthday,
       'age': instance.age,
-      'position': instance.position,
+      'position': instance.position?.toJson(),
       'dob': instance.dob,
       'height': instance.height,
       'weight': instance.weight,
@@ -5634,7 +5634,7 @@ Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
       'blockList': instance.blockList,
       'id': instance.id,
       'fcmToken': instance.fcmToken,
-      'cubeUser': instance.cubeUser,
+      'cubeUser': instance.cubeUser.toJson(),
     };
 
 const _$RoleEnumMap = {

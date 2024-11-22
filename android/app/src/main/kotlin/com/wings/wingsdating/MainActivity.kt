@@ -1,4 +1,4 @@
-package com.wings.wings_dating_app
+package com.wings.wingsdating
 
 import io.flutter.embedding.android.FlutterActivity
 

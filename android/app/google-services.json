@@ -39,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
+              "client_id": "546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.wingsDatingApp"
+                "bundle_id": "com.wings.wingsdating"
               }
             }
           ]
@@ -75,10 +75,10 @@
               "client_type": 3
             },
             {
-              "client_id": "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
+              "client_id": "546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.wingsDatingApp"
+                "bundle_id": "com.wings.wingsdating"
               }
             }
           ]

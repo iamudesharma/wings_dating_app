@@ -32,7 +32,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
 
   @override
   Widget build(BuildContext context) {
-    CallManager.instance.init(context);
+    // CallManager.instance.init(context);
     return Scaffold(
       bottomNavigationBar: const SizedBox(height: 50, child: BannerExample()),
       body: ResponsiveBuilder(builder: (context, size) {
@@ -44,6 +44,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
           routes: const [
             UsersRoute(),
             ChatListRoute(),
+            AlbumRoute(),
             ProfileRoute(),
           ],
           bottomNavigationBuilder: size.isMobile
@@ -53,8 +54,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                       return NavigationBar(
                         backgroundColor: Colors.black,
                         selectedIndex: tabsRouter.activeIndex,
-                        onDestinationSelected: (value) =>
-                            tabsRouter.setActiveIndex(value, notify: true),
+                        onDestinationSelected: (value) => tabsRouter.setActiveIndex(value, notify: true),
                         destinations: const [
                           NavigationDestination(
                             label: 'Home',
@@ -66,6 +66,12 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                             label: 'Chat',
                             icon: Icon(
                               Icons.chat_bubble_outline,
+                            ),
+                          ),
+                          NavigationDestination(
+                            label: 'Album',
+                            icon: Icon(
+                              Icons.album_outlined,
                             ),
                           ),
                           NavigationDestination(

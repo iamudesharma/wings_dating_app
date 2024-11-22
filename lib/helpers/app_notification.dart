@@ -1,330 +1,311 @@
-import 'dart:convert';
-import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
-import 'package:flutter/foundation.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:universal_io/io.dart';
+// import 'dart:convert';
+// // import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
+// import 'package:flutter/foundation.dart';
+// import 'package:package_info_plus/package_info_plus.dart';
+// import 'package:universal_io/io.dart';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:platform_device_id/platform_device_id.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// // import 'package:platform_device_id/platform_device_id.dart';
 
-import 'package:connectycube_sdk/connectycube_sdk.dart';
+// import 'package:connectycube_sdk/connectycube_sdk.dart';
 
-import '../const/pref_util.dart';
-import '../src/chats/pages/incoming_call_screen.dart';
-import '../src/chats/services/call_manager.dart';
+// import '../const/pref_util.dart';
+// import '../src/chats/pages/incoming_call_screen.dart';
+// import '../src/chats/services/call_manager.dart';
 
-// import 'utils/consts.dart';
-// import 'utils/pref_util.dart';
+// // import 'utils/consts.dart';
+// // import 'utils/pref_util.dart';
 
-class PushNotificationsManager {
-  static const TAG = "PushNotificationsManager";
+// class PushNotificationsManager {
+//   static const TAG = "PushNotificationsManager";
 
-  static final PushNotificationsManager _instance =
-      PushNotificationsManager._internal();
+//   static final PushNotificationsManager _instance = PushNotificationsManager._internal();
 
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+//   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  PushNotificationsManager._internal() {
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  }
+//   PushNotificationsManager._internal() {
+//     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+//   }
 
-  BuildContext? applicationContext;
+//   BuildContext? applicationContext;
 
-  static PushNotificationsManager get instance => _instance;
+//   static PushNotificationsManager get instance => _instance;
 
-  Future<dynamic> Function(String? payload)? onNotificationClicked;
+//   Future<dynamic> Function(String? payload)? onNotificationClicked;
 
-  initCall() async {
-    ConnectycubeFlutterCallKit.initEventsHandler();
+//   initCall() async {
+//     // ConnectycubeFlutterCallKit.initEventsHandler();
 
-    ConnectycubeFlutterCallKit.onTokenRefreshed = (token) {
-      log('[onTokenRefresh] VoIP token: $token', TAG);
-      subscribe(token);
-    };
+//     // ConnectycubeFlutterCallKit.onTokenRefreshed = (token) {
+//     //   log('[onTokenRefresh] VoIP token: $token', TAG);
+//     //   subscribe(token);
+//     // };
 
-    ConnectycubeFlutterCallKit.getToken().then((token) {
-      log('[getToken] VoIP token: $token', TAG);
-      if (token != null) {
-        subscribe(token);
-      }
-    });
+//     // ConnectycubeFlutterCallKit.getToken().then((token) {
+//     //   log('[getToken] VoIP token: $token', TAG);
+//     //   if (token != null) {
+//     //     subscribe(token);
+//     //   }
+//     // });
 
-    ConnectycubeFlutterCallKit.onCallRejectedWhenTerminated =
-        onCallRejectedWhenTerminated;
-  }
+//     // ConnectycubeFlutterCallKit.onCallRejectedWhenTerminated =
+//     //     onCallRejectedWhenTerminated;
+//   }
 
-  init() async {
-    if (Platform.isAndroid) {
-      await initCall();
-    }
+//   init() async {
+//     if (Platform.isAndroid) {
+//       await initCall();
+//     }
 
-    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    if (Platform.isAndroid) {
-      await firebaseMessaging.requestPermission(
-          alert: true, badge: true, sound: true);
-    }
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('ic_launcher_foreground');
-    final DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings(
-      requestSoundPermission: true,
-      requestBadgePermission: true,
-      requestAlertPermission: true,
+//     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+//     if (Platform.isAndroid) {
+//       await firebaseMessaging.requestPermission(alert: true, badge: true, sound: true);
+//     }
+//     const AndroidInitializationSettings initializationSettingsAndroid =
+//         AndroidInitializationSettings('ic_launcher_foreground');
+//     final DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(
+//       requestSoundPermission: true,
+//       requestBadgePermission: true,
+//       requestAlertPermission: true,
 
-      // onDidReceiveLocalNotification: onDidReceiveLocalNotification,
-    );
+//       // onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+//     );
 
-    final DarwinInitializationSettings initializationSettingsMacOS =
-        DarwinInitializationSettings(
-      requestSoundPermission: true,
-      requestBadgePermission: true,
-      requestAlertPermission: true,
-      
-      // onDidReceiveLocalNotification: onDidReceiveLocalNotification,
-    );
+//     final DarwinInitializationSettings initializationSettingsMacOS = DarwinInitializationSettings(
+//       requestSoundPermission: true,
+//       requestBadgePermission: true,
+//       requestAlertPermission: true,
 
-    InitializationSettings initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid,
-        iOS: initializationSettingsIOS,
-        macOS: initializationSettingsMacOS);
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (details) =>
-          onSelectNotification(details.payload),
-      onDidReceiveBackgroundNotificationResponse: (details) =>
-          notificationTapBackground,
-    );
+//       // onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+//     );
 
-    String? token;
-    if (Platform.isAndroid || kIsWeb) {
-      firebaseMessaging.getToken().then((token) {
-        log('[getToken] token: $token', TAG);
-        subscribe(token);
-      }).catchError((onError) {
-        log('[getToken] onError: $onError', TAG);
-      });
-    } else if (Platform.isIOS || Platform.isMacOS) {
-      token = await firebaseMessaging.getAPNSToken();
-      log('[getAPNSToken] token: $token', TAG);
-    }
+//     InitializationSettings initializationSettings = InitializationSettings(
+//         android: initializationSettingsAndroid, iOS: initializationSettingsIOS, macOS: initializationSettingsMacOS);
+//     await flutterLocalNotificationsPlugin.initialize(
+//       initializationSettings,
+//       onDidReceiveNotificationResponse: (details) => () {},
+//       // onSelectNotification(details.payload),
+//       onDidReceiveBackgroundNotificationResponse: (details) => () {},
+//     );
 
-    if (!isEmpty(token)) {
-      subscribe(token);
-    }
+//     // String? token;
+//     // if (Platform.isAndroid || kIsWeb) {
+//     //   firebaseMessaging.getToken().then((token) {
+//     //     log('[getToken] token: $token', TAG);
+//     //     subscribe(token);
+//     //   }).catchError((onError) {
+//     //     log('[getToken] onError: $onError', TAG);
+//     //   });
+//     // } else if (Platform.isIOS || Platform.isMacOS) {
+//     //   token = await firebaseMessaging.getAPNSToken();
+//     //   log('[getAPNSToken] token: $token', TAG);
+//     // }
 
-    firebaseMessaging.onTokenRefresh.listen((newToken) {
-      subscribe(newToken);
-    });
+//     // if (!isEmpty(token)) {
+//     //   subscribe(token);
+//     // }
 
-    FirebaseMessaging.onMessage.listen((remoteMessage) {
-      log('[onMessage] message: ${remoteMessage.data}', TAG);
-      showNotification(remoteMessage);
-    });
+//     // firebaseMessaging.onTokenRefresh.listen((newToken) {
+//     //   subscribe(newToken);
+//     // });
 
-    FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
+//     FirebaseMessaging.onMessage.listen((remoteMessage) {
+//       log('[onMessage] message: ${remoteMessage.data}', TAG);
+//       showNotification(remoteMessage);
+//     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) {
-      log('[onMessageOpenedApp] remoteMessage: $remoteMessage', TAG);
-      if (onNotificationClicked != null) {
-        onNotificationClicked!.call(jsonEncode(remoteMessage.data));
-      }
-    });
-  }
+//     FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
 
-  subscribe(String? token) async {
-    log('[subscribe] token: $token', PushNotificationsManager.TAG);
+//     FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) {
+//       log('[onMessageOpenedApp] remoteMessage: $remoteMessage', TAG);
+//       if (onNotificationClicked != null) {
+//         onNotificationClicked!.call(jsonEncode(remoteMessage.data));
+//       }
+//     });
+//   }
 
-    SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
-    if (sharedPrefs.getSubscriptionToken() == token) {
-      log('[subscribe] skip subscription for same token',
-          PushNotificationsManager.TAG);
-      return;
-    }
+//   subscribe(String? token) async {
+//     log('[subscribe] token: $token', PushNotificationsManager.TAG);
 
-    CreateSubscriptionParameters parameters = CreateSubscriptionParameters();
-    parameters.pushToken = token;
+//     SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
+//     if (sharedPrefs.getSubscriptionToken() == token) {
+//       log('[subscribe] skip subscription for same token', PushNotificationsManager.TAG);
+//       return;
+//     }
 
-    bool isProduction =
-        kIsWeb ? true : const bool.fromEnvironment('dart.vm.product');
-    parameters.environment =
-        isProduction ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
+//     CreateSubscriptionParameters parameters = CreateSubscriptionParameters();
+//     parameters.pushToken = token;
 
-    if (Platform.isAndroid || kIsWeb) {
-      parameters.channel = NotificationsChannels.GCM;
-      parameters.platform = CubePlatform.ANDROID;
-    } else if (Platform.isIOS || Platform.isMacOS) {
-      parameters.channel = NotificationsChannels.APNS;
-      parameters.platform = CubePlatform.IOS;
-    }
+//     bool isProduction = kIsWeb ? true : const bool.fromEnvironment('dart.vm.product');
+//     parameters.environment = isProduction ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
 
-    var deviceId = await PlatformDeviceId.getDeviceId;
+//     if (Platform.isAndroid || kIsWeb) {
+//       parameters.channel = NotificationsChannels.GCM;
+//       parameters.platform = CubePlatform.ANDROID;
+//     } else if (Platform.isIOS || Platform.isMacOS) {
+//       parameters.channel = NotificationsChannels.APNS;
+//       parameters.platform = CubePlatform.IOS;
+//     }
 
-    if (kIsWeb) {
-      parameters.udid = base64Encode(utf8.encode(deviceId ?? ''));
-    } else {
-      parameters.udid = deviceId;
-    }
+//     // var deviceId = await PackageInfo.;
 
-    var packageInfo = await PackageInfo.fromPlatform();
-    parameters.bundleIdentifier = packageInfo.packageName;
+//     if (kIsWeb) {
+//       // parameters.udid = base64Encode(utf8.encode(deviceId ?? ''));
+//     } else {
+//       // parameters.udid = deviceId;
+//     }
 
-    createSubscription(parameters.getRequestParameters())
-        .then((cubeSubscription) {
-      log('[subscribe] subscription SUCCESS', PushNotificationsManager.TAG);
-      sharedPrefs.saveSubscriptionToken(token!);
-      for (var subscription in cubeSubscription) {
-        if (subscription.clientIdentificationSequence == token) {
-          sharedPrefs.saveSubscriptionId(subscription.id!);
-        }
-      }
-    }).catchError((error) {
-      log('[subscribe] subscription ERROR: $error',
-          PushNotificationsManager.TAG);
-    });
-  }
+//     var packageInfo = await PackageInfo.fromPlatform();
+//     parameters.bundleIdentifier = packageInfo.packageName;
 
-  unsubscribe() {
-    SharedPrefs.instance.init().then((sharedPrefs) {
-      int subscriptionId = sharedPrefs.getSubscriptionId();
-      if (subscriptionId != 0) {
-        deleteSubscription(subscriptionId).then((voidResult) {
-          FirebaseMessaging.instance.deleteToken();
-          sharedPrefs.saveSubscriptionId(0);
-        });
-      }
-    }).catchError((onError) {
-      log('[unsubscribe] ERROR: $onError', PushNotificationsManager.TAG);
-    });
-  }
+//     createSubscription(parameters.getRequestParameters()).then((cubeSubscription) {
+//       log('[subscribe] subscription SUCCESS', PushNotificationsManager.TAG);
+//       sharedPrefs.saveSubscriptionToken(token!);
+//       for (var subscription in cubeSubscription) {
+//         if (subscription.clientIdentificationSequence == token) {
+//           sharedPrefs.saveSubscriptionId(subscription.id!);
+//         }
+//       }
+//     }).catchError((error) {
+//       log('[subscribe] subscription ERROR: $error', PushNotificationsManager.TAG);
+//     });
+//   }
 
-  Future<dynamic> onDidReceiveLocalNotification(
-      int id, String? title, String? body, String? payload) {
-    log('[onDidReceiveLocalNotification] id: $id , title: $title, body: $body, payload: $payload',
-        PushNotificationsManager.TAG);
-    return Future.value();
-  }
+//   unsubscribe() {
+//     SharedPrefs.instance.init().then((sharedPrefs) {
+//       int subscriptionId = sharedPrefs.getSubscriptionId();
+//       if (subscriptionId != 0) {
+//         deleteSubscription(subscriptionId).then((voidResult) {
+//           FirebaseMessaging.instance.deleteToken();
+//           sharedPrefs.saveSubscriptionId(0);
+//         });
+//       }
+//     }).catchError((onError) {
+//       log('[unsubscribe] ERROR: $onError', PushNotificationsManager.TAG);
+//     });
+//   }
 
-  Future<dynamic> onSelectNotification(String? payload) {
-    log('[onSelectNotification] payload: $payload',
-        PushNotificationsManager.TAG);
-    if (onNotificationClicked != null) {
-      onNotificationClicked!.call(payload);
-    }
-    return Future.value();
-  }
-}
+//   Future<dynamic> onDidReceiveLocalNotification(int id, String? title, String? body, String? payload) {
+//     log('[onDidReceiveLocalNotification] id: $id , title: $title, body: $body, payload: $payload',
+//         PushNotificationsManager.TAG);
+//     return Future.value();
+//   }
 
-showNotification(RemoteMessage message) async {
-  log('[showNotification] message: ${message.data}',
-      PushNotificationsManager.TAG);
-  Map<String, dynamic> data = message.data;
+//   Future<dynamic> onSelectNotification(String? payload) {
+//     log('[onSelectNotification] payload: $payload', PushNotificationsManager.TAG);
+//     if (onNotificationClicked != null) {
+//       onNotificationClicked!.call(payload);
+//     }
+//     return Future.value();
+//   }
+// }
 
-  const AndroidNotificationDetails androidPlatformChannelSpecifics =
-      AndroidNotificationDetails(
-    'messages_channel_id',
-    'Chat messages',
-    channelDescription: 'Chat messages will be received here',
-    importance: Importance.max,
-    priority: Priority.high,
-    showWhen: true,
-    color: Colors.green,
-  );
-  const NotificationDetails platformChannelSpecifics =
-      NotificationDetails(android: androidPlatformChannelSpecifics);
-  FlutterLocalNotificationsPlugin().show(
-    6543,
-    "Chat sample",
-    data['message'].toString(),
-    platformChannelSpecifics,
-    payload: jsonEncode(data),
-  );
-}
+// showNotification(RemoteMessage message) async {
+//   log('[showNotification] message: ${message.data}', PushNotificationsManager.TAG);
+//   Map<String, dynamic> data = message.data;
 
-Future<void> onBackgroundMessage(RemoteMessage message) async {
-  log('[onBackgroundMessage] message: ${message.data}',
-      PushNotificationsManager.TAG);
-  showNotification(message);
-  return Future.value();
-}
+//   const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+//     'messages_channel_id',
+//     'Chat messages',
+//     channelDescription: 'Chat messages will be received here',
+//     importance: Importance.max,
+//     priority: Priority.high,
+//     showWhen: true,
+//     color: Colors.green,
+//   );
+//   const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+//   FlutterLocalNotificationsPlugin().show(
+//     6543,
+//     "Chat sample",
+//     data['message'].toString(),
+//     platformChannelSpecifics,
+//     payload: jsonEncode(data),
+//   );
+// }
 
-@pragma('vm:entry-point')
-void notificationTapBackground(NotificationResponse notificationResponse) {
-  // handle action
-}
+// Future<void> onBackgroundMessage(RemoteMessage message) async {
+//   log('[onBackgroundMessage] message: ${message.data}', PushNotificationsManager.TAG);
+//   // showNotification(message);
+//   return Future.value();
+// }
 
-Future<void> onCallRejectedWhenTerminated(CallEvent callEvent) async {
-  print(
-      '[PushNotificationsManager][onCallRejectedWhenTerminated] callEvent: $callEvent');
+// @pragma('vm:entry-point')
+// void notificationTapBackground(NotificationResponse notificationResponse) {
+//   // handle action
+// }
 
-  var currentUser = SharedPrefs.instance.getUser();
-  initConnectycubeContextLess();
+// // Future<void> onCallRejectedWhenTerminated(CallEvent callEvent) async {
+// //   print(
+// //       '[PushNotificationsManager][onCallRejectedWhenTerminated] callEvent: $callEvent');
 
-  var sendOfflineReject = rejectCall(callEvent.sessionId, {
-    ...callEvent.opponentsIds.where((userId) => currentUser!.id != userId),
-    callEvent.callerId
-  });
-  var sendPushAboutReject = sendPushAboutRejectFromKilledState({
-    PARAM_CALL_TYPE: callEvent.callType,
-    PARAM_SESSION_ID: callEvent.sessionId,
-    PARAM_CALLER_ID: callEvent.callerId,
-    PARAM_CALLER_NAME: callEvent.callerName,
-    PARAM_CALL_OPPONENTS: callEvent.opponentsIds.join(','),
-  }, callEvent.callerId);
+// //   var currentUser = SharedPrefs.instance.getUser();
+// //   initConnectycubeContextLess();
 
-  return Future.wait([sendOfflineReject, sendPushAboutReject]).then((result) {
-    return Future.value();
-  });
-}
+// //   var sendOfflineReject = rejectCall(callEvent.sessionId, {
+// //     ...callEvent.opponentsIds.where((userId) => currentUser!.id != userId),
+// //     callEvent.callerId
+// //   });
+// //   var sendPushAboutReject = sendPushAboutRejectFromKilledState({
+// //     PARAM_CALL_TYPE: callEvent.callType,
+// //     PARAM_SESSION_ID: callEvent.sessionId,
+// //     PARAM_CALLER_ID: callEvent.callerId,
+// //     PARAM_CALLER_NAME: callEvent.callerName,
+// //     PARAM_CALL_OPPONENTS: callEvent.opponentsIds.join(','),
+// //   }, callEvent.callerId);
 
-Future<dynamic> onNotificationSelected(String? payload, BuildContext? context) {
-  log('[onSelectNotification] payload: $payload', PushNotificationsManager.TAG);
+// //   return Future.wait([sendOfflineReject, sendPushAboutReject]).then((result) {
+// //     return Future.value();
+// //   });
+// // }
 
-  if (context == null) return Future.value();
+// Future<dynamic> onNotificationSelected(String? payload, BuildContext? context) {
+//   log('[onSelectNotification] payload: $payload', PushNotificationsManager.TAG);
 
-  log('[onSelectNotification] context != null', PushNotificationsManager.TAG);
+//   if (context == null) return Future.value();
 
-  if (payload != null) {
-    return SharedPrefs.instance.init().then((sharedPrefs) {
-      CubeUser? user = sharedPrefs.getUser();
+//   log('[onSelectNotification] context != null', PushNotificationsManager.TAG);
 
-      if (user != null && !CubeChatConnection.instance.isAuthenticated()) {
-        Map<String, dynamic> payloadObject = jsonDecode(payload);
-        String? dialogId = payloadObject['dialog_id'];
+//   if (payload != null) {
+//     return SharedPrefs.instance.init().then((sharedPrefs) {
+//       CubeUser? user = sharedPrefs.getUser();
 
-        log("getNotificationAppLaunchDetails, dialog_id: $dialogId",
-            PushNotificationsManager.TAG);
+//       if (user != null && !CubeChatConnection.instance.isAuthenticated()) {
+//         Map<String, dynamic> payloadObject = jsonDecode(payload);
+//         String? dialogId = payloadObject['dialog_id'];
 
-        getDialogs({'id': dialogId}).then((dialogs) {
-          if (dialogs?.items != null && dialogs!.items.isNotEmpty) {
-            CubeDialog dialog = dialogs.items.first;
+//         log("getNotificationAppLaunchDetails, dialog_id: $dialogId", PushNotificationsManager.TAG);
 
-            // Navigator.pushReplacementNamed(context, 'chat_dialog',
-            //     arguments: {USER_ARG_NAME: user, DIALOG_ARG_NAME: dialog});
-          }
-        });
-      }
-    });
-  } else {
-    return Future.value();
-  }
-}
+//         getDialogs({'id': dialogId}).then((dialogs) {
+//           if (dialogs?.items != null && dialogs!.items.isNotEmpty) {
+//             CubeDialog dialog = dialogs.items.first;
 
-Future<void> sendPushAboutRejectFromKilledState(
-  Map<String, dynamic> parameters,
-  int callerId,
-) {
-  CreateEventParams params = CreateEventParams();
-  params.parameters = parameters;
-  params.parameters['message'] = "Reject call";
-  params.parameters[PARAM_SIGNAL_TYPE] = SIGNAL_TYPE_REJECT_CALL;
-  // params.parameters[PARAM_IOS_VOIP] = 1;
+//             // Navigator.pushReplacementNamed(context, 'chat_dialog',
+//             //     arguments: {USER_ARG_NAME: user, DIALOG_ARG_NAME: dialog});
+//           }
+//         });
+//       }
+//     });
+//   } else {
+//     return Future.value();
+//   }
+// }
 
-  params.notificationType = NotificationType.PUSH;
-  params.environment =
-      kReleaseMode ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
-  params.usersIds = [callerId];
+// // Future<void> sendPushAboutRejectFromKilledState(
+// //   Map<String, dynamic> parameters,
+// //   int callerId,
+// // ) {
+// //   CreateEventParams params = CreateEventParams();
+// //   params.parameters = parameters;
+// //   params.parameters['message'] = "Reject call";
+// //   params.parameters[PARAM_SIGNAL_TYPE] = SIGNAL_TYPE_REJECT_CALL;
+// //   // params.parameters[PARAM_IOS_VOIP] = 1;
 
-  return createEvent(params.getEventForRequest());
-}
+// //   params.notificationType = NotificationType.PUSH;
+// //   params.environment =
+// //       kReleaseMode ? CubeEnvironment.PRODUCTION : CubeEnvironment.DEVELOPMENT;
+// //   params.usersIds = [callerId];
+
+// //   return createEvent(params.getEventForRequest());
+// // }

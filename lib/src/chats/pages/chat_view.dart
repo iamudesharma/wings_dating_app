@@ -1213,9 +1213,9 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
         IconButton(
           icon: const Icon(Icons.video_call),
           onPressed: () {
-            CallManager.instance.startNewCall(context, CallType.VIDEO_CALL, {
-              _cubeDialog!.occupantsIds!.where((e) => e != _cubeUserId).first
-            });
+            // CallManager.instance.startNewCall(context, CallType.VIDEO_CALL, {
+            //   _cubeDialog!.occupantsIds!.where((e) => e != _cubeUserId).first
+            // });
           },
         ),
         IconButton(

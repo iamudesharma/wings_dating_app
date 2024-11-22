@@ -65,13 +65,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   @override
   void initState() {
     if (widget.isEditProfile) {
-      final userdata =
-          ref.read(ProfileController.userControllerProvider).userModel;
+      final userdata = ref.read(ProfileController.userControllerProvider).userModel;
 
       logger.i(userdata);
 
-      _usernameController =
-          TextEditingController(text: userdata?.username ?? "");
+      _usernameController = TextEditingController(text: userdata?.username ?? "");
 // _phoneController = TextEditingController();
       _dobController = TextEditingController(
         text: userdata?.birthday,
@@ -129,8 +127,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
         slivers: [
           SliverToBoxAdapter(
             child: AppBar(
-              title:
-                  Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
+              title: Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
             ),
           ),
           SliverToBoxAdapter(
@@ -165,8 +162,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 )
                               : CircleAvatar(
                                   radius: 45,
-                                  backgroundImage: CachedNetworkImageProvider(
-                                      profile.userModel?.profileUrl ?? ""),
+                                  backgroundImage: CachedNetworkImageProvider(profile.userModel?.profileUrl ?? ""),
                                 ),
                       const SizedBox(
                         height: 20,
@@ -187,42 +183,28 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                           isImageUpdate = true;
                                         });
                                         await ref
-                                            .read(ProfileController
-                                                .userControllerProvider)
-                                            .pickImage(
-                                                imageSource:
-                                                    ImageSource.camera);
+                                            .read(ProfileController.userControllerProvider)
+                                            .pickImage(imageSource: ImageSource.camera);
 
-                                        await ref
-                                            .read(profileRepoProvider)
-                                            .updateImage(profile.profileImage!);
+                                        await ref.read(profileRepoProvider).updateImage(profile.profileImage!);
                                       },
                                       gallery: () async {
                                         if (widget.isEditProfile) {
                                           setState(() {
                                             isImageUpdate = true;
                                           });
-                                          await ref
-                                              .read(ProfileController
-                                                  .userControllerProvider)
-                                              .pickImage(
-                                                imageSource:
-                                                    ImageSource.gallery,
+                                          await ref.read(ProfileController.userControllerProvider).pickImage(
+                                                imageSource: ImageSource.gallery,
                                               );
 
-                                          await ref
-                                              .read(profileRepoProvider)
-                                              .updateImage(
-                                                  profile.profileImage!);
+                                          await ref.read(profileRepoProvider).updateImage(profile.profileImage!);
                                         }
                                       },
                                     );
                                   });
                                 });
                           },
-                          child: Text(widget.isEditProfile
-                              ? "Change Profile Picture"
-                              : "Upload Profile Picture"),
+                          child: Text(widget.isEditProfile ? "Change Profile Picture" : "Upload Profile Picture"),
                         );
                       }),
                       const SizedBox(
@@ -288,8 +270,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                             print(value);
                             if (value != null) {
                               setState(() {
-                                _dobController.text =
-                                    DateFormat.yMd().format(value);
+                                _dobController.text = DateFormat.yMd().format(value);
 
                                 //     _selectedDate = value;
                                 _selectedDate = value;
@@ -325,11 +306,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               child: TextButton.icon(
                                   icon: const Icon(Icons.add),
                                   onPressed: () async {
-                                    context.router.push(
-                                        const AddAdditionalInformationRoute());
+                                    context.router.push(const AddAdditionalInformationRoute());
                                   },
-                                  label:
-                                      const Text("Add Additional Information")),
+                                  label: const Text("Add Additional Information")),
                             )
                           : const SizedBox.shrink(),
                       const SizedBox(
@@ -347,11 +326,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               setState(() {
                                 _loading = true;
                               });
-                              SharedPrefs sharedPrefs =
-                                  await SharedPrefs.instance.init();
+                              SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
 
-                              final data =
-                                  await Geolocator.getCurrentPosition();
+                              final data = await Geolocator.getCurrentPosition();
 
                               GeoFirePoint myLocation = GeoFirePoint(GeoPoint(
                                 data.latitude,
@@ -361,15 +338,10 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               if (_formKey.currentState!.validate()) {
                                 CubeUser? cubeUser0 = sharedPrefs.getUser();
 
-                                final image = await ref
-                                    .read(ProfileController
-                                        .userControllerProvider)
-                                    .uploadImage();
+                                final image = await ref.read(ProfileController.userControllerProvider).uploadImage();
                                 if (widget.isEditProfile) {
                                   UserModel? user = profile.userModel?.copyWith(
-                                    position: GeoPointData(
-                                        geohash: myLocation.geohash,
-                                        geopoint: myLocation.geopoint),
+                                    position: GeoPointData(geohash: myLocation.geohash, geopoint: myLocation.geopoint),
                                     bio: _bioController.text,
                                     fcmToken: "",
                                     cubeUser: CubeUser(
@@ -377,20 +349,14 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       password: cubeUser0?.password,
                                       login: cubeUser0?.login,
                                       fullName: _usernameController.text,
-                                      avatar: isImageUpdate
-                                          ? image
-                                          : profile.userModel?.cubeUser.avatar,
+                                      avatar: isImageUpdate ? image : profile.userModel?.cubeUser.avatar,
                                     ),
                                     username: _usernameController.text,
-                                    profileUrl: isImageUpdate
-                                        ? image
-                                        : profile.userModel?.cubeUser.avatar,
+                                    profileUrl: isImageUpdate ? image : profile.userModel?.cubeUser.avatar,
                                     birthday: _dobController.text,
                                   );
                                   logger.i(user?.toJson());
-                                  await ref
-                                      .read(Dependency.profileProvider)
-                                      .updateUserDoc(user!);
+                                  await ref.read(Dependency.profileProvider).updateUserDoc(user!);
 
                                   // updateUser(CubeUser(
                                   //   id: _cubeUser?.id,
@@ -408,17 +374,15 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   //   fullName: _usernameController.text,
                                   //   avatar: image,
                                   //   phone: _cubeUser!.phone,
-                                  ref.invalidate(getUserByIdProvider(
-                                      profile.userModel!.id)); // ));
+                                  ref.invalidate(getUserByIdProvider(profile.userModel!.id)); // ));
 
                                   setState(() {
                                     _loading = false;
                                   });
 
-                                   route.back();
+                                  route.back();
                                 } else {
-                                  final sharedPrefs =
-                                      await SharedPrefs.instance.init();
+                                  final sharedPrefs = await SharedPrefs.instance.init();
                                   int age = calculateAge(_selectedDate!);
 
                                   int password = Random().nextInt(1000000000);
@@ -426,14 +390,10 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   final cubeUser = sharedPrefs.getUser();
                                   UserModel user = UserModel(
                                     cubeUser: CubeUser(
-                                        avatar: await ref
-                                            .read(ProfileController
-                                                .userControllerProvider)
-                                            .uploadImage(),
+                                        avatar: await ref.read(ProfileController.userControllerProvider).uploadImage(),
                                         fullName: _usernameController.text,
                                         password: password.toString(),
-                                        login: _usernameController.text
-                                            .toLowerCase()),
+                                        login: _usernameController.text.toLowerCase()),
                                     fcmToken: "",
                                     // fcmToken: token ?? "",
                                     dob: _dobController.text,
@@ -443,10 +403,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     username: _usernameController.text,
                                     bio: _bioController.text,
                                     age: age,
-                                    profileUrl: await ref
-                                        .read(ProfileController
-                                            .userControllerProvider)
-                                        .uploadImage(),
+                                    profileUrl: await ref.read(ProfileController.userControllerProvider).uploadImage(),
                                     birthday: _dobController.text,
 
                                     position: GeoPointData(
@@ -455,27 +412,19 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     ),
                                   );
 
-                                  logger.i(user.toJson());
-                                  logger.i(myLocation.data);
-                                  await ref
-                                      .read(Dependency.profileProvider)
-                                      .createUserDoc(user);
+                                  await ref.read(Dependency.profileProvider).createUserDoc(user);
 
                                   try {
                                     _signInCC(
                                         CubeUser(
-                                            avatar: await ref
-                                                .read(ProfileController
-                                                    .userControllerProvider)
-                                                .uploadImage(),
+                                            avatar:
+                                                await ref.read(ProfileController.userControllerProvider).uploadImage(),
                                             fullName: _usernameController.text,
                                             password: password.toString(),
-                                            login: _usernameController.text
-                                                .toLowerCase()),
+                                            login: _usernameController.text.toLowerCase()),
                                         ref);
 
-                                    await route
-                                        .popAndPush(const DashboardRoute());
+                                    await route.popAndPush(const DashboardRoute());
                                   } on Exception catch (e) {
                                     logger.e(e);
                                     _bioController.clear();
@@ -590,7 +539,7 @@ _loginToCC(CubeUser user, {bool saveUser = false}) {
       });
     }
 
-    PushNotificationsManager.instance.init();
+    // PushNotificationsManager.instance.init();
 
     _loginToCubeChat(user);
   }).catchError((error) {
