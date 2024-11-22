@@ -41,7 +41,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
 
     return WillPopScope(
       onWillPop: () {
-        AutoRouter.of(context).pop();
+        AutoRouter.of(context).back();
         return Future.value(true);
       },
       child: Scaffold(
@@ -85,7 +85,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                             //     .addToBlockList(userData!.id);
 
                             // ignore: use_build_context_synchronously
-                            context.router.pop();
+                            context.router.maybePop();
                             // AutoRouter.of(context).replace(const DashboardRoute());
                           },
                           value: 1,

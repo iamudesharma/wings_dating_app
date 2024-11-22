@@ -12,7 +12,7 @@ part of 'message.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Message _$MessageFromJson(Map<String, dynamic> json) {
   return _Message.fromJson(json);
@@ -32,8 +32,12 @@ mixin _$Message {
   String? get repliedTo => throw _privateConstructorUsedError;
   MessageEnum? get repliedMessageType => throw _privateConstructorUsedError;
 
+  /// Serializes this Message to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Message
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MessageCopyWith<Message> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -65,6 +69,8 @@ class _$MessageCopyWithImpl<$Res, $Val extends Message>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Message
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -125,10 +131,10 @@ class _$MessageCopyWithImpl<$Res, $Val extends Message>
 }
 
 /// @nodoc
-abstract class _$$_MessageCopyWith<$Res> implements $MessageCopyWith<$Res> {
-  factory _$$_MessageCopyWith(
-          _$_Message value, $Res Function(_$_Message) then) =
-      __$$_MessageCopyWithImpl<$Res>;
+abstract class _$$MessageImplCopyWith<$Res> implements $MessageCopyWith<$Res> {
+  factory _$$MessageImplCopyWith(
+          _$MessageImpl value, $Res Function(_$MessageImpl) then) =
+      __$$MessageImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -145,12 +151,15 @@ abstract class _$$_MessageCopyWith<$Res> implements $MessageCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_MessageCopyWithImpl<$Res>
-    extends _$MessageCopyWithImpl<$Res, _$_Message>
-    implements _$$_MessageCopyWith<$Res> {
-  __$$_MessageCopyWithImpl(_$_Message _value, $Res Function(_$_Message) _then)
+class __$$MessageImplCopyWithImpl<$Res>
+    extends _$MessageCopyWithImpl<$Res, _$MessageImpl>
+    implements _$$MessageImplCopyWith<$Res> {
+  __$$MessageImplCopyWithImpl(
+      _$MessageImpl _value, $Res Function(_$MessageImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Message
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -165,7 +174,7 @@ class __$$_MessageCopyWithImpl<$Res>
     Object? repliedTo = freezed,
     Object? repliedMessageType = freezed,
   }) {
-    return _then(_$_Message(
+    return _then(_$MessageImpl(
       senderId: null == senderId
           ? _value.senderId
           : senderId // ignore: cast_nullable_to_non_nullable
@@ -212,8 +221,8 @@ class __$$_MessageCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Message implements _Message {
-  const _$_Message(
+class _$MessageImpl implements _Message {
+  const _$MessageImpl(
       {required this.senderId,
       required this.recieverid,
       required this.text,
@@ -225,8 +234,8 @@ class _$_Message implements _Message {
       this.repliedTo,
       this.repliedMessageType});
 
-  factory _$_Message.fromJson(Map<String, dynamic> json) =>
-      _$$_MessageFromJson(json);
+  factory _$MessageImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MessageImplFromJson(json);
 
   @override
   final String senderId;
@@ -256,10 +265,10 @@ class _$_Message implements _Message {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Message &&
+            other is _$MessageImpl &&
             (identical(other.senderId, senderId) ||
                 other.senderId == senderId) &&
             (identical(other.recieverid, recieverid) ||
@@ -279,7 +288,7 @@ class _$_Message implements _Message {
                 other.repliedMessageType == repliedMessageType));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -294,15 +303,17 @@ class _$_Message implements _Message {
       repliedTo,
       repliedMessageType);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Message
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MessageCopyWith<_$_Message> get copyWith =>
-      __$$_MessageCopyWithImpl<_$_Message>(this, _$identity);
+  _$$MessageImplCopyWith<_$MessageImpl> get copyWith =>
+      __$$MessageImplCopyWithImpl<_$MessageImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MessageToJson(
+    return _$$MessageImplToJson(
       this,
     );
   }
@@ -319,9 +330,9 @@ abstract class _Message implements Message {
       required final bool isSeen,
       final String? repliedMessage,
       final String? repliedTo,
-      final MessageEnum? repliedMessageType}) = _$_Message;
+      final MessageEnum? repliedMessageType}) = _$MessageImpl;
 
-  factory _Message.fromJson(Map<String, dynamic> json) = _$_Message.fromJson;
+  factory _Message.fromJson(Map<String, dynamic> json) = _$MessageImpl.fromJson;
 
   @override
   String get senderId;
@@ -344,8 +355,11 @@ abstract class _Message implements Message {
   String? get repliedTo;
   @override
   MessageEnum? get repliedMessageType;
+
+  /// Create a copy of Message
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_MessageCopyWith<_$_Message> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$MessageImplCopyWith<_$MessageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

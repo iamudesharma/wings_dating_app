@@ -39,20 +39,7 @@ final isUserOnlineProvider = FutureProvider.family<bool, bool>(
 final userListProvider = StreamProvider<List<UserModel?>?>(
     (ref) => ref.read(profileRepoProvider).getUserList());
 
-class UserListNotifier extends AsyncNotifier<List<UserModel?>?> {
-  @override
-  FutureOr<List<UserModel?>?> build() {
-    return [];
-  }
 
-  Future refresh() async {
-    return build();
-  }
-
-  // addToBlockList(int id) async {
-  //   await ref.read(profileRepoProvider).addToBlockList(id: id);
-  // }
-}
 
 @RoutePage()
 class UsersView extends ConsumerStatefulWidget {
@@ -64,7 +51,7 @@ class UsersView extends ConsumerStatefulWidget {
 
 class _UsersViewState extends ConsumerState<UsersView>
     with WidgetsBindingObserver {
-  late StreamSubscription<ConnectivityResult> connectivityStateSubscription;
+  late StreamSubscription<List<ConnectivityResult>> connectivityStateSubscription;
   AppLifecycleState? appState;
 
   Widget? nullWidget;

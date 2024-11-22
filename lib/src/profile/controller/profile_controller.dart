@@ -14,9 +14,12 @@ import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 
 import '../../../dependency/dependenies.dart';
+import '../../../helpers/extra_data.dart';
 import '../../../helpers/helpers.dart';
 
 // part 'profile_controller.g.dart';
+
+
 
 final _userControllerProvider = ChangeNotifierProvider<ProfileController>(
   (ref) {

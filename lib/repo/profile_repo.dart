@@ -156,8 +156,7 @@ class ProfileRepo with RepositoryExceptionMixin {
             field: "position",
             asBroadcastStream: true,
             strictMode: true,
-            // queryBuilder: (query) =>
-            //     query.where("blockList", whereNotIn: [userModel.blockList]),
+            queryBuilder: (query) => query.limit(limit),
             geopointFrom: geopointFrom);
 
     final userListRaw = stream.map((event) {
@@ -247,10 +246,8 @@ class ProfileRepo with RepositoryExceptionMixin {
     CubeChatConnection.instance.privacyListsManager
         ?.createList(listName, items)
         .then((users) {
-          
       // privacy list created
-        })
-        .catchError((exception) {
+    }).catchError((exception) {
       // error occurred during creation privacy list
     });
 
@@ -273,8 +270,7 @@ class ProfileRepo with RepositoryExceptionMixin {
       var listName = 'blockList';
 
       var items = [
-        CubePrivacyListItem(cubeId, CubePrivacyAction.deny,
-            isMutual: true),
+        CubePrivacyListItem(cubeId, CubePrivacyAction.deny, isMutual: true),
       ];
 
       CubeChatConnection.instance.privacyListsManager

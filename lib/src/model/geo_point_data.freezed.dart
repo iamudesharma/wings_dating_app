@@ -12,7 +12,7 @@ part of 'geo_point_data.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 GeoPointData _$GeoPointDataFromJson(Map<String, dynamic> json) {
   return _GeoPointData.fromJson(json);
@@ -44,8 +44,13 @@ mixin _$GeoPointData {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  /// Serializes this GeoPointData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of GeoPointData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $GeoPointDataCopyWith<GeoPointData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -74,6 +79,8 @@ class _$GeoPointDataCopyWithImpl<$Res, $Val extends GeoPointData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of GeoPointData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -94,11 +101,11 @@ class _$GeoPointDataCopyWithImpl<$Res, $Val extends GeoPointData>
 }
 
 /// @nodoc
-abstract class _$$_GeoPointDataCopyWith<$Res>
+abstract class _$$GeoPointDataImplCopyWith<$Res>
     implements $GeoPointDataCopyWith<$Res> {
-  factory _$$_GeoPointDataCopyWith(
-          _$_GeoPointData value, $Res Function(_$_GeoPointData) then) =
-      __$$_GeoPointDataCopyWithImpl<$Res>;
+  factory _$$GeoPointDataImplCopyWith(
+          _$GeoPointDataImpl value, $Res Function(_$GeoPointDataImpl) then) =
+      __$$GeoPointDataImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -110,20 +117,22 @@ abstract class _$$_GeoPointDataCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_GeoPointDataCopyWithImpl<$Res>
-    extends _$GeoPointDataCopyWithImpl<$Res, _$_GeoPointData>
-    implements _$$_GeoPointDataCopyWith<$Res> {
-  __$$_GeoPointDataCopyWithImpl(
-      _$_GeoPointData _value, $Res Function(_$_GeoPointData) _then)
+class __$$GeoPointDataImplCopyWithImpl<$Res>
+    extends _$GeoPointDataCopyWithImpl<$Res, _$GeoPointDataImpl>
+    implements _$$GeoPointDataImplCopyWith<$Res> {
+  __$$GeoPointDataImplCopyWithImpl(
+      _$GeoPointDataImpl _value, $Res Function(_$GeoPointDataImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of GeoPointData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? geopoint = null,
     Object? geohash = null,
   }) {
-    return _then(_$_GeoPointData(
+    return _then(_$GeoPointDataImpl(
       geopoint: null == geopoint
           ? _value.geopoint
           : geopoint // ignore: cast_nullable_to_non_nullable
@@ -138,16 +147,16 @@ class __$$_GeoPointDataCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_GeoPointData implements _GeoPointData {
-  const _$_GeoPointData(
+class _$GeoPointDataImpl implements _GeoPointData {
+  const _$GeoPointDataImpl(
       {@JsonSerializable(explicitToJson: true, createFieldMap: true)
       @GeoPointConverter()
       @JsonKey(name: "geopoint")
       required this.geopoint,
       @JsonKey(name: "geohash") required this.geohash});
 
-  factory _$_GeoPointData.fromJson(Map<String, dynamic> json) =>
-      _$$_GeoPointDataFromJson(json);
+  factory _$GeoPointDataImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GeoPointDataImplFromJson(json);
 
   @override
   @JsonSerializable(explicitToJson: true, createFieldMap: true)
@@ -165,24 +174,26 @@ class _$_GeoPointData implements _GeoPointData {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GeoPointData &&
+            other is _$GeoPointDataImpl &&
             (identical(other.geopoint, geopoint) ||
                 other.geopoint == geopoint) &&
             (identical(other.geohash, geohash) || other.geohash == geohash));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, geopoint, geohash);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of GeoPointData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_GeoPointDataCopyWith<_$_GeoPointData> get copyWith =>
-      __$$_GeoPointDataCopyWithImpl<_$_GeoPointData>(this, _$identity);
+  _$$GeoPointDataImplCopyWith<_$GeoPointDataImpl> get copyWith =>
+      __$$GeoPointDataImplCopyWithImpl<_$GeoPointDataImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -214,7 +225,7 @@ class _$_GeoPointData implements _GeoPointData {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_GeoPointDataToJson(
+    return _$$GeoPointDataImplToJson(
       this,
     );
   }
@@ -227,21 +238,24 @@ abstract class _GeoPointData implements GeoPointData {
           @JsonKey(name: "geopoint")
           required final GeoPoint geopoint,
           @JsonKey(name: "geohash") required final String geohash}) =
-      _$_GeoPointData;
+      _$GeoPointDataImpl;
 
   factory _GeoPointData.fromJson(Map<String, dynamic> json) =
-      _$_GeoPointData.fromJson;
+      _$GeoPointDataImpl.fromJson;
 
   @override
   @JsonSerializable(explicitToJson: true, createFieldMap: true)
   @GeoPointConverter()
   @JsonKey(name: "geopoint")
-  GeoPoint get geopoint;
-  @override // ignore: invalid_annotation_target
+  GeoPoint get geopoint; // ignore: invalid_annotation_target
+  @override
   @JsonKey(name: "geohash")
   String get geohash;
+
+  /// Create a copy of GeoPointData
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_GeoPointDataCopyWith<_$_GeoPointData> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$GeoPointDataImplCopyWith<_$GeoPointDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

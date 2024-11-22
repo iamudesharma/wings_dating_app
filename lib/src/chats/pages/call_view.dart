@@ -966,7 +966,7 @@ class _CallViewState extends State<CallView>
     if (_isIncoming) {
       AutoRouter.of(context).replace(const DashboardRoute());
     } else {
-      AutoRouter.of(context).pop();
+      AutoRouter.of(context).back();
     }
   }
 
@@ -1018,14 +1018,24 @@ class _CallViewState extends State<CallView>
     logger.i("onDisconnectedFromUser userId= $userId");
     _removeMediaStream(session, userId);
   }
+  
+  @override
+  void onConnectingToUser(P2PSession session, int userId) {
+    // TODO: implement onConnectingToUser
+  }
+  
+  @override
+  void onConnectionFailedWithUser(P2PSession session, int userId) {
+    // TODO: implement onConnectionFailedWithUser
+  }
 }
 
 Future<bool> initForegroundService() async {
   if (Platform.isAndroid) {
-    const androidConfig = FlutterBackgroundAndroidConfig(
+  const   androidConfig = FlutterBackgroundAndroidConfig(
       notificationTitle: 'Conference Calls sample',
       notificationText: 'Screen sharing in in progress',
-      notificationImportance: AndroidNotificationImportance.Default,
+      notificationImportance:  AndroidNotificationImportance.high,
       notificationIcon:
           AndroidResource(name: 'ic_launcher_foreground', defType: 'drawable'),
     );

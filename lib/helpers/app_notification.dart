@@ -72,7 +72,8 @@ class PushNotificationsManager {
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
-      onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+
+      // onDidReceiveLocalNotification: onDidReceiveLocalNotification,
     );
 
     final DarwinInitializationSettings initializationSettingsMacOS =
@@ -80,7 +81,8 @@ class PushNotificationsManager {
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
-      onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+      
+      // onDidReceiveLocalNotification: onDidReceiveLocalNotification,
     );
 
     InitializationSettings initializationSettings = InitializationSettings(

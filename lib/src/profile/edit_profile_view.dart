@@ -415,7 +415,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     _loading = false;
                                   });
 
-                                  await route.pop();
+                                   route.back();
                                 } else {
                                   final sharedPrefs =
                                       await SharedPrefs.instance.init();

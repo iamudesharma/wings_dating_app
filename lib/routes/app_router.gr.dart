@@ -9,132 +9,6 @@
 
 part of 'app_router.dart';
 
-abstract class _$AppRouter extends RootStackRouter {
-  // ignore: unused_element
-  _$AppRouter({super.navigatorKey});
-
-  @override
-  final Map<String, PageFactory> pagesMap = {
-    AddAdditionalInformationRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const AddAdditionalInformationView(),
-      );
-    },
-    BooksTab.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const BooksTabView(),
-      );
-    },
-    CallRoute.name: (routeData) {
-      final args = routeData.argsAs<CallRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CallView(
-          args.callSession,
-          args.isIncoming,
-          key: args.key,
-        ),
-      );
-    },
-    ChatListRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ChatListView(),
-      );
-    },
-    ChatRoute.name: (routeData) {
-      final pathParams = routeData.inheritedPathParams;
-      final args = routeData.argsAs<ChatRouteArgs>(
-          orElse: () =>
-              ChatRouteArgs(cubeUserId: pathParams.optInt('cubeUserId')));
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ChatView(
-          key: args.key,
-          cubeUser: args.cubeUser,
-          cubeDialog: args.cubeDialog,
-          chatUserCubeId: args.chatUserCubeId,
-          dialogId: args.dialogId,
-          cubeUserId: args.cubeUserId,
-        ),
-      );
-    },
-    ChatRouteProvider.name: (routeData) {
-      final pathParams = routeData.inheritedPathParams;
-      final args = routeData.argsAs<ChatRouteProviderArgs>(
-          orElse: () => ChatRouteProviderArgs(
-              cubeUserId: pathParams.optInt('cubeUserId')));
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ChatViewProvider(
-          key: args.key,
-          cubeUser: args.cubeUser,
-          cubeDialog: args.cubeDialog,
-          chatUserCubeId: args.chatUserCubeId,
-          dialogId: args.dialogId,
-          cubeUserId: args.cubeUserId,
-        ),
-      );
-    },
-    DashboardRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const DashboardView(),
-      );
-    },
-    EditProfileRoute.name: (routeData) {
-      final args = routeData.argsAs<EditProfileRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: EditProfileView(
-          key: args.key,
-          isEditProfile: args.isEditProfile,
-        ),
-      );
-    },
-    OtherUserProfileRoute.name: (routeData) {
-      final pathParams = routeData.inheritedPathParams;
-      final args = routeData.argsAs<OtherUserProfileRouteArgs>(
-          orElse: () =>
-              OtherUserProfileRouteArgs(id: pathParams.optString('id')));
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: OtherUserProfileView(
-          key: args.key,
-          id: args.id,
-          isCurrentUser: args.isCurrentUser,
-        ),
-      );
-    },
-    ProfileRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileView(),
-      );
-    },
-    SignOptionsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const SignOptionsView(),
-      );
-    },
-    UserBlockListRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const UserBlockListView(),
-      );
-    },
-    UsersRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const UsersView(),
-      );
-    },
-  };
-}
-
 /// generated route for
 /// [AddAdditionalInformationView]
 class AddAdditionalInformationRoute extends PageRouteInfo<void> {
@@ -146,7 +20,12 @@ class AddAdditionalInformationRoute extends PageRouteInfo<void> {
 
   static const String name = 'AddAdditionalInformationRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AddAdditionalInformationView();
+    },
+  );
 }
 
 /// generated route for
@@ -160,7 +39,12 @@ class BooksTab extends PageRouteInfo<void> {
 
   static const String name = 'BooksTab';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const BooksTabView();
+    },
+  );
 }
 
 /// generated route for
@@ -183,7 +67,17 @@ class CallRoute extends PageRouteInfo<CallRouteArgs> {
 
   static const String name = 'CallRoute';
 
-  static const PageInfo<CallRouteArgs> page = PageInfo<CallRouteArgs>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<CallRouteArgs>();
+      return CallView(
+        args.callSession,
+        args.isIncoming,
+        key: args.key,
+      );
+    },
+  );
 }
 
 class CallRouteArgs {
@@ -216,7 +110,12 @@ class ChatListRoute extends PageRouteInfo<void> {
 
   static const String name = 'ChatListRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ChatListView();
+    },
+  );
 }
 
 /// generated route for
@@ -246,7 +145,23 @@ class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
 
   static const String name = 'ChatRoute';
 
-  static const PageInfo<ChatRouteArgs> page = PageInfo<ChatRouteArgs>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final pathParams = data.inheritedPathParams;
+      final args = data.argsAs<ChatRouteArgs>(
+          orElse: () =>
+              ChatRouteArgs(cubeUserId: pathParams.optInt('cubeUserId')));
+      return ChatView(
+        key: args.key,
+        cubeUser: args.cubeUser,
+        cubeDialog: args.cubeDialog,
+        chatUserCubeId: args.chatUserCubeId,
+        dialogId: args.dialogId,
+        cubeUserId: args.cubeUserId,
+      );
+    },
+  );
 }
 
 class ChatRouteArgs {
@@ -304,8 +219,23 @@ class ChatRouteProvider extends PageRouteInfo<ChatRouteProviderArgs> {
 
   static const String name = 'ChatRouteProvider';
 
-  static const PageInfo<ChatRouteProviderArgs> page =
-      PageInfo<ChatRouteProviderArgs>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final pathParams = data.inheritedPathParams;
+      final args = data.argsAs<ChatRouteProviderArgs>(
+          orElse: () => ChatRouteProviderArgs(
+              cubeUserId: pathParams.optInt('cubeUserId')));
+      return ChatViewProvider(
+        key: args.key,
+        cubeUser: args.cubeUser,
+        cubeDialog: args.cubeDialog,
+        chatUserCubeId: args.chatUserCubeId,
+        dialogId: args.dialogId,
+        cubeUserId: args.cubeUserId,
+      );
+    },
+  );
 }
 
 class ChatRouteProviderArgs {
@@ -347,7 +277,12 @@ class DashboardRoute extends PageRouteInfo<void> {
 
   static const String name = 'DashboardRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DashboardView();
+    },
+  );
 }
 
 /// generated route for
@@ -368,8 +303,16 @@ class EditProfileRoute extends PageRouteInfo<EditProfileRouteArgs> {
 
   static const String name = 'EditProfileRoute';
 
-  static const PageInfo<EditProfileRouteArgs> page =
-      PageInfo<EditProfileRouteArgs>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<EditProfileRouteArgs>();
+      return EditProfileView(
+        key: args.key,
+        isEditProfile: args.isEditProfile,
+      );
+    },
+  );
 }
 
 class EditProfileRouteArgs {
@@ -409,8 +352,20 @@ class OtherUserProfileRoute extends PageRouteInfo<OtherUserProfileRouteArgs> {
 
   static const String name = 'OtherUserProfileRoute';
 
-  static const PageInfo<OtherUserProfileRouteArgs> page =
-      PageInfo<OtherUserProfileRouteArgs>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final pathParams = data.inheritedPathParams;
+      final args = data.argsAs<OtherUserProfileRouteArgs>(
+          orElse: () =>
+              OtherUserProfileRouteArgs(id: pathParams.optString('id')));
+      return OtherUserProfileView(
+        key: args.key,
+        id: args.id,
+        isCurrentUser: args.isCurrentUser,
+      );
+    },
+  );
 }
 
 class OtherUserProfileRouteArgs {
@@ -443,7 +398,12 @@ class ProfileRoute extends PageRouteInfo<void> {
 
   static const String name = 'ProfileRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ProfileView();
+    },
+  );
 }
 
 /// generated route for
@@ -457,7 +417,12 @@ class SignOptionsRoute extends PageRouteInfo<void> {
 
   static const String name = 'SignOptionsRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SignOptionsView();
+    },
+  );
 }
 
 /// generated route for
@@ -471,7 +436,12 @@ class UserBlockListRoute extends PageRouteInfo<void> {
 
   static const String name = 'UserBlockListRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const UserBlockListView();
+    },
+  );
 }
 
 /// generated route for
@@ -485,5 +455,10 @@ class UsersRoute extends PageRouteInfo<void> {
 
   static const String name = 'UsersRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const UsersView();
+    },
+  );
 }
