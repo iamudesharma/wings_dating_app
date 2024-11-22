@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com</string>
+	<string>546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u</string>
+	<string>com.googleusercontent.apps.546119961072-gagar0rklvln2vdo82a5ha1enip01bp4</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.wingsDatingApp</string>
+	<string>com.wings.wingsdating</string>
 	<key>PROJECT_ID</key>
 	<string>wings-dating-951ed</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:546119961072:ios:ef020db2491cf562d9b535</string>
+	<string>1:546119961072:ios:e18673a382af989fd9b535</string>
 </dict>
 </plist>

@@ -5,6 +5,7 @@ import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
+import 'package:wings_dating_app/src/album/album_view.dart';
 
 import '../src/auth/sign_options.dart';
 import '../src/chats/chats_list_view.dart';
@@ -47,6 +48,11 @@ class AppRouter extends RootStackRouter {
             keepHistory: true,
           ),
           AutoRoute(
+            page: AlbumRoute.page,
+            path: "",
+            keepHistory: true,
+          ),
+          AutoRoute(
             page: ProfileRoute.page,
             keepHistory: true,
             path: "",
@@ -77,18 +83,12 @@ class AppRouter extends RootStackRouter {
         page: AddAdditionalInformationRoute.page,
         type: const RouteType.adaptive(),
         path: "/add-additional-information"),
-    AutoRoute(
-        page: EditProfileRoute.page,
-        type: const RouteType.adaptive(),
-        path: "/edit-profile"),
-    AutoRoute(
-      page: CallRoute.page,
-      type: const RouteType.adaptive(),
-    ),
-    AutoRoute(
-        page: UserBlockListRoute.page,
-        type: const RouteType.adaptive(),
-        path: "/user-block-list"),
+    AutoRoute(page: EditProfileRoute.page, type: const RouteType.adaptive(), path: "/edit-profile"),
+    // AutoRoute(
+    //   page: CallRoute.page,
+    //   type: const RouteType.adaptive(),
+    // ),
+    AutoRoute(page: UserBlockListRoute.page, type: const RouteType.adaptive(), path: "/user-block-list"),
   ];
 }
 

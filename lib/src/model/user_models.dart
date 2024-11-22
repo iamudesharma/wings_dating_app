@@ -36,6 +36,7 @@ class UserModel with _$UserModel {
     createToJson: true,
     createFieldMap: true,
     createPerFieldToJson: true,
+    explicitToJson: true,
   )
   factory UserModel({
     required String username,

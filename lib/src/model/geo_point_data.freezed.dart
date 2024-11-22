@@ -20,7 +20,11 @@ GeoPointData _$GeoPointDataFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$GeoPointData {
-  @JsonSerializable(explicitToJson: true, createFieldMap: true)
+  @JsonSerializable(
+      createToJson: true,
+      createFieldMap: true,
+      createPerFieldToJson: true,
+      explicitToJson: true)
   @GeoPointConverter()
   @JsonKey(name: "geopoint")
   GeoPoint get geopoint =>
@@ -62,7 +66,11 @@ abstract class $GeoPointDataCopyWith<$Res> {
       _$GeoPointDataCopyWithImpl<$Res, GeoPointData>;
   @useResult
   $Res call(
-      {@JsonSerializable(explicitToJson: true, createFieldMap: true)
+      {@JsonSerializable(
+          createToJson: true,
+          createFieldMap: true,
+          createPerFieldToJson: true,
+          explicitToJson: true)
       @GeoPointConverter()
       @JsonKey(name: "geopoint")
       GeoPoint geopoint,
@@ -109,7 +117,11 @@ abstract class _$$GeoPointDataImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonSerializable(explicitToJson: true, createFieldMap: true)
+      {@JsonSerializable(
+          createToJson: true,
+          createFieldMap: true,
+          createPerFieldToJson: true,
+          explicitToJson: true)
       @GeoPointConverter()
       @JsonKey(name: "geopoint")
       GeoPoint geopoint,
@@ -149,7 +161,11 @@ class __$$GeoPointDataImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$GeoPointDataImpl implements _GeoPointData {
   const _$GeoPointDataImpl(
-      {@JsonSerializable(explicitToJson: true, createFieldMap: true)
+      {@JsonSerializable(
+          createToJson: true,
+          createFieldMap: true,
+          createPerFieldToJson: true,
+          explicitToJson: true)
       @GeoPointConverter()
       @JsonKey(name: "geopoint")
       required this.geopoint,
@@ -159,7 +175,11 @@ class _$GeoPointDataImpl implements _GeoPointData {
       _$$GeoPointDataImplFromJson(json);
 
   @override
-  @JsonSerializable(explicitToJson: true, createFieldMap: true)
+  @JsonSerializable(
+      createToJson: true,
+      createFieldMap: true,
+      createPerFieldToJson: true,
+      explicitToJson: true)
   @GeoPointConverter()
   @JsonKey(name: "geopoint")
   final GeoPoint geopoint;
@@ -233,7 +253,11 @@ class _$GeoPointDataImpl implements _GeoPointData {
 
 abstract class _GeoPointData implements GeoPointData {
   const factory _GeoPointData(
-          {@JsonSerializable(explicitToJson: true, createFieldMap: true)
+          {@JsonSerializable(
+              createToJson: true,
+              createFieldMap: true,
+              createPerFieldToJson: true,
+              explicitToJson: true)
           @GeoPointConverter()
           @JsonKey(name: "geopoint")
           required final GeoPoint geopoint,
@@ -244,7 +268,11 @@ abstract class _GeoPointData implements GeoPointData {
       _$GeoPointDataImpl.fromJson;
 
   @override
-  @JsonSerializable(explicitToJson: true, createFieldMap: true)
+  @JsonSerializable(
+      createToJson: true,
+      createFieldMap: true,
+      createPerFieldToJson: true,
+      explicitToJson: true)
   @GeoPointConverter()
   @JsonKey(name: "geopoint")
   GeoPoint get geopoint; // ignore: invalid_annotation_target

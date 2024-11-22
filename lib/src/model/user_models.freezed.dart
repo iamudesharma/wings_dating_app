@@ -426,7 +426,10 @@ class __$$UserModelImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(
-    createToJson: true, createFieldMap: true, createPerFieldToJson: true)
+    createToJson: true,
+    createFieldMap: true,
+    createPerFieldToJson: true,
+    explicitToJson: true)
 class _$UserModelImpl implements _UserModel {
   _$UserModelImpl(
       {required this.username,

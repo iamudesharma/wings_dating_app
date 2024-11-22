@@ -29,6 +29,25 @@ class AddAdditionalInformationRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [AlbumView]
+class AlbumRoute extends PageRouteInfo<void> {
+  const AlbumRoute({List<PageRouteInfo>? children})
+      : super(
+          AlbumRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AlbumRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AlbumView();
+    },
+  );
+}
+
+/// generated route for
 /// [BooksTabView]
 class BooksTab extends PageRouteInfo<void> {
   const BooksTab({List<PageRouteInfo>? children})
@@ -45,58 +64,6 @@ class BooksTab extends PageRouteInfo<void> {
       return const BooksTabView();
     },
   );
-}
-
-/// generated route for
-/// [CallView]
-class CallRoute extends PageRouteInfo<CallRouteArgs> {
-  CallRoute({
-    required P2PSession callSession,
-    required bool isIncoming,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CallRoute.name,
-          args: CallRouteArgs(
-            callSession: callSession,
-            isIncoming: isIncoming,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CallRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<CallRouteArgs>();
-      return CallView(
-        args.callSession,
-        args.isIncoming,
-        key: args.key,
-      );
-    },
-  );
-}
-
-class CallRouteArgs {
-  const CallRouteArgs({
-    required this.callSession,
-    required this.isIncoming,
-    this.key,
-  });
-
-  final P2PSession callSession;
-
-  final bool isIncoming;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'CallRouteArgs{callSession: $callSession, isIncoming: $isIncoming, key: $key}';
-  }
 }
 
 /// generated route for

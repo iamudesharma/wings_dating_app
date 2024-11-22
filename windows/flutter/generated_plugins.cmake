@@ -13,7 +13,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   firebase_storage
   flutter_webrtc
   geolocator_windows
-  platform_device_id_windows
   url_launcher_windows
 )
 
