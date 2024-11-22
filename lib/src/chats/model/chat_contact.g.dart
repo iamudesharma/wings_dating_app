@@ -6,8 +6,8 @@ part of 'chat_contact.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_ChatContact _$$_ChatContactFromJson(Map<String, dynamic> json) =>
-    _$_ChatContact(
+_$ChatContactImpl _$$ChatContactImplFromJson(Map<String, dynamic> json) =>
+    _$ChatContactImpl(
       name: json['name'] as String,
       profilePic: json['profilePic'] as String,
       contactId: json['contactId'] as String,
@@ -16,7 +16,7 @@ _$_ChatContact _$$_ChatContactFromJson(Map<String, dynamic> json) =>
       fcmToken: json['fcmToken'] as String,
     );
 
-Map<String, dynamic> _$$_ChatContactToJson(_$_ChatContact instance) =>
+Map<String, dynamic> _$$ChatContactImplToJson(_$ChatContactImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'profilePic': instance.profilePic,

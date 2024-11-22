@@ -12,7 +12,7 @@ part of 'chat_contact.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 ChatContact _$ChatContactFromJson(Map<String, dynamic> json) {
   return _ChatContact.fromJson(json);
@@ -27,8 +27,12 @@ mixin _$ChatContact {
   String get lastMessage => throw _privateConstructorUsedError;
   String get fcmToken => throw _privateConstructorUsedError;
 
+  /// Serializes this ChatContact to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ChatContact
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ChatContactCopyWith<ChatContact> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -58,6 +62,8 @@ class _$ChatContactCopyWithImpl<$Res, $Val extends ChatContact>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ChatContact
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,11 +104,11 @@ class _$ChatContactCopyWithImpl<$Res, $Val extends ChatContact>
 }
 
 /// @nodoc
-abstract class _$$_ChatContactCopyWith<$Res>
+abstract class _$$ChatContactImplCopyWith<$Res>
     implements $ChatContactCopyWith<$Res> {
-  factory _$$_ChatContactCopyWith(
-          _$_ChatContact value, $Res Function(_$_ChatContact) then) =
-      __$$_ChatContactCopyWithImpl<$Res>;
+  factory _$$ChatContactImplCopyWith(
+          _$ChatContactImpl value, $Res Function(_$ChatContactImpl) then) =
+      __$$ChatContactImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -115,13 +121,15 @@ abstract class _$$_ChatContactCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ChatContactCopyWithImpl<$Res>
-    extends _$ChatContactCopyWithImpl<$Res, _$_ChatContact>
-    implements _$$_ChatContactCopyWith<$Res> {
-  __$$_ChatContactCopyWithImpl(
-      _$_ChatContact _value, $Res Function(_$_ChatContact) _then)
+class __$$ChatContactImplCopyWithImpl<$Res>
+    extends _$ChatContactCopyWithImpl<$Res, _$ChatContactImpl>
+    implements _$$ChatContactImplCopyWith<$Res> {
+  __$$ChatContactImplCopyWithImpl(
+      _$ChatContactImpl _value, $Res Function(_$ChatContactImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ChatContact
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -132,7 +140,7 @@ class __$$_ChatContactCopyWithImpl<$Res>
     Object? lastMessage = null,
     Object? fcmToken = null,
   }) {
-    return _then(_$_ChatContact(
+    return _then(_$ChatContactImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -163,8 +171,8 @@ class __$$_ChatContactCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ChatContact implements _ChatContact {
-  const _$_ChatContact(
+class _$ChatContactImpl implements _ChatContact {
+  const _$ChatContactImpl(
       {required this.name,
       required this.profilePic,
       required this.contactId,
@@ -172,8 +180,8 @@ class _$_ChatContact implements _ChatContact {
       required this.lastMessage,
       required this.fcmToken});
 
-  factory _$_ChatContact.fromJson(Map<String, dynamic> json) =>
-      _$$_ChatContactFromJson(json);
+  factory _$ChatContactImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ChatContactImplFromJson(json);
 
   @override
   final String name;
@@ -194,10 +202,10 @@ class _$_ChatContact implements _ChatContact {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ChatContact &&
+            other is _$ChatContactImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.profilePic, profilePic) ||
                 other.profilePic == profilePic) &&
@@ -211,20 +219,22 @@ class _$_ChatContact implements _ChatContact {
                 other.fcmToken == fcmToken));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, name, profilePic, contactId,
       timeSent, lastMessage, fcmToken);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChatContact
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ChatContactCopyWith<_$_ChatContact> get copyWith =>
-      __$$_ChatContactCopyWithImpl<_$_ChatContact>(this, _$identity);
+  _$$ChatContactImplCopyWith<_$ChatContactImpl> get copyWith =>
+      __$$ChatContactImplCopyWithImpl<_$ChatContactImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ChatContactToJson(
+    return _$$ChatContactImplToJson(
       this,
     );
   }
@@ -237,10 +247,10 @@ abstract class _ChatContact implements ChatContact {
       required final String contactId,
       required final DateTime timeSent,
       required final String lastMessage,
-      required final String fcmToken}) = _$_ChatContact;
+      required final String fcmToken}) = _$ChatContactImpl;
 
   factory _ChatContact.fromJson(Map<String, dynamic> json) =
-      _$_ChatContact.fromJson;
+      _$ChatContactImpl.fromJson;
 
   @override
   String get name;
@@ -254,8 +264,11 @@ abstract class _ChatContact implements ChatContact {
   String get lastMessage;
   @override
   String get fcmToken;
+
+  /// Create a copy of ChatContact
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_ChatContactCopyWith<_$_ChatContact> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ChatContactImplCopyWith<_$ChatContactImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

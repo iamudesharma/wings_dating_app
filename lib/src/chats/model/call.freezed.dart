@@ -12,7 +12,7 @@ part of 'call.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Call _$CallFromJson(Map<String, dynamic> json) {
   return _Call.fromJson(json);
@@ -29,8 +29,12 @@ mixin _$Call {
   String get callId => throw _privateConstructorUsedError;
   bool get hasDialled => throw _privateConstructorUsedError;
 
+  /// Serializes this Call to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Call
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CallCopyWith<Call> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -60,6 +64,8 @@ class _$CallCopyWithImpl<$Res, $Val extends Call>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Call
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -110,9 +116,10 @@ class _$CallCopyWithImpl<$Res, $Val extends Call>
 }
 
 /// @nodoc
-abstract class _$$_CallCopyWith<$Res> implements $CallCopyWith<$Res> {
-  factory _$$_CallCopyWith(_$_Call value, $Res Function(_$_Call) then) =
-      __$$_CallCopyWithImpl<$Res>;
+abstract class _$$CallImplCopyWith<$Res> implements $CallCopyWith<$Res> {
+  factory _$$CallImplCopyWith(
+          _$CallImpl value, $Res Function(_$CallImpl) then) =
+      __$$CallImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -127,11 +134,14 @@ abstract class _$$_CallCopyWith<$Res> implements $CallCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_CallCopyWithImpl<$Res> extends _$CallCopyWithImpl<$Res, _$_Call>
-    implements _$$_CallCopyWith<$Res> {
-  __$$_CallCopyWithImpl(_$_Call _value, $Res Function(_$_Call) _then)
+class __$$CallImplCopyWithImpl<$Res>
+    extends _$CallCopyWithImpl<$Res, _$CallImpl>
+    implements _$$CallImplCopyWith<$Res> {
+  __$$CallImplCopyWithImpl(_$CallImpl _value, $Res Function(_$CallImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Call
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -144,7 +154,7 @@ class __$$_CallCopyWithImpl<$Res> extends _$CallCopyWithImpl<$Res, _$_Call>
     Object? callId = null,
     Object? hasDialled = null,
   }) {
-    return _then(_$_Call(
+    return _then(_$CallImpl(
       callerId: null == callerId
           ? _value.callerId
           : callerId // ignore: cast_nullable_to_non_nullable
@@ -183,8 +193,8 @@ class __$$_CallCopyWithImpl<$Res> extends _$CallCopyWithImpl<$Res, _$_Call>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Call implements _Call {
-  const _$_Call(
+class _$CallImpl implements _Call {
+  const _$CallImpl(
       {required this.callerId,
       required this.callerName,
       required this.callerPic,
@@ -194,7 +204,8 @@ class _$_Call implements _Call {
       required this.callId,
       required this.hasDialled});
 
-  factory _$_Call.fromJson(Map<String, dynamic> json) => _$$_CallFromJson(json);
+  factory _$CallImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CallImplFromJson(json);
 
   @override
   final String callerId;
@@ -219,10 +230,10 @@ class _$_Call implements _Call {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Call &&
+            other is _$CallImpl &&
             (identical(other.callerId, callerId) ||
                 other.callerId == callerId) &&
             (identical(other.callerName, callerName) ||
@@ -240,20 +251,22 @@ class _$_Call implements _Call {
                 other.hasDialled == hasDialled));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, callerId, callerName, callerPic,
       receiverId, receiverName, receiverPic, callId, hasDialled);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Call
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CallCopyWith<_$_Call> get copyWith =>
-      __$$_CallCopyWithImpl<_$_Call>(this, _$identity);
+  _$$CallImplCopyWith<_$CallImpl> get copyWith =>
+      __$$CallImplCopyWithImpl<_$CallImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CallToJson(
+    return _$$CallImplToJson(
       this,
     );
   }
@@ -268,9 +281,9 @@ abstract class _Call implements Call {
       required final String receiverName,
       required final String receiverPic,
       required final String callId,
-      required final bool hasDialled}) = _$_Call;
+      required final bool hasDialled}) = _$CallImpl;
 
-  factory _Call.fromJson(Map<String, dynamic> json) = _$_Call.fromJson;
+  factory _Call.fromJson(Map<String, dynamic> json) = _$CallImpl.fromJson;
 
   @override
   String get callerId;
@@ -288,7 +301,11 @@ abstract class _Call implements Call {
   String get callId;
   @override
   bool get hasDialled;
+
+  /// Create a copy of Call
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_CallCopyWith<_$_Call> get copyWith => throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CallImplCopyWith<_$CallImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

@@ -48,7 +48,7 @@ mixin RepositoryExceptionMixin {
       throw RepositoryException(
           message: unKnownMessage, exception: e, stackTrace: st);
     } on Exception catch (e, st) {
-      logger.e(e, [st]);
+      logger.e(e, stackTrace: st);
       Fluttertoast.showToast(msg: e.toString());
 
       throw RepositoryException(

@@ -1,10 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/helpers/app_notification.dart';
@@ -21,11 +19,10 @@ part 'app_router_provider.g.dart';
 final chat = CubeChatConnection.instance;
 
 @Riverpod(keepAlive: true)
-AppRouter appRoute(AppRouteRef ref) {
-  return AppRouter(
-    ref,
-    // profileDocGuard: ProfileDocGuard(ref: ref),
-  );
+AppRouter appRoute(Ref ref) {
+  return AppRouter(ref
+      // profileDocGuard: ProfileDocGuard(ref: ref),
+      );
 }
 
 class AuthGuard extends AutoRouteGuard {
@@ -38,13 +35,10 @@ class AuthGuard extends AutoRouteGuard {
     FirebaseAuth auth = FirebaseAuth.instance;
 
     if (auth.currentUser != null) {
-      print(auth.currentUser != null);
       if (await ref.read(profileRepoProvider).checkUserDocExist()) {
         logger.i('user doc exist');
 
-        await ref
-            .read(ProfileController.userControllerProvider)
-            .getCurrentUser();
+        await ref.read(ProfileController.userControllerProvider).getCurrentUser();
         await ref.read(profileRepoProvider).isUserOnline(true);
 
         final userModel = await SharedPrefs.instance.init();
@@ -56,11 +50,7 @@ class AuthGuard extends AutoRouteGuard {
         } else {
           _loginToCC(
               resolver: resolver,
-              userModel.getUser() ??
-                  ref
-                      .read(ProfileController.userControllerProvider)
-                      .userModel!
-                      .cubeUser);
+              userModel.getUser() ?? ref.read(ProfileController.userControllerProvider).userModel!.cubeUser);
         }
       } else {
         resolver.next(false);
@@ -84,12 +74,10 @@ void _processLoginError(exception) {
   );
 }
 
-_loginToCC(CubeUser user,
-    {bool saveUser = true, required NavigationResolver resolver}) {
+_loginToCC(CubeUser user, {bool saveUser = true, required NavigationResolver resolver}) {
   CubeUser cubeuser = CubeUser(login: user.login, password: user.password);
 
   createSession(cubeuser).then((cubeSession) async {
-    print("createSession cubeSession: $cubeSession");
 
     _loginToCubeChat(user);
 
@@ -108,7 +96,6 @@ _loginToCC(CubeUser user,
 }
 
 _loginToCubeChat(CubeUser user) {
-  print("_loginToCubeChat user $user");
   CubeChatConnectionSettings.instance.totalReconnections = 0;
   CubeChatConnection.instance.login(user).then((cubeUser) {
     // _isLoginContinues = false;

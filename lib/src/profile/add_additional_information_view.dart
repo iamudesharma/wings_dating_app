@@ -264,7 +264,7 @@ class _AddAdditionalInformationViewState
                     onChanged: <Role>(value) {
                       logger.i(value);
                       ref.read(roleProvider.notifier).update((state) => value);
-                      context.router.pop();
+                      context.router.back();
                     },
                     value: Role.values,
                   ));
@@ -290,7 +290,7 @@ class _AddAdditionalInformationViewState
                       ref
                           .read(bodyTypeProvider.notifier)
                           .update((sate) => value);
-                      context.router.pop();
+                      context.router.back();
                     },
                     value: BodyType.values,
                   ));
@@ -315,7 +315,7 @@ class _AddAdditionalInformationViewState
                     onChanged: <String>(value) {
                       logger.i(value);
                       ref.read(weightProvider.notifier).update((sate) => value);
-                      context.router.pop();
+                      context.router.back();
                     },
                     value: weightList,
                   ));
@@ -340,7 +340,7 @@ class _AddAdditionalInformationViewState
                     onChanged: <String>(value) {
                       logger.i(value);
                       ref.read(heightProvider.notifier).update((sate) => value);
-                      context.router.pop();
+                      context.router.back();
                     },
                     value: heightList,
                   ));
@@ -367,7 +367,7 @@ class _AddAdditionalInformationViewState
                           value;
 
                       setState(() {});
-                      context.router.pop();
+                      context.router.back();
                     },
                     value: RelationshipStatus.values,
                   ));
@@ -394,7 +394,7 @@ class _AddAdditionalInformationViewState
                           .read(ethnicityProvider.notifier)
                           .update((state) => value);
 
-                      context.router.pop();
+                      context.router.back();
                     },
                     value: Ethnicity.values,
                   ));
@@ -420,7 +420,7 @@ class _AddAdditionalInformationViewState
                       ref
                           .read(lookingForProvider.notifier)
                           .update((sate) => value);
-                      context.router.pop();
+                      context.router.back();
                     },
                     value: LookingFor.values,
                   ));
@@ -446,7 +446,7 @@ class _AddAdditionalInformationViewState
                       ref
                           .read(whereToMeetProvider.notifier)
                           .update((sate) => value);
-                      context.router.pop();
+                      context.router.back();
                     },
                     value: WhereToMeet.values,
                   ));

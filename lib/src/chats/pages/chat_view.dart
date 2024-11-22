@@ -261,7 +261,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   final Map<int?, CubeUser?> _occupants = {};
 
   late bool isLoading;
-  late StreamSubscription<ConnectivityResult> connectivityStateSubscription;
+  late StreamSubscription<List<ConnectivityResult>> connectivityStateSubscription;
   String? imageUrl;
   // List<CubeMessage> listMessage = [];
 
@@ -734,9 +734,9 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                         ? TextStyle(
                             color: Colors.green, fontFamily: 'NotoColorEmoji')
                         : null,
-                    iconColorSelected: Colors.green,
-                    indicatorColor: Colors.green,
-                    bgColor: Colors.white,
+                    // : Colors.green,
+                    // indicatorColor: Colors.green,
+                    // bgColor: Colors.white,
                   ),
                   onEmojiSelected: (category, emoji) {
                     Navigator.pop(context, emoji);
@@ -1444,7 +1444,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     });
   }
 
-  void onConnectivityChanged(ConnectivityResult connectivityType) {
+  void onConnectivityChanged(List<ConnectivityResult> connectivityType) {
     log("[ChatScreenState] connectivityType changed to '$connectivityType'");
 
     if (connectivityType == ConnectivityResult.wifi ||
@@ -1652,7 +1652,7 @@ class MessageBar extends StatelessWidget {
 }
 
 final connectivityStateSubscriptionProvider =
-    StreamProvider.autoDispose<ConnectivityResult>((ref) async* {
+    StreamProvider.autoDispose<List<ConnectivityResult>>((ref) async* {
   ref.keepAlive();
   yield* Connectivity().onConnectivityChanged;
 });
