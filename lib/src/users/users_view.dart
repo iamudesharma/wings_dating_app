@@ -304,30 +304,9 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                   SliverToBoxAdapter(
                     child: Row(
                       children: [
-                        if (!sizingInformation.isMobile)
-                          Expanded(
-                            child: SizedBox(
-                                height: sizingInformation.screenSize.height,
-                                child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: NavigationRail(
-                                      selectedIndex: AutoTabsRouter.of(context).activeIndex,
-                                      extended: sizingInformation.isTablet ? false : true,
-                                      onDestinationSelected: (value) {
-                                        AutoTabsRouter.of(context).setActiveIndex(value);
-                                      },
-                                      destinations: const [
-                                        NavigationRailDestination(icon: Icon(Icons.home), label: Text("Users")),
-                                        NavigationRailDestination(icon: Icon(Icons.chat_bubble), label: Text("Chat")),
-                                        NavigationRailDestination(icon: Icon(Icons.album_outlined), label: Text("Album")),
-
-                                        NavigationRailDestination(
-                                          icon: Icon(Icons.person),
-                                          label: Text("Profile"),
-                                        ),
-                                      ],
-                                    ))),
-                          ),
+                        NavigationBarWidget(
+                          sizingInformation: sizingInformation,
+                        ),
                         Expanded(
                           flex: 5,
                           child: userList.when(
@@ -359,7 +338,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
                                   return UserGridItem(
                                     onTapEditProfile: () async {
-                                      AutoTabsRouter.of(context).setActiveIndex(2);
+                                      AutoTabsRouter.of(context).setActiveIndex(3);
                                     },
                                     isCurrentUser: users?.id == userData.id ? true : false,
                                     users: users!,
@@ -378,5 +357,46 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
         }),
       ),
     );
+  }
+}
+
+class NavigationBarWidget extends StatelessWidget {
+  const NavigationBarWidget({
+    super.key,
+    required this.sizingInformation,
+  });
+  final SizingInformation sizingInformation;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!sizingInformation.isMobile) {
+      return Expanded(
+          child: SizedBox(
+              height: sizingInformation.screenSize.height,
+              child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: ListenableBuilder(
+                      listenable: AutoTabsRouter.of(context),
+                      builder: (context, child) {
+                        return NavigationRail(
+                          selectedIndex: AutoTabsRouter.of(context).activeIndex,
+                          extended: sizingInformation.isTablet ? false : true,
+                          onDestinationSelected: (value) {
+                            AutoTabsRouter.of(context).setActiveIndex(value);
+                          },
+                          destinations: const [
+                            NavigationRailDestination(icon: Icon(Icons.home), label: Text("Users")),
+                            NavigationRailDestination(icon: Icon(Icons.chat_bubble), label: Text("Chat")),
+                            NavigationRailDestination(icon: Icon(Icons.album_outlined), label: Text("Album")),
+                            NavigationRailDestination(
+                              icon: Icon(Icons.person),
+                              label: Text("Profile"),
+                            ),
+                          ],
+                        );
+                      }))));
+    } else {
+      return Container();
+    }
   }
 }

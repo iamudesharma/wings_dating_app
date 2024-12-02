@@ -20,7 +20,10 @@ AlbumListModel _$AlbumListModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AlbumListModel {
-  List<AlbumModel> get albums => throw _privateConstructorUsedError;
+  List<String> get imageUrls => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  String get userId => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
 
   /// Serializes this AlbumListModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -38,7 +41,7 @@ abstract class $AlbumListModelCopyWith<$Res> {
           AlbumListModel value, $Res Function(AlbumListModel) then) =
       _$AlbumListModelCopyWithImpl<$Res, AlbumListModel>;
   @useResult
-  $Res call({List<AlbumModel> albums});
+  $Res call({List<String> imageUrls, String name, String userId, String id});
 }
 
 /// @nodoc
@@ -56,13 +59,28 @@ class _$AlbumListModelCopyWithImpl<$Res, $Val extends AlbumListModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? albums = null,
+    Object? imageUrls = null,
+    Object? name = null,
+    Object? userId = null,
+    Object? id = null,
   }) {
     return _then(_value.copyWith(
-      albums: null == albums
-          ? _value.albums
-          : albums // ignore: cast_nullable_to_non_nullable
-              as List<AlbumModel>,
+      imageUrls: null == imageUrls
+          ? _value.imageUrls
+          : imageUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -75,7 +93,7 @@ abstract class _$$AlbumListModelImplCopyWith<$Res>
       __$$AlbumListModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<AlbumModel> albums});
+  $Res call({List<String> imageUrls, String name, String userId, String id});
 }
 
 /// @nodoc
@@ -91,13 +109,28 @@ class __$$AlbumListModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? albums = null,
+    Object? imageUrls = null,
+    Object? name = null,
+    Object? userId = null,
+    Object? id = null,
   }) {
     return _then(_$AlbumListModelImpl(
-      albums: null == albums
-          ? _value._albums
-          : albums // ignore: cast_nullable_to_non_nullable
-              as List<AlbumModel>,
+      imageUrls: null == imageUrls
+          ? _value._imageUrls
+          : imageUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -110,23 +143,34 @@ class __$$AlbumListModelImplCopyWithImpl<$Res>
     createPerFieldToJson: true,
     explicitToJson: true)
 class _$AlbumListModelImpl implements _AlbumListModel {
-  const _$AlbumListModelImpl({required final List<AlbumModel> albums})
-      : _albums = albums;
+  const _$AlbumListModelImpl(
+      {required final List<String> imageUrls,
+      required this.name,
+      required this.userId,
+      required this.id})
+      : _imageUrls = imageUrls;
 
   factory _$AlbumListModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$AlbumListModelImplFromJson(json);
 
-  final List<AlbumModel> _albums;
+  final List<String> _imageUrls;
   @override
-  List<AlbumModel> get albums {
-    if (_albums is EqualUnmodifiableListView) return _albums;
+  List<String> get imageUrls {
+    if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_albums);
+    return EqualUnmodifiableListView(_imageUrls);
   }
 
   @override
+  final String name;
+  @override
+  final String userId;
+  @override
+  final String id;
+
+  @override
   String toString() {
-    return 'AlbumListModel(albums: $albums)';
+    return 'AlbumListModel(imageUrls: $imageUrls, name: $name, userId: $userId, id: $id)';
   }
 
   @override
@@ -134,13 +178,17 @@ class _$AlbumListModelImpl implements _AlbumListModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AlbumListModelImpl &&
-            const DeepCollectionEquality().equals(other._albums, _albums));
+            const DeepCollectionEquality()
+                .equals(other._imageUrls, _imageUrls) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.id, id) || other.id == id));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_albums));
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_imageUrls), name, userId, id);
 
   /// Create a copy of AlbumListModel
   /// with the given fields replaced by the non-null parameter values.
@@ -160,236 +208,28 @@ class _$AlbumListModelImpl implements _AlbumListModel {
 }
 
 abstract class _AlbumListModel implements AlbumListModel {
-  const factory _AlbumListModel({required final List<AlbumModel> albums}) =
-      _$AlbumListModelImpl;
+  const factory _AlbumListModel(
+      {required final List<String> imageUrls,
+      required final String name,
+      required final String userId,
+      required final String id}) = _$AlbumListModelImpl;
 
   factory _AlbumListModel.fromJson(Map<String, dynamic> json) =
       _$AlbumListModelImpl.fromJson;
 
   @override
-  List<AlbumModel> get albums;
+  List<String> get imageUrls;
+  @override
+  String get name;
+  @override
+  String get userId;
+  @override
+  String get id;
 
   /// Create a copy of AlbumListModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AlbumListModelImplCopyWith<_$AlbumListModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-AlbumModel _$AlbumModelFromJson(Map<String, dynamic> json) {
-  return _AlbumModel.fromJson(json);
-}
-
-/// @nodoc
-mixin _$AlbumModel {
-  String get id => throw _privateConstructorUsedError;
-  String get path => throw _privateConstructorUsedError;
-
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_AlbumModel value) $default,
-  ) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_AlbumModel value)? $default,
-  ) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_AlbumModel value)? $default, {
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-
-  /// Serializes this AlbumModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of AlbumModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $AlbumModelCopyWith<AlbumModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $AlbumModelCopyWith<$Res> {
-  factory $AlbumModelCopyWith(
-          AlbumModel value, $Res Function(AlbumModel) then) =
-      _$AlbumModelCopyWithImpl<$Res, AlbumModel>;
-  @useResult
-  $Res call({String id, String path});
-}
-
-/// @nodoc
-class _$AlbumModelCopyWithImpl<$Res, $Val extends AlbumModel>
-    implements $AlbumModelCopyWith<$Res> {
-  _$AlbumModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of AlbumModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? path = null,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      path: null == path
-          ? _value.path
-          : path // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$AlbumModelImplCopyWith<$Res>
-    implements $AlbumModelCopyWith<$Res> {
-  factory _$$AlbumModelImplCopyWith(
-          _$AlbumModelImpl value, $Res Function(_$AlbumModelImpl) then) =
-      __$$AlbumModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String id, String path});
-}
-
-/// @nodoc
-class __$$AlbumModelImplCopyWithImpl<$Res>
-    extends _$AlbumModelCopyWithImpl<$Res, _$AlbumModelImpl>
-    implements _$$AlbumModelImplCopyWith<$Res> {
-  __$$AlbumModelImplCopyWithImpl(
-      _$AlbumModelImpl _value, $Res Function(_$AlbumModelImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AlbumModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? path = null,
-  }) {
-    return _then(_$AlbumModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      path: null == path
-          ? _value.path
-          : path // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-@JsonSerializable(
-    createToJson: true,
-    createFieldMap: true,
-    createPerFieldToJson: true,
-    explicitToJson: true)
-class _$AlbumModelImpl implements _AlbumModel {
-  const _$AlbumModelImpl({required this.id, required this.path});
-
-  factory _$AlbumModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AlbumModelImplFromJson(json);
-
-  @override
-  final String id;
-  @override
-  final String path;
-
-  @override
-  String toString() {
-    return 'AlbumModel(id: $id, path: $path)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AlbumModelImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.path, path) || other.path == path));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, id, path);
-
-  /// Create a copy of AlbumModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AlbumModelImplCopyWith<_$AlbumModelImpl> get copyWith =>
-      __$$AlbumModelImplCopyWithImpl<_$AlbumModelImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_AlbumModel value) $default,
-  ) {
-    return $default(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_AlbumModel value)? $default,
-  ) {
-    return $default?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_AlbumModel value)? $default, {
-    required TResult orElse(),
-  }) {
-    if ($default != null) {
-      return $default(this);
-    }
-    return orElse();
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AlbumModelImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _AlbumModel implements AlbumModel {
-  const factory _AlbumModel(
-      {required final String id,
-      required final String path}) = _$AlbumModelImpl;
-
-  factory _AlbumModel.fromJson(Map<String, dynamic> json) =
-      _$AlbumModelImpl.fromJson;
-
-  @override
-  String get id;
-  @override
-  String get path;
-
-  /// Create a copy of AlbumModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AlbumModelImplCopyWith<_$AlbumModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

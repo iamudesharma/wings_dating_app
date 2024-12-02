@@ -29,6 +29,25 @@ class AddAdditionalInformationRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [AlbumDetailsView]
+class AlbumDetailsRoute extends PageRouteInfo<void> {
+  const AlbumDetailsRoute({List<PageRouteInfo>? children})
+      : super(
+          AlbumDetailsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AlbumDetailsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AlbumDetailsView();
+    },
+  );
+}
+
+/// generated route for
 /// [AlbumView]
 class AlbumRoute extends PageRouteInfo<void> {
   const AlbumRoute({List<PageRouteInfo>? children})
@@ -64,6 +83,58 @@ class BooksTab extends PageRouteInfo<void> {
       return const BooksTabView();
     },
   );
+}
+
+/// generated route for
+/// [CallView]
+class CallRoute extends PageRouteInfo<CallRouteArgs> {
+  CallRoute({
+    required P2PSession callSession,
+    required bool isIncoming,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CallRoute.name,
+          args: CallRouteArgs(
+            callSession: callSession,
+            isIncoming: isIncoming,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CallRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<CallRouteArgs>();
+      return CallView(
+        args.callSession,
+        args.isIncoming,
+        key: args.key,
+      );
+    },
+  );
+}
+
+class CallRouteArgs {
+  const CallRouteArgs({
+    required this.callSession,
+    required this.isIncoming,
+    this.key,
+  });
+
+  final P2PSession callSession;
+
+  final bool isIncoming;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'CallRouteArgs{callSession: $callSession, isIncoming: $isIncoming, key: $key}';
+  }
 }
 
 /// generated route for

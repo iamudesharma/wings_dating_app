@@ -8,13 +8,13 @@ import 'package:wings_dating_app/src/model/user_models.dart';
 
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
+import 'package:wings_dating_app/src/users/users_view.dart';
 import '../../repo/profile_repo.dart';
 import '../../routes/app_router.dart';
 
 import 'package:velocity_x/velocity_x.dart';
 
-final getUserByIdProvider =
-    FutureProvider.family<UserModel?, String>((ref, id) {
+final getUserByIdProvider = FutureProvider.family<UserModel?, String>((ref, id) {
   return ref.read(profileRepoProvider).getUserById(id);
 });
 
@@ -31,8 +31,7 @@ class ProfileView extends ConsumerStatefulWidget {
 class _ProfileViewState extends ConsumerState<ProfileView> {
   @override
   Widget build(BuildContext context) {
-    var userData =
-        ref.watch(ProfileController.userControllerProvider).userModel;
+    var userData = ref.watch(ProfileController.userControllerProvider).userModel;
 
     // logger.i(userData?.profileUrl);
 
@@ -73,35 +72,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
               ),
               Row(
                 children: [
-                  if (!sizingInformation.isMobile)
-                    Expanded(
-                      child: SizedBox(
-                          height: sizingInformation.screenSize.height,
-                          child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: NavigationRail(
-                                selectedIndex:
-                                    AutoTabsRouter.of(context).activeIndex,
-                                extended:
-                                    sizingInformation.isTablet ? false : true,
-                                onDestinationSelected: (value) {
-                                  AutoTabsRouter.of(context)
-                                      .setActiveIndex(value);
-                                },
-                                destinations: const [
-                                  NavigationRailDestination(
-                                      icon: Icon(Icons.home),
-                                      label: Text("Users")),
-                                  NavigationRailDestination(
-                                      icon: Icon(Icons.chat_bubble),
-                                      label: Text("Chat")),
-                                  NavigationRailDestination(
-                                    icon: Icon(Icons.person),
-                                    label: Text("Profile"),
-                                  ),
-                                ],
-                              ))),
-                    ),
+                  NavigationBarWidget(
+                    sizingInformation: sizingInformation,
+                  ),
                   Expanded(
                     flex: 4,
                     child: Column(
@@ -116,13 +89,11 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                                 children: [
                                   CircleAvatar(
                                     radius: 50,
-                                    backgroundImage:
-                                        NetworkImage(userData.profileUrl ?? ""),
+                                    backgroundImage: NetworkImage(userData.profileUrl ?? ""),
                                   ),
                                   10.widthBox,
                                   const Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [],
                                   ),
                                   const Spacer(),
@@ -165,37 +136,22 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ProfileInputCard(
-                                      title: "Role",
-                                      value: userData.role.value),
+                                  ProfileInputCard(title: "Role", value: userData.role.value),
+                                  Divider(),
+                                  ProfileInputCard(title: "Body Type", value: userData.bodyType.value),
+                                  Divider(),
+                                  ProfileInputCard(title: "Ethnicity", value: userData.ethnicity.value),
                                   Divider(),
                                   ProfileInputCard(
-                                      title: "Body Type",
-                                      value: userData.bodyType.value),
+                                      title: "Relationship Status", value: userData.relationshipStatus.value),
                                   Divider(),
-                                  ProfileInputCard(
-                                      title: "Ethnicity",
-                                      value: userData.ethnicity.value),
+                                  ProfileInputCard(title: "Looking for", value: userData.lookingFor.value),
                                   Divider(),
-                                  ProfileInputCard(
-                                      title: "Relationship Status",
-                                      value: userData.relationshipStatus.value),
+                                  ProfileInputCard(title: "Where to meet", value: userData.whereToMeet.value),
                                   Divider(),
-                                  ProfileInputCard(
-                                      title: "Looking for",
-                                      value: userData.lookingFor.value),
+                                  ProfileInputCard(title: "Height", value: userData.height ?? "Do not Show"),
                                   Divider(),
-                                  ProfileInputCard(
-                                      title: "Where to meet",
-                                      value: userData.whereToMeet.value),
-                                  Divider(),
-                                  ProfileInputCard(
-                                      title: "Height",
-                                      value: userData.height ?? "Do not Show"),
-                                  Divider(),
-                                  ProfileInputCard(
-                                      title: "Weight",
-                                      value: userData.weight ?? "Do not Show"),
+                                  ProfileInputCard(title: "Weight", value: userData.weight ?? "Do not Show"),
                                   Divider(),
                                 ],
                               ),

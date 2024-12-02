@@ -75,7 +75,9 @@ dependencies:
   # firebase_analytics: ^10.4.2po
   flutter_animate: ^4.5.1
   geolocator: ^13.0.2
-  # connectycube_flutter_call_kit: ^2.3.0
+  connectycube_flutter_call_kit:
+                        git:
+                          url: https://github.com/hatemragab/connectycube-flutter-call-kit.git
   connectycube_sdk: ^2.14.1
   shared_preferences: ^2.3.3
 
@@ -105,6 +107,9 @@ dependencies:
   # google_mobile_ads:
   context_menus: ^2.0.0
   package_rename: ^1.7.1
+  pro_image_editor: ^5.4.2
+  path_provider: ^2.1.5
+  # path_provider: ^2.1.3
 
 dev_dependencies:
   flutter_test:

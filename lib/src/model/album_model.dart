@@ -17,27 +17,30 @@ class AlbumListModel with _$AlbumListModel {
     explicitToJson: true,
   )
   const factory AlbumListModel({
-    required List<AlbumModel> albums,
+    required List<String> imageUrls,
+    required String name,
+    required String userId,
+    required String id,
   }) = _AlbumListModel;
 
   factory AlbumListModel.fromJson(Map<String, Object?> json) => _$AlbumListModelFromJson(json);
 }
 
-@Freezed(map: FreezedMapOptions.all, toStringOverride: true, toJson: true, fromJson: true)
-class AlbumModel with _$AlbumModel {
-  @JsonSerializable(
-    createToJson: true,
-    createFieldMap: true,
-    createPerFieldToJson: true,
-    explicitToJson: true,
-  )
-  const factory AlbumModel({
-    required String id,
-    required String path,
-  }) = _AlbumModel;
+// @Freezed(map: FreezedMapOptions.all, toStringOverride: true, toJson: true, fromJson: true)
+// class AlbumModel with _$AlbumModel {
+//   @JsonSerializable(
+//     createToJson: true,
+//     createFieldMap: true,
+//     createPerFieldToJson: true,
+//     explicitToJson: true,
+//   )
+//   const factory AlbumModel({
+//     required String id,
+//     required String path,
+//   }) = _AlbumModel;
 
-  factory AlbumModel.fromJson(Map<String, Object?> json) => _$AlbumModelFromJson(json);
-}
+//   factory AlbumModel.fromJson(Map<String, Object?> json) => _$AlbumModelFromJson(json);
+// }
 
 final _albumRef = AlbumListModelCollectionReference();
 

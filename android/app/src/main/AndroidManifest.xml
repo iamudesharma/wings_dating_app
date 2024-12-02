@@ -50,8 +50,11 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="high_importance_channel" />
             <meta-data
-  android:name="com.google.firebase.messaging.default_notification_channel_id"
-  android:value="high_importance_channel" />
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="high_importance_channel" />
+        <!-- <meta-data
+android:name="com.connectycube.flutter.connectycube_flutter_call_kit.app_notification_icon"
+android:resource="@drawable/ic_notification" /> -->
 
         <!-- <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

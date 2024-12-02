@@ -84,10 +84,10 @@ class AppRouter extends RootStackRouter {
         type: const RouteType.adaptive(),
         path: "/add-additional-information"),
     AutoRoute(page: EditProfileRoute.page, type: const RouteType.adaptive(), path: "/edit-profile"),
-    // AutoRoute(
-    //   page: CallRoute.page,
-    //   type: const RouteType.adaptive(),
-    // ),
+    AutoRoute(
+      page: AlbumDetailsRoute.page,
+      type: const RouteType.adaptive(),
+    ),
     AutoRoute(page: UserBlockListRoute.page, type: const RouteType.adaptive(), path: "/user-block-list"),
   ];
 }

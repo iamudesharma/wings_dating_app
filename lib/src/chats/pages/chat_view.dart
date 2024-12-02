@@ -41,8 +41,7 @@ import 'package:rxdart/rxdart.dart' as rx;
 int? time;
 const int messagesPerPage = 50;
 int lastPartSize = 0;
-final _chatUserData =
-    FutureProvider.autoDispose.family<UserModel?, int>((ref, id) {
+final _chatUserData = FutureProvider.autoDispose.family<UserModel?, int>((ref, id) {
   ref.keepAlive();
   return ref.read(profileRepoProvider).getUserByCubeId(id);
 });
@@ -94,9 +93,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
   void didChangeDependencies() async {
     var user = SharedPrefs.instance.getUser()!;
 
-    await CubeChatConnection.instance
-        .getLasUserActivity(user.id!)
-        .then((value) {
+    await CubeChatConnection.instance.getLasUserActivity(user.id!).then((value) {
       logger.d("subscribeToUserLastActivityStatus $value");
     }).onError((error, stackTrace) {
       logger.e("subscribeToUserLastActivityStatus error $error");
@@ -160,10 +157,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
                                   users.username,
                                 ),
                                 Text(
-                                  ref
-                                      .read(ProfileController
-                                          .userControllerProvider)
-                                      .getDistance(
+                                  ref.read(ProfileController.userControllerProvider).getDistance(
                                         GeoPoint(
                                           users.position!.geopoint.latitude,
                                           users.position!.geopoint.longitude,
@@ -175,11 +169,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
                                 )
                               ],
                             ),
-                            time == null
-                                ? const SizedBox()
-                                : Text(
-                                    DateTime.fromMicrosecondsSinceEpoch(time!)
-                                        .timeAgo())
+                            time == null ? const SizedBox() : Text(DateTime.fromMicrosecondsSinceEpoch(time!).timeAgo())
                           ],
                         ),
                       )),
@@ -244,8 +234,7 @@ class ChatScreen extends ConsumerStatefulWidget {
   final CubeDialog? _cubeDialog;
   final Emotions _emotions;
 
-  const ChatScreen(this._cubeUserId, this._cubeDialog, this._emotions,
-      {super.key});
+  const ChatScreen(this._cubeUserId, this._cubeDialog, this._emotions, {super.key});
 
   @override
   // ignore: no_logic_in_create_state
@@ -285,9 +274,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   StreamSubscription? lastActivitySubscription;
   StreamSubscription<MessageStatus>? deleteMsgSubscription;
 
-  rx.BehaviorSubject<List<CubeMessage>> listMessageSubject =
-      rx.BehaviorSubject<List<CubeMessage>>.seeded([]);
-
+  rx.BehaviorSubject<List<CubeMessage>> listMessageSubject = rx.BehaviorSubject<List<CubeMessage>>.seeded([]);
 
   final List<CubeMessage> _unreadMessages = [];
   final List<CubeMessage> _unsentMessages = [];
@@ -319,8 +306,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     isLoading = false;
     imageUrl = '';
     listScrollController.addListener(onScrollChanged);
-    connectivityStateSubscription =
-        Connectivity().onConnectivityChanged.listen(onConnectivityChanged);
+    connectivityStateSubscription = Connectivity().onConnectivityChanged.listen(onConnectivityChanged);
   }
 
   @override
@@ -336,7 +322,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     lastActivitySubscription?.cancel();
     listScrollController.dispose();
     listMessageSubject.close();
-    
+
     _sendStopTypingTimer?.cancel();
     _sendStopTypingTimer = null;
     typingTimer?.cancel();
@@ -385,8 +371,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   void onReceiveMessage(CubeMessage message) {
     log("onReceiveMessage message= $message");
-    if (message.dialogId != _cubeDialog?.dialogId ||
-        message.senderId == _cubeUserId) return;
+    if (message.dialogId != _cubeDialog?.dialogId || message.senderId == _cubeUserId) return;
 
     addMessageToListView(message);
   }
@@ -412,25 +397,21 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   void _performReaction(Emoji emoji, CubeMessage message) {
-    if ((message.reactions?.own.isNotEmpty ?? false) &&
-        (message.reactions?.own.contains(emoji.emoji) ?? false)) {
+    if ((message.reactions?.own.isNotEmpty ?? false) && (message.reactions?.own.contains(emoji.emoji) ?? false)) {
       removeMessageReaction(message.messageId!, emoji.emoji);
-      _updateMessageReactions(MessageReaction(
-          _cubeUserId, _cubeDialog!.dialogId!, message.messageId!,
-          removeReaction: emoji.emoji));
+      _updateMessageReactions(
+          MessageReaction(_cubeUserId, _cubeDialog!.dialogId!, message.messageId!, removeReaction: emoji.emoji));
     } else {
       addMessageReaction(message.messageId!, emoji.emoji);
-      _updateMessageReactions(MessageReaction(
-          _cubeUserId, _cubeDialog!.dialogId!, message.messageId!,
-          addReaction: emoji.emoji));
+      _updateMessageReactions(
+          MessageReaction(_cubeUserId, _cubeDialog!.dialogId!, message.messageId!, addReaction: emoji.emoji));
     }
   }
 
   void _updateMessageReactions(MessageReaction reaction) {
     log('[_updateMessageReactions]');
     setState(() {
-      CubeMessage? msg = listMessageSubject.value
-          .firstWhereOrNull((msg) => msg.messageId == reaction.messageId);
+      CubeMessage? msg = listMessageSubject.value.firstWhereOrNull((msg) => msg.messageId == reaction.messageId);
       if (msg == null) return;
 
       if (msg.reactions == null) {
@@ -440,31 +421,27 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
         });
       } else {
         if (reaction.addReaction != null) {
-          if (reaction.userId != _cubeUserId ||
-              !(msg.reactions?.own.contains(reaction.addReaction) ?? false)) {
+          if (reaction.userId != _cubeUserId || !(msg.reactions?.own.contains(reaction.addReaction) ?? false)) {
             if (reaction.userId == _cubeUserId) {
               msg.reactions!.own.add(reaction.addReaction!);
             }
 
-            msg.reactions!.total[reaction.addReaction!] =
-                msg.reactions!.total[reaction.addReaction] == null
-                    ? 1
-                    : msg.reactions!.total[reaction.addReaction]! + 1;
+            msg.reactions!.total[reaction.addReaction!] = msg.reactions!.total[reaction.addReaction] == null
+                ? 1
+                : msg.reactions!.total[reaction.addReaction]! + 1;
           }
         }
 
         if (reaction.removeReaction != null) {
-          if (reaction.userId != _cubeUserId ||
-              (msg.reactions?.own.contains(reaction.removeReaction) ?? false)) {
+          if (reaction.userId != _cubeUserId || (msg.reactions?.own.contains(reaction.removeReaction) ?? false)) {
             if (reaction.userId == _cubeUserId) {
               msg.reactions!.own.remove(reaction.removeReaction!);
             }
 
-            msg.reactions!.total[reaction.removeReaction!] =
-                msg.reactions!.total[reaction.removeReaction] != null &&
-                        msg.reactions!.total[reaction.removeReaction]! > 0
-                    ? msg.reactions!.total[reaction.removeReaction]! - 1
-                    : 0;
+            msg.reactions!.total[reaction.removeReaction!] = msg.reactions!.total[reaction.removeReaction] != null &&
+                    msg.reactions!.total[reaction.removeReaction]! > 0
+                ? msg.reactions!.total[reaction.removeReaction]! - 1
+                : 0;
           }
 
           msg.reactions!.total.removeWhere((key, value) => value == 0);
@@ -475,13 +452,10 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   void onTypingMessage(TypingStatus status) {
     log("TypingStatus message= ${status.userId}");
-    if (status.userId == _cubeUserId ||
-        (status.dialogId != null && status.dialogId != _cubeDialog?.dialogId)) {
+    if (status.userId == _cubeUserId || (status.dialogId != null && status.dialogId != _cubeDialog?.dialogId)) {
       return;
     }
-    userStatus = _occupants[status.userId]?.fullName ??
-        _occupants[status.userId]?.login ??
-        '';
+    userStatus = _occupants[status.userId]?.fullName ?? _occupants[status.userId]?.login ?? '';
     if (userStatus.isEmpty) return;
     userStatus = "$userStatus is typing ...";
 
@@ -540,8 +514,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
     message.senderId = _cubeUserId;
     addMessageToListView(message);
-    listScrollController.animateTo(0.0,
-        duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+    listScrollController.animateTo(0.0, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
 
     bool isProduction = const bool.fromEnvironment('dart.vm.product');
 
@@ -580,17 +553,12 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   updateReadDeliveredStatusMessage(MessageStatus status, bool isRead) {
     log('[updateReadDeliveredStatusMessage]');
     setState(() {
-      CubeMessage? msg = listMessageSubject.value
-          .firstWhereOrNull((msg) => msg.messageId == status.messageId);
+      CubeMessage? msg = listMessageSubject.value.firstWhereOrNull((msg) => msg.messageId == status.messageId);
       if (msg == null) return;
       if (isRead) {
-        msg.readIds == null
-            ? msg.readIds = [status.userId]
-            : msg.readIds?.add(status.userId);
+        msg.readIds == null ? msg.readIds = [status.userId] : msg.readIds?.add(status.userId);
       } else {
-        msg.deliveredIds == null
-            ? msg.deliveredIds = [status.userId]
-            : msg.deliveredIds?.add(status.userId);
+        msg.deliveredIds == null ? msg.deliveredIds = [status.userId] : msg.deliveredIds?.add(status.userId);
       }
 
       log('[updateReadDeliveredStatusMessage] status updated for $msg');
@@ -607,8 +575,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   addMessageToListView(CubeMessage message) {
     setState(() {
       isLoading = false;
-      int existMessageIndex =
-          listMessageSubject.value.indexWhere((cubeMessage) {
+      int existMessageIndex = listMessageSubject.value.indexWhere((cubeMessage) {
         return cubeMessage.messageId == message.messageId;
       });
 
@@ -627,9 +594,8 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Material(
-        color: Theme.of(context).platform == TargetPlatform.iOS
-            ? Colors.black
-            : Theme.of(context).scaffoldBackgroundColor,
+        color:
+            Theme.of(context).platform == TargetPlatform.iOS ? Colors.black : Theme.of(context).scaffoldBackgroundColor,
         child: WillPopScope(
           onWillPop: onBackPress,
           child: Stack(
@@ -660,8 +626,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     var isOwnMessage = message.senderId == _cubeUserId;
 
     return LayoutBuilder(builder: (context, constraints) {
-      var widgetWidth =
-          constraints.maxWidth == double.infinity ? 240 : constraints.maxWidth;
+      var widgetWidth = constraints.maxWidth == double.infinity ? 240 : constraints.maxWidth;
       var maxColumns = (widgetWidth / 60).round();
       if (message.reactions!.total.length < maxColumns) {
         maxColumns = message.reactions!.total.length;
@@ -690,19 +655,15 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                             Radius.circular(16),
                           ),
                           child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 4, horizontal: 6),
+                              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(reaction,
                                       style: kIsWeb
-                                          ? const TextStyle(
-                                              color: Colors.green,
-                                              fontFamily: 'NotoColorEmoji')
+                                          ? const TextStyle(color: Colors.green, fontFamily: 'NotoColorEmoji')
                                           : null),
-                                  Text(
-                                      ' ${message.reactions!.total[reaction].toString()}',
+                                  Text(' ${message.reactions!.total[reaction].toString()}',
                                       style: const TextStyle(
                                         color: Colors.white,
                                       )),
@@ -723,17 +684,13 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
               child: Material(
             child: Container(
                 margin: const EdgeInsets.all(8),
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
                 width: 400,
                 height: 400,
                 child: EmojiPicker(
                   config: const Config(
                     checkPlatformCompatibility: true,
-                    emojiTextStyle: kIsWeb
-                        ? TextStyle(
-                            color: Colors.green, fontFamily: 'NotoColorEmoji')
-                        : null,
+                    emojiTextStyle: kIsWeb ? TextStyle(color: Colors.green, fontFamily: 'NotoColorEmoji') : null,
                     // : Colors.green,
                     // indicatorColor: Colors.green,
                     // bgColor: Colors.white,
@@ -753,10 +710,8 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   Widget buildItem(int index, CubeMessage message) {
     markAsReadIfNeed() {
-      var isOpponentMsgRead =
-          message.readIds != null && message.readIds!.contains(_cubeUserId);
-      print(
-          "markAsReadIfNeed message= $message, isOpponentMsgRead= $isOpponentMsgRead");
+      var isOpponentMsgRead = message.readIds != null && message.readIds!.contains(_cubeUserId);
+      print("markAsReadIfNeed message= $message, isOpponentMsgRead= $isOpponentMsgRead");
       if (message.senderId != _cubeUserId && !isOpponentMsgRead) {
         if (message.readIds == null) {
           message.readIds = [_cubeUserId];
@@ -764,8 +719,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
           message.readIds!.add(_cubeUserId);
         }
 
-        if (CubeChatConnection.instance.chatConnectionState ==
-            CubeChatConnectionState.Ready) {
+        if (CubeChatConnection.instance.chatConnectionState == CubeChatConnectionState.Ready) {
           _cubeDialog?.readMessage(message);
         } else {
           _unreadMessages.add(message);
@@ -777,32 +731,26 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
       log("[getReadDeliveredWidget] messageIsRead");
       if (_cubeDialog?.type == CubeDialogType.PRIVATE) {
         return message.readIds != null &&
-            (message.recipientId == null ||
-                message.readIds!.contains(message.recipientId));
+            (message.recipientId == null || message.readIds!.contains(message.recipientId));
       }
       return message.readIds != null &&
-          message.readIds!.any(
-              (int id) => id != _cubeUserId && _occupants.keys.contains(id));
+          message.readIds!.any((int id) => id != _cubeUserId && _occupants.keys.contains(id));
     }
 
     bool messageIsDelivered() {
       log("[getReadDeliveredWidget] messageIsDelivered");
       if (_cubeDialog?.type == CubeDialogType.PRIVATE) {
         return message.deliveredIds != null &&
-            (message.recipientId == null ||
-                message.deliveredIds!.contains(message.recipientId));
+            (message.recipientId == null || message.deliveredIds!.contains(message.recipientId));
       }
       return message.deliveredIds != null &&
-          message.deliveredIds!.any(
-              (int id) => id != _cubeUserId && _occupants.keys.contains(id));
+          message.deliveredIds!.any((int id) => id != _cubeUserId && _occupants.keys.contains(id));
     }
 
     Widget getDateWidget() {
       return Text(
-        DateFormat('HH:mm').format(
-            DateTime.fromMillisecondsSinceEpoch(message.dateSent! * 1000)),
-        style: const TextStyle(
-            color: Colors.grey, fontSize: 12.0, fontStyle: FontStyle.italic),
+        DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(message.dateSent! * 1000)),
+        style: const TextStyle(color: Colors.grey, fontSize: 12.0, fontStyle: FontStyle.italic),
       );
     }
 
@@ -811,26 +759,22 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
         alignment: Alignment.center,
         // ignore: sort_child_properties_last
         child: Text(
-          DateFormat('dd MMMM').format(
-              DateTime.fromMillisecondsSinceEpoch(message.dateSent! * 1000)),
-          style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontSize: 20.0,
-              fontStyle: FontStyle.italic),
+          DateFormat('dd MMMM').format(DateTime.fromMillisecondsSinceEpoch(message.dateSent! * 1000)),
+          style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0, fontStyle: FontStyle.italic),
         ),
         margin: const EdgeInsets.all(10.0),
       );
     }
 
     bool isHeaderView() {
-      int headerId = int.parse(DateFormat('ddMMyyyy').format(
-          DateTime.fromMillisecondsSinceEpoch(message.dateSent! * 1000)));
+      int headerId =
+          int.parse(DateFormat('ddMMyyyy').format(DateTime.fromMillisecondsSinceEpoch(message.dateSent! * 1000)));
       if (index >= listMessageSubject.value.length - 1) {
         return false;
       }
       var msgPrev = listMessageSubject.value[index + 1];
-      int nextItemHeaderId = int.parse(DateFormat('ddMMyyyy').format(
-          DateTime.fromMillisecondsSinceEpoch(msgPrev.dateSent! * 1000)));
+      int nextItemHeaderId =
+          int.parse(DateFormat('ddMMyyyy').format(DateTime.fromMillisecondsSinceEpoch(msgPrev.dateSent! * 1000)));
       var result = headerId != nextItemHeaderId;
       return result;
     }
@@ -851,50 +795,43 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                         child: GestureDetector(
                           onLongPress: () => _reactOnMessage(message),
                           child: Material(
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (message.reactions != null &&
-                                      message.reactions!.total.isNotEmpty)
-                                    getReactionsWidget(message),
-                                  CachedNetworkImage(
-                                    placeholder: (context, url) => Container(
-                                      width: 200.0,
-                                      height: 200.0,
-                                      padding: const EdgeInsets.all(70.0),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            Theme.of(context).primaryColorLight,
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(20.0),
-                                        ),
-                                      ),
-                                      child: CircularProgressIndicator.adaptive(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Theme.of(context).primaryColor),
-                                      ),
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              if (message.reactions != null && message.reactions!.total.isNotEmpty)
+                                getReactionsWidget(message),
+                              CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  width: 200.0,
+                                  height: 200.0,
+                                  padding: const EdgeInsets.all(70.0),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColorLight,
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(20.0),
                                     ),
-                                    errorWidget: (context, url, error) =>
-                                        Material(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(8.0),
-                                      ),
-                                      clipBehavior: Clip.hardEdge,
-                                      child: Image.asset(
-                                        'images/img_not_available.jpeg',
-                                        width: 200.0,
-                                        height: 200.0,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    imageUrl: message.attachments!.first.url!,
+                                  ),
+                                  child: CircularProgressIndicator.adaptive(
+                                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Material(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                  child: Image.asset(
+                                    'images/img_not_available.jpeg',
                                     width: 200.0,
                                     height: 200.0,
                                     fit: BoxFit.cover,
                                   ),
-                                  getDateWidget(),
-                                ]),
+                                ),
+                                imageUrl: message.attachments!.first.url!,
+                                width: 200.0,
+                                height: 200.0,
+                                fit: BoxFit.cover,
+                              ),
+                              getDateWidget(),
+                            ]),
                           ),
                           onTap: () {
                             AutoRouter.of(context).pushWidget(
@@ -903,9 +840,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                 appBar: AppBar(),
                                 body: PageView.builder(
                                   itemBuilder: (context, index) =>
-                                      CachedNetworkImage(
-                                          imageUrl:
-                                              message.attachments![index].url!),
+                                      CachedNetworkImage(imageUrl: message.attachments![index].url!),
                                   itemCount: message.attachments!.length,
                                 ),
                               ),
@@ -941,9 +876,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                           PopupMenuItem<String>(
                                             value: 'Doge',
                                             onTap: () async {
-                                              await Future.delayed(
-                                                  const Duration(
-                                                      milliseconds: 200));
+                                              await Future.delayed(const Duration(milliseconds: 200));
                                               _reactOnMessage(message);
                                             },
                                             child: const Text('Add reaction'),
@@ -951,14 +884,12 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                           if (message.senderId == _cubeUserId)
                                             PopupMenuItem<String>(
                                                 onTap: () async {
-                                                  await _cubeDialog
-                                                      ?.deleteMessage(message);
+                                                  await _cubeDialog?.deleteMessage(message);
                                                 },
                                                 value: 'Lion',
                                                 child: const Text('Delete')),
                                         ],
-                                        position: const RelativeRect.fromLTRB(
-                                            200, 280, 0, 100),
+                                        position: const RelativeRect.fromLTRB(200, 280, 0, 100),
                                       );
                                       // popUpMenu(message);
                                     },
@@ -967,8 +898,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                       children: [
                                         Expanded(
                                           child: BubbleNormal(
-                                            color:
-                                                Theme.of(context).primaryColor,
+                                            color: Theme.of(context).primaryColor,
                                             text: message.body ?? "",
                                             isSender: isLastMessageRight(index),
                                             seen: messageIsRead(),
@@ -977,8 +907,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                             sent: true,
                                           ),
                                         ),
-                                        if (message.reactions != null &&
-                                            message.reactions!.total.isNotEmpty)
+                                        if (message.reactions != null && message.reactions!.total.isNotEmpty)
                                           getReactionsWidget(message),
                                       ],
                                     ),
@@ -987,20 +916,16 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                               ]),
                         )
                       : Container(
-                          padding:
-                              const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                          padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                           width: 200.0,
-                          decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(8.0)),
+                          decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(8.0)),
                           margin: EdgeInsets.only(
                             bottom: isLastMessageRight(index) ? 20.0 : 10.0,
                             right: 10.0,
                           ),
                           child: Text(
                             "Empty",
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColor),
+                            style: TextStyle(color: Theme.of(context).primaryColor),
                           ),
                         ),
             ],
@@ -1027,51 +952,43 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                           child: GestureDetector(
                             onLongPress: () => _reactOnMessage(message),
                             child: Material(
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    if (message.reactions != null &&
-                                        message.reactions!.total.isNotEmpty)
-                                      getReactionsWidget(message),
-                                    CachedNetworkImage(
-                                      placeholder: (context, url) => Container(
-                                        width: 200.0,
-                                        height: 200.0,
-                                        padding: const EdgeInsets.all(70.0),
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .primaryColorLight,
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(20.0),
-                                          ),
-                                        ),
-                                        child:
-                                            CircularProgressIndicator.adaptive(
-                                          valueColor: AlwaysStoppedAnimation<
-                                                  Color>(
-                                              Theme.of(context).primaryColor),
-                                        ),
+                              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                if (message.reactions != null && message.reactions!.total.isNotEmpty)
+                                  getReactionsWidget(message),
+                                CachedNetworkImage(
+                                  placeholder: (context, url) => Container(
+                                    width: 200.0,
+                                    height: 200.0,
+                                    padding: const EdgeInsets.all(70.0),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).primaryColorLight,
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(20.0),
                                       ),
-                                      errorWidget: (context, url, error) =>
-                                          Material(
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(8.0),
-                                        ),
-                                        clipBehavior: Clip.hardEdge,
-                                        child: Image.asset(
-                                          'images/img_not_available.jpeg',
-                                          width: 200.0,
-                                          height: 200.0,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      imageUrl: message.attachments!.first.url!,
+                                    ),
+                                    child: CircularProgressIndicator.adaptive(
+                                      valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) => Material(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                    clipBehavior: Clip.hardEdge,
+                                    child: Image.asset(
+                                      'images/img_not_available.jpeg',
                                       width: 200.0,
                                       height: 200.0,
                                       fit: BoxFit.cover,
                                     ),
-                                    getDateWidget(),
-                                  ]),
+                                  ),
+                                  imageUrl: message.attachments!.first.url!,
+                                  width: 200.0,
+                                  height: 200.0,
+                                  fit: BoxFit.cover,
+                                ),
+                                getDateWidget(),
+                              ]),
                             ),
                             onTap: () {
                               AutoRouter.of(context).pushWidget(
@@ -1080,9 +997,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                                   appBar: AppBar(),
                                   body: PageView.builder(
                                     itemBuilder: (context, index) =>
-                                        CachedNetworkImage(
-                                            imageUrl: message
-                                                .attachments![index].url!),
+                                        CachedNetworkImage(imageUrl: message.attachments![index].url!),
                                     itemCount: message.attachments!.length,
                                   ),
                                 ),
@@ -1098,65 +1013,51 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
                       )
                     : message.body != null && message.body!.isNotEmpty
                         ? Flexible(
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  MouseRegion(
-                                    cursor: SystemMouseCursors.click,
-                                    child: GestureDetector(
-                                      onLongPress: () =>
-                                          _reactOnMessage(message),
-                                      child: Row(
-                                        children: [
-                                          // message.senderId == _cubeUserId
-                                          //     ? const SizedBox()
-                                          //     : const ReactionWrapper(
-                                          //         buttonReaction: Padding(
-                                          //             padding: EdgeInsets.only(
-                                          //                 top: 2.0),
-                                          //             child: Text("👎")),
-                                          //         child: SizedBox(),
-                                          //       ),
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  onLongPress: () => _reactOnMessage(message),
+                                  child: Row(
+                                    children: [
+                                      // message.senderId == _cubeUserId
+                                      //     ? const SizedBox()
+                                      //     : const ReactionWrapper(
+                                      //         buttonReaction: Padding(
+                                      //             padding: EdgeInsets.only(
+                                      //                 top: 2.0),
+                                      //             child: Text("👎")),
+                                      //         child: SizedBox(),
+                                      //       ),
 
-                                          if (message.reactions != null &&
-                                              message
-                                                  .reactions!.total.isNotEmpty)
-                                            getReactionsWidget(message),
-                                          FittedBox(
-                                            child: BubbleNormal(
-                                              color: Theme.of(context)
-                                                  .primaryColor
-                                                  .withOpacity(0.7),
-                                              sent: true,
-                                              isSender:
-                                                  isLastMessageLeft(index),
-                                              text: message.body!,
-                                              seen: messageIsRead(),
-                                              delivered: messageIsDelivered(),
-                                              tail: true,
-                                            ),
-                                          ),
-                                        ],
+                                      if (message.reactions != null && message.reactions!.total.isNotEmpty)
+                                        getReactionsWidget(message),
+                                      FittedBox(
+                                        child: BubbleNormal(
+                                          color: Theme.of(context).primaryColor.withOpacity(0.7),
+                                          sent: true,
+                                          isSender: isLastMessageLeft(index),
+                                          text: message.body!,
+                                          seen: messageIsRead(),
+                                          delivered: messageIsDelivered(),
+                                          tail: true,
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  // getDateWidget(),
-                                ]),
+                                ),
+                              ),
+                              // getDateWidget(),
+                            ]),
                           )
                         : Container(
-                            padding: const EdgeInsets.fromLTRB(
-                                15.0, 10.0, 15.0, 10.0),
+                            padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                             width: 200.0,
-                            decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(8.0)),
-                            margin: EdgeInsets.only(
-                                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                                right: 10.0),
+                            decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(8.0)),
+                            margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
                             child: Text(
                               "Empty",
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
+                              style: TextStyle(color: Theme.of(context).primaryColor),
                             ),
                           ),
               ],
@@ -1187,8 +1088,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   Widget buildLoading() {
     return Positioned(
-      child:
-          isLoading ? const CircularProgressIndicator.adaptive() : Container(),
+      child: isLoading ? const CircularProgressIndicator.adaptive() : Container(),
     );
   }
 
@@ -1200,8 +1100,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
         margin: const EdgeInsets.all(16.0),
         child: Text(
           userStatus,
-          style:
-              const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+          style: const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
         ),
       ),
     );
@@ -1259,8 +1158,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
           if (!snapshot.hasData) {
             return Center(
                 child: CircularProgressIndicator.adaptive(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor)));
+                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)));
           } else {
             listMessageSubject.add(snapshot.data ?? []);
             return getWidgetMessages(listMessageSubject.value);
@@ -1271,8 +1169,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Future<List<CubeMessage>> getMessagesList() async {
-    if (listMessageSubject.value.isNotEmpty)
-      return Future.value(listMessageSubject.value);
+    if (listMessageSubject.value.isNotEmpty) return Future.value(listMessageSubject.value);
 
     Completer<List<CubeMessage>> completer = Completer();
     List<CubeMessage>? messages;
@@ -1282,8 +1179,8 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
           isLoading = false;
           messages = loadedMessages;
         }),
-        getAllUsersByIds(_cubeDialog!.occupantsIds!.toSet()).then((result) =>
-            _occupants.addAll({for (var item in result!.items) item.id: item}))
+        getAllUsersByIds(_cubeDialog!.occupantsIds!.toSet())
+            .then((result) => _occupants.addAll({for (var item in result!.items) item.id: item}))
       ]);
       completer.complete(messages);
     } catch (error) {
@@ -1293,17 +1190,14 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   void onScrollChanged() {
-    if ((listScrollController.position.pixels ==
-            listScrollController.position.maxScrollExtent) &&
+    if ((listScrollController.position.pixels == listScrollController.position.maxScrollExtent) &&
         messagesPerPage >= lastPartSize) {
       setState(() {
         isLoading = true;
 
         if (oldMessages.isNotEmpty) {
-          getMessagesBetweenDates(
-                  oldMessages.first.dateSent ?? 0,
-                  listMessageSubject.value.last.dateSent ??
-                      DateTime.now().millisecondsSinceEpoch ~/ 1000)
+          getMessagesBetweenDates(oldMessages.first.dateSent ?? 0,
+                  listMessageSubject.value.last.dateSent ?? DateTime.now().millisecondsSinceEpoch ~/ 1000)
               .then((newMessages) {
             setState(() {
               isLoading = false;
@@ -1318,8 +1212,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
             });
           });
         } else {
-          getMessagesByDate(listMessageSubject.value.last.dateSent ?? 0, false)
-              .then((messages) {
+          getMessagesByDate(listMessageSubject.value.last.dateSent ?? 0, false).then((messages) {
             setState(() {
               isLoading = false;
               listMessageSubject.add(messages);
@@ -1339,26 +1232,16 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   _initChatListeners() {
     log("[_initChatListeners]");
-    msgSubscription = CubeChatConnection
-        .instance.chatMessagesManager!.chatMessagesStream
-        .listen(onReceiveMessage);
-    deliveredSubscription = CubeChatConnection
-        .instance.messagesStatusesManager!.deliveredStream
-        .listen(onDeliveredMessage);
-    readSubscription = CubeChatConnection
-        .instance.messagesStatusesManager!.readStream
-        .listen(onReadMessage);
-    typingSubscription = CubeChatConnection
-        .instance.typingStatusesManager!.isTypingStream
-        .listen(onTypingMessage);
+    msgSubscription = CubeChatConnection.instance.chatMessagesManager!.chatMessagesStream.listen(onReceiveMessage);
+    deliveredSubscription =
+        CubeChatConnection.instance.messagesStatusesManager!.deliveredStream.listen(onDeliveredMessage);
+    readSubscription = CubeChatConnection.instance.messagesStatusesManager!.readStream.listen(onReadMessage);
+    typingSubscription = CubeChatConnection.instance.typingStatusesManager!.isTypingStream.listen(onTypingMessage);
 
-    reactionSubscription = CubeChatConnection
-        .instance.messagesReactionsManager?.reactionsStream
-        .listen(onReactionMessage);
+    reactionSubscription =
+        CubeChatConnection.instance.messagesReactionsManager?.reactionsStream.listen(onReactionMessage);
 
-    deleteMsgSubscription = CubeChatConnection
-        .instance.messagesStatusesManager?.deletedStream
-        .listen(onDeleteMessage);
+    deleteMsgSubscription = CubeChatConnection.instance.messagesStatusesManager?.deletedStream.listen(onDeleteMessage);
   }
 
   void _initCubeChat() {
@@ -1404,8 +1287,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 
   void _startStopTypingStatus() {
     _sendStopTypingTimer?.cancel();
-    _sendStopTypingTimer =
-        Timer(const Duration(milliseconds: STOP_TYPING_TIMEOUT), () {
+    _sendStopTypingTimer = Timer(const Duration(milliseconds: STOP_TYPING_TIMEOUT), () {
       _cubeDialog?.sendStopTypingStatus();
     });
   }
@@ -1414,9 +1296,7 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
     var params = GetMessagesParameters();
     params.sorter = RequestSorter("desc", '', 'date_sent');
     params.limit = messagesPerPage;
-    params.filters = [
-      RequestFilter('', 'date_sent', isLoadNew || date == 0 ? 'gt' : 'lt', date)
-    ];
+    params.filters = [RequestFilter('', 'date_sent', isLoadNew || date == 0 ? 'gt' : 'lt', date)];
 
     return getMessages(_cubeDialog!.dialogId!, params.getRequestParameters())
         .then((result) {
@@ -1428,18 +1308,13 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
         .catchError((onError) {});
   }
 
-  Future<List<CubeMessage>> getMessagesBetweenDates(
-      int startDate, int endDate) async {
+  Future<List<CubeMessage>> getMessagesBetweenDates(int startDate, int endDate) async {
     var params = GetMessagesParameters();
     params.sorter = RequestSorter("desc", '', 'date_sent');
     params.limit = messagesPerPage;
-    params.filters = [
-      RequestFilter('', 'date_sent', 'gt', startDate),
-      RequestFilter('', 'date_sent', 'lt', endDate)
-    ];
+    params.filters = [RequestFilter('', 'date_sent', 'gt', startDate), RequestFilter('', 'date_sent', 'lt', endDate)];
 
-    return getMessages(_cubeDialog!.dialogId!, params.getRequestParameters())
-        .then((result) {
+    return getMessages(_cubeDialog!.dialogId!, params.getRequestParameters()).then((result) {
       return result!.items;
     });
   }
@@ -1447,14 +1322,13 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
   void onConnectivityChanged(List<ConnectivityResult> connectivityType) {
     log("[ChatScreenState] connectivityType changed to '$connectivityType'");
 
-    if (connectivityType == ConnectivityResult.wifi ||
-        connectivityType == ConnectivityResult.mobile) {
+    if (connectivityType == ConnectivityResult.wifi || connectivityType == ConnectivityResult.mobile) {
       setState(() {
         isLoading = true;
       });
 
-      getMessagesBetweenDates(listMessageSubject.value.first.dateSent ?? 0,
-              DateTime.now().millisecondsSinceEpoch ~/ 1000)
+      getMessagesBetweenDates(
+              listMessageSubject.value.first.dateSent ?? 0, DateTime.now().millisecondsSinceEpoch ~/ 1000)
           .then((newMessages) {
         setState(() {
           if (newMessages.length == messagesPerPage) {
@@ -1476,13 +1350,11 @@ class ChatScreenState extends ConsumerState<ChatScreen> {
 Future<CubeFile> getUploadingImageFuture(FilePickerResult result) async {
   // there possible to upload the file as an array of bytes, but here showed two ways just as an example
   if (kIsWeb) {
-    return uploadRawFile(result.files.single.bytes!, result.files.single.name,
-        isPublic: true, onProgress: (progress) {
+    return uploadRawFile(result.files.single.bytes!, result.files.single.name, isPublic: true, onProgress: (progress) {
       log("uploadImageFile progress= $progress");
     });
   } else {
-    return uploadFile(File(result.files.single.path!), isPublic: true,
-        onProgress: (progress) {
+    return uploadFile(File(result.files.single.path!), isPublic: true, onProgress: (progress) {
       log("uploadImageFile progress= $progress");
     });
   }
@@ -1598,8 +1470,7 @@ class MessageBar extends StatelessWidget {
                         decoration: InputDecoration(
                           hintText: "Type your message here",
                           hintMaxLines: 1,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 10),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
                           hintStyle: const TextStyle(
                             fontSize: 16,
                           ),
@@ -1651,8 +1522,7 @@ class MessageBar extends StatelessWidget {
   }
 }
 
-final connectivityStateSubscriptionProvider =
-    StreamProvider.autoDispose<List<ConnectivityResult>>((ref) async* {
+final connectivityStateSubscriptionProvider = StreamProvider.autoDispose<List<ConnectivityResult>>((ref) async* {
   ref.keepAlive();
   yield* Connectivity().onConnectivityChanged;
 });
