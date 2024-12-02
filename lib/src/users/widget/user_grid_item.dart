@@ -28,7 +28,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
     return InkWell(
       onTap: () {
         if (widget.isCurrentUser!) {
-          AutoTabsRouter.of(context).setActiveIndex(2);
+          AutoTabsRouter.of(context).setActiveIndex(3);
         } else {
           AutoRouter.of(context).push(
             OtherUserProfileRoute(

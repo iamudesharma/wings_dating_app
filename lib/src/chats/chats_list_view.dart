@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
+import 'package:wings_dating_app/src/users/users_view.dart';
 
 import '../../routes/app_router.dart';
 
@@ -17,8 +18,7 @@ final chatListProvider = StreamProvider((ref) async* {
   yield* getDialogs().asStream();
 });
 
-final unreadMessageCount =
-    FutureProvider.family<dynamic, List<String>?>((ref, dialogId) async {
+final unreadMessageCount = FutureProvider.family<dynamic, List<String>?>((ref, dialogId) async {
   return getUnreadMessagesCount(dialogId);
 });
 
@@ -34,8 +34,7 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
   CubeUser? currentUser;
 
   StreamSubscription<CubeMessage>? msgSubscription;
-  final ChatMessagesManager? chatMessagesManager =
-      CubeChatConnection.instance.chatMessagesManager;
+  final ChatMessagesManager? chatMessagesManager = CubeChatConnection.instance.chatMessagesManager;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +45,6 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
         () => ref.refresh(chatListProvider),
       ),
       child: Scaffold(
-        
         appBar: AppBar(
           // leading: const AutoLeadingButton(),
           title: const Text("Chats"),
@@ -54,39 +52,14 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
         body: ResponsiveBuilder(builder: (context, sizingInformation) {
           return Row(
             children: [
-              if (!sizingInformation.isMobile)
-                Expanded(
-                  child: SizedBox(
-                      height: sizingInformation.screenSize.height,
-                      child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: NavigationRail(
-                            selectedIndex:
-                                AutoTabsRouter.of(context).activeIndex,
-                            extended: sizingInformation.isTablet ? false : true,
-                            onDestinationSelected: (value) {
-                              AutoTabsRouter.of(context).setActiveIndex(value);
-                            },
-                            destinations: const [
-                              NavigationRailDestination(
-                                  icon: Icon(Icons.home), label: Text("Users")),
-                              NavigationRailDestination(
-                                  icon: Icon(Icons.chat_bubble),
-                                  label: Text("Chat")),
-                              NavigationRailDestination(
-                                icon: Icon(Icons.person),
-                                label: Text("Profile"),
-                              ),
-                            ],
-                          ))),
-                ),
+              NavigationBarWidget(
+                sizingInformation: sizingInformation,
+              ),
               Expanded(
                 flex: 4,
                 child: value.when(
-                    error: (error, stackTrace) =>
-                        Center(child: Text(error.toString())),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator.adaptive()),
+                    error: (error, stackTrace) => Center(child: Text(error.toString())),
+                    loading: () => const Center(child: CircularProgressIndicator.adaptive()),
                     data: (data) {
                       final dialogList = data!.items;
 
@@ -94,10 +67,7 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
                         return const Center(
                           child: Text(
                             "No user for chat",
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white
                                 // color: Colors.white,
                                 ),
                           ),
@@ -113,8 +83,7 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
                                 child: ListView.separated(
                                   itemCount: dialogList.length,
                                   itemBuilder: (context, index) {
-                                    return _getListItemTile(
-                                        context, index, dialogList);
+                                    return _getListItemTile(context, index, dialogList);
                                   },
                                   separatorBuilder: (context, index) {
                                     return const SizedBox();
@@ -134,15 +103,13 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
     );
   }
 
-  Widget _getListItemTile(
-      BuildContext context, int index, List<CubeDialog> dialogList) {
+  Widget _getListItemTile(BuildContext context, int index, List<CubeDialog> dialogList) {
     getDialogAvatarWidget() {
       var dialog = dialogList[index];
       if (dialog.photo == null) {
         return const CircleAvatar(
           radius: 25,
-          backgroundImage: CachedNetworkImageProvider(
-              "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+          backgroundImage: CachedNetworkImageProvider("https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
         );
       } else {
         return CachedNetworkImage(
@@ -160,8 +127,7 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
             ),
           ),
-          imageUrl: dialogList[index].photo ??
-              "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
+          imageUrl: dialogList[index].photo ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
           width: 45.0,
           height: 45.0,
           fit: BoxFit.cover,
@@ -189,10 +155,8 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
           AutoRouter.of(context).push(
             ChatRoute(
               cubeDialog: dialogList[index],
-              cubeUserId:
-                  id!.where((element) => element == currentUser!.id).first,
-              chatUserCubeId:
-                  id.where((element) => element != currentUser!.id).first,
+              cubeUserId: id!.where((element) => element == currentUser!.id).first,
+              chatUserCubeId: id.where((element) => element != currentUser!.id).first,
             ),
           );
 
@@ -226,13 +190,11 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
                       shape: BoxShape.circle,
                       color: Colors.red,
                     ),
-                    child:
-                        Text(dialogList[index].unreadMessageCount.toString())),
+                    child: Text(dialogList[index].unreadMessageCount.toString())),
             const SizedBox(width: 10.0),
             Text(
               dialogList[index].lastMessageDateSent != null
-                  ? DateTime.fromMillisecondsSinceEpoch(
-                          dialogList[index].lastMessageDateSent! * 1000)
+                  ? DateTime.fromMillisecondsSinceEpoch(dialogList[index].lastMessageDateSent! * 1000)
                       .timeAgo(useShortForm: true)
                   : 'Not available',
               style: const TextStyle(color: Colors.grey, fontSize: 12.0),
@@ -255,8 +217,7 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
   @override
   void initState() {
     super.initState();
-    msgSubscription =
-        chatMessagesManager?.chatMessagesStream.listen(onReceiveMessage);
+    msgSubscription = chatMessagesManager?.chatMessagesStream.listen(onReceiveMessage);
 
     final users = ref.read(ProfileController.userControllerProvider).userModel!;
 
@@ -280,12 +241,7 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
   }
 
   updateDialog(CubeMessage msg) {
-    var dialogItem = ref
-        .read(chatListProvider)
-        .value!
-        .items
-        .where((dlg) => dlg.dialogId == msg.dialogId)
-        .first;
+    var dialogItem = ref.read(chatListProvider).value!.items.where((dlg) => dlg.dialogId == msg.dialogId).first;
     // ignore: unnecessary_null_comparison
     if (dialogItem == null) return;
     dialogItem.lastMessage = msg.body;
