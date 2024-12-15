@@ -22,6 +22,21 @@ final albumsRepoProvider = AutoDisposeProvider<AlbumsRepo>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AlbumsRepoRef = AutoDisposeProviderRef<AlbumsRepo>;
+String _$sharedAlbumHash() => r'5c149220e45fe3a0a968bb2da4e62587f26c5bca';
+
+/// See also [SharedAlbum].
+@ProviderFor(SharedAlbum)
+final sharedAlbumProvider =
+    AsyncNotifierProvider<SharedAlbum, List<GetMessageResponse>>.internal(
+  SharedAlbum.new,
+  name: r'sharedAlbumProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$sharedAlbumHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SharedAlbum = AsyncNotifier<List<GetMessageResponse>>;
 String _$albumClassHash() => r'7faeaf0ed3379950868e327442c1f65206f47d30';
 
 /// See also [AlbumClass].

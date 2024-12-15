@@ -1,23 +1,26 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:path_provider/path_provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uuid/uuid.dart';
-import 'package:wings_dating_app/dependency/dependenies.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/helpers/uploader.dart';
 import 'package:wings_dating_app/repo/albums_repo.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:wings_dating_app/src/album/controller/album_controller.dart';
 import 'package:wings_dating_app/src/model/album_model.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
-part 'album_view.g.dart';
+
+// part 'album_view.g.dart';
 
 final getAllAlbumsProvider = FutureProvider<List<AlbumListModel>>((ref) async {
   return ref.read(albumsRepoProvider).getAllAlbums();
@@ -42,7 +45,7 @@ class AlbumView extends ConsumerWidget {
                 onTap: () async {
                   // final image = await pickImageForm(ImageSource.gallery);
                   // if (image != null) {
-                  context.router.push(AlbumDetailsRoute());
+                  context.router.push(CreateAlbumRoute());
 
                   // }
                 },
@@ -51,6 +54,7 @@ class AlbumView extends ConsumerWidget {
         ),
         body: ResponsiveBuilder(builder: (context, sizingInformation) {
           final albums = ref.watch(getAllAlbumsProvider);
+          final sharedAlbums = ref.watch(sharedAlbumProvider);
           return Row(
             children: [
               NavigationBarWidget(
@@ -60,14 +64,65 @@ class AlbumView extends ConsumerWidget {
                   flex: 4,
                   child: albums.when(
                     data: (data) => GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisExtent: 200),
-                        itemCount: data.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                        itemCount: data.length + (sharedAlbums.value?.length ?? 0),
                         itemBuilder: (context, index) {
-                          return InkWell(
-                              onTap: () {
-                                context.router.push(AlbumDetailsRoute());
-                              },
-                              child: Text(data[index].name));
+                          print("index ${index >= data.length}");
+                          if (index >= data.length) {
+                            final sharedAlbum = sharedAlbums.value![index - data.length];
+                            final image =
+                                List.from(sharedAlbum.message.attachments.first.extraData["imageUrls"] as dynamic);
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Stack(
+                                children: [
+                                  Animate(
+                                    effects: [BlurEffect()],
+                                    child: Positioned.fill(
+                                        child: Image.network(
+                                      image.first,
+                                      fit: BoxFit.cover,
+                                    )),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Stack(
+                              children: [
+                                Animate(
+                                  effects: [BlurEffect()],
+                                  child: Positioned.fill(
+                                      child: Image.network(
+                                    data[index].imageUrls[index],
+                                    fit: BoxFit.cover,
+                                  )),
+                                ),
+                                Center(
+                                  child: InkWell(
+                                    onTap: () {
+                                      context.router.push(AlbumDetailsRoute(id: data[index].id));
+                                    },
+                                    child: Card(
+                                      color: Colors.black12,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          data[index].name,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 21,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
                         }),
                     loading: () => const Center(child: CircularProgressIndicator.adaptive()),
                     error: (error, stackTrace) => Center(child: Text(error.toString())),
@@ -80,128 +135,39 @@ class AlbumView extends ConsumerWidget {
   }
 }
 
-void _openEditor(BuildContext context, WidgetRef ref, {required String path}) {
+void openEditor(BuildContext context, WidgetRef ref, {required String path, required String id}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => ProImageEditor.file(
-        File(path),
-        callbacks: ProImageEditorCallbacks(
-          onImageEditingComplete: (bytes) async {
-            // print('onImageEditingComplete $bytes');
-            final directory = await getTemporaryDirectory();
+      builder: (context) => kIsWeb
+          ? ProImageEditor.network(
+              path,
+              callbacks: ProImageEditorCallbacks(
+                onImageEditingComplete: (bytes) async {
+                  final path = await uploadFileToFirebaseAlbum(bytes);
 
-            // Define the file path (you can specify any name or extension for the image)
-            final filePath = '${directory.path}/my_image.png';
+                  await ref.read(AlbumControllerProvider(id).notifier).addImage(path);
 
-            // Create a File object and write the bytes to it
-            final file = File(filePath);
-            await file.writeAsBytes(bytes);
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+            )
+          : ProImageEditor.file(
+              File(path),
+              callbacks: ProImageEditorCallbacks(
+                onImageEditingComplete: (bytes) async {
+                  final path = await uploadFileToFirebaseAlbum(bytes);
 
-            final path = await uploadFileToFirebaseAlbum(bytes);
-            ref.read(albumsRepoProvider).addAlbum(
-                  AlbumListModel(
-                      imageUrls: [path],
-                      name: "my album",
-                      id: Uuid().v4(),
-                      userId: ref.read(Dependency.firebaseAuthProvider).currentUser!.uid),
-                );
+                  await ref.read(AlbumControllerProvider(id).notifier).addImage(path);
 
-            ref.read(albumProviderProvider.notifier).addImage(filePath);
-            /*
-              Your code to handle the edited image. Upload it to your server as an example.
-              You can choose to use await, so that the loading-dialog remains visible until your code is ready, or no async, so that the loading-dialog closes immediately.
-              By default, the bytes are in `jpg` format.
-            */
-            if (context.mounted) {
-              Navigator.pop(context);
-            }
-          },
-        ),
-      ),
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+            ),
     ),
   );
-}
-
-@RoutePage()
-class AlbumDetailsView extends ConsumerWidget {
-  const AlbumDetailsView({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final albums = ref.watch(albumProviderProvider);
-    return Scaffold(
-      appBar: AppBar(
-        // leading: const AutoLeadingButton(),
-        title: const Text("Chats"),
-        actions: [
-          GestureDetector(
-              onTap: () async {
-                final image = await pickImageForm(ImageSource.gallery);
-                if (image != null) {
-                  if (context.mounted) {
-                    _openEditor(context, ref, path: image);
-                  }
-                }
-              },
-              child: Text((albums.value?.length ?? 0) > 0 ? "Add More" : "Create Album")),
-        ],
-      ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Flex(
-              direction: Axis.horizontal,
-              children: [
-                Card(),
-                Column(),
-              ],
-            ),
-          ),
-          albums.when(
-            data: (data) => SliverGrid.builder(
-              itemCount: data.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-              ),
-              itemBuilder: (context, index) {
-                return Image.network(
-                  data[index],
-                );
-              },
-            ),
-            error: (error, stackTrace) => SliverToBoxAdapter(
-              child: Center(child: Text(error.toString())),
-            ),
-            loading: () => SliverToBoxAdapter(
-              child: Center(child: CircularProgressIndicator.adaptive()),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-@Riverpod(keepAlive: true)
-class AlbumProvider extends _$AlbumProvider {
-  // List<String> albums = [];
-  @override
-  Future<List<String>> build() async {
-    return Future.value([]);
-  }
-
-  Future<void> addImage(String todo) async {
-    state = const AsyncLoading();
-    // Ensure that state.value is treated as List<String>
-    var newTodos = [...(state.value as List<String>), todo];
-    state = AsyncData(newTodos);
-  }
-
-  Future<void> removeImage(String todo) async {
-    state = const AsyncLoading();
-    // Ensure that state.value is treated as List<String>
-    var newTodos = state.value?..remove(todo);
-    state = AsyncData(newTodos ?? []);
-  }
 }

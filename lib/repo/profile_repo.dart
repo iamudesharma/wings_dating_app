@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
@@ -57,29 +57,6 @@ class ProfileRepo with RepositoryExceptionMixin {
     );
   }
 
-  createCubeUser(CubeUser user) async {
-    await signUp(user).then((value) async {
-      user.id = value.id;
-      SharedPrefs.instance.saveNewUser(user);
-
-      await updateCubeUserDoc(value);
-
-      signInCubeUser(value);
-    });
-  }
-
-  updateCubeUser(
-    CubeUser newcubeUser,
-  ) async {
-    await updateUser(newcubeUser);
-  }
-
-  signInCubeUser(
-    CubeUser newcubeUser,
-  ) async {
-    await signIn(newcubeUser);
-  }
-
   Future<bool> checkUserDocExist() async {
     final data = await userCollection().doc(FirebaseAuth.instance.currentUser!.uid).get();
 
@@ -96,20 +73,6 @@ class ProfileRepo with RepositoryExceptionMixin {
     final usercollection = userCollection();
     await exceptionHandler<void>(
         usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).update(userModel.toJson()));
-
-    await exceptionHandler<void>(
-      updateUser(userModel.cubeUser).then((value) async {
-        SharedPrefs.instance.updateUser(value);
-      }),
-    );
-  }
-
-  Future<void> updateCubeUserDoc(CubeUser cubeUser) async {
-    await exceptionHandler<void>(
-      userCollection()
-          .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-          .update({"cubeUser": cubeUser.toJson()}).onError((error, stackTrace) => logger.e(error)),
-    );
   }
 
   Future<void> updateLocation(dynamic pointData) async {
@@ -136,14 +99,14 @@ class ProfileRepo with RepositoryExceptionMixin {
       userModel.position!.geopoint.longitude,
     );
 
-    final Stream<List<DocumentSnapshot<UserModel?>>> stream = GeoCollectionReference<UserModel?>(usercollection)
-        .subscribeWithin(
+    final Stream<List<DocumentSnapshot<UserModel?>>> stream =
+        GeoCollectionReference<UserModel?>(usercollection).subscribeWithin(
             center: GeoFirePoint(center),
-            radiusInKm: 10000,
+            radiusInKm: 1000000,
             field: "position",
             asBroadcastStream: true,
-            strictMode: true,
-            queryBuilder: (query) => query.limit(limit),
+            // strictMode: true,
+            queryBuilder: (query) => query.limit(20),
             geopointFrom: geopointFrom);
 
     final userListRaw = stream.map((event) {
@@ -221,50 +184,50 @@ class ProfileRepo with RepositoryExceptionMixin {
   }
 
   Future<void> addToBlockList({required String id, required int cubeId}) async {
-    final usercollection = userCollection();
+    // final usercollection = userCollection();
 
-    var listName = 'blockList';
+    // var listName = 'blockList';
 
-    var items = [
-      CubePrivacyListItem(cubeId, CubePrivacyAction.deny, isMutual: true),
-    ];
+    // var items = [
+    //   CubePrivacyListItem(cubeId, CubePrivacyAction.deny, isMutual: true),
+    // ];
 
-    CubeChatConnection.instance.privacyListsManager?.createList(listName, items).then((users) {
-      // privacy list created
-    }).catchError((exception) {
-      // error occurred during creation privacy list
-    });
+    // CubeChatConnection.instance.privacyListsManager?.createList(listName, items).then((users) {
+    //   // privacy list created
+    // }).catchError((exception) {
+    //   // error occurred during creation privacy list
+    // });
 
-    await usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).update({
-      "blockList": FieldValue.arrayUnion([id])
-    });
-    ref.read(ProfileController.userControllerProvider.notifier).userModel!.blockList.add(id);
+    // await usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).update({
+    //   "blockList": FieldValue.arrayUnion([id])
+    // });
+    // ref.read(ProfileController.userControllerProvider.notifier).userModel!.blockList.add(id);
   }
 
   Future removeToBlockList({required String id, required int cubeId}) async {
-    try {
-      final usercollection = userCollection();
+    // try {
+    //   final usercollection = userCollection();
 
-      var listName = 'blockList';
+    //   var listName = 'blockList';
 
-      var items = [
-        CubePrivacyListItem(cubeId, CubePrivacyAction.deny, isMutual: true),
-      ];
+    //   var items = [
+    //     CubePrivacyListItem(cubeId, CubePrivacyAction.deny, isMutual: true),
+    //   ];
 
-      CubeChatConnection.instance.privacyListsManager
-          ?.declineDefaultList()
-          .then((voidResult) => CubeChatConnection.instance.privacyListsManager?.createList(listName, items))
-          .then((list) => CubeChatConnection.instance.privacyListsManager?.setDefaultList(listName))
-          .then((updatedList) {});
+    //   CubeChatConnection.instance.privacyListsManager
+    //       ?.declineDefaultList()
+    //       .then((voidResult) => CubeChatConnection.instance.privacyListsManager?.createList(listName, items))
+    //       .then((list) => CubeChatConnection.instance.privacyListsManager?.setDefaultList(listName))
+    //       .then((updatedList) {});
 
-      await usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).update({
-        "blockList": FieldValue.arrayRemove(
-          [id],
-        ),
-      });
-    } catch (e) {
-      throw e;
-    }
+    //   await usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).update({
+    //     "blockList": FieldValue.arrayRemove(
+    //       [id],
+    //     ),
+    //   });
+    // } catch (e) {
+    //   throw e;
+    // }
   }
 
   Future<List<UserModel?>> getBlockList() async {

@@ -45,12 +45,12 @@ class UserBlockListView extends ConsumerWidget {
                     return ListTile(
                       trailing: TextButton(
                         onPressed: () async {
-                          await ref
-                              .read(ProfileController.userControllerProvider)
-                              .removeFromBlockList(
-                                id: user.id,
-                                cubeId: user.cubeUser.id!,
-                              );
+                          // await ref
+                          //     .read(ProfileController.userControllerProvider)
+                          //     .removeFromBlockList(
+                          //       id: user.id,
+                          //       cubeId: user.cubeUser.id!,
+                          //     );
 
                           ref.invalidate(getUserBlockListProvider);
                         },

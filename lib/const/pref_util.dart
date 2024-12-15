@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:connectycube_sdk/connectycube_chat.dart';
+// import 'package:connectycube_sdk/connectycube_chat.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wings_dating_app/src/model/stream_user.dart';
 
 const String prefUserLogin = "pref_user_login";
 const String prefUserPsw = "pref_user_psw";
@@ -34,43 +35,31 @@ class SharedPrefs {
     return completer.future;
   }
 
-  saveNewUser(CubeUser cubeUser) async {
+  saveNewUser(StreamUser cubeUser) async {
     prefs.clear();
-    await prefs.setString(prefUserLogin, cubeUser.login ?? "");
-    await prefs.setString(prefUserPsw, cubeUser.password ?? "");
-    await prefs.setString(prefUserName, cubeUser.fullName ?? "");
-    await prefs.setInt(prefUserId, cubeUser.id!);
-    await prefs.setString(prefphone, cubeUser.phone ?? "");
-    if (cubeUser.avatar != null) {
-      await prefs.setString(prefUserAvatar, cubeUser.avatar!);
-    }
+    prefs.setString(prefUserLogin, cubeUser.toJson());
   }
 
-  updateUser(CubeUser cubeUser) {
-    if (cubeUser.password != null) {
-      prefs.setString(prefUserPsw, cubeUser.password!);
-    }
-    if (cubeUser.login != null) prefs.setString(prefUserLogin, cubeUser.login!);
-    if (cubeUser.fullName != null) {
-      prefs.setString(prefUserName, cubeUser.fullName!);
-    }
-    if (cubeUser.phone != null) {
-      prefs.setString(prefphone, cubeUser.phone!);
-    }
-    if (cubeUser.avatar != null) {
-      prefs.setString(prefUserAvatar, cubeUser.avatar!);
-    }
-  }
+  // updateUser(CubeUser cubeUser) {
+  //   if (cubeUser.password != null) {
+  //     prefs.setString(prefUserPsw, cubeUser.password!);
+  //   }
+  //   if (cubeUser.login != null) prefs.setString(prefUserLogin, cubeUser.login!);
+  //   if (cubeUser.fullName != null) {
+  //     prefs.setString(prefUserName, cubeUser.fullName!);
+  //   }
+  //   if (cubeUser.phone != null) {
+  //     prefs.setString(prefphone, cubeUser.phone!);
+  //   }
+  //   if (cubeUser.avatar != null) {
+  //     prefs.setString(prefUserAvatar, cubeUser.avatar!);
+  //   }
+  // }
 
-  CubeUser? getUser() {
+  StreamUser? getUser() {
     if (prefs.get(prefUserLogin) == null) return null;
-    var user = CubeUser();
-    user.login = prefs.getString(prefUserLogin);
-    user.password = prefs.getString(prefUserPsw);
-    user.fullName = prefs.getString(prefUserName);
-    user.id = prefs.getInt(prefUserId);
-    user.avatar = prefs.getString(prefUserAvatar);
-    user.phone = prefs.getString(prefphone);
+
+    StreamUser user = StreamUser().copyWith();
     return user;
   }
 

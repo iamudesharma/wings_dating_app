@@ -1,11 +1,15 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart';
+// import 'package:connectycube_sdk/connectycube_sdk.dart';
 // import 'package:connectycube_sdk/connectycube_sdk.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
+import 'package:wings_dating_app/src/album/album_details_view.dart';
 import 'package:wings_dating_app/src/album/album_view.dart';
+import 'package:wings_dating_app/src/album/create_album_view.dart';
+import 'package:wings_dating_app/src/album/widget/image_preview.dart';
 
 import '../src/auth/sign_options.dart';
 import '../src/chats/chats_list_view.dart';
@@ -42,21 +46,19 @@ class AppRouter extends RootStackRouter {
         RedirectRoute(path: '', redirectTo: 'users'),
         AutoRoute(page: BooksTab.page, path: "user", children: [
           AutoRoute(page: UsersRoute.page, path: "", initial: true),
-          AutoRoute(
-            page: ChatListRoute.page,
-            path: "",
-            keepHistory: true,
-          ),
+          AutoRoute(page: ChatListRoute.page, path: "", keepHistory: true, children: [
+            AutoRoute(
+              page: ChatRoute.page,
+              path: "chat/:id",
+              keepHistory: true,
+            ),
+          ]),
           AutoRoute(
             page: AlbumRoute.page,
             path: "",
             keepHistory: true,
           ),
-          AutoRoute(
-            page: ProfileRoute.page,
-            keepHistory: true,
-            path: "",
-          ),
+          AutoRoute(page: ProfileRoute.page, keepHistory: true, path: "", children: []),
         ])
       ],
       guards: [
@@ -74,11 +76,11 @@ class AppRouter extends RootStackRouter {
       type: const RouteType.adaptive(),
       path: "/user/:id",
     ),
-    AutoRoute(
-      page: ChatRoute.page,
-      path: "/chat/:cubeUserId",
-      keepHistory: true,
-    ),
+    // AutoRoute(
+    //   page: ChatRoute.page,
+    //   path: "/chat/:cubeUserId",
+    //   keepHistory: true,
+    // ),
     AutoRoute(
         page: AddAdditionalInformationRoute.page,
         type: const RouteType.adaptive(),
@@ -89,6 +91,11 @@ class AppRouter extends RootStackRouter {
       type: const RouteType.adaptive(),
     ),
     AutoRoute(page: UserBlockListRoute.page, type: const RouteType.adaptive(), path: "/user-block-list"),
+    AutoRoute(page: ImagePreviewRoute.page, type: const RouteType.adaptive(), path: "/image:path"),
+    AutoRoute(
+      page: CreateAlbumRoute.page,
+      type: const RouteType.adaptive(),
+    ),
   ];
 }
 

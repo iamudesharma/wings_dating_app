@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart';
+// import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
@@ -10,10 +10,10 @@ final searchUsersProvider = FutureProvider.family<List<UserModel?>?, String>((re
   return await ref.read(profileRepoProvider).searchUser(query);
 });
 
-final userLastActiveProvider = FutureProvider.family<int, int>((ref, cubeId) async {
-  await CubeChatConnection.instance.subscribeToUserLastActivityStatus(cubeId);
-  return CubeChatConnection.instance.getLasUserActivity(cubeId);
-});
+// final userLastActiveProvider = FutureProvider.family<int, int>((ref, cubeId) async {
+//   await CubeChatConnection.instance.subscribeToUserLastActivityStatus(cubeId);
+//   return CubeChatConnection.instance.getLasUserActivity(cubeId);
+// });
 
 class UsersSearchDelegate extends SearchDelegate {
   final WidgetRef ref;

@@ -30,10 +30,21 @@ class AddAdditionalInformationRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [AlbumDetailsView]
-class AlbumDetailsRoute extends PageRouteInfo<void> {
-  const AlbumDetailsRoute({List<PageRouteInfo>? children})
-      : super(
+class AlbumDetailsRoute extends PageRouteInfo<AlbumDetailsRouteArgs> {
+  AlbumDetailsRoute({
+    Key? key,
+    required String id,
+    bool isPreview = false,
+    Channel? channel,
+    List<PageRouteInfo>? children,
+  }) : super(
           AlbumDetailsRoute.name,
+          args: AlbumDetailsRouteArgs(
+            key: key,
+            id: id,
+            isPreview: isPreview,
+            channel: channel,
+          ),
           initialChildren: children,
         );
 
@@ -42,9 +53,37 @@ class AlbumDetailsRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const AlbumDetailsView();
+      final args = data.argsAs<AlbumDetailsRouteArgs>();
+      return AlbumDetailsView(
+        key: args.key,
+        id: args.id,
+        isPreview: args.isPreview,
+        channel: args.channel,
+      );
     },
   );
+}
+
+class AlbumDetailsRouteArgs {
+  const AlbumDetailsRouteArgs({
+    this.key,
+    required this.id,
+    this.isPreview = false,
+    this.channel,
+  });
+
+  final Key? key;
+
+  final String id;
+
+  final bool isPreview;
+
+  final Channel? channel;
+
+  @override
+  String toString() {
+    return 'AlbumDetailsRouteArgs{key: $key, id: $id, isPreview: $isPreview, channel: $channel}';
+  }
 }
 
 /// generated route for
@@ -86,58 +125,6 @@ class BooksTab extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [CallView]
-class CallRoute extends PageRouteInfo<CallRouteArgs> {
-  CallRoute({
-    required P2PSession callSession,
-    required bool isIncoming,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CallRoute.name,
-          args: CallRouteArgs(
-            callSession: callSession,
-            isIncoming: isIncoming,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CallRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<CallRouteArgs>();
-      return CallView(
-        args.callSession,
-        args.isIncoming,
-        key: args.key,
-      );
-    },
-  );
-}
-
-class CallRouteArgs {
-  const CallRouteArgs({
-    required this.callSession,
-    required this.isIncoming,
-    this.key,
-  });
-
-  final P2PSession callSession;
-
-  final bool isIncoming;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'CallRouteArgs{callSession: $callSession, isIncoming: $isIncoming, key: $key}';
-  }
-}
-
-/// generated route for
 /// [ChatListView]
 class ChatListRoute extends PageRouteInfo<void> {
   const ChatListRoute({List<PageRouteInfo>? children})
@@ -161,23 +148,17 @@ class ChatListRoute extends PageRouteInfo<void> {
 class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
   ChatRoute({
     Key? key,
-    CubeUser? cubeUser,
-    CubeDialog? cubeDialog,
-    int? chatUserCubeId,
-    String? dialogId,
-    int? cubeUserId,
+    required Channel channel,
+    required String id,
     List<PageRouteInfo>? children,
   }) : super(
           ChatRoute.name,
           args: ChatRouteArgs(
             key: key,
-            cubeUser: cubeUser,
-            cubeDialog: cubeDialog,
-            chatUserCubeId: chatUserCubeId,
-            dialogId: dialogId,
-            cubeUserId: cubeUserId,
+            channel: channel,
+            id: id,
           ),
-          rawPathParams: {'cubeUserId': cubeUserId},
+          rawPathParams: {'id': id},
           initialChildren: children,
         );
 
@@ -186,17 +167,11 @@ class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final pathParams = data.inheritedPathParams;
-      final args = data.argsAs<ChatRouteArgs>(
-          orElse: () =>
-              ChatRouteArgs(cubeUserId: pathParams.optInt('cubeUserId')));
+      final args = data.argsAs<ChatRouteArgs>();
       return ChatView(
         key: args.key,
-        cubeUser: args.cubeUser,
-        cubeDialog: args.cubeDialog,
-        chatUserCubeId: args.chatUserCubeId,
-        dialogId: args.dialogId,
-        cubeUserId: args.cubeUserId,
+        channel: args.channel,
+        id: args.id,
       );
     },
   );
@@ -205,103 +180,39 @@ class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
 class ChatRouteArgs {
   const ChatRouteArgs({
     this.key,
-    this.cubeUser,
-    this.cubeDialog,
-    this.chatUserCubeId,
-    this.dialogId,
-    this.cubeUserId,
+    required this.channel,
+    required this.id,
   });
 
   final Key? key;
 
-  final CubeUser? cubeUser;
+  final Channel channel;
 
-  final CubeDialog? cubeDialog;
-
-  final int? chatUserCubeId;
-
-  final String? dialogId;
-
-  final int? cubeUserId;
+  final String id;
 
   @override
   String toString() {
-    return 'ChatRouteArgs{key: $key, cubeUser: $cubeUser, cubeDialog: $cubeDialog, chatUserCubeId: $chatUserCubeId, dialogId: $dialogId, cubeUserId: $cubeUserId}';
+    return 'ChatRouteArgs{key: $key, channel: $channel, id: $id}';
   }
 }
 
 /// generated route for
-/// [ChatViewProvider]
-class ChatRouteProvider extends PageRouteInfo<ChatRouteProviderArgs> {
-  ChatRouteProvider({
-    Key? key,
-    CubeUser? cubeUser,
-    CubeDialog? cubeDialog,
-    int? chatUserCubeId,
-    String? dialogId,
-    int? cubeUserId,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ChatRouteProvider.name,
-          args: ChatRouteProviderArgs(
-            key: key,
-            cubeUser: cubeUser,
-            cubeDialog: cubeDialog,
-            chatUserCubeId: chatUserCubeId,
-            dialogId: dialogId,
-            cubeUserId: cubeUserId,
-          ),
-          rawPathParams: {'cubeUserId': cubeUserId},
+/// [CreateAlbumView]
+class CreateAlbumRoute extends PageRouteInfo<void> {
+  const CreateAlbumRoute({List<PageRouteInfo>? children})
+      : super(
+          CreateAlbumRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'ChatRouteProvider';
+  static const String name = 'CreateAlbumRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final pathParams = data.inheritedPathParams;
-      final args = data.argsAs<ChatRouteProviderArgs>(
-          orElse: () => ChatRouteProviderArgs(
-              cubeUserId: pathParams.optInt('cubeUserId')));
-      return ChatViewProvider(
-        key: args.key,
-        cubeUser: args.cubeUser,
-        cubeDialog: args.cubeDialog,
-        chatUserCubeId: args.chatUserCubeId,
-        dialogId: args.dialogId,
-        cubeUserId: args.cubeUserId,
-      );
+      return const CreateAlbumView();
     },
   );
-}
-
-class ChatRouteProviderArgs {
-  const ChatRouteProviderArgs({
-    this.key,
-    this.cubeUser,
-    this.cubeDialog,
-    this.chatUserCubeId,
-    this.dialogId,
-    this.cubeUserId,
-  });
-
-  final Key? key;
-
-  final CubeUser? cubeUser;
-
-  final CubeDialog? cubeDialog;
-
-  final int? chatUserCubeId;
-
-  final String? dialogId;
-
-  final int? cubeUserId;
-
-  @override
-  String toString() {
-    return 'ChatRouteProviderArgs{key: $key, cubeUser: $cubeUser, cubeDialog: $cubeDialog, chatUserCubeId: $chatUserCubeId, dialogId: $dialogId, cubeUserId: $cubeUserId}';
-  }
 }
 
 /// generated route for
@@ -366,6 +277,56 @@ class EditProfileRouteArgs {
   @override
   String toString() {
     return 'EditProfileRouteArgs{key: $key, isEditProfile: $isEditProfile}';
+  }
+}
+
+/// generated route for
+/// [ImagePreviewView]
+class ImagePreviewRoute extends PageRouteInfo<ImagePreviewRouteArgs> {
+  ImagePreviewRoute({
+    Key? key,
+    required String path,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ImagePreviewRoute.name,
+          args: ImagePreviewRouteArgs(
+            key: key,
+            path: path,
+          ),
+          rawPathParams: {'path': path},
+          initialChildren: children,
+        );
+
+  static const String name = 'ImagePreviewRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final pathParams = data.inheritedPathParams;
+      final args = data.argsAs<ImagePreviewRouteArgs>(
+          orElse: () =>
+              ImagePreviewRouteArgs(path: pathParams.getString('path')));
+      return ImagePreviewView(
+        key: args.key,
+        path: args.path,
+      );
+    },
+  );
+}
+
+class ImagePreviewRouteArgs {
+  const ImagePreviewRouteArgs({
+    this.key,
+    required this.path,
+  });
+
+  final Key? key;
+
+  final String path;
+
+  @override
+  String toString() {
+    return 'ImagePreviewRouteArgs{key: $key, path: $path}';
   }
 }
 

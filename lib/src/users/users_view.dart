@@ -5,7 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart';
+// import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -92,12 +92,6 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
     checkIfService();
 
-    init(AppConst.cubeappId, AppConst.authKey, AppConst.authSecret, onSessionRestore: () async {
-      SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
-      CubeUser? user = sharedPrefs.getUser();
-
-      return createSession(user);
-    });
     if (!kIsWeb) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         print('Got a message whilst in the foreground!');
@@ -117,15 +111,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
     connectivityStateSubscription = Connectivity().onConnectivityChanged.listen((connectivityType) {
       if (AppLifecycleState.resumed != appState) return;
 
-      if (connectivityType != ConnectivityResult.none) {
-        log("chatConnectionState = ${CubeChatConnection.instance.chatConnectionState}");
-        bool isChatDisconnected = CubeChatConnection.instance.chatConnectionState == CubeChatConnectionState.Closed ||
-            CubeChatConnection.instance.chatConnectionState == CubeChatConnectionState.ForceClosed;
-
-        if (isChatDisconnected && CubeChatConnection.instance.currentUser != null) {
-          CubeChatConnection.instance.relogin();
-        }
-      }
+      if (connectivityType != ConnectivityResult.none) {}
     });
 
     appState = WidgetsBinding.instance.lifecycleState;
@@ -135,14 +121,14 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
   }
 
   saveCubeUserInFirebase() async {
-    final userModel = ref.read(ProfileController.userControllerProvider).userModel?.cubeUser;
+    // final userModel = ref.read(ProfileController.userControllerProvider).userModel?.cubeUser;
 
-    SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
-    CubeUser? user = sharedPrefs.getUser();
+    // SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
+    // S? user = sharedPrefs.getUser();
 
-    if (userModel!.id == null) {
-      await ref.read(profileRepoProvider).updateCubeUserDoc(user!);
-    }
+    // if (userModel!.id == null) {
+    //   await ref.read(profileRepoProvider).updateCubeUserDoc(user!);
+    // }
   }
 
   @override
@@ -155,30 +141,12 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-    log("Current app state: $state");
     appState = state;
 
     if (AppLifecycleState.paused == state) {
-      if (CubeChatConnection.instance.isAuthenticated()) {
-        CubeChatConnection.instance.markInactive();
-
-        await compute(ref.read(profileRepoProvider).isUserOnline, false);
-      }
     } else if (AppLifecycleState.resumed == state) {
       // // just for an example user was saved in the local storage
-      SharedPrefs.instance.init().then((sharedPrefs) async {
-        CubeUser? user = sharedPrefs.getUser();
-
-        if (user != null) {
-          if (!CubeChatConnection.instance.isAuthenticated()) {
-            CubeChatConnection.instance.login(user);
-          } else {
-            CubeChatConnection.instance.markActive();
-
-            await compute(ref.read(profileRepoProvider).isUserOnline, true);
-          }
-        }
-      });
+      SharedPrefs.instance.init().then((sharedPrefs) async {});
     }
   }
 
@@ -190,11 +158,6 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
     final _currentUser = ref.read(ProfileController.userControllerProvider).userModel;
     // _loginToCubeChat(sharedPrefs.getUser()!);
-    if (_currentUser?.cubeUser.id == null) {
-      await ref.read(profileRepoProvider).updateUserDoc(_currentUser!.copyWith(
-            cubeUser: sharedPrefs.getUser()!,
-          ));
-    }
   }
 
   bool? isOnline = false;
