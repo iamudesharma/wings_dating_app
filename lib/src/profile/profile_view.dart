@@ -12,7 +12,7 @@ import 'package:wings_dating_app/src/users/users_view.dart';
 import '../../repo/profile_repo.dart';
 import '../../routes/app_router.dart';
 
-import 'package:velocity_x/velocity_x.dart';
+// import 'package:velocity_x/velocity_x.dart';
 
 final getUserByIdProvider = FutureProvider.family<UserModel?, String>((ref, id) {
   return ref.read(profileRepoProvider).getUserById(id);
@@ -83,7 +83,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              20.heightBox,
+                              // 20.heightBox,
+                              SizedBox(height: 20),
+
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -91,7 +93,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                                     radius: 50,
                                     backgroundImage: NetworkImage(userData.profileUrl ?? ""),
                                   ),
-                                  10.widthBox,
+                                  // 10.widthBox,
+                                  SizedBox(width: 10),
+
                                   const Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [],
@@ -127,12 +131,16 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                                   fontSize: 25,
                                 ),
                               ),
-                              10.heightBox,
+                              // 10.heightBox,
+                              SizedBox(height: 10),
+
                               Text(
                                 userData.bio ?? "",
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
-                              20.heightBox,
+                              // 20.heightBox,
+                              SizedBox(height: 20),
+
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

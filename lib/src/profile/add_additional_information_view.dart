@@ -5,7 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:velocity_x/velocity_x.dart';
+// import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/send_notification.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 
@@ -29,25 +29,21 @@ final albumListProvider = StateProvider<List<String>?>((ref) {
   return [];
 });
 
-
 @RoutePage()
 class AddAdditionalInformationView extends ConsumerStatefulWidget {
   const AddAdditionalInformationView({super.key});
 
   @override
-  ConsumerState<AddAdditionalInformationView> createState() =>
-      _AddAdditionalInformationViewState();
+  ConsumerState<AddAdditionalInformationView> createState() => _AddAdditionalInformationViewState();
 }
 
-class _AddAdditionalInformationViewState
-    extends ConsumerState<AddAdditionalInformationView> {
+class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInformationView> {
   @override
   Widget build(
     BuildContext context,
   ) {
     final prfile = ref.watch(Dependency.profileProvider);
-    final profiledata =
-        ref.read(ProfileController.userControllerProvider).userModel;
+    final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
     final role = ref.watch(roleProvider);
     final bodyType = ref.watch(bodyTypeProvider);
 
@@ -64,8 +60,7 @@ class _AddAdditionalInformationViewState
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar.medium(
-              title: const Text("Additional Information"), floating: false),
+          SliverAppBar.medium(title: const Text("Additional Information"), floating: false),
           // SliverToBoxAdapter(
           //   child: StaggeredGrid.count(
           //     crossAxisCount: 4,
@@ -215,7 +210,9 @@ class _AddAdditionalInformationViewState
                     trailing: const Icon(Icons.arrow_forward_ios),
                   ),
                   const Divider(),
-                  20.heightBox,
+                  // 20.heightBox,
+                  SizedBox(height: 20),
+
                   ElevatedButton(
                     onPressed: () async {
                       final router = AutoRouter.of(context);
@@ -231,14 +228,11 @@ class _AddAdditionalInformationViewState
                       );
 
                       logger.i(data?.toJson());
-                      await ref
-                          .read(ProfileController.userControllerProvider)
-                          .updateUserData(data!);
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
 
                       router.replace(const DashboardRoute());
                     },
-                    style: ElevatedButton.styleFrom(
-                        fixedSize: Size(MediaQuery.of(context).size.width, 35)),
+                    style: ElevatedButton.styleFrom(fixedSize: Size(MediaQuery.of(context).size.width, 35)),
                     child: const Text("Save"),
                   ),
                 ],
@@ -288,9 +282,7 @@ class _AddAdditionalInformationViewState
                     selected: bodyType,
                     onChanged: <BodyType>(value) {
                       logger.i(value);
-                      ref
-                          .read(bodyTypeProvider.notifier)
-                          .update((sate) => value);
+                      ref.read(bodyTypeProvider.notifier).update((sate) => value);
                       context.router.back();
                     },
                     value: BodyType.values,
@@ -364,8 +356,7 @@ class _AddAdditionalInformationViewState
                     selected: relationShip,
                     onChanged: <BodyType>(value) {
                       logger.i(value);
-                      ref.read(relationshipStatusProvider.notifier).state =
-                          value;
+                      ref.read(relationshipStatusProvider.notifier).state = value;
 
                       setState(() {});
                       context.router.back();
@@ -391,9 +382,7 @@ class _AddAdditionalInformationViewState
                     selected: ethnicity,
                     onChanged: <BodyType>(value) {
                       logger.i(value);
-                      ref
-                          .read(ethnicityProvider.notifier)
-                          .update((state) => value);
+                      ref.read(ethnicityProvider.notifier).update((state) => value);
 
                       context.router.back();
                     },
@@ -418,9 +407,7 @@ class _AddAdditionalInformationViewState
                     selected: lookingFor,
                     onChanged: <BodyType>(value) {
                       logger.i(value);
-                      ref
-                          .read(lookingForProvider.notifier)
-                          .update((sate) => value);
+                      ref.read(lookingForProvider.notifier).update((sate) => value);
                       context.router.back();
                     },
                     value: LookingFor.values,
@@ -444,9 +431,7 @@ class _AddAdditionalInformationViewState
                     selected: whereToMeet,
                     onChanged: <BodyType>(value) {
                       logger.i(value);
-                      ref
-                          .read(whereToMeetProvider.notifier)
-                          .update((sate) => value);
+                      ref.read(whereToMeetProvider.notifier).update((sate) => value);
                       context.router.back();
                     },
                     value: WhereToMeet.values,
@@ -491,9 +476,7 @@ class _AdditionalDataWidgetState extends State<AdditionalDataWidget> {
           color: widget.selected == widget.value[index]
               ? Theme.of(context).primaryColor
               : Theme.of(context).primaryColor.withOpacity(0.2),
-          role: widget.isString!
-              ? widget.value[index]
-              : "${widget.value[index].value}",
+          role: widget.isString! ? widget.value[index] : "${widget.value[index].value}",
         ),
       ),
     );
@@ -560,9 +543,7 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
               builder: (context) {
                 return ImagePickerWidget(
                   camera: () async {
-                    final data = await ref
-                        .read(ProfileController.userControllerProvider)
-                        .pickImageFromAlbum(
+                    final data = await ref.read(ProfileController.userControllerProvider).pickImageFromAlbum(
                           ImageSource.camera,
                         );
 
@@ -574,9 +555,7 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
                     }
                   },
                   gallery: () async {
-                    final data = await ref
-                        .read(ProfileController.userControllerProvider)
-                        .pickImageFromAlbum(
+                    final data = await ref.read(ProfileController.userControllerProvider).pickImageFromAlbum(
                           ImageSource.gallery,
                         );
 

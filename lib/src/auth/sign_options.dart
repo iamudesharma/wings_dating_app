@@ -8,7 +8,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
-import 'package:velocity_x/velocity_x.dart';
+// import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/assets.dart';
 // import 'package:flutterfire_ui/auth.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
@@ -58,14 +58,10 @@ class SignOptionsView extends ConsumerWidget {
                         // ),
                         const Text(
                           'Wings Dating',
-                          style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
                         )
                             .animate(
-                              adapter: ValueNotifierAdapter(isFromCom,
-                                  animated: true),
+                              adapter: ValueNotifierAdapter(isFromCom, animated: true),
                             )
                             .shake(),
                         SvgPicture.asset(
@@ -92,7 +88,7 @@ class SignOptionsView extends ConsumerWidget {
                     height: 300,
                     width: 300,
                   ),
-                  20.heightBox,
+                  SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -103,16 +99,10 @@ class SignOptionsView extends ConsumerWidget {
                       // ),
                       const Text(
                         'Wings Dating',
-                        style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ).animate(
-                          onInit: (controller) =>
-                              controller.repeat(reverse: true),
-                          effects: [
-                            const ShakeEffect(),
-                          ]),
+                        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
+                      ).animate(onInit: (controller) => controller.repeat(reverse: true), effects: [
+                        const ShakeEffect(),
+                      ]),
                       SvgPicture.asset(
                         Assets.rainbow3SVG,
                         height: 50,
@@ -134,13 +124,14 @@ class SignOptionsView extends ConsumerWidget {
               //     await SharedPrefs.instance.saveNewUser(cubeUser);
 
               //     logger.i('Saved  cubeUser: is true ');
-              AutoRouter.of(context).replace(
+              await AutoRouter.of(context).replace(
                 const DashboardRoute(),
               );
               // });
               // });
             }),
             AuthStateChangeAction<UserCreated>((context, state) async {
+              // signInUsingFirebase();
               // await    state!.user?.getIdToken().then((idToken) {
               //       signInUsingFirebase(
               //               DefaultFirebaseOptions.currentPlatform.projectId, idToken)
@@ -148,7 +139,7 @@ class SignOptionsView extends ConsumerWidget {
               //         await SharedPrefs.instance.saveNewUser(cubeUser);
 
               //         logger.i('Saved  cubeUser: is true ');
-              AutoRouter.of(context).replace(
+              await AutoRouter.of(context).replace(
                 const DashboardRoute(),
               );
               //       });

@@ -1,12 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart';
+// import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta_seo/meta_seo.dart';
-import 'package:velocity_x/velocity_x.dart';
+// import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
+import 'package:wings_dating_app/repo/chat_repo.dart';
+import 'package:wings_dating_app/services/chat_services.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 
@@ -78,7 +80,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                           //     .addToBlockList(userData!.id);
 
                           // ignore: use_build_context_synchronously
-                          context.router.maybePop();
+                          context.router.back();
                           // AutoRouter.of(context).replace(const DashboardRoute());
                         },
                         value: 1,
@@ -143,12 +145,16 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                         "About",
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      10.heightBox,
+                      // 10.heightBox,
+                      SizedBox(height: 20),
+
                       Text(
                         userData.bio ?? "",
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
-                      20.heightBox,
+                      // 20.heightBox,
+                      SizedBox(height: 20),
+
                       Center(
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
@@ -184,27 +190,17 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
             icon: const Icon(Icons.chat_bubble),
             label: currentUser!.blockList.contains(otherUser.value?.id) ? const Text("Unblock") : const Text("Message"),
             onPressed: () async {
-              _createDialog(context, {currentUser.cubeUser.id ?? 0, otherUser.value!.cubeUser.id ?? 0},
-                  currentUser.cubeUser.id ?? 0);
+              // Future.microtask(() async {
+              //   ref.read(chatRepoProvider.notifier).connectUser(
+              //         user: await ref.read(Dependency.profileProvider).getCurrentUser(),
+              //       );
+              // });
+
+              ref.read(chatRepoProvider.notifier).createChat(currentUser.id, otherUser.value!.id);
+
+              // Todo create chat one to one chat
             }),
       ),
     );
-  }
-
-  void _createDialog(BuildContext context, Set<int> users, int current) async {
-    log("_createDialog with users= $users");
-
-    CubeDialog newDialog = CubeDialog(CubeDialogType.PRIVATE, occupantsIds: users.toList());
-    await createDialog(newDialog).then((createdDialog) async {
-      await AutoRouter.of(context).push(
-        ChatRoute(
-          cubeUserId: current,
-          chatUserCubeId: users.where((element) => element != current).first,
-          cubeDialog: createdDialog,
-        ),
-      );
-    }).catchError((error) {
-      logger.e(error);
-    });
   }
 }

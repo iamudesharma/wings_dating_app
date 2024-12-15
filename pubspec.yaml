@@ -40,9 +40,9 @@ dependencies:
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
   # get: ^4.6.5
-  firebase_auth: ^5.3.3
-  cloud_firestore: ^5.5.0
-  firebase_storage: ^12.3.6
+  firebase_auth: ^5.3.4
+  cloud_firestore: ^5.5.1
+  firebase_storage: ^12.3.7
   # c: ^1.0.0-dev.45
   cloud_firestore_odm: ^1.0.0-dev.88
   # json_annotation: ^4.7.0
@@ -51,40 +51,45 @@ dependencies:
   firebase_ui_auth: ^1.16.0
   riverpod_annotation: ^2.6.1
   logger: ^2.5.0
-  firebase_core: ^3.8.0
-  flex_color_scheme: ^8.0.1
+  firebase_core: ^3.8.1
+  flex_color_scheme: ^8.0.2
 
   intl: ^0.19.0
-  velocity_x: ^4.2.1
+  
   fluttertoast: 8.2.8
   image_picker: ^1.1.2
 
   flutter_staggered_grid_view: ^0.7.0
   freezed: ^2.5.7
   # geoflutterfire2: ^2.3.15
-  geoflutterfire_plus: ^0.0.31
+  geoflutterfire_plus: ^0.0.32
   google_fonts: ^6.2.1
   chat_bubbles: ^1.6.0
   uuid: ^4.5.1
-  firebase_messaging: ^15.1.5
-  cached_network_image: ^3.4.1
+  firebase_messaging: ^15.1.6
+  cached_network_image:
+    git:
+      url: "https://github.com/Neotech-iHoops/flutter_cached_network_image.git"
+      ref: "develop"
+      path: "cached_network_image"
+        
 
   flutter_local_notifications: ^18.0.1
 
   # firebase_crashlytics: ^3.3.2
   # firebase_analytics: ^10.4.2po
-  flutter_animate: ^4.5.1
+  flutter_animate: ^4.5.2
   geolocator: ^13.0.2
-  connectycube_flutter_call_kit:
-                        git:
-                          url: https://github.com/hatemragab/connectycube-flutter-call-kit.git
-  connectycube_sdk: ^2.14.1
+  # connectycube_flutter_call_kit:
+  #                       git:
+  #                         url: https://github.com/hatemragab/connectycube-flutter-call-kit.git
+  # connectycube_sdk: ^2.14.1
   shared_preferences: ^2.3.3
 
-  connectivity_plus: ^6.1.0
+  connectivity_plus: ^6.1.1
   # file_picker: ^5.3.2
   package_info_plus: ^8.1.1
-  flutter_slidable: ^3.1.1
+  flutter_slidable: ^3.1.2
 
   # flutter_native_splash: ^2.2.19
   # flutter_isolate: ^2.0.4
@@ -100,15 +105,17 @@ dependencies:
   responsive_builder: ^0.7.1
   meta_seo: ^3.0.9
   url_strategy: ^0.3.0
-  lottie: ^3.1.3
-  flutter_svg: ^2.0.15
-  file_picker: ^8.1.4
+  lottie: ^3.3.0
+  flutter_svg: ^2.0.16
+  file_picker: ^8.1.5
   rxdart: ^0.28.0
   # google_mobile_ads:
   context_menus: ^2.0.0
   package_rename: ^1.7.1
-  pro_image_editor: ^5.4.2
+  pro_image_editor: ^6.2.1
   path_provider: ^2.1.5
+  stream_chat_flutter: ^8.3.0
+  # stream_chat: ^8.3.0
   # path_provider: ^2.1.3
 
 dev_dependencies:
@@ -135,6 +142,12 @@ dev_dependencies:
 dependency_overrides:
   device_info_plus: "11.1.1"
   package_info_plus: "8.1.1"
+  mime: "2.0.0"
+  cached_network_image:
+    git:
+      url: "https://github.com/Neotech-iHoops/flutter_cached_network_image.git"
+      ref: "develop"
+      path: "cached_network_image"
 
   # intl: ^0.18.0
   # http:

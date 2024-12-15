@@ -4,9 +4,10 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart' as cube;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:wings_dating_app/helpers/extra_data.dart';
 import 'geo_point_data.dart';
 
@@ -62,7 +63,6 @@ class UserModel with _$UserModel {
     @Default([]) List<String> blockList,
     required String id,
     required String fcmToken,
-    required cube.CubeUser cubeUser,
   }) = _UserModel;
 
   // Converts JSON data to UserModel.

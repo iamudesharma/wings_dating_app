@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:wings_dating_app/repo/chat_repo.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/services/ad_helper.dart';
+import 'package:wings_dating_app/services/chat_services.dart';
 import 'package:wings_dating_app/src/chats/services/call_manager.dart';
 
+import '../dependency/dependenies.dart';
 import '../routes/app_router_provider.dart';
 import 'chats/chats_list_view.dart';
 
@@ -22,6 +25,11 @@ class DashboardView extends ConsumerStatefulWidget {
 class _DashboardViewState extends ConsumerState<DashboardView> {
   @override
   void initState() {
+    Future.microtask(() async {
+      ref.read(chatRepoProvider.notifier).connectUser(
+            user: await ref.read(Dependency.profileProvider).getCurrentUser(),
+          );
+    });
     // NotificationsController.initializeNotificationsEventListeners(ref);
 
     // // ref.read(appRouteProvider).addListener(() {
@@ -34,7 +42,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
   Widget build(BuildContext context) {
     // CallManager.instance.init(context);
     return Scaffold(
-      bottomNavigationBar: const SizedBox(height: 50, child: BannerExample()),
+      // bottomNavigationBar: const SizedBox(height: 50, child: BannerExample()),
       body: ResponsiveBuilder(builder: (context, size) {
         return AutoTabsScaffold(
           homeIndex: 0,
