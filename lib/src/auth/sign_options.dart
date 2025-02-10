@@ -1,20 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:flutter/cupertino.dart';
 // import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
-// import 'package:velocity_x/velocity_x.dart';
-import 'package:wings_dating_app/assets.dart';
-// import 'package:flutterfire_ui/auth.dart';
-import 'package:wings_dating_app/routes/app_router.dart';
-import 'package:wings_dating_app/src/login.dart';
 
-// import 'package:firebase_auth/firebase_auth.dart' show EmailAuthProvider;
+import 'package:wings_dating_app/assets.dart';
+
+import 'package:wings_dating_app/routes/app_router.dart';
 
 @RoutePage()
 class SignOptionsView extends ConsumerWidget {
@@ -51,11 +47,6 @@ class SignOptionsView extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // SvgPicture.asset(
-                        //   Assets.rainbow2SVG,
-                        //   height: 50,
-                        //   width: 50,
-                        // ),
                         const Text(
                           'Wings Dating',
                           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
@@ -92,11 +83,6 @@ class SignOptionsView extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // SvgPicture.asset(
-                      //   Assets.rainbow2SVG,
-                      //   height: 50,
-                      //   width: 50,
-                      // ),
                       const Text(
                         'Wings Dating',
                         style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
@@ -117,13 +103,6 @@ class SignOptionsView extends ConsumerWidget {
           auth: FirebaseAuth.instance,
           actions: [
             AuthStateChangeAction<SignedIn>((context, state) async {
-              // state.user?.getIdToken().then((idToken) {
-              //   signInUsingFirebase(
-              //           DefaultFirebaseOptions.currentPlatform.projectId, idToken)
-              //       .then((cubeUser) async {
-              //     await SharedPrefs.instance.saveNewUser(cubeUser);
-
-              //     logger.i('Saved  cubeUser: is true ');
               await AutoRouter.of(context).replace(
                 const DashboardRoute(),
               );
@@ -131,14 +110,6 @@ class SignOptionsView extends ConsumerWidget {
               // });
             }),
             AuthStateChangeAction<UserCreated>((context, state) async {
-              // signInUsingFirebase();
-              // await    state!.user?.getIdToken().then((idToken) {
-              //       signInUsingFirebase(
-              //               DefaultFirebaseOptions.currentPlatform.projectId, idToken)
-              //           .then((cubeUser) async {
-              //         await SharedPrefs.instance.saveNewUser(cubeUser);
-
-              //         logger.i('Saved  cubeUser: is true ');
               await AutoRouter.of(context).replace(
                 const DashboardRoute(),
               );
@@ -148,6 +119,7 @@ class SignOptionsView extends ConsumerWidget {
           ],
           showAuthActionSwitch: true,
           loginViewKey: key,
+          
         ),
       ),
     );

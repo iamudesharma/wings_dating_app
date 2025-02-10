@@ -1,4 +1,7 @@
 {
-  "cSpell.words": ["geohash", "th"],
+  "cSpell.words": [
+    "geohash",
+    "th"
+  ],
   "dart.flutterSdkPath": "~/fvm/versions/stable"
 }

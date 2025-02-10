@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:wings_dating_app/dependency/dependenies.dart';
+import 'package:wings_dating_app/dependency/dependencies.dart';
 import 'package:wings_dating_app/services/chat_services.dart';
 import 'package:wings_dating_app/src/model/album_model.dart';
 part 'albums_repo.g.dart';

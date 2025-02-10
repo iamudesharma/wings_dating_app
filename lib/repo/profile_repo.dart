@@ -8,7 +8,7 @@ import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/const/pref_util.dart';
-import 'package:wings_dating_app/dependency/dependenies.dart';
+import 'package:wings_dating_app/dependency/dependencies.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/repo/repo_exception.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';

@@ -13,7 +13,6 @@ import 'package:wings_dating_app/src/album/widget/image_preview.dart';
 
 import '../src/auth/sign_options.dart';
 import '../src/chats/chats_list_view.dart';
-import '../src/chats/pages/call_view.dart';
 import '../src/chats/pages/chat_view.dart';
 import '../src/dashboard.dart';
 import '../src/profile/add_additional_information_view.dart';
@@ -46,13 +45,7 @@ class AppRouter extends RootStackRouter {
         RedirectRoute(path: '', redirectTo: 'users'),
         AutoRoute(page: BooksTab.page, path: "user", children: [
           AutoRoute(page: UsersRoute.page, path: "", initial: true),
-          AutoRoute(page: ChatListRoute.page, path: "", keepHistory: true, children: [
-            AutoRoute(
-              page: ChatRoute.page,
-              path: "chat/:id",
-              keepHistory: true,
-            ),
-          ]),
+          AutoRoute(page: ChatListRoute.page, path: "", keepHistory: true, children: []),
           AutoRoute(
             page: AlbumRoute.page,
             path: "",
@@ -64,6 +57,11 @@ class AppRouter extends RootStackRouter {
       guards: [
         AuthGuard(ref: ref),
       ],
+    ),
+    AutoRoute(
+      page: ChatRoute.page,
+      path: "/chat/:id",
+      keepHistory: true,
     ),
     AutoRoute(
       page: SignOptionsRoute.page,
