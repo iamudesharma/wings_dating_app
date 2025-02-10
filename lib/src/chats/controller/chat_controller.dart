@@ -14,9 +14,9 @@ class ChatController extends ChangeNotifier {
 
   ChatController(this.ref);
 
-  Future<String?> pickImage({required ImageSource imageSource}) async {
+  Future<Uint8List?> pickImage({required ImageSource imageSource}) async {
     final image = await pickImageForm(imageSource);
 
-    return image;
+   return image;
   }
 }

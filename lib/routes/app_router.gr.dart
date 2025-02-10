@@ -198,10 +198,17 @@ class ChatRouteArgs {
 
 /// generated route for
 /// [CreateAlbumView]
-class CreateAlbumRoute extends PageRouteInfo<void> {
-  const CreateAlbumRoute({List<PageRouteInfo>? children})
-      : super(
+class CreateAlbumRoute extends PageRouteInfo<CreateAlbumRouteArgs> {
+  CreateAlbumRoute({
+    Key? key,
+    String? id,
+    List<PageRouteInfo>? children,
+  }) : super(
           CreateAlbumRoute.name,
+          args: CreateAlbumRouteArgs(
+            key: key,
+            id: id,
+          ),
           initialChildren: children,
         );
 
@@ -210,9 +217,30 @@ class CreateAlbumRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const CreateAlbumView();
+      final args = data.argsAs<CreateAlbumRouteArgs>(
+          orElse: () => const CreateAlbumRouteArgs());
+      return CreateAlbumView(
+        key: args.key,
+        id: args.id,
+      );
     },
   );
+}
+
+class CreateAlbumRouteArgs {
+  const CreateAlbumRouteArgs({
+    this.key,
+    this.id,
+  });
+
+  final Key? key;
+
+  final String? id;
+
+  @override
+  String toString() {
+    return 'CreateAlbumRouteArgs{key: $key, id: $id}';
+  }
 }
 
 /// generated route for

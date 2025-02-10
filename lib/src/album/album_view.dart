@@ -1,18 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/helpers/uploader.dart';
 import 'package:wings_dating_app/repo/albums_repo.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
@@ -92,18 +86,21 @@ class AlbumView extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(20),
                             child: Stack(
                               children: [
-                                Animate(
-                                  effects: [BlurEffect()],
-                                  child: Positioned.fill(
-                                      child: Image.network(
-                                    data[index].imageUrls[index],
-                                    fit: BoxFit.cover,
-                                  )),
-                                ),
+                                if (data[index].imageUrls.isNotEmpty)
+                                  Animate(
+                                    effects: [BlurEffect()],
+                                    child: Positioned.fill(
+                                        child: Image.network(
+                                      data[index].imageUrls[index],
+                                      fit: BoxFit.cover,
+                                    )),
+                                  ),
                                 Center(
                                   child: InkWell(
                                     onTap: () {
-                                      context.router.push(AlbumDetailsRoute(id: data[index].id));
+                                      context.router.push(CreateAlbumRoute(id: data[index].id));
+
+                                      // context.router.push(AlbumDetailsRoute(id: data[index].id));
                                     },
                                     child: Card(
                                       color: Colors.black12,
@@ -135,18 +132,18 @@ class AlbumView extends ConsumerWidget {
   }
 }
 
-void openEditor(BuildContext context, WidgetRef ref, {required String path, required String id}) {
-  Navigator.push(
+Future<void> openEditor(BuildContext context, WidgetRef ref, {required Uint8List path, required String id}) async {
+  await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => kIsWeb
-          ? ProImageEditor.network(
+          ? ProImageEditor.memory(
               path,
               callbacks: ProImageEditorCallbacks(
                 onImageEditingComplete: (bytes) async {
-                  final path = await uploadFileToFirebaseAlbum(bytes);
+                  final _path = await uploadFileToFirebaseAlbum(bytes);
 
-                  await ref.read(AlbumControllerProvider(id).notifier).addImage(path);
+                  await ref.read(AlbumControllerProvider(id).notifier).addImage(_path);
 
                   if (context.mounted) {
                     Navigator.pop(context);
@@ -154,8 +151,8 @@ void openEditor(BuildContext context, WidgetRef ref, {required String path, requ
                 },
               ),
             )
-          : ProImageEditor.file(
-              File(path),
+          : ProImageEditor.memory(
+              path,
               callbacks: ProImageEditorCallbacks(
                 onImageEditingComplete: (bytes) async {
                   final path = await uploadFileToFirebaseAlbum(bytes);

@@ -13,7 +13,7 @@ import 'package:wings_dating_app/src/profile/controller/profile_controller.dart'
 import 'package:wings_dating_app/src/profile/edit_profile_view.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
 
-import '../../dependency/dependenies.dart';
+import '../../dependency/dependencies.dart';
 import '../../helpers/extra_data.dart';
 import '../../helpers/logger.dart';
 
@@ -529,7 +529,7 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
   @override
   Widget build(BuildContext context) {
     final userController = ref.watch(ProfileController.userControllerProvider);
-    final albumList = ref.watch(albumListProvider);
+    // final albumList = ref.watch(albumListProvider);
 
     return InkWell(
       onTap: () async {
@@ -550,7 +550,7 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
                     if (data != null) {
 // albumList.update((state) => state[widget.index] = data);
 
-                      albumList[widget.index] = data;
+                      // albumList[widget.index] = data;
                       setState(() {});
                     }
                   },
@@ -560,7 +560,7 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
                         );
 
                     if (data != null) {
-                      albumList[widget.index] = data;
+                      // albumList[widget.index] = data;
                       setState(() {});
                     }
                   },
@@ -579,18 +579,18 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: albumList!.isEmpty
-            ? const Icon(Icons.add)
-            : userController.albumImages.isEmpty
-                ? Image(
-                    image: FileImage(
-                      File(
-                        userController.albumImages[widget.index],
-                      ),
-                    ),
-                    fit: BoxFit.cover,
-                  )
-                : const Icon(Icons.add),
+        // child: albumList!.isEmpty
+        //     ? const Icon(Icons.add)
+        //     : userController.albumImages.isEmpty
+        //         ? Image(
+        //             image: FileImage(
+        //               File(
+        //                 userController.albumImages[widget.index],
+        //               ),
+        //             ),
+        //             fit: BoxFit.cover,
+        //           )
+        //         : const Icon(Icons.add),
       ),
     );
   }

@@ -21,7 +21,7 @@ import 'package:intl/intl.dart';
 // import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/const/pref_util.dart';
 
-import 'package:wings_dating_app/dependency/dependenies.dart';
+import 'package:wings_dating_app/dependency/dependencies.dart';
 import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
@@ -148,14 +148,14 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                             ? kIsWeb
                                 ? CircleAvatar(
                                     radius: 45,
-                                    backgroundImage: CachedNetworkImageProvider(
+                                    backgroundImage: MemoryImage(
                                       profile.profileImage!,
                                     ),
                                   )
                                 : CircleAvatar(
                                     radius: 45,
-                                    backgroundImage: FileImage(
-                                      File(profile.profileImage!),
+                                    backgroundImage: MemoryImage(
+                                      profile.profileImage!,
                                     ),
                                   )
                             : !widget.isEditProfile
@@ -188,7 +188,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                               .read(ProfileController.userControllerProvider)
                                               .pickImage(imageSource: ImageSource.camera);
 
-                                          await ref.read(profileRepoProvider).updateImage(profile.profileImage!);
+                                          // await ref.read(profileRepoProvider).updateImage(profile.profileImage!);
                                         },
                                         gallery: () async {
                                           if (widget.isEditProfile) {
@@ -199,7 +199,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                                   imageSource: ImageSource.gallery,
                                                 );
 
-                                            await ref.read(profileRepoProvider).updateImage(profile.profileImage!);
+                                            // await ref.read(profileRepoProvider).updateImage(profile.profileImage!);
                                           }
                                         },
                                       );

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-// import 'package:connectycube_sdk/connectycube_chat.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wings_dating_app/src/model/stream_user.dart';
 

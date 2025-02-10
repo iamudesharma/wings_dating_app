@@ -1,16 +1,8 @@
-import 'dart:convert';
-
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:wings_dating_app/src/model/stream_user.dart';
 
-// import 'package:connectycube_sdk/connectycube_sdk.dart';
-
-import '../const/pref_util.dart';
-
+@RoutePage()
 class LoginView extends StatelessWidget {
-  static const String TAG = "LoginScreen";
-
   const LoginView({super.key});
 
   @override

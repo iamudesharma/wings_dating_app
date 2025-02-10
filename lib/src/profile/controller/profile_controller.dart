@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:connectycube_sdk/connectycube_sdk.dart';
@@ -13,7 +14,7 @@ import 'package:wings_dating_app/repo/profile_repo.dart';
 
 import 'package:wings_dating_app/src/model/user_models.dart';
 
-import '../../../dependency/dependenies.dart';
+import '../../../dependency/dependencies.dart';
 import '../../../helpers/extra_data.dart';
 import '../../../helpers/helpers.dart';
 
@@ -29,7 +30,7 @@ class ProfileController extends ChangeNotifier {
   static ChangeNotifierProvider<ProfileController> userControllerProvider = _userControllerProvider;
   UserModel? userModel;
 
-  String? profileImage;
+  Uint8List? profileImage;
 
   List<String> albumImages = [];
 
@@ -64,8 +65,8 @@ class ProfileController extends ChangeNotifier {
           .read(Dependency.firebaseStorageProvider)
           .ref("profileImages")
           .child("${DateTime.now().millisecondsSinceEpoch.toString()}.jpg")
-          .putFile(
-            File(profileImage!),
+          .putData(
+            profileImage!,
             SettableMetadata(contentType: 'image/jpeg'),
           )
           .then((p0) async {
@@ -78,7 +79,7 @@ class ProfileController extends ChangeNotifier {
     }
   }
 
-  Future<String?> pickImageFromAlbum(ImageSource source) async {
+  Future<Uint8List?> pickImageFromAlbum(ImageSource source) async {
     final image = await pickImageForm(source);
     ImagePicker().pickMultiImage();
 

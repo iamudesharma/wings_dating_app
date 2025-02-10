@@ -5,7 +5,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-// import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,19 +12,14 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:meta_seo/meta_seo.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/model/geo_point_data.dart';
-import 'package:wings_dating_app/src/users/widget/users_search_elegate.dart';
+import 'package:wings_dating_app/src/users/widget/users_search_delegate.dart';
 
-import '../../const/app_const.dart';
 import '../../const/pref_util.dart';
-import '../../routes/app_router.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
 import 'widget/user_grid_item.dart';
@@ -62,7 +56,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
         nullWidget = Center(
           child: Column(
             children: [
-              const Text("Plase enable location service"),
+              const Text("Please enable location service"),
               TextButton(
                 child: const Text("Enable"),
                 onPressed: () {
@@ -120,16 +114,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
     saveCubeUserInFirebase();
   }
 
-  saveCubeUserInFirebase() async {
-    // final userModel = ref.read(ProfileController.userControllerProvider).userModel?.cubeUser;
-
-    // SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
-    // S? user = sharedPrefs.getUser();
-
-    // if (userModel!.id == null) {
-    //   await ref.read(profileRepoProvider).updateCubeUserDoc(user!);
-    // }
-  }
+  saveCubeUserInFirebase() async {}
 
   @override
   void dispose() {
@@ -154,32 +139,25 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
   void didChangeDependencies() async {
     super.didChangeDependencies();
 
-    SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
-
     final _currentUser = ref.read(ProfileController.userControllerProvider).userModel;
-    // _loginToCubeChat(sharedPrefs.getUser()!);
   }
 
   bool? isOnline = false;
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) {
-      // Define MetaSEO object
-      MetaSEO meta = MetaSEO();
-      // add meta seo data for web app as you want
-      meta.author(author: 'Eng Mouaz M AlShahmeh');
-      meta.description(description: 'Meta SEO Web Example');
-      meta.keywords(keywords: 'Flutter, Dart, SEO, Meta, Web');
-    }
-
     final userData = ref.watch(ProfileController.userControllerProvider).userModel;
     final userList = ref.watch(userListProvider);
 
     return Scaffold(
       body: RefreshIndicator.adaptive(
         onRefresh: () async {
-          final currentLocation = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+          final currentLocation = await Geolocator.getCurrentPosition(
+            locationSettings: LocationSettings(
+              accuracy: LocationAccuracy.high,
+              distanceFilter: 1,
+            ),
+          );
 
           logger.d("currentLocation ${currentLocation.toJson()}");
           final currentUser = userData?.position?.geopoint;
@@ -207,8 +185,6 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                     child: AppBar(
                       leadingWidth: 40,
                       leading: CircleAvatar(
-                        // radius: 25,
-                        // radius: 2,
                         backgroundImage: CachedNetworkImageProvider(
                             userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                       ),
@@ -334,30 +310,31 @@ class NavigationBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!sizingInformation.isMobile) {
       return Expanded(
-          child: SizedBox(
-              height: sizingInformation.screenSize.height,
-              child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: ListenableBuilder(
-                      listenable: AutoTabsRouter.of(context),
-                      builder: (context, child) {
-                        return NavigationRail(
-                          selectedIndex: AutoTabsRouter.of(context).activeIndex,
-                          extended: sizingInformation.isTablet ? false : true,
-                          onDestinationSelected: (value) {
-                            AutoTabsRouter.of(context).setActiveIndex(value);
-                          },
-                          destinations: const [
-                            NavigationRailDestination(icon: Icon(Icons.home), label: Text("Users")),
-                            NavigationRailDestination(icon: Icon(Icons.chat_bubble), label: Text("Chat")),
-                            NavigationRailDestination(icon: Icon(Icons.album_outlined), label: Text("Album")),
-                            NavigationRailDestination(
-                              icon: Icon(Icons.person),
-                              label: Text("Profile"),
-                            ),
-                          ],
-                        );
-                      }))));
+        child: SizedBox(
+          height: sizingInformation.screenSize.height,
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: ListenableBuilder(
+              listenable: AutoTabsRouter.of(context),
+              builder: (context, child) {
+                return NavigationRail(
+                  selectedIndex: AutoTabsRouter.of(context).activeIndex,
+                  extended: sizingInformation.isTablet ? false : true,
+                  onDestinationSelected: (value) {
+                    AutoTabsRouter.of(context).setActiveIndex(value);
+                  },
+                  destinations: const [
+                    NavigationRailDestination(icon: Icon(Icons.home), label: Text("Users")),
+                    NavigationRailDestination(icon: Icon(Icons.chat_bubble), label: Text("Chat")),
+                    NavigationRailDestination(icon: Icon(Icons.album_outlined), label: Text("Album")),
+                    NavigationRailDestination(icon: Icon(Icons.person), label: Text("Profile"))
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      );
     } else {
       return Container();
     }

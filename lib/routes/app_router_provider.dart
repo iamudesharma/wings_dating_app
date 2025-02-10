@@ -5,12 +5,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 
 import 'package:wings_dating_app/routes/app_router.dart';
 
-import '../const/pref_util.dart';
 import '../repo/profile_repo.dart';
 import '../src/profile/controller/profile_controller.dart';
 
@@ -18,9 +16,7 @@ part 'app_router_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 AppRouter appRoute(Ref ref) {
-  return AppRouter(ref
-      // profileDocGuard: ProfileDocGuard(ref: ref),
-      );
+  return AppRouter(ref);
 }
 
 class AuthGuard extends AutoRouteGuard {

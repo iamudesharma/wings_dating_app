@@ -6,7 +6,7 @@ part of 'album_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$albumControllerHash() => r'19de05489ade843668c083efda9871696157b5d7';
+String _$albumControllerHash() => r'6486d1e5c37c6d345eb3e5a75f96bf9ef3413a66';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,10 +31,10 @@ class _SystemHash {
 
 abstract class _$AlbumController
     extends BuildlessAsyncNotifier<AlbumListModel?> {
-  late final String id;
+  late final String? id;
 
   FutureOr<AlbumListModel?> build(
-    String id,
+    String? id,
   );
 }
 
@@ -49,7 +49,7 @@ class AlbumControllerFamily extends Family<AsyncValue<AlbumListModel?>> {
 
   /// See also [AlbumController].
   AlbumControllerProvider call(
-    String id,
+    String? id,
   ) {
     return AlbumControllerProvider(
       id,
@@ -65,12 +65,14 @@ class AlbumControllerFamily extends Family<AsyncValue<AlbumListModel?>> {
     );
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  static final Iterable<ProviderOrFamily> _dependencies =
+      const <ProviderOrFamily>[];
 
   @override
   Iterable<ProviderOrFamily>? get dependencies => _dependencies;
 
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  static final Iterable<ProviderOrFamily> _allTransitiveDependencies =
+      const <ProviderOrFamily>{};
 
   @override
   Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
@@ -85,7 +87,7 @@ class AlbumControllerProvider
     extends AsyncNotifierProviderImpl<AlbumController, AlbumListModel?> {
   /// See also [AlbumController].
   AlbumControllerProvider(
-    String id,
+    String? id,
   ) : this._internal(
           () => AlbumController()..id = id,
           from: albumControllerProvider,
@@ -110,7 +112,7 @@ class AlbumControllerProvider
     required this.id,
   }) : super.internal();
 
-  final String id;
+  final String? id;
 
   @override
   FutureOr<AlbumListModel?> runNotifierBuild(
@@ -161,7 +163,7 @@ class AlbumControllerProvider
 // ignore: unused_element
 mixin AlbumControllerRef on AsyncNotifierProviderRef<AlbumListModel?> {
   /// The parameter `id` of this provider.
-  String get id;
+  String? get id;
 }
 
 class _AlbumControllerProviderElement
@@ -170,7 +172,7 @@ class _AlbumControllerProviderElement
   _AlbumControllerProviderElement(super.provider);
 
   @override
-  String get id => (origin as AlbumControllerProvider).id;
+  String? get id => (origin as AlbumControllerProvider).id;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

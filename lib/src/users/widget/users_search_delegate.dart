@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
-import 'package:wings_dating_app/src/users/users_view.dart';
 
 final searchUsersProvider = FutureProvider.family<List<UserModel?>?, String>((ref, query) async {
   return await ref.read(profileRepoProvider).searchUser(query);
