@@ -125,10 +125,10 @@ packages:
     dependency: transitive
     description:
       name: build_config
-      sha256: bf80fcfb46a29945b423bd9aad884590fb1dc69b330a4d4700cac476af1708d1
+      sha256: "4ae2de3e1e67ea270081eaee972e1bd8f027d459f249e0f1186730784c2e7e33"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "1.1.2"
   build_daemon:
     dependency: transitive
     description:
@@ -267,20 +267,18 @@ packages:
     source: hosted
     version: "5.6.4"
   cloud_firestore_odm:
-    dependency: transitive
+    dependency: "direct dev"
     description:
-      name: cloud_firestore_odm
-      sha256: aa1fc8693e064805c0f414037e841e886b52775307308f93bd9895beaa2ba415
-      url: "https://pub.dev"
-    source: hosted
+      path: "/Users/udeshsharma/Code/udesh/firestoreodm-flutter/packages/cloud_firestore_odm"
+      relative: false
+    source: path
     version: "1.0.0-dev.88"
   cloud_firestore_odm_generator:
     dependency: "direct dev"
     description:
-      name: cloud_firestore_odm_generator
-      sha256: d8b695ac0a3aeb88c1f42b2be8f53d79bd92126a761adc672430c9e2361d71e2
-      url: "https://pub.dev"
-    source: hosted
+      path: "/Users/udeshsharma/Code/udesh/firestoreodm-flutter/packages/cloud_firestore_odm_generator"
+      relative: false
+    source: path
     version: "1.0.0-dev.89"
   cloud_firestore_platform_interface:
     dependency: transitive
@@ -634,6 +632,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+3"
+  firebase_analytics:
+    dependency: "direct main"
+    description:
+      name: firebase_analytics
+      sha256: "6abce50b79729d8a13c3d4ae05ac612d5ef2f57394330bc5e581ca0e762325f4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "11.4.3"
+  firebase_analytics_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_analytics_platform_interface
+      sha256: cd9ae65870bf23ab7e63a04fe9c1b38522fd3556a8c32288afd3f5cb10d4b8f4
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.3.3"
+  firebase_analytics_web:
+    dependency: transitive
+    description:
+      name: firebase_analytics_web
+      sha256: "5654ed7e39d7a8099e60748924327159785512d78d913e965f9ca93c533af910"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.10+9"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -2207,10 +2229,10 @@ packages:
     dependency: transitive
     description:
       name: source_helper
-      sha256: "6adebc0006c37dd63fe05bca0a929b99f06402fc95aa35bf36d67f5c06de01fd"
+      sha256: "86d247119aedce8e63f4751bd9626fc9613255935558447569ad42f9f5b48b3c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.4"
+    version: "1.3.5"
   source_span:
     dependency: transitive
     description:
