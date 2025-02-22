@@ -49,10 +49,14 @@ class SignOptionsView extends ConsumerWidget {
                       children: [
                         const Text(
                           'Wings Dating',
-                          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         )
                             .animate(
-                              adapter: ValueNotifierAdapter(isFromCom, animated: true),
+                              adapter: ValueNotifierAdapter(isFromCom,
+                                  animated: true),
                             )
                             .shake(),
                         SvgPicture.asset(
@@ -85,10 +89,16 @@ class SignOptionsView extends ConsumerWidget {
                     children: [
                       const Text(
                         'Wings Dating',
-                        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
-                      ).animate(onInit: (controller) => controller.repeat(reverse: true), effects: [
-                        const ShakeEffect(),
-                      ]),
+                        style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ).animate(
+                          onInit: (controller) =>
+                              controller.repeat(reverse: true),
+                          effects: [
+                            const ShakeEffect(),
+                          ]),
                       SvgPicture.asset(
                         Assets.rainbow3SVG,
                         height: 50,
@@ -119,7 +129,6 @@ class SignOptionsView extends ConsumerWidget {
           ],
           showAuthActionSwitch: true,
           loginViewKey: key,
-          
         ),
       ),
     );

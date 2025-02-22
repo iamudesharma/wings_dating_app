@@ -1,7 +1,5 @@
-
 class Assets {
   Assets._();
-
 
   static const logoPNG = 'assets/logo.png';
   static const rainbow2SVG = 'assets/rainbow-2.svg';

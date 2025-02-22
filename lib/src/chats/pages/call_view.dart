@@ -784,7 +784,7 @@
 //   //       });
 
 //   //       return FutureBuilder<RTCVideoRenderer>(
-          
+
 //   //         future: initialisationFuture,
 //   //         builder: (context, snapshot) {
 //   //           if (snapshot.hasData) {
@@ -1019,17 +1019,17 @@
 //     logger.i("onDisconnectedFromUser userId= $userId");
 //     _removeMediaStream(session, userId);
 //   }
-  
+
 //   @override
 //   void onConnectingToUser(P2PSession session, int userId) {
 //     // TODO: implement onConnectingToUser
 //   }
-  
+
 //   @override
 //   void onConnectionFailedWithUser(P2PSession session, int userId) {
 //     // TODO: implement onConnectionFailedWithUser
 //   }
-  
+
 //   renderStreamsGrid(Orientation orientation) {}
 // }
 

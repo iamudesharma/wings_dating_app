@@ -26,7 +26,6 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
     channelStateSort: const [SortOption('last_message_at')],
   );
 
-  final _innerRouterKey = GlobalKey<AutoRouterState>();
   @override
   void dispose() {
     _controller.dispose();
@@ -47,7 +46,8 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
               return StreamChannelListView(
                 controller: _controller,
                 onChannelTap: (channel) {
-                  context.router.push(ChatRoute(channel: channel, id: channel.id!));
+                  context.router
+                      .push(ChatRoute(channel: channel, id: channel.id!));
 
                   // final router = AutoRoute.of(context);
                   // context.innerRouterOf<StackRouter>(ChatRoute(channel: channel, id: channel.id!));
@@ -77,7 +77,8 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
                       // print("Channel: ${channel.id}");
                       // final router = _innerRouterKey.currentState?.controller;
                       // router?.push(ChatRoute(channel: channel, id: channel.id!));
-                      context.router.push(ChatRoute(channel: channel, id: channel.id!));
+                      context.router
+                          .push(ChatRoute(channel: channel, id: channel.id!));
                     },
                   ),
                 ),

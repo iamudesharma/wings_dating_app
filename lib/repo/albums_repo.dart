@@ -13,11 +13,13 @@ class SharedAlbum extends _$SharedAlbum {
     final searchMap = await ref.read(chatClientProvider).search(
         Filter.and([
           Filter.equal("type", "messaging"),
-          Filter.in_('members', [ref.read(chatClientProvider).state.currentUser!.id]),
+          Filter.in_(
+              'members', [ref.read(chatClientProvider).state.currentUser!.id]),
         ]),
         messageFilters: Filter.and([
           Filter.equal("attachments.type", "album"),
-          Filter.notEqual("user.id", ref.read(chatClientProvider).state.currentUser!.id)
+          Filter.notEqual(
+              "user.id", ref.read(chatClientProvider).state.currentUser!.id)
         ]));
 
     return searchMap.results;
@@ -42,7 +44,9 @@ class AlbumsRepo {
   Future<List<AlbumListModel>> getAllAlbums() async {
     final data = await ref
         .read(albumProvider)
-        .whereUserId(isEqualTo: ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
+        .whereUserId(
+            isEqualTo:
+                ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
         .get();
 
     final albumList = data.docs.map((e) => e.data).toList();

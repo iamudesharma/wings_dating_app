@@ -32,7 +32,8 @@ final isUserOnlineProvider = FutureProvider.family<bool, bool>(
   (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
 );
 
-final userListProvider = StreamProvider<List<UserModel?>?>((ref) => ref.read(profileRepoProvider).getUserList());
+final userListProvider = StreamProvider<List<UserModel?>?>(
+    (ref) => ref.read(profileRepoProvider).getUserList());
 
 @RoutePage()
 class UsersView extends ConsumerStatefulWidget {
@@ -42,8 +43,10 @@ class UsersView extends ConsumerStatefulWidget {
   ConsumerState<UsersView> createState() => _UsersViewState();
 }
 
-class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserver {
-  late StreamSubscription<List<ConnectivityResult>> connectivityStateSubscription;
+class _UsersViewState extends ConsumerState<UsersView>
+    with WidgetsBindingObserver {
+  late StreamSubscription<List<ConnectivityResult>>
+      connectivityStateSubscription;
   AppLifecycleState? appState;
 
   Widget? nullWidget;
@@ -92,7 +95,8 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
         print('Message data: ${message.data}');
 
         if (message.notification != null) {
-          print('Message also contained a notification: ${message.notification}');
+          print(
+              'Message also contained a notification: ${message.notification}');
 
           // showNotification(message);
         }
@@ -102,7 +106,8 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
     super.initState();
 
-    connectivityStateSubscription = Connectivity().onConnectivityChanged.listen((connectivityType) {
+    connectivityStateSubscription =
+        Connectivity().onConnectivityChanged.listen((connectivityType) {
       if (AppLifecycleState.resumed != appState) return;
 
       if (connectivityType != ConnectivityResult.none) {}
@@ -139,14 +144,16 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
   void didChangeDependencies() async {
     super.didChangeDependencies();
 
-    final _currentUser = ref.read(ProfileController.userControllerProvider).userModel;
+    final _currentUser =
+        ref.read(ProfileController.userControllerProvider).userModel;
   }
 
   bool? isOnline = false;
 
   @override
   Widget build(BuildContext context) {
-    final userData = ref.watch(ProfileController.userControllerProvider).userModel;
+    final userData =
+        ref.watch(ProfileController.userControllerProvider).userModel;
     final userList = ref.watch(userListProvider);
 
     return Scaffold(
@@ -164,9 +171,12 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
           if (currentLocation.latitude != currentUser?.latitude &&
               currentLocation.longitude != currentUser?.longitude) {
-            GeoFirePoint geoFirePoint = GeoFirePoint(GeoPoint(currentLocation.latitude, currentLocation.longitude));
+            GeoFirePoint geoFirePoint = GeoFirePoint(
+                GeoPoint(currentLocation.latitude, currentLocation.longitude));
 
-            await ref.read(profileRepoProvider).updateUserDoc(userData!.copyWith(
+            await ref
+                .read(profileRepoProvider)
+                .updateUserDoc(userData!.copyWith(
                     position: GeoPointData(
                   geohash: geoFirePoint.geohash,
                   geopoint: geoFirePoint.geopoint,
@@ -185,13 +195,15 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                     child: AppBar(
                       leadingWidth: 40,
                       leading: CircleAvatar(
-                        backgroundImage: CachedNetworkImageProvider(
-                            userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+                        backgroundImage: CachedNetworkImageProvider(userData!
+                                .profileUrl ??
+                            "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                       ),
                       title: Text(userData.username),
                       actions: [
                         SearchAnchor(
-                          viewBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                          viewBackgroundColor:
+                              Theme.of(context).scaffoldBackgroundColor,
                           viewSurfaceTintColor: Colors.black,
                           builder: (context, controller) => InkWell(
                               onTap: () {
@@ -199,7 +211,8 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                               },
                               child: const Icon(Icons.search)),
                           suggestionsBuilder: (context, controller) {
-                            final userList = ref.watch(searchUsersProvider(controller.text));
+                            final userList =
+                                ref.watch(searchUsersProvider(controller.text));
 
                             return [
                               Container(
@@ -207,13 +220,14 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                                   loading: () => const Center(
                                     child: CircularProgressIndicator.adaptive(),
                                   ),
-                                  error: (error, stackTrace) => (error is Exception)
-                                      ? Center(
-                                          child: Text(error.toString()),
-                                        )
-                                      : Center(
-                                          child: Text(error.toString()),
-                                        ),
+                                  error: (error, stackTrace) =>
+                                      (error is Exception)
+                                          ? Center(
+                                              child: Text(error.toString()),
+                                            )
+                                          : Center(
+                                              child: Text(error.toString()),
+                                            ),
                                   data: (data) => SizedBox(
                                     height: MediaQuery.of(context).size.height,
                                     width: MediaQuery.of(context).size.width,
@@ -223,9 +237,13 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                                         final users = data[index];
                                         return ListTile(
                                           leading: CircleAvatar(
-                                            backgroundImage: CachedNetworkImageProvider(users!.profileUrl!),
+                                            backgroundImage:
+                                                CachedNetworkImageProvider(
+                                                    users!.profileUrl!),
                                           ),
-                                          title: Text(users.username, style: const TextStyle(color: Colors.white)),
+                                          title: Text(users.username,
+                                              style: const TextStyle(
+                                                  color: Colors.white)),
                                           onTap: () {},
                                         );
                                       },
@@ -235,7 +253,8 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                               )
                             ];
                           },
-                          isFullScreen: sizingInformation.isMobile ? true : false,
+                          isFullScreen:
+                              sizingInformation.isMobile ? true : false,
                         ),
                       ],
                     ),
@@ -263,7 +282,8 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                               height: sizingInformation.screenSize.height,
                               width: sizingInformation.screenSize.width,
                               child: GridView.builder(
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: sizingInformation.isMobile
                                       ? 3
                                       : sizingInformation.isTablet
@@ -277,9 +297,11 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
                                   return UserGridItem(
                                     onTapEditProfile: () async {
-                                      AutoTabsRouter.of(context).setActiveIndex(3);
+                                      AutoTabsRouter.of(context)
+                                          .setActiveIndex(3);
                                     },
-                                    isCurrentUser: users?.id == userData.id ? true : false,
+                                    isCurrentUser:
+                                        users?.id == userData.id ? true : false,
                                     users: users!,
                                   ).animate().shake();
                                 },
@@ -324,10 +346,14 @@ class NavigationBarWidget extends StatelessWidget {
                     AutoTabsRouter.of(context).setActiveIndex(value);
                   },
                   destinations: const [
-                    NavigationRailDestination(icon: Icon(Icons.home), label: Text("Users")),
-                    NavigationRailDestination(icon: Icon(Icons.chat_bubble), label: Text("Chat")),
-                    NavigationRailDestination(icon: Icon(Icons.album_outlined), label: Text("Album")),
-                    NavigationRailDestination(icon: Icon(Icons.person), label: Text("Profile"))
+                    NavigationRailDestination(
+                        icon: Icon(Icons.home), label: Text("Users")),
+                    NavigationRailDestination(
+                        icon: Icon(Icons.chat_bubble), label: Text("Chat")),
+                    NavigationRailDestination(
+                        icon: Icon(Icons.album_outlined), label: Text("Album")),
+                    NavigationRailDestination(
+                        icon: Icon(Icons.person), label: Text("Profile"))
                   ],
                 );
               },

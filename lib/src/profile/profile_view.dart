@@ -14,7 +14,8 @@ import '../../routes/app_router.dart';
 
 // import 'package:velocity_x/velocity_x.dart';
 
-final getUserByIdProvider = FutureProvider.family<UserModel?, String>((ref, id) {
+final getUserByIdProvider =
+    FutureProvider.family<UserModel?, String>((ref, id) {
   return ref.read(profileRepoProvider).getUserById(id);
 });
 
@@ -31,7 +32,8 @@ class ProfileView extends ConsumerStatefulWidget {
 class _ProfileViewState extends ConsumerState<ProfileView> {
   @override
   Widget build(BuildContext context) {
-    var userData = ref.watch(ProfileController.userControllerProvider).userModel;
+    var userData =
+        ref.watch(ProfileController.userControllerProvider).userModel;
 
     // logger.i(userData?.profileUrl);
 
@@ -91,13 +93,15 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                                 children: [
                                   CircleAvatar(
                                     radius: 50,
-                                    backgroundImage: NetworkImage(userData.profileUrl ?? ""),
+                                    backgroundImage:
+                                        NetworkImage(userData.profileUrl ?? ""),
                                   ),
                                   // 10.widthBox,
                                   SizedBox(width: 10),
 
                                   const Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [],
                                   ),
                                   const Spacer(),
@@ -144,22 +148,37 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ProfileInputCard(title: "Role", value: userData.role.value),
-                                  Divider(),
-                                  ProfileInputCard(title: "Body Type", value: userData.bodyType.value),
-                                  Divider(),
-                                  ProfileInputCard(title: "Ethnicity", value: userData.ethnicity.value),
+                                  ProfileInputCard(
+                                      title: "Role",
+                                      value: userData.role.value),
                                   Divider(),
                                   ProfileInputCard(
-                                      title: "Relationship Status", value: userData.relationshipStatus.value),
+                                      title: "Body Type",
+                                      value: userData.bodyType.value),
                                   Divider(),
-                                  ProfileInputCard(title: "Looking for", value: userData.lookingFor.value),
+                                  ProfileInputCard(
+                                      title: "Ethnicity",
+                                      value: userData.ethnicity.value),
                                   Divider(),
-                                  ProfileInputCard(title: "Where to meet", value: userData.whereToMeet.value),
+                                  ProfileInputCard(
+                                      title: "Relationship Status",
+                                      value: userData.relationshipStatus.value),
                                   Divider(),
-                                  ProfileInputCard(title: "Height", value: userData.height ?? "Do not Show"),
+                                  ProfileInputCard(
+                                      title: "Looking for",
+                                      value: userData.lookingFor.value),
                                   Divider(),
-                                  ProfileInputCard(title: "Weight", value: userData.weight ?? "Do not Show"),
+                                  ProfileInputCard(
+                                      title: "Where to meet",
+                                      value: userData.whereToMeet.value),
+                                  Divider(),
+                                  ProfileInputCard(
+                                      title: "Height",
+                                      value: userData.height ?? "Do not Show"),
+                                  Divider(),
+                                  ProfileInputCard(
+                                      title: "Weight",
+                                      value: userData.weight ?? "Do not Show"),
                                   Divider(),
                                 ],
                               ),

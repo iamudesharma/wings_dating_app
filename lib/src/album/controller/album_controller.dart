@@ -30,7 +30,8 @@ class AlbumController extends _$AlbumController {
       imageUrls: [...?state.value?.imageUrls, image],
     );
     // state = AsyncData(state..copyWith(imageUrls: [...?state.value?.imageUrls, image]));
-    state = AsyncData(state.value?.copyWith(imageUrls: [...?state.value?.imageUrls, image]));
+    state = AsyncData(
+        state.value?.copyWith(imageUrls: [...?state.value?.imageUrls, image]));
     // state = AsyncData(state);
     // Ensure that state.value is treated as List<String>
     // var newImage = [...(state.value as List<String>), image];

@@ -23,7 +23,8 @@ class AlbumListModel with _$AlbumListModel {
     required String id,
   }) = _AlbumListModel;
 
-  factory AlbumListModel.fromJson(Map<String, Object?> json) => _$AlbumListModelFromJson(json);
+  factory AlbumListModel.fromJson(Map<String, Object?> json) =>
+      _$AlbumListModelFromJson(json);
 }
 
 // @Freezed(map: FreezedMapOptions.all, toStringOverride: true, toJson: true, fromJson: true)

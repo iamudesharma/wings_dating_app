@@ -26,7 +26,8 @@ class OtherUserProfileView extends ConsumerStatefulWidget {
   final bool? isCurrentUser;
 
   @override
-  ConsumerState<OtherUserProfileView> createState() => _OtherUserProfileViewState();
+  ConsumerState<OtherUserProfileView> createState() =>
+      _OtherUserProfileViewState();
 }
 
 class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
@@ -34,7 +35,8 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
   Widget build(BuildContext context) {
     // var userData;
     // if (widget.isCurrentUser!) {
-    var currentUser = ref.watch(ProfileController.userControllerProvider).userModel;
+    var currentUser =
+        ref.watch(ProfileController.userControllerProvider).userModel;
     // } else {
     var otherUser = ref.watch(getUserByIdProvider(widget.id!));
     // }
@@ -61,7 +63,9 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
             meta.keywords(
               keywords: userData.bodyType.value,
             );
-            meta.ogImage(ogImage: userData.profileUrl ?? "https://img.icons8.com/ios/500/null.png");
+            meta.ogImage(
+                ogImage: userData.profileUrl ??
+                    "https://img.icons8.com/ios/500/null.png");
           }
           return CustomScrollView(
             slivers: [
@@ -128,7 +132,8 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                     width: MediaQuery.of(context).size.width,
                     child: CachedNetworkImage(
                       // color: Colors.white,
-                      imageUrl: (userData.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+                      imageUrl: (userData.profileUrl ??
+                          "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                       fit: BoxFit.contain,
                       color: Colors.white,
                     ),
@@ -164,14 +169,29 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ProfileInputCard(title: "Role", value: userData.role.value),
-                              ProfileInputCard(title: "Body Type", value: userData.bodyType.value),
-                              ProfileInputCard(title: "Ethnicity", value: userData.ethnicity.value),
-                              ProfileInputCard(title: "Relationship Status", value: userData.relationshipStatus.value),
-                              ProfileInputCard(title: "Looking for", value: userData.lookingFor.value),
-                              ProfileInputCard(title: "Where to meet", value: userData.whereToMeet.value),
-                              ProfileInputCard(title: "Height", value: userData.height ?? "Do not Show"),
-                              ProfileInputCard(title: "Weight", value: userData.weight ?? "Do not Show"),
+                              ProfileInputCard(
+                                  title: "Role", value: userData.role.value),
+                              ProfileInputCard(
+                                  title: "Body Type",
+                                  value: userData.bodyType.value),
+                              ProfileInputCard(
+                                  title: "Ethnicity",
+                                  value: userData.ethnicity.value),
+                              ProfileInputCard(
+                                  title: "Relationship Status",
+                                  value: userData.relationshipStatus.value),
+                              ProfileInputCard(
+                                  title: "Looking for",
+                                  value: userData.lookingFor.value),
+                              ProfileInputCard(
+                                  title: "Where to meet",
+                                  value: userData.whereToMeet.value),
+                              ProfileInputCard(
+                                  title: "Height",
+                                  value: userData.height ?? "Do not Show"),
+                              ProfileInputCard(
+                                  title: "Weight",
+                                  value: userData.weight ?? "Do not Show"),
                             ],
                           ),
                         ),
@@ -188,7 +208,9 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton.icon(
             icon: const Icon(Icons.chat_bubble),
-            label: currentUser!.blockList.contains(otherUser.value?.id) ? const Text("Unblock") : const Text("Message"),
+            label: currentUser!.blockList.contains(otherUser.value?.id)
+                ? const Text("Unblock")
+                : const Text("Message"),
             onPressed: () async {
               // Future.microtask(() async {
               //   ref.read(chatRepoProvider.notifier).connectUser(
@@ -196,7 +218,9 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
               //       );
               // });
 
-              ref.read(chatRepoProvider.notifier).createChat(currentUser.id, otherUser.value!.id);
+              ref
+                  .read(chatRepoProvider.notifier)
+                  .createChat(currentUser.id, otherUser.value!.id);
 
               // Todo create chat one to one chat
             }),

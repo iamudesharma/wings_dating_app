@@ -25,7 +25,8 @@ import 'package:wings_dating_app/src/model/user_models.dart';
 int? time;
 const int messagesPerPage = 50;
 int lastPartSize = 0;
-final _chatUserData = FutureProvider.autoDispose.family<UserModel?, int>((ref, id) {
+final _chatUserData =
+    FutureProvider.autoDispose.family<UserModel?, int>((ref, id) {
   ref.keepAlive();
   return ref.read(profileRepoProvider).getUserByCubeId(id);
 });
@@ -151,8 +152,10 @@ class PickUpAlbum extends ConsumerWidget {
 
 class AlbumBuilder extends StreamAttachmentWidgetBuilder {
   @override
-  Widget build(BuildContext context, Message message, Map<String, List<Attachment>> attachments) {
-    final attachment = message.attachments.first.extraData["imageUrls"] as dynamic;
+  Widget build(BuildContext context, Message message,
+      Map<String, List<Attachment>> attachments) {
+    final attachment =
+        message.attachments.first.extraData["imageUrls"] as dynamic;
     final imageId = message.attachments.first.extraData["image_id"] as dynamic;
 
     return GestureDetector(

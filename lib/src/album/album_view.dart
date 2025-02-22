@@ -58,14 +58,20 @@ class AlbumView extends ConsumerWidget {
                   flex: 4,
                   child: albums.when(
                     data: (data) => GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-                        itemCount: data.length + (sharedAlbums.value?.length ?? 0),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3),
+                        itemCount:
+                            data.length + (sharedAlbums.value?.length ?? 0),
                         itemBuilder: (context, index) {
                           print("index ${index >= data.length}");
                           if (index >= data.length) {
-                            final sharedAlbum = sharedAlbums.value![index - data.length];
-                            final image =
-                                List.from(sharedAlbum.message.attachments.first.extraData["imageUrls"] as dynamic);
+                            final sharedAlbum =
+                                sharedAlbums.value![index - data.length];
+                            final image = List.from(sharedAlbum
+                                .message
+                                .attachments
+                                .first
+                                .extraData["imageUrls"] as dynamic);
                             return ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Stack(
@@ -98,7 +104,8 @@ class AlbumView extends ConsumerWidget {
                                 Center(
                                   child: InkWell(
                                     onTap: () {
-                                      context.router.push(CreateAlbumRoute(id: data[index].id));
+                                      context.router.push(
+                                          CreateAlbumRoute(id: data[index].id));
 
                                       // context.router.push(AlbumDetailsRoute(id: data[index].id));
                                     },
@@ -121,8 +128,10 @@ class AlbumView extends ConsumerWidget {
                             ),
                           );
                         }),
-                    loading: () => const Center(child: CircularProgressIndicator.adaptive()),
-                    error: (error, stackTrace) => Center(child: Text(error.toString())),
+                    loading: () => const Center(
+                        child: CircularProgressIndicator.adaptive()),
+                    error: (error, stackTrace) =>
+                        Center(child: Text(error.toString())),
                   )),
             ],
           );
@@ -132,7 +141,8 @@ class AlbumView extends ConsumerWidget {
   }
 }
 
-Future<void> openEditor(BuildContext context, WidgetRef ref, {required Uint8List path, required String id}) async {
+Future<void> openEditor(BuildContext context, WidgetRef ref,
+    {required Uint8List path, required String id}) async {
   await Navigator.push(
     context,
     MaterialPageRoute(
@@ -143,7 +153,9 @@ Future<void> openEditor(BuildContext context, WidgetRef ref, {required Uint8List
                 onImageEditingComplete: (bytes) async {
                   final _path = await uploadFileToFirebaseAlbum(bytes);
 
-                  await ref.read(AlbumControllerProvider(id).notifier).addImage(_path);
+                  await ref
+                      .read(AlbumControllerProvider(id).notifier)
+                      .addImage(_path);
 
                   if (context.mounted) {
                     Navigator.pop(context);
@@ -157,7 +169,9 @@ Future<void> openEditor(BuildContext context, WidgetRef ref, {required Uint8List
                 onImageEditingComplete: (bytes) async {
                   final path = await uploadFileToFirebaseAlbum(bytes);
 
-                  await ref.read(AlbumControllerProvider(id).notifier).addImage(path);
+                  await ref
+                      .read(AlbumControllerProvider(id).notifier)
+                      .addImage(path);
 
                   if (context.mounted) {
                     Navigator.pop(context);

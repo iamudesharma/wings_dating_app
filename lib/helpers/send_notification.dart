@@ -1,4 +1,3 @@
-
 String intToTimeLeft(int value) {
   int h, m, s;
 
@@ -12,7 +11,6 @@ String intToTimeLeft(int value) {
 
   return result;
 }
-
 
 List<String> weightList = [
   "Do not show",
@@ -193,4 +191,3 @@ List<String> heightList = [
   "209 cm",
   "210 cm",
 ];
-
