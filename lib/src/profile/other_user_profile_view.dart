@@ -6,13 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta_seo/meta_seo.dart';
 // import 'package:velocity_x/velocity_x.dart';
-import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/repo/chat_repo.dart';
-import 'package:wings_dating_app/services/chat_services.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 
-import '../../routes/app_router.dart';
+import 'widgets/profile_input_card.dart';
+
 
 @RoutePage()
 class OtherUserProfileView extends ConsumerStatefulWidget {

@@ -47,6 +47,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
             UsersRoute(),
             ChatListRoute(),
             AlbumRoute(),
+            MatchingRoute(),
             ProfileRoute(),
           ],
           bottomNavigationBuilder: size.isMobile
@@ -56,8 +57,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                       return NavigationBar(
                         backgroundColor: Colors.black,
                         selectedIndex: tabsRouter.activeIndex,
-                        onDestinationSelected: (value) =>
-                            tabsRouter.setActiveIndex(value, notify: true),
+                        onDestinationSelected: (value) => tabsRouter.setActiveIndex(value, notify: true),
                         destinations: const [
                           NavigationDestination(
                             label: 'Home',

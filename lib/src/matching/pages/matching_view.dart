@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:wings_dating_app/src/users/users_view.dart';
 
 @RoutePage()
 class MatchingView extends ConsumerStatefulWidget {
@@ -14,18 +15,15 @@ class MatchingView extends ConsumerStatefulWidget {
   ConsumerState<MatchingView> createState() => _MatchingViewState();
 }
 
-class _MatchingViewState extends ConsumerState<MatchingView>
-    with WidgetsBindingObserver {
-  late StreamSubscription<List<ConnectivityResult>>
-      connectivityStateSubscription;
+class _MatchingViewState extends ConsumerState<MatchingView> with WidgetsBindingObserver {
+  late StreamSubscription<List<ConnectivityResult>> connectivityStateSubscription;
   AppLifecycleState? appState;
 
   @override
   void initState() {
     super.initState();
     // Initialize connectivity subscription
-    connectivityStateSubscription =
-        Connectivity().onConnectivityChanged.listen((connectivityType) {
+    connectivityStateSubscription = Connectivity().onConnectivityChanged.listen((connectivityType) {
       // Handle connectivity changes
     });
     appState = WidgetsBinding.instance.lifecycleState;
@@ -47,13 +45,23 @@ class _MatchingViewState extends ConsumerState<MatchingView>
           // Refresh logic
         },
         child: ResponsiveBuilder(builder: (context, sizingInformation) {
-          return CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: AppBar(
-                  title: const Text("Matching Users"),
-                  actions: [
-                    // Add search functionality if needed
+          return Row(
+            children: [
+              NavigationBarWidget(
+                sizingInformation: sizingInformation,
+              ),
+              Expanded(
+                flex: 5,
+                child: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: AppBar(
+                        title: const Text("Matching Users"),
+                        actions: [
+                          // Add search functionality if needed
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

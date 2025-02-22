@@ -78,6 +78,7 @@ dependencies:
 
   # firebase_crashlytics: ^3.3.2
   # firebase_analytics: ^10.4.2po
+  firebase_analytics: ^11.4.3
   flutter_animate: ^4.5.2
   geolocator: ^13.0.2
   # connectycube_flutter_call_kit:
@@ -134,7 +135,13 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   build_runner: ^2.4.15
  
-  cloud_firestore_odm_generator: ^1.0.0-dev.89
+  cloud_firestore_odm_generator:
+    path: /Users/udeshsharma/Code/udesh/firestoreodm-flutter/packages/cloud_firestore_odm_generator
+
+  cloud_firestore_odm:
+    path: /Users/udeshsharma/Code/udesh/firestoreodm-flutter/packages/cloud_firestore_odm
+     
+    
   json_serializable: ^6.9.4
   # auto_route_generator: ^6.0.0-rc
   auto_route_generator: ^9.3.1
@@ -158,6 +165,12 @@ dependency_overrides:
   source_gen: ^2.0.0
   analyzer: "^7.0.0"
   file_picker: "9.0.0"
+  cloud_firestore_odm_generator:
+    path: /Users/udeshsharma/Code/udesh/firestoreodm-flutter/packages/cloud_firestore_odm_generator
+
+  cloud_firestore_odm:
+    path: /Users/udeshsharma/Code/udesh/firestoreodm-flutter/packages/cloud_firestore_odm
+    
 
   # http:
   # google_fonts:

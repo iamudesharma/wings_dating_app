@@ -10,11 +10,13 @@ import 'package:wings_dating_app/src/album/album_details_view.dart';
 import 'package:wings_dating_app/src/album/album_view.dart';
 import 'package:wings_dating_app/src/album/create_album_view.dart';
 import 'package:wings_dating_app/src/album/widget/image_preview.dart';
+import 'package:wings_dating_app/src/login.dart';
 
 import '../src/auth/sign_options.dart';
 import '../src/chats/chats_list_view.dart';
 import '../src/chats/pages/chat_view.dart';
 import '../src/dashboard.dart';
+import '../src/matching/pages/matching_view.dart';
 import '../src/profile/add_additional_information_view.dart';
 import '../src/profile/edit_profile_view.dart';
 import '../src/profile/other_user_profile_view.dart';
@@ -55,6 +57,11 @@ class AppRouter extends RootStackRouter {
             path: "",
             keepHistory: true,
           ),
+           AutoRoute(
+              page: MatchingRoute.page,
+              keepHistory: true,
+              path: "",
+              children: []),
           AutoRoute(
               page: ProfileRoute.page,
               keepHistory: true,
