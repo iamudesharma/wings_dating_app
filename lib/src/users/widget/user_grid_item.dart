@@ -8,7 +8,11 @@ import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
 class UserGridItem extends ConsumerStatefulWidget {
-  const UserGridItem({super.key, required this.users, this.isCurrentUser = false, this.onTapEditProfile});
+  const UserGridItem(
+      {super.key,
+      required this.users,
+      this.isCurrentUser = false,
+      this.onTapEditProfile});
 
   final UserModel users;
 
@@ -40,8 +44,8 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: CachedNetworkImageProvider(
-                widget.users.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+            image: CachedNetworkImageProvider(widget.users.profileUrl ??
+                "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
             fit: BoxFit.cover,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -54,7 +58,9 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
             child: Row(
               children: [
                 Text(
-                  ref.read(ProfileController.userControllerProvider).getDistance(
+                  ref
+                      .read(ProfileController.userControllerProvider)
+                      .getDistance(
                         GeoPoint(
                           widget.users.position!.geopoint.latitude,
                           widget.users.position!.geopoint.longitude,
@@ -67,14 +73,18 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                 ),
                 const Spacer(),
                 widget.isCurrentUser!
-                    ? InkWell(onTap: widget.onTapEditProfile, child: const Icon(Icons.edit))
+                    ? InkWell(
+                        onTap: widget.onTapEditProfile,
+                        child: const Icon(Icons.edit))
                     : Align(
                         alignment: Alignment.topRight,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CircleAvatar(
                             radius: 5,
-                            backgroundColor: widget.users.isOnline ? Colors.green : Colors.amber,
+                            backgroundColor: widget.users.isOnline
+                                ? Colors.green
+                                : Colors.amber,
                           ),
                         ),
                       ),

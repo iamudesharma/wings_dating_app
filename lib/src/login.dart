@@ -8,7 +8,8 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false, title: const Text('Chat')),
+      appBar:
+          AppBar(automaticallyImplyLeading: false, title: const Text('Chat')),
       body: const LoginPage(),
     );
   }
@@ -167,7 +168,8 @@ class LoginPageState extends State<LoginPage> {
             ),
             TextButton(
               onPressed: _formChange,
-              child: const Text('Don\'t have an account? Tap here to register.'),
+              child:
+                  const Text('Don\'t have an account? Tap here to register.'),
             ),
             TextButton(
               onPressed: () {},

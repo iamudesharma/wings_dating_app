@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/udeshsharma/fvm/versions/stable/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/udeshsharma/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/udeshsharma/Code/udesh/wings_dating_app/android/app/.cxx/Debug/4a365m3l/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/udeshsharma/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/udeshsharma/Code/udesh/wings_dating_app/android/app/.cxx/Debug/4a365m3l/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

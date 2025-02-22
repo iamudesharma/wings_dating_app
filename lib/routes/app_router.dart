@@ -45,13 +45,21 @@ class AppRouter extends RootStackRouter {
         RedirectRoute(path: '', redirectTo: 'users'),
         AutoRoute(page: BooksTab.page, path: "user", children: [
           AutoRoute(page: UsersRoute.page, path: "", initial: true),
-          AutoRoute(page: ChatListRoute.page, path: "", keepHistory: true, children: []),
+          AutoRoute(
+              page: ChatListRoute.page,
+              path: "",
+              keepHistory: true,
+              children: []),
           AutoRoute(
             page: AlbumRoute.page,
             path: "",
             keepHistory: true,
           ),
-          AutoRoute(page: ProfileRoute.page, keepHistory: true, path: "", children: []),
+          AutoRoute(
+              page: ProfileRoute.page,
+              keepHistory: true,
+              path: "",
+              children: []),
         ])
       ],
       guards: [
@@ -83,13 +91,22 @@ class AppRouter extends RootStackRouter {
         page: AddAdditionalInformationRoute.page,
         type: const RouteType.adaptive(),
         path: "/add-additional-information"),
-    AutoRoute(page: EditProfileRoute.page, type: const RouteType.adaptive(), path: "/edit-profile"),
+    AutoRoute(
+        page: EditProfileRoute.page,
+        type: const RouteType.adaptive(),
+        path: "/edit-profile"),
     AutoRoute(
       page: AlbumDetailsRoute.page,
       type: const RouteType.adaptive(),
     ),
-    AutoRoute(page: UserBlockListRoute.page, type: const RouteType.adaptive(), path: "/user-block-list"),
-    AutoRoute(page: ImagePreviewRoute.page, type: const RouteType.adaptive(), path: "/image:path"),
+    AutoRoute(
+        page: UserBlockListRoute.page,
+        type: const RouteType.adaptive(),
+        path: "/user-block-list"),
+    AutoRoute(
+        page: ImagePreviewRoute.page,
+        type: const RouteType.adaptive(),
+        path: "/image:path"),
     AutoRoute(
       page: CreateAlbumRoute.page,
       type: const RouteType.adaptive(),

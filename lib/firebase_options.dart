@@ -64,8 +64,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '546119961072',
     projectId: 'wings-dating-951ed',
     storageBucket: 'wings-dating-951ed.appspot.com',
-    androidClientId: '546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com',
-    iosClientId: '546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com',
+    androidClientId:
+        '546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com',
+    iosClientId:
+        '546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com',
     iosBundleId: 'com.wings.wingsdating',
   );
 
@@ -75,8 +77,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '546119961072',
     projectId: 'wings-dating-951ed',
     storageBucket: 'wings-dating-951ed.appspot.com',
-    androidClientId: '546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com',
-    iosClientId: '546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com',
+    androidClientId:
+        '546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com',
+    iosClientId:
+        '546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com',
     iosBundleId: 'com.wings.wingsdating',
   );
 
@@ -89,5 +93,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'wings-dating-951ed.appspot.com',
     measurementId: 'G-Z8K22GR1Z6',
   );
-
 }

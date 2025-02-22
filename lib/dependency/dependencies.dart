@@ -14,7 +14,6 @@ class Dependency {
     return FirebaseFirestore.instance;
   });
 
-
   static final firebaseStorageProvider = Provider<FirebaseStorage>((ref) {
     return FirebaseStorage.instance;
   });

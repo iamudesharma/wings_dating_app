@@ -45,7 +45,8 @@ void main() async {
     EmailAuthProvider(),
     PhoneAuthProvider(),
     GoogleProvider(
-      clientId: "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
+      clientId:
+          "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
     ),
   ]);
 
@@ -66,8 +67,6 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
-
-  
   }
 
   @override
@@ -114,7 +113,8 @@ class _MyAppState extends ConsumerState<MyApp> {
         tones: FlexTones.jolly(Brightness.dark),
         blendLevel: 15,
         appBarOpacity: 0.90,
-        subThemesData: const FlexSubThemesData(blendOnLevel: 30, inputDecoratorRadius: 20.0, cardRadius: 20),
+        subThemesData: const FlexSubThemesData(
+            blendOnLevel: 30, inputDecoratorRadius: 20.0, cardRadius: 20),
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
         useMaterial3: true,
         fontFamily: GoogleFonts.notoSans().fontFamily,

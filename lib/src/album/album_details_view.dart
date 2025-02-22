@@ -10,7 +10,8 @@ import 'package:wings_dating_app/src/album/controller/album_controller.dart';
 
 @RoutePage()
 class AlbumDetailsView extends ConsumerWidget {
-  const AlbumDetailsView({super.key, required this.id, this.isPreview = false, this.channel});
+  const AlbumDetailsView(
+      {super.key, required this.id, this.isPreview = false, this.channel});
   final String id;
   final bool isPreview;
   final Channel? channel;
@@ -72,7 +73,9 @@ class AlbumDetailsView extends ConsumerWidget {
                   }
                 }
               },
-              child: Text((albums.value?.imageUrls.length ?? 0) > 0 ? "Add More" : "Create Album")),
+              child: Text((albums.value?.imageUrls.length ?? 0) > 0
+                  ? "Add More"
+                  : "Create Album")),
         ],
       ),
       body: CustomScrollView(

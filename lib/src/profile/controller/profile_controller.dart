@@ -27,7 +27,8 @@ final _userControllerProvider = ChangeNotifierProvider<ProfileController>(
 );
 
 class ProfileController extends ChangeNotifier {
-  static ChangeNotifierProvider<ProfileController> userControllerProvider = _userControllerProvider;
+  static ChangeNotifierProvider<ProfileController> userControllerProvider =
+      _userControllerProvider;
   UserModel? userModel;
 
   Uint8List? profileImage;
@@ -105,12 +106,17 @@ class ProfileController extends ChangeNotifier {
     return meterToKm(data);
   }
 
-  Future<void> removeFromBlockList({required String id, required int cubeId}) async {
-    await ref.read(Dependency.profileProvider).removeToBlockList(id: id, cubeId: cubeId);
+  Future<void> removeFromBlockList(
+      {required String id, required int cubeId}) async {
+    await ref
+        .read(Dependency.profileProvider)
+        .removeToBlockList(id: id, cubeId: cubeId);
   }
 
   Future<void> addToBlockList({required String id, required int cubeId}) async {
-    await ref.read(Dependency.profileProvider).removeToBlockList(id: id, cubeId: cubeId);
+    await ref
+        .read(Dependency.profileProvider)
+        .removeToBlockList(id: id, cubeId: cubeId);
   }
 }
 

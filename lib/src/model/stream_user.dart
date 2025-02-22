@@ -25,13 +25,16 @@ class StreamUser {
 
   factory StreamUser.fromMap(Map<String, dynamic> map) {
     return StreamUser(
-      user: map['user'] != null ? User.fromJson(map['user'] as Map<String, dynamic>) : null,
+      user: map['user'] != null
+          ? User.fromJson(map['user'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory StreamUser.fromJson(String source) => StreamUser.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory StreamUser.fromJson(String source) =>
+      StreamUser.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'StreamUser(user: $user)';

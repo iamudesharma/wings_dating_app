@@ -43,7 +43,8 @@ class UserModel with _$UserModel {
     required String username,
     String? bio,
     List<String>? albumUrl,
-    @Default("https://img.icons8.com/ios/500/null/user-male-circle--v1.png") String? profileUrl,
+    @Default("https://img.icons8.com/ios/500/null/user-male-circle--v1.png")
+    String? profileUrl,
     String? birthday,
     int? age,
     @JsonKey(name: "position") GeoPointData? position,
@@ -53,7 +54,8 @@ class UserModel with _$UserModel {
     String? lived,
     @Default(Role.doNotShow) Role role,
     @Default(BodyType.doNotShow) BodyType bodyType,
-    @Default(RelationshipStatus.doNotShow) RelationshipStatus relationshipStatus,
+    @Default(RelationshipStatus.doNotShow)
+    RelationshipStatus relationshipStatus,
     @Default(Ethnicity.doNotShow) Ethnicity ethnicity,
     @Default(LookingFor.doNotShow) LookingFor lookingFor,
     @Default(WhereToMeet.doNotShow) WhereToMeet whereToMeet,
@@ -66,7 +68,8 @@ class UserModel with _$UserModel {
   }) = _UserModel;
 
   // Converts JSON data to UserModel.
-  factory UserModel.fromJson(Map<String, Object?> json) => _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, Object?> json) =>
+      _$UserModelFromJson(json);
 }
 
 // Define the Firestore collection reference.

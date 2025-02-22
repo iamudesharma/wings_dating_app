@@ -65,11 +65,13 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   @override
   void initState() {
     if (widget.isEditProfile) {
-      final userdata = ref.read(ProfileController.userControllerProvider).userModel;
+      final userdata =
+          ref.read(ProfileController.userControllerProvider).userModel;
 
       logger.i(userdata);
 
-      _usernameController = TextEditingController(text: userdata?.username ?? "");
+      _usernameController =
+          TextEditingController(text: userdata?.username ?? "");
 // _phoneController = TextEditingController();
       _dobController = TextEditingController(
         text: userdata?.birthday,
@@ -127,7 +129,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
         slivers: [
           SliverToBoxAdapter(
             child: AppBar(
-              title: Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
+              title:
+                  Text(widget.isEditProfile ? "Edit Profile" : "Save Profile"),
             ),
           ),
           SliverToBoxAdapter(
@@ -164,7 +167,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   )
                                 : CircleAvatar(
                                     radius: 45,
-                                    backgroundImage: CachedNetworkImageProvider(profile.userModel?.profileUrl ?? ""),
+                                    backgroundImage: CachedNetworkImageProvider(
+                                        profile.userModel?.profileUrl ?? ""),
                                   ),
                         const SizedBox(
                           height: 20,
@@ -185,8 +189,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                             isImageUpdate = true;
                                           });
                                           await ref
-                                              .read(ProfileController.userControllerProvider)
-                                              .pickImage(imageSource: ImageSource.camera);
+                                              .read(ProfileController
+                                                  .userControllerProvider)
+                                              .pickImage(
+                                                  imageSource:
+                                                      ImageSource.camera);
 
                                           // await ref.read(profileRepoProvider).updateImage(profile.profileImage!);
                                         },
@@ -195,8 +202,12 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                             setState(() {
                                               isImageUpdate = true;
                                             });
-                                            await ref.read(ProfileController.userControllerProvider).pickImage(
-                                                  imageSource: ImageSource.gallery,
+                                            await ref
+                                                .read(ProfileController
+                                                    .userControllerProvider)
+                                                .pickImage(
+                                                  imageSource:
+                                                      ImageSource.gallery,
                                                 );
 
                                             // await ref.read(profileRepoProvider).updateImage(profile.profileImage!);
@@ -206,7 +217,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     });
                                   });
                             },
-                            child: Text(widget.isEditProfile ? "Change Profile Picture" : "Upload Profile Picture"),
+                            child: Text(widget.isEditProfile
+                                ? "Change Profile Picture"
+                                : "Upload Profile Picture"),
                           );
                         }),
                         const SizedBox(
@@ -272,7 +285,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               print(value);
                               if (value != null) {
                                 setState(() {
-                                  _dobController.text = DateFormat.yMd().format(value);
+                                  _dobController.text =
+                                      DateFormat.yMd().format(value);
 
                                   //     _selectedDate = value;
                                   _selectedDate = value;
@@ -308,9 +322,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 child: TextButton.icon(
                                     icon: const Icon(Icons.add),
                                     onPressed: () async {
-                                      context.router.push(const AddAdditionalInformationRoute());
+                                      context.router.push(
+                                          const AddAdditionalInformationRoute());
                                     },
-                                    label: const Text("Add Additional Information")),
+                                    label: const Text(
+                                        "Add Additional Information")),
                               )
                             : const SizedBox.shrink(),
                         const SizedBox(
@@ -328,9 +344,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 setState(() {
                                   _loading = true;
                                 });
-                                SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
+                                SharedPrefs sharedPrefs =
+                                    await SharedPrefs.instance.init();
 
-                                final data = await Geolocator.getCurrentPosition();
+                                final data =
+                                    await Geolocator.getCurrentPosition();
 
                                 GeoFirePoint myLocation = GeoFirePoint(GeoPoint(
                                   27.22879789190122,
@@ -358,7 +376,10 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   username: _usernameController.text,
                                   bio: _bioController.text,
                                   age: age,
-                                  profileUrl: await ref.read(ProfileController.userControllerProvider).uploadImage(),
+                                  profileUrl: await ref
+                                      .read(ProfileController
+                                          .userControllerProvider)
+                                      .uploadImage(),
                                   birthday: _dobController.text,
 
                                   position: GeoPointData(
@@ -369,7 +390,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       )),
                                 );
 
-                                await ref.read(Dependency.profileProvider).createUserDoc(user);
+                                await ref
+                                    .read(Dependency.profileProvider)
+                                    .createUserDoc(user);
 
                                 try {
                                   // _signInCC(
@@ -381,7 +404,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   //         login: _usernameController.text.toLowerCase()),
                                   //     ref);
 
-                                  await route.popAndPush(const DashboardRoute());
+                                  await route
+                                      .popAndPush(const DashboardRoute());
                                 } catch (e) {
                                   logger.e(e);
                                   _bioController.clear();

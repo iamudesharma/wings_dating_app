@@ -11,7 +11,8 @@ Future<String> uploadFileToFirebaseAlbum(Uint8List file) async {
 
   /// In some special cases detect firebase the contentType wrong,
   /// so we make sure the contentType is set to jpg.
-  TaskSnapshot snap = await ref.putData(file, SettableMetadata(contentType: 'image/jpg'));
+  TaskSnapshot snap =
+      await ref.putData(file, SettableMetadata(contentType: 'image/jpg'));
   // UploadTask uploadTask = firebaseStorage.ref().child("album").putData(file);
   // TaskSnapshot snap = await uploadTask;
   String downloadUrl = await snap.ref.getDownloadURL();
