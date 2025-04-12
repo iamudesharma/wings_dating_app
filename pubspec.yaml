@@ -37,36 +37,35 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.6.1
   # freezed: ^2.2.1
-  freezed_annotation: ^2.4.4
+  freezed_annotation: ^2.4.0
   json_annotation: ^4.9.0
   # get: ^4.6.5
-  firebase_auth: ^5.5.0
-  cloud_firestore: ^5.6.4
-  firebase_storage: ^12.4.3
+  firebase_auth: ^5.5.2
+  cloud_firestore: ^5.6.6
+  firebase_storage: ^12.4.5
   # c: ^1.0.0-dev.45
-  # cloud_firestore_odm: ^1.0.0-dev.88
+  # cloud_firestore_odm: ^1.0.0-dev.
   # json_annotation: ^4.7.0
   auto_route: ^9.3.0
   # flutterfire_ui: ^0.4.3+20
   firebase_ui_auth: ^1.16.1
   riverpod_annotation: ^2.6.1
   logger: ^2.5.0
-  firebase_core: ^3.12.0
-  flex_color_scheme: ^8.1.1
+  firebase_core: ^3.13.0
+  flex_color_scheme: ^8.2.0
 
   intl: ^0.20.2
   
   fluttertoast: 8.2.12
   image_picker: ^1.1.2
-
   flutter_staggered_grid_view: ^0.7.0
-  freezed: ^2.5.8
+  freezed: ^2.4.9
   # geoflutterfire2: ^2.3.15
   geoflutterfire_plus: ^0.0.32
   google_fonts: ^6.2.1
   chat_bubbles: ^1.7.0
   uuid: ^4.5.1
-  firebase_messaging: ^15.2.3
+  firebase_messaging: ^15.2.5
   cached_network_image:
     git:
       url: "https://github.com/Neotech-iHoops/flutter_cached_network_image.git"
@@ -74,27 +73,27 @@ dependencies:
       path: "cached_network_image"
         
 
-  flutter_local_notifications: ^18.0.1
+  flutter_local_notifications: ^18.0.0
 
   # firebase_crashlytics: ^3.3.2
   # firebase_analytics: ^10.4.2po
   firebase_analytics: ^11.4.3
   flutter_animate: ^4.5.2
-  geolocator: ^13.0.2
+  geolocator: ^13.0.4
   # connectycube_flutter_call_kit:
   #                       git:
   #                         url: https://github.com/hatemragab/connectycube-flutter-call-kit.git
   # connectycube_sdk: ^2.14.1
-  shared_preferences: ^2.5.2
+  shared_preferences: ^2.5.3
 
   connectivity_plus: ^6.1.3
   # file_picker: ^5.3.2
-  package_info_plus: ^8.1.1
+  package_info_plus: ^8.3.0
   flutter_slidable: ^4.0.0
 
   # flutter_native_splash: ^2.2.19
   # flutter_isolate: ^2.0.4
-  flutter_background: ^1.3.0+1
+  flutter_background: ^1.3.0
   firebase_ui_oauth_google: ^1.4.1
   flutter_localizations:
     sdk: flutter
@@ -108,17 +107,21 @@ dependencies:
   url_strategy: ^0.3.0
   lottie: ^3.3.1
   flutter_svg: ^2.0.17
-  file_picker: ^9.0.0
+  file_picker: ^10.1.0
   rxdart: ^0.28.0
   # google_mobile_ads:
   context_menus: ^2.0.0
-  package_rename: ^1.8.0
-  pro_image_editor: ^8.3.1
+  package_rename: ^1.10.0
+  pro_image_editor: ^9.4.0
   path_provider: ^2.1.5
-  stream_chat_flutter: ^9.4.0
-  map_location_picker: ^1.3.3
+  stream_chat_flutter: ^9.7.0
+  map_location_picker: ^1.3.4
   # open_street_map_search_and_pick: ^0.1.1
   firestore_modeler: ^0.2.0+1
+  # objectbox: ^4.1.0
+  
+  # objectbox_flutter_libs: ^4.1.0 
+  
   
   # stream_chat: ^8.3.0
   # path_provider: ^2.1.3
@@ -141,20 +144,24 @@ dev_dependencies:
   cloud_firestore_odm:
     path: /Users/udeshsharma/Code/udesh/firestoreodm-flutter/packages/cloud_firestore_odm
      
-    
+  # 
+  # objectbox_generator: ^4.1.0
+
   json_serializable: ^6.9.4
   # auto_route_generator: ^6.0.0-rc
-  auto_route_generator: ^9.3.1
-  riverpod_generator: ^2.6.4
+  auto_route_generator: ^9.2.0
+  riverpod_generator: ^2.6.3
   custom_lint:
   riverpod_lint:
-  google_mobile_ads: ^5.3.1
+  google_mobile_ads: ^6.0.0
+  
 
 dependency_overrides:
-  # device_info_plus: "11.1.1"
-  # package_info_plus: "8.1.1"
-  # geolocator: "13.0.2"
-  # mime: "2.0.0"
+  device_info_plus: "11.1.1"
+  package_info_plus: "8.1.1"
+  geolocator: "13.0.2"
+  mime: "2.0.0"
+  photo_manager: "3.6.4"
   cached_network_image:
     git:
       url: "https://github.com/Neotech-iHoops/flutter_cached_network_image.git"

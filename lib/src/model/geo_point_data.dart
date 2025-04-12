@@ -5,16 +5,14 @@ import 'package:wings_dating_app/src/model/user_models.dart';
 part 'geo_point_data.freezed.dart';
 part 'geo_point_data.g.dart';
 
-@Freezed(
-    map: FreezedMapOptions.all,
-    toStringOverride: true,
-    toJson: true,
-    fromJson: true)
+@Freezed(map: FreezedMapOptions.all, toStringOverride: true, toJson: true, fromJson: true)
 class GeoPointData with _$GeoPointData {
   const factory GeoPointData({
     @JsonSerializable(
         createToJson: true,
         createFieldMap: true,
+        createJsonKeys: true,
+        createFactory: true,
         createPerFieldToJson: true,
         explicitToJson: true)
 
@@ -26,20 +24,23 @@ class GeoPointData with _$GeoPointData {
     @JsonKey(name: "geohash") required String geohash,
   }) = _GeoPointData;
 
-  factory GeoPointData.fromJson(Map<String, Object?> json) =>
-      _$GeoPointDataFromJson(json);
+  factory GeoPointData.fromJson(Map<String, Object?> json) => _$GeoPointDataFromJson(json);
 }
 
-class GeoPointConverter implements JsonConverter<GeoPoint, GeoPoint> {
+class GeoPointConverter implements JsonConverter<GeoPoint, Map<String, dynamic>> {
   const GeoPointConverter();
 
   @override
-  GeoPoint fromJson(GeoPoint geoPoint) {
-    return geoPoint;
+  GeoPoint fromJson(json) {
+    // return geoPoint;
+    return GeoPoint(json['latitude'] as double, json['longitude'] as double);
   }
 
   @override
-  GeoPoint toJson(GeoPoint geoPoint) => geoPoint;
+  Map<String, dynamic> toJson(GeoPoint geoPoint) => {
+        'latitude': geoPoint.latitude,
+        'longitude': geoPoint.longitude,
+      };
 }
 
 // class FirestoreDateTimeConverter extends JsonConverter<DateTime, Timestamp> {

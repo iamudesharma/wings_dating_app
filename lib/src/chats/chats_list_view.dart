@@ -7,6 +7,7 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/services/chat_services.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 @RoutePage()
 class ChatListView extends ConsumerStatefulWidget {
@@ -46,6 +47,12 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
               return StreamChannelListView(
                 controller: _controller,
                 onChannelTap: (channel) {
+                  FirebaseAnalytics.instance.logEvent(
+                    name: 'chat_channel_tapped',
+                    parameters: <String, Object>{
+                      'channel_id': channel.id! as Object,
+                    },
+                  );
                   context.router
                       .push(ChatRoute(channel: channel, id: channel.id!));
 
@@ -74,9 +81,12 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
                   child: StreamChannelListView(
                     controller: _controller,
                     onChannelTap: (channel) {
-                      // print("Channel: ${channel.id}");
-                      // final router = _innerRouterKey.currentState?.controller;
-                      // router?.push(ChatRoute(channel: channel, id: channel.id!));
+                      FirebaseAnalytics.instance.logEvent(
+                        name: 'chat_channel_tapped',
+                        parameters: <String, Object>{
+                          'channel_id': channel.id! as Object,
+                        },
+                      );
                       context.router
                           .push(ChatRoute(channel: channel, id: channel.id!));
                     },
