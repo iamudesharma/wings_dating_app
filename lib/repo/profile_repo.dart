@@ -27,10 +27,7 @@ class ProfileRepo with RepositoryExceptionMixin {
   ProfileRepo(this.ref);
 
   CollectionReference<UserModel> userCollection() {
-    final data = ref
-        .read(Dependency.firebaseStoreProvider)
-        .collection("users")
-        .withConverter<UserModel>(
+    final data = ref.read(Dependency.firebaseStoreProvider).collection("users").withConverter<UserModel>(
           fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
           toFirestore: (user, _) => user.toJson(),
         );
@@ -40,9 +37,7 @@ class ProfileRepo with RepositoryExceptionMixin {
 
   Future<void> createUserDoc(UserModel userModel) async {
     final usercollection = userCollection();
-    await usercollection
-        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-        .set(userModel);
+    await usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).set(userModel);
   }
 
   // Future<void> updateUserDoc(UserModel userModel) async {
@@ -55,20 +50,19 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<UserModel> getCurrentUser() async {
     final usercollection = userCollection();
 
+    var userModels = SharedPrefs.instance.getUsers();
+    if (userModels != null) {
+      return userModels;
+    }
     return await exceptionHandler<UserModel>(
-      usercollection
-          .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-          .get()
-          .then((value) {
+      usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).get().then((value) {
         return value.data()!;
       }),
     );
   }
 
   Future<bool> checkUserDocExist() async {
-    final data = await userCollection()
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
+    final data = await userCollection().doc(FirebaseAuth.instance.currentUser!.uid).get();
 
     if (data.exists) {
       logger.i('User doc exist');
@@ -81,9 +75,10 @@ class ProfileRepo with RepositoryExceptionMixin {
 
   Future<void> updateUserDoc(UserModel userModel) async {
     final usercollection = userCollection();
-    await exceptionHandler<void>(usercollection
-        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-        .update(userModel.toJson()));
+    await exceptionHandler<void>(
+        usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).update(userModel.toJson()));
+
+    await SharedPrefs.instance.updateUser(userModel);
   }
 
   Future<void> updateLocation(dynamic pointData) async {
@@ -91,9 +86,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     final usercollection = userCollection();
 
     await exceptionHandler<void>(
-      usercollection
-          .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-          .update(
+      usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).update(
         {
           "position": pointData,
         },
@@ -104,8 +97,7 @@ class ProfileRepo with RepositoryExceptionMixin {
   Stream<List<UserModel?>?> getUserList({int limit = 10}) {
     final usercollection = userCollection();
 
-    final userModel =
-        ref.read(ProfileController.userControllerProvider).userModel!;
+    final userModel = ref.read(ProfileController.userControllerProvider).userModel!;
 
     logger.i(userModel.position);
     GeoPoint center = GeoPoint(
@@ -151,8 +143,7 @@ class ProfileRepo with RepositoryExceptionMixin {
     // return users;
   }
 
-  Future<void> saveUserLocationData(
-      String UserId, String Username, String imgae) async {}
+  Future<void> saveUserLocationData(String UserId, String Username, String imgae) async {}
 
   Future makeOnline(String userId, bool isOnline) async {
     final usercollection = userCollection();
@@ -248,9 +239,7 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<List<UserModel?>> getBlockList() async {
     final usercollection = userCollection();
 
-    final data = await usercollection
-        .doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid)
-        .get();
+    final data = await usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).get();
 
     final userList = await data.get("blockList");
 
@@ -300,11 +289,9 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<List<UserModel?>?> searchUser(String query) async {
     final usercollection = userCollection();
 
-    final docs =
-        usercollection.where("username", isGreaterThanOrEqualTo: query).get();
+    final docs = usercollection.where("username", isGreaterThanOrEqualTo: query).get();
 
-    final data =
-        await docs.then((value) => value.docs.map((e) => e.data()).toList());
+    final data = await docs.then((value) => value.docs.map((e) => e.data()).toList());
 
     logger.i(data.length);
     return data;

@@ -9,6 +9,7 @@ import 'package:meta_seo/meta_seo.dart';
 import 'package:wings_dating_app/repo/chat_repo.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'widgets/profile_input_card.dart';
 
@@ -32,6 +33,12 @@ class OtherUserProfileView extends ConsumerStatefulWidget {
 class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
   @override
   Widget build(BuildContext context) {
+    FirebaseAnalytics.instance.logEvent(
+      name: 'user_profile_view',
+      parameters: <String, Object>{
+        'user_id': widget.id as Object,
+      },
+    );
     // var userData;
     // if (widget.isCurrentUser!) {
     var currentUser =

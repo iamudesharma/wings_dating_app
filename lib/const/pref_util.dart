@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wings_dating_app/src/model/stream_user.dart';
+import 'package:wings_dating_app/src/model/user_models.dart';
 
 const String prefUserLogin = "pref_user_login";
 const String prefUserPsw = "pref_user_psw";
@@ -39,21 +41,26 @@ class SharedPrefs {
     prefs.setString(prefUserLogin, cubeUser.toJson());
   }
 
-  // updateUser(CubeUser cubeUser) {
-  //   if (cubeUser.password != null) {
-  //     prefs.setString(prefUserPsw, cubeUser.password!);
-  //   }
-  //   if (cubeUser.login != null) prefs.setString(prefUserLogin, cubeUser.login!);
-  //   if (cubeUser.fullName != null) {
-  //     prefs.setString(prefUserName, cubeUser.fullName!);
-  //   }
-  //   if (cubeUser.phone != null) {
-  //     prefs.setString(prefphone, cubeUser.phone!);
-  //   }
-  //   if (cubeUser.avatar != null) {
-  //     prefs.setString(prefUserAvatar, cubeUser.avatar!);
-  //   }
-  // }
+  UserModel? getUsers() {
+    return prefs.containsKey(prefUserId) ? UserModel.fromJson(jsonDecode(prefs.getString(prefUserId)!)) : null;
+  }
+
+  updateUser(UserModel userModel) async {
+    prefs.setString(prefUserId, jsonEncode(userModel.toJson()));
+    // if (cubeUser.password != null) {
+    //   prefs.setString(prefUserPsw, cubeUser.password!);
+    // }
+    // if (cubeUser.login != null) prefs.setString(prefUserLogin, cubeUser.login!);
+    // if (cubeUser.fullName != null) {
+    //   prefs.setString(prefUserName, cubeUser.fullName!);
+    // }
+    // if (cubeUser.phone != null) {
+    //   prefs.setString(prefphone, cubeUser.phone!);
+    // }
+    // if (cubeUser.avatar != null) {
+    //   prefs.setString(prefUserAvatar, cubeUser.avatar!);
+    // }
+  }
 
   StreamUser? getUser() {
     if (prefs.get(prefUserLogin) == null) return null;

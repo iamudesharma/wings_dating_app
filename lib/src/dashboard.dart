@@ -78,6 +78,12 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                             ),
                           ),
                           NavigationDestination(
+                            label: 'Matching',
+                            icon: Icon(
+                              Icons.person_2_outlined,
+                            ),
+                          ),
+                          NavigationDestination(
                             label: 'Profile',
                             icon: Icon(
                               Icons.person_2_outlined,

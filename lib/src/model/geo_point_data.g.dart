@@ -8,8 +8,8 @@ part of 'geo_point_data.dart';
 
 _$GeoPointDataImpl _$$GeoPointDataImplFromJson(Map<String, dynamic> json) =>
     _$GeoPointDataImpl(
-      geopoint:
-          const GeoPointConverter().fromJson(json['geopoint'] as GeoPoint),
+      geopoint: const GeoPointConverter()
+          .fromJson(json['geopoint'] as Map<String, dynamic>),
       geohash: json['geohash'] as String,
     );
 

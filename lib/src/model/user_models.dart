@@ -11,24 +11,8 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:wings_dating_app/helpers/extra_data.dart';
 import 'geo_point_data.dart';
 
-// ignore_for_file: invalid_annotation_target
-
-// These `part` directives should be placed **before** any other code, including imports.
 part 'user_models.freezed.dart';
 part 'user_models.g.dart';
-
-// Define missing enums for serialization.
-// enum Role { doNotShow, user, admin }
-
-// enum BodyType { doNotShow, slim, athletic, average, muscular, heavy }
-
-// enum RelationshipStatus { doNotShow, single, inARelationship, married }
-
-// enum Ethnicity { doNotShow, caucasian, african, asian, hispanic }
-
-// enum LookingFor { doNotShow, friendship, relationship, casual }
-
-// enum WhereToMeet { doNotShow, cafe, park, club, home }
 
 @Collection<UserModel>('users')
 @freezed
@@ -43,8 +27,7 @@ class UserModel with _$UserModel {
     required String username,
     String? bio,
     List<String>? albumUrl,
-    @Default("https://img.icons8.com/ios/500/null/user-male-circle--v1.png")
-    String? profileUrl,
+    @Default("https://img.icons8.com/ios/500/null/user-male-circle--v1.png") String? profileUrl,
     String? birthday,
     int? age,
     @JsonKey(name: "position") GeoPointData? position,
@@ -54,8 +37,7 @@ class UserModel with _$UserModel {
     String? lived,
     @Default(Role.doNotShow) Role role,
     @Default(BodyType.doNotShow) BodyType bodyType,
-    @Default(RelationshipStatus.doNotShow)
-    RelationshipStatus relationshipStatus,
+    @Default(RelationshipStatus.doNotShow) RelationshipStatus relationshipStatus,
     @Default(Ethnicity.doNotShow) Ethnicity ethnicity,
     @Default(LookingFor.doNotShow) LookingFor lookingFor,
     @Default(WhereToMeet.doNotShow) WhereToMeet whereToMeet,
@@ -68,8 +50,7 @@ class UserModel with _$UserModel {
   }) = _UserModel;
 
   // Converts JSON data to UserModel.
-  factory UserModel.fromJson(Map<String, Object?> json) =>
-      _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, Object?> json) => _$UserModelFromJson(json);
 }
 
 // Define the Firestore collection reference.

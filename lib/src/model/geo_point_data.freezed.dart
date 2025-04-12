@@ -23,6 +23,8 @@ mixin _$GeoPointData {
   @JsonSerializable(
       createToJson: true,
       createFieldMap: true,
+      createJsonKeys: true,
+      createFactory: true,
       createPerFieldToJson: true,
       explicitToJson: true)
   @GeoPointConverter()
@@ -69,6 +71,8 @@ abstract class $GeoPointDataCopyWith<$Res> {
       {@JsonSerializable(
           createToJson: true,
           createFieldMap: true,
+          createJsonKeys: true,
+          createFactory: true,
           createPerFieldToJson: true,
           explicitToJson: true)
       @GeoPointConverter()
@@ -120,6 +124,8 @@ abstract class _$$GeoPointDataImplCopyWith<$Res>
       {@JsonSerializable(
           createToJson: true,
           createFieldMap: true,
+          createJsonKeys: true,
+          createFactory: true,
           createPerFieldToJson: true,
           explicitToJson: true)
       @GeoPointConverter()
@@ -164,6 +170,8 @@ class _$GeoPointDataImpl implements _GeoPointData {
       {@JsonSerializable(
           createToJson: true,
           createFieldMap: true,
+          createJsonKeys: true,
+          createFactory: true,
           createPerFieldToJson: true,
           explicitToJson: true)
       @GeoPointConverter()
@@ -178,6 +186,8 @@ class _$GeoPointDataImpl implements _GeoPointData {
   @JsonSerializable(
       createToJson: true,
       createFieldMap: true,
+      createJsonKeys: true,
+      createFactory: true,
       createPerFieldToJson: true,
       explicitToJson: true)
   @GeoPointConverter()
@@ -256,6 +266,8 @@ abstract class _GeoPointData implements GeoPointData {
           {@JsonSerializable(
               createToJson: true,
               createFieldMap: true,
+              createJsonKeys: true,
+              createFactory: true,
               createPerFieldToJson: true,
               explicitToJson: true)
           @GeoPointConverter()
@@ -271,6 +283,8 @@ abstract class _GeoPointData implements GeoPointData {
   @JsonSerializable(
       createToJson: true,
       createFieldMap: true,
+      createJsonKeys: true,
+      createFactory: true,
       createPerFieldToJson: true,
       explicitToJson: true)
   @GeoPointConverter()

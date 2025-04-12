@@ -20,12 +20,16 @@ import 'package:google_mobile_ads/google_mobile_ads.dart' show MobileAds;
 import 'package:meta_seo/meta_seo.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'package:wings_dating_app/const/pref_util.dart';
 // import 'package:isolate_flutter/isolate_flutter.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
 import 'package:wings_dating_app/services/chat_services.dart';
 // import 'package:wings_dating_app/routes/navigation_observers.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'firebase_options.dart';
+
+FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,14 +49,18 @@ void main() async {
     EmailAuthProvider(),
     PhoneAuthProvider(),
     GoogleProvider(
-      clientId:
-          "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
+      clientId: "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
     ),
   ]);
 
   if (kIsWeb) {
     MetaSEO().config();
   }
+
+  await SharedPrefs.instance.init().then((value) {
+    // ignore: avoid_print
+    print("SharedPrefs initialized");
+  });
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -113,8 +121,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         tones: FlexTones.jolly(Brightness.dark),
         blendLevel: 15,
         appBarOpacity: 0.90,
-        subThemesData: const FlexSubThemesData(
-            blendOnLevel: 30, inputDecoratorRadius: 20.0, cardRadius: 20),
+        subThemesData: const FlexSubThemesData(blendOnLevel: 30, inputDecoratorRadius: 20.0, cardRadius: 20),
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
         useMaterial3: true,
         fontFamily: GoogleFonts.notoSans().fontFamily,

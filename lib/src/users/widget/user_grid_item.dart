@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
-
+import 'package:firebase_analytics/firebase_analytics.dart';
 class UserGridItem extends ConsumerStatefulWidget {
   const UserGridItem(
       {super.key,
@@ -31,6 +31,12 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
 
     return InkWell(
       onTap: () {
+        FirebaseAnalytics.instance.logEvent(
+          name: 'user_grid_item_tapped',
+          parameters: <String, Object>{
+            'user_id': widget.users.id as Object,
+          },
+        );
         if (widget.isCurrentUser!) {
           AutoTabsRouter.of(context).setActiveIndex(3);
         } else {

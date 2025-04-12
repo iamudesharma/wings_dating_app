@@ -19,10 +19,10 @@
 #include <geolocator_windows/geolocator_windows.h>
 #include <media_kit_video/media_kit_video_plugin_c_api.h>
 #include <record_windows/record_windows_plugin_c_api.h>
-#include <screen_brightness_windows/screen_brightness_windows_plugin.h>
 #include <share_plus/share_plus_windows_plugin_c_api.h>
 #include <thumblr_windows/thumblr_windows_plugin.h>
 #include <url_launcher_windows/url_launcher_windows.h>
+#include <volume_controller/volume_controller_plugin_c_api.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   CloudFirestorePluginCApiRegisterWithRegistrar(
@@ -51,12 +51,12 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("MediaKitVideoPluginCApi"));
   RecordWindowsPluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("RecordWindowsPluginCApi"));
-  ScreenBrightnessWindowsPluginRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("ScreenBrightnessWindowsPlugin"));
   SharePlusWindowsPluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("SharePlusWindowsPluginCApi"));
   ThumblrWindowsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("ThumblrWindowsPlugin"));
   UrlLauncherWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("UrlLauncherWindows"));
+  VolumeControllerPluginCApiRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("VolumeControllerPluginCApi"));
 }

@@ -18,6 +18,7 @@ import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/model/geo_point_data.dart';
 import 'package:wings_dating_app/src/users/widget/users_search_delegate.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../const/pref_util.dart';
 import '../model/user_models.dart';
@@ -321,6 +322,12 @@ class NavigationBarWidget extends StatelessWidget {
                   selectedIndex: AutoTabsRouter.of(context).activeIndex,
                   extended: sizingInformation.isTablet ? false : true,
                   onDestinationSelected: (value) {
+                    FirebaseAnalytics.instance.logEvent(
+                      name: 'navigation_rail_tapped',
+                      parameters: <String, Object>{
+                        'index': value as Object,
+                      },
+                    );
                     AutoTabsRouter.of(context).setActiveIndex(value);
                   },
                   destinations: const [
