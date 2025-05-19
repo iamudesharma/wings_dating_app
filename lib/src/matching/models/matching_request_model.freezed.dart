@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,42 +10,75 @@ part of 'matching_request_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-MatchingRequestModel _$MatchingRequestModelFromJson(Map<String, dynamic> json) {
-  return _MatchingRequestModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$MatchingRequestModel {
-  String get userId => throw _privateConstructorUsedError;
-  RangeValue get ageRange => throw _privateConstructorUsedError;
-  List<String> get bodyTypes => throw _privateConstructorUsedError;
-  List<String> get positionPreferences => throw _privateConstructorUsedError;
-  List<String> get skills => throw _privateConstructorUsedError;
-  List<String> get activities => throw _privateConstructorUsedError;
+  String get userId;
+  RangeValue get ageRange;
+  List<String> get bodyTypes;
+  List<String> get positionPreferences;
+  List<String> get skills;
+  List<String> get activities;
   @FirestoreDateTimeConverter()
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  String get id => throw _privateConstructorUsedError;
-
-  /// Serializes this MatchingRequestModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  DateTime get createdAt;
+  String get id;
 
   /// Create a copy of MatchingRequestModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $MatchingRequestModelCopyWith<MatchingRequestModel> get copyWith =>
-      throw _privateConstructorUsedError;
+      _$MatchingRequestModelCopyWithImpl<MatchingRequestModel>(
+          this as MatchingRequestModel, _$identity);
+
+  /// Serializes this MatchingRequestModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is MatchingRequestModel &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.ageRange, ageRange) ||
+                other.ageRange == ageRange) &&
+            const DeepCollectionEquality().equals(other.bodyTypes, bodyTypes) &&
+            const DeepCollectionEquality()
+                .equals(other.positionPreferences, positionPreferences) &&
+            const DeepCollectionEquality().equals(other.skills, skills) &&
+            const DeepCollectionEquality()
+                .equals(other.activities, activities) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.id, id) || other.id == id));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      userId,
+      ageRange,
+      const DeepCollectionEquality().hash(bodyTypes),
+      const DeepCollectionEquality().hash(positionPreferences),
+      const DeepCollectionEquality().hash(skills),
+      const DeepCollectionEquality().hash(activities),
+      createdAt,
+      id);
+
+  @override
+  String toString() {
+    return 'MatchingRequestModel(userId: $userId, ageRange: $ageRange, bodyTypes: $bodyTypes, positionPreferences: $positionPreferences, skills: $skills, activities: $activities, createdAt: $createdAt, id: $id)';
+  }
 }
 
 /// @nodoc
-abstract class $MatchingRequestModelCopyWith<$Res> {
+abstract mixin class $MatchingRequestModelCopyWith<$Res> {
   factory $MatchingRequestModelCopyWith(MatchingRequestModel value,
-          $Res Function(MatchingRequestModel) then) =
-      _$MatchingRequestModelCopyWithImpl<$Res, MatchingRequestModel>;
+          $Res Function(MatchingRequestModel) _then) =
+      _$MatchingRequestModelCopyWithImpl;
   @useResult
   $Res call(
       {String userId,
@@ -60,15 +94,12 @@ abstract class $MatchingRequestModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$MatchingRequestModelCopyWithImpl<$Res,
-        $Val extends MatchingRequestModel>
+class _$MatchingRequestModelCopyWithImpl<$Res>
     implements $MatchingRequestModelCopyWith<$Res> {
-  _$MatchingRequestModelCopyWithImpl(this._value, this._then);
+  _$MatchingRequestModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final MatchingRequestModel _self;
+  final $Res Function(MatchingRequestModel) _then;
 
   /// Create a copy of MatchingRequestModel
   /// with the given fields replaced by the non-null parameter values.
@@ -84,40 +115,40 @@ class _$MatchingRequestModelCopyWithImpl<$Res,
     Object? createdAt = null,
     Object? id = null,
   }) {
-    return _then(_value.copyWith(
+    return _then(_self.copyWith(
       userId: null == userId
-          ? _value.userId
+          ? _self.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
       ageRange: null == ageRange
-          ? _value.ageRange
+          ? _self.ageRange
           : ageRange // ignore: cast_nullable_to_non_nullable
               as RangeValue,
       bodyTypes: null == bodyTypes
-          ? _value.bodyTypes
+          ? _self.bodyTypes
           : bodyTypes // ignore: cast_nullable_to_non_nullable
               as List<String>,
       positionPreferences: null == positionPreferences
-          ? _value.positionPreferences
+          ? _self.positionPreferences
           : positionPreferences // ignore: cast_nullable_to_non_nullable
               as List<String>,
       skills: null == skills
-          ? _value.skills
+          ? _self.skills
           : skills // ignore: cast_nullable_to_non_nullable
               as List<String>,
       activities: null == activities
-          ? _value.activities
+          ? _self.activities
           : activities // ignore: cast_nullable_to_non_nullable
               as List<String>,
       createdAt: null == createdAt
-          ? _value.createdAt
+          ? _self.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
       id: null == id
-          ? _value.id
+          ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-    ) as $Val);
+    ));
   }
 
   /// Create a copy of MatchingRequestModel
@@ -125,90 +156,9 @@ class _$MatchingRequestModelCopyWithImpl<$Res,
   @override
   @pragma('vm:prefer-inline')
   $RangeValueCopyWith<$Res> get ageRange {
-    return $RangeValueCopyWith<$Res>(_value.ageRange, (value) {
-      return _then(_value.copyWith(ageRange: value) as $Val);
+    return $RangeValueCopyWith<$Res>(_self.ageRange, (value) {
+      return _then(_self.copyWith(ageRange: value));
     });
-  }
-}
-
-/// @nodoc
-abstract class _$$MatchingRequestModelImplCopyWith<$Res>
-    implements $MatchingRequestModelCopyWith<$Res> {
-  factory _$$MatchingRequestModelImplCopyWith(_$MatchingRequestModelImpl value,
-          $Res Function(_$MatchingRequestModelImpl) then) =
-      __$$MatchingRequestModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String userId,
-      RangeValue ageRange,
-      List<String> bodyTypes,
-      List<String> positionPreferences,
-      List<String> skills,
-      List<String> activities,
-      @FirestoreDateTimeConverter() DateTime createdAt,
-      String id});
-
-  @override
-  $RangeValueCopyWith<$Res> get ageRange;
-}
-
-/// @nodoc
-class __$$MatchingRequestModelImplCopyWithImpl<$Res>
-    extends _$MatchingRequestModelCopyWithImpl<$Res, _$MatchingRequestModelImpl>
-    implements _$$MatchingRequestModelImplCopyWith<$Res> {
-  __$$MatchingRequestModelImplCopyWithImpl(_$MatchingRequestModelImpl _value,
-      $Res Function(_$MatchingRequestModelImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of MatchingRequestModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? userId = null,
-    Object? ageRange = null,
-    Object? bodyTypes = null,
-    Object? positionPreferences = null,
-    Object? skills = null,
-    Object? activities = null,
-    Object? createdAt = null,
-    Object? id = null,
-  }) {
-    return _then(_$MatchingRequestModelImpl(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      ageRange: null == ageRange
-          ? _value.ageRange
-          : ageRange // ignore: cast_nullable_to_non_nullable
-              as RangeValue,
-      bodyTypes: null == bodyTypes
-          ? _value._bodyTypes
-          : bodyTypes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      positionPreferences: null == positionPreferences
-          ? _value._positionPreferences
-          : positionPreferences // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      skills: null == skills
-          ? _value._skills
-          : skills // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      activities: null == activities
-          ? _value._activities
-          : activities // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
   }
 }
 
@@ -219,8 +169,8 @@ class __$$MatchingRequestModelImplCopyWithImpl<$Res>
     createFieldMap: true,
     createPerFieldToJson: true,
     explicitToJson: true)
-class _$MatchingRequestModelImpl implements _MatchingRequestModel {
-  _$MatchingRequestModelImpl(
+class _MatchingRequestModel implements MatchingRequestModel {
+  _MatchingRequestModel(
       {required this.userId,
       required this.ageRange,
       required final List<String> bodyTypes,
@@ -233,9 +183,8 @@ class _$MatchingRequestModelImpl implements _MatchingRequestModel {
         _positionPreferences = positionPreferences,
         _skills = skills,
         _activities = activities;
-
-  factory _$MatchingRequestModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MatchingRequestModelImplFromJson(json);
+  factory _MatchingRequestModel.fromJson(Map<String, dynamic> json) =>
+      _$MatchingRequestModelFromJson(json);
 
   @override
   final String userId;
@@ -280,16 +229,27 @@ class _$MatchingRequestModelImpl implements _MatchingRequestModel {
   @override
   final String id;
 
+  /// Create a copy of MatchingRequestModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'MatchingRequestModel(userId: $userId, ageRange: $ageRange, bodyTypes: $bodyTypes, positionPreferences: $positionPreferences, skills: $skills, activities: $activities, createdAt: $createdAt, id: $id)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$MatchingRequestModelCopyWith<_MatchingRequestModel> get copyWith =>
+      __$MatchingRequestModelCopyWithImpl<_MatchingRequestModel>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$MatchingRequestModelToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$MatchingRequestModelImpl &&
+            other is _MatchingRequestModel &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.ageRange, ageRange) ||
                 other.ageRange == ageRange) &&
@@ -318,141 +278,152 @@ class _$MatchingRequestModelImpl implements _MatchingRequestModel {
       createdAt,
       id);
 
-  /// Create a copy of MatchingRequestModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$MatchingRequestModelImplCopyWith<_$MatchingRequestModelImpl>
-      get copyWith =>
-          __$$MatchingRequestModelImplCopyWithImpl<_$MatchingRequestModelImpl>(
-              this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MatchingRequestModelImplToJson(
-      this,
-    );
+  String toString() {
+    return 'MatchingRequestModel(userId: $userId, ageRange: $ageRange, bodyTypes: $bodyTypes, positionPreferences: $positionPreferences, skills: $skills, activities: $activities, createdAt: $createdAt, id: $id)';
   }
 }
 
-abstract class _MatchingRequestModel implements MatchingRequestModel {
-  factory _MatchingRequestModel(
-      {required final String userId,
-      required final RangeValue ageRange,
-      required final List<String> bodyTypes,
-      required final List<String> positionPreferences,
-      required final List<String> skills,
-      required final List<String> activities,
-      @FirestoreDateTimeConverter() required final DateTime createdAt,
-      required final String id}) = _$MatchingRequestModelImpl;
+/// @nodoc
+abstract mixin class _$MatchingRequestModelCopyWith<$Res>
+    implements $MatchingRequestModelCopyWith<$Res> {
+  factory _$MatchingRequestModelCopyWith(_MatchingRequestModel value,
+          $Res Function(_MatchingRequestModel) _then) =
+      __$MatchingRequestModelCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String userId,
+      RangeValue ageRange,
+      List<String> bodyTypes,
+      List<String> positionPreferences,
+      List<String> skills,
+      List<String> activities,
+      @FirestoreDateTimeConverter() DateTime createdAt,
+      String id});
 
-  factory _MatchingRequestModel.fromJson(Map<String, dynamic> json) =
-      _$MatchingRequestModelImpl.fromJson;
+  @override
+  $RangeValueCopyWith<$Res> get ageRange;
+}
 
-  @override
-  String get userId;
-  @override
-  RangeValue get ageRange;
-  @override
-  List<String> get bodyTypes;
-  @override
-  List<String> get positionPreferences;
-  @override
-  List<String> get skills;
-  @override
-  List<String> get activities;
-  @override
-  @FirestoreDateTimeConverter()
-  DateTime get createdAt;
-  @override
-  String get id;
+/// @nodoc
+class __$MatchingRequestModelCopyWithImpl<$Res>
+    implements _$MatchingRequestModelCopyWith<$Res> {
+  __$MatchingRequestModelCopyWithImpl(this._self, this._then);
+
+  final _MatchingRequestModel _self;
+  final $Res Function(_MatchingRequestModel) _then;
 
   /// Create a copy of MatchingRequestModel
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$MatchingRequestModelImplCopyWith<_$MatchingRequestModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? userId = null,
+    Object? ageRange = null,
+    Object? bodyTypes = null,
+    Object? positionPreferences = null,
+    Object? skills = null,
+    Object? activities = null,
+    Object? createdAt = null,
+    Object? id = null,
+  }) {
+    return _then(_MatchingRequestModel(
+      userId: null == userId
+          ? _self.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      ageRange: null == ageRange
+          ? _self.ageRange
+          : ageRange // ignore: cast_nullable_to_non_nullable
+              as RangeValue,
+      bodyTypes: null == bodyTypes
+          ? _self._bodyTypes
+          : bodyTypes // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      positionPreferences: null == positionPreferences
+          ? _self._positionPreferences
+          : positionPreferences // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      skills: null == skills
+          ? _self._skills
+          : skills // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      activities: null == activities
+          ? _self._activities
+          : activities // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 
-RangeValue _$RangeValueFromJson(Map<String, dynamic> json) {
-  return _RangeValue.fromJson(json);
+  /// Create a copy of MatchingRequestModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $RangeValueCopyWith<$Res> get ageRange {
+    return $RangeValueCopyWith<$Res>(_self.ageRange, (value) {
+      return _then(_self.copyWith(ageRange: value));
+    });
+  }
 }
 
 /// @nodoc
 mixin _$RangeValue {
-  double get start => throw _privateConstructorUsedError;
-  double get end => throw _privateConstructorUsedError;
-
-  /// Serializes this RangeValue to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  double get start;
+  double get end;
 
   /// Create a copy of RangeValue
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $RangeValueCopyWith<RangeValue> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $RangeValueCopyWith<$Res> {
-  factory $RangeValueCopyWith(
-          RangeValue value, $Res Function(RangeValue) then) =
-      _$RangeValueCopyWithImpl<$Res, RangeValue>;
-  @useResult
-  $Res call({double start, double end});
-}
-
-/// @nodoc
-class _$RangeValueCopyWithImpl<$Res, $Val extends RangeValue>
-    implements $RangeValueCopyWith<$Res> {
-  _$RangeValueCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of RangeValue
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $RangeValueCopyWith<RangeValue> get copyWith =>
+      _$RangeValueCopyWithImpl<RangeValue>(this as RangeValue, _$identity);
+
+  /// Serializes this RangeValue to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? start = null,
-    Object? end = null,
-  }) {
-    return _then(_value.copyWith(
-      start: null == start
-          ? _value.start
-          : start // ignore: cast_nullable_to_non_nullable
-              as double,
-      end: null == end
-          ? _value.end
-          : end // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is RangeValue &&
+            (identical(other.start, start) || other.start == start) &&
+            (identical(other.end, end) || other.end == end));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, start, end);
+
+  @override
+  String toString() {
+    return 'RangeValue(start: $start, end: $end)';
   }
 }
 
 /// @nodoc
-abstract class _$$RangeValueImplCopyWith<$Res>
-    implements $RangeValueCopyWith<$Res> {
-  factory _$$RangeValueImplCopyWith(
-          _$RangeValueImpl value, $Res Function(_$RangeValueImpl) then) =
-      __$$RangeValueImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $RangeValueCopyWith<$Res> {
+  factory $RangeValueCopyWith(
+          RangeValue value, $Res Function(RangeValue) _then) =
+      _$RangeValueCopyWithImpl;
   @useResult
   $Res call({double start, double end});
 }
 
 /// @nodoc
-class __$$RangeValueImplCopyWithImpl<$Res>
-    extends _$RangeValueCopyWithImpl<$Res, _$RangeValueImpl>
-    implements _$$RangeValueImplCopyWith<$Res> {
-  __$$RangeValueImplCopyWithImpl(
-      _$RangeValueImpl _value, $Res Function(_$RangeValueImpl) _then)
-      : super(_value, _then);
+class _$RangeValueCopyWithImpl<$Res> implements $RangeValueCopyWith<$Res> {
+  _$RangeValueCopyWithImpl(this._self, this._then);
+
+  final RangeValue _self;
+  final $Res Function(RangeValue) _then;
 
   /// Create a copy of RangeValue
   /// with the given fields replaced by the non-null parameter values.
@@ -462,13 +433,13 @@ class __$$RangeValueImplCopyWithImpl<$Res>
     Object? start = null,
     Object? end = null,
   }) {
-    return _then(_$RangeValueImpl(
+    return _then(_self.copyWith(
       start: null == start
-          ? _value.start
+          ? _self.start
           : start // ignore: cast_nullable_to_non_nullable
               as double,
       end: null == end
-          ? _value.end
+          ? _self.end
           : end // ignore: cast_nullable_to_non_nullable
               as double,
     ));
@@ -482,27 +453,36 @@ class __$$RangeValueImplCopyWithImpl<$Res>
     createFieldMap: true,
     createPerFieldToJson: true,
     explicitToJson: true)
-class _$RangeValueImpl implements _RangeValue {
-  _$RangeValueImpl({required this.start, required this.end});
-
-  factory _$RangeValueImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RangeValueImplFromJson(json);
+class _RangeValue implements RangeValue {
+  _RangeValue({required this.start, required this.end});
+  factory _RangeValue.fromJson(Map<String, dynamic> json) =>
+      _$RangeValueFromJson(json);
 
   @override
   final double start;
   @override
   final double end;
 
+  /// Create a copy of RangeValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'RangeValue(start: $start, end: $end)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$RangeValueCopyWith<_RangeValue> get copyWith =>
+      __$RangeValueCopyWithImpl<_RangeValue>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$RangeValueToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RangeValueImpl &&
+            other is _RangeValue &&
             (identical(other.start, start) || other.start == start) &&
             (identical(other.end, end) || other.end == end));
   }
@@ -511,39 +491,49 @@ class _$RangeValueImpl implements _RangeValue {
   @override
   int get hashCode => Object.hash(runtimeType, start, end);
 
-  /// Create a copy of RangeValue
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$RangeValueImplCopyWith<_$RangeValueImpl> get copyWith =>
-      __$$RangeValueImplCopyWithImpl<_$RangeValueImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$RangeValueImplToJson(
-      this,
-    );
+  String toString() {
+    return 'RangeValue(start: $start, end: $end)';
   }
 }
 
-abstract class _RangeValue implements RangeValue {
-  factory _RangeValue(
-      {required final double start,
-      required final double end}) = _$RangeValueImpl;
-
-  factory _RangeValue.fromJson(Map<String, dynamic> json) =
-      _$RangeValueImpl.fromJson;
-
+/// @nodoc
+abstract mixin class _$RangeValueCopyWith<$Res>
+    implements $RangeValueCopyWith<$Res> {
+  factory _$RangeValueCopyWith(
+          _RangeValue value, $Res Function(_RangeValue) _then) =
+      __$RangeValueCopyWithImpl;
   @override
-  double get start;
-  @override
-  double get end;
+  @useResult
+  $Res call({double start, double end});
+}
+
+/// @nodoc
+class __$RangeValueCopyWithImpl<$Res> implements _$RangeValueCopyWith<$Res> {
+  __$RangeValueCopyWithImpl(this._self, this._then);
+
+  final _RangeValue _self;
+  final $Res Function(_RangeValue) _then;
 
   /// Create a copy of RangeValue
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$RangeValueImplCopyWith<_$RangeValueImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? start = null,
+    Object? end = null,
+  }) {
+    return _then(_RangeValue(
+      start: null == start
+          ? _self.start
+          : start // ignore: cast_nullable_to_non_nullable
+              as double,
+      end: null == end
+          ? _self.end
+          : end // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
+  }
 }
+
+// dart format on

@@ -266,13 +266,13 @@ class _$MatchingModelDocumentReference extends FirestoreDocumentReference<
     final json = {
       ...model.toJson(),
       if (minAgeFieldValue != null)
-        _$$MatchingModelImplFieldMap['minAge']!: minAgeFieldValue,
+        _$MatchingModelFieldMap['minAge']!: minAgeFieldValue,
       if (maxAgeFieldValue != null)
-        _$$MatchingModelImplFieldMap['maxAge']!: maxAgeFieldValue,
+        _$MatchingModelFieldMap['maxAge']!: maxAgeFieldValue,
       if (skillsFieldValue != null)
-        _$$MatchingModelImplFieldMap['skills']!: skillsFieldValue,
+        _$MatchingModelFieldMap['skills']!: skillsFieldValue,
       if (freeTimeActivitiesFieldValue != null)
-        _$$MatchingModelImplFieldMap['freeTimeActivities']!:
+        _$MatchingModelFieldMap['freeTimeActivities']!:
             freeTimeActivitiesFieldValue,
     };
 
@@ -295,13 +295,13 @@ class _$MatchingModelDocumentReference extends FirestoreDocumentReference<
     final json = {
       ...model.toJson(),
       if (minAgeFieldValue != null)
-        _$$MatchingModelImplFieldMap['minAge']!: minAgeFieldValue,
+        _$MatchingModelFieldMap['minAge']!: minAgeFieldValue,
       if (maxAgeFieldValue != null)
-        _$$MatchingModelImplFieldMap['maxAge']!: maxAgeFieldValue,
+        _$MatchingModelFieldMap['maxAge']!: maxAgeFieldValue,
       if (skillsFieldValue != null)
-        _$$MatchingModelImplFieldMap['skills']!: skillsFieldValue,
+        _$MatchingModelFieldMap['skills']!: skillsFieldValue,
       if (freeTimeActivitiesFieldValue != null)
-        _$$MatchingModelImplFieldMap['freeTimeActivities']!:
+        _$MatchingModelFieldMap['freeTimeActivities']!:
             freeTimeActivitiesFieldValue,
     };
 
@@ -320,13 +320,13 @@ class _$MatchingModelDocumentReference extends FirestoreDocumentReference<
     final json = {
       ...model.toJson(),
       if (minAgeFieldValue != null)
-        _$$MatchingModelImplFieldMap['minAge']!: minAgeFieldValue,
+        _$MatchingModelFieldMap['minAge']!: minAgeFieldValue,
       if (maxAgeFieldValue != null)
-        _$$MatchingModelImplFieldMap['maxAge']!: maxAgeFieldValue,
+        _$MatchingModelFieldMap['maxAge']!: maxAgeFieldValue,
       if (skillsFieldValue != null)
-        _$$MatchingModelImplFieldMap['skills']!: skillsFieldValue,
+        _$MatchingModelFieldMap['skills']!: skillsFieldValue,
       if (freeTimeActivitiesFieldValue != null)
-        _$$MatchingModelImplFieldMap['freeTimeActivities']!:
+        _$MatchingModelFieldMap['freeTimeActivities']!:
             freeTimeActivitiesFieldValue,
     };
 
@@ -361,26 +361,26 @@ class _$MatchingModelDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (minAge != _sentinel)
-        _$$MatchingModelImplFieldMap['minAge']!:
-            _$$MatchingModelImplPerFieldToJson.minAge(minAge as int),
+        _$MatchingModelFieldMap['minAge']!:
+            _$MatchingModelPerFieldToJson.minAge(minAge as int),
       if (minAgeFieldValue != null)
-        _$$MatchingModelImplFieldMap['minAge']!: minAgeFieldValue,
+        _$MatchingModelFieldMap['minAge']!: minAgeFieldValue,
       if (maxAge != _sentinel)
-        _$$MatchingModelImplFieldMap['maxAge']!:
-            _$$MatchingModelImplPerFieldToJson.maxAge(maxAge as int),
+        _$MatchingModelFieldMap['maxAge']!:
+            _$MatchingModelPerFieldToJson.maxAge(maxAge as int),
       if (maxAgeFieldValue != null)
-        _$$MatchingModelImplFieldMap['maxAge']!: maxAgeFieldValue,
+        _$MatchingModelFieldMap['maxAge']!: maxAgeFieldValue,
       if (skills != _sentinel)
-        _$$MatchingModelImplFieldMap['skills']!:
-            _$$MatchingModelImplPerFieldToJson.skills(skills as List<String>),
+        _$MatchingModelFieldMap['skills']!:
+            _$MatchingModelPerFieldToJson.skills(skills as List<String>),
       if (skillsFieldValue != null)
-        _$$MatchingModelImplFieldMap['skills']!: skillsFieldValue,
+        _$MatchingModelFieldMap['skills']!: skillsFieldValue,
       if (freeTimeActivities != _sentinel)
-        _$$MatchingModelImplFieldMap['freeTimeActivities']!:
-            _$$MatchingModelImplPerFieldToJson
+        _$MatchingModelFieldMap['freeTimeActivities']!:
+            _$MatchingModelPerFieldToJson
                 .freeTimeActivities(freeTimeActivities as List<String>),
       if (freeTimeActivitiesFieldValue != null)
-        _$$MatchingModelImplFieldMap['freeTimeActivities']!:
+        _$MatchingModelFieldMap['freeTimeActivities']!:
             freeTimeActivitiesFieldValue,
     };
 
@@ -416,26 +416,26 @@ class _$MatchingModelDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (minAge != _sentinel)
-        _$$MatchingModelImplFieldMap['minAge']!:
-            _$$MatchingModelImplPerFieldToJson.minAge(minAge as int),
+        _$MatchingModelFieldMap['minAge']!:
+            _$MatchingModelPerFieldToJson.minAge(minAge as int),
       if (minAgeFieldValue != null)
-        _$$MatchingModelImplFieldMap['minAge']!: minAgeFieldValue,
+        _$MatchingModelFieldMap['minAge']!: minAgeFieldValue,
       if (maxAge != _sentinel)
-        _$$MatchingModelImplFieldMap['maxAge']!:
-            _$$MatchingModelImplPerFieldToJson.maxAge(maxAge as int),
+        _$MatchingModelFieldMap['maxAge']!:
+            _$MatchingModelPerFieldToJson.maxAge(maxAge as int),
       if (maxAgeFieldValue != null)
-        _$$MatchingModelImplFieldMap['maxAge']!: maxAgeFieldValue,
+        _$MatchingModelFieldMap['maxAge']!: maxAgeFieldValue,
       if (skills != _sentinel)
-        _$$MatchingModelImplFieldMap['skills']!:
-            _$$MatchingModelImplPerFieldToJson.skills(skills as List<String>),
+        _$MatchingModelFieldMap['skills']!:
+            _$MatchingModelPerFieldToJson.skills(skills as List<String>),
       if (skillsFieldValue != null)
-        _$$MatchingModelImplFieldMap['skills']!: skillsFieldValue,
+        _$MatchingModelFieldMap['skills']!: skillsFieldValue,
       if (freeTimeActivities != _sentinel)
-        _$$MatchingModelImplFieldMap['freeTimeActivities']!:
-            _$$MatchingModelImplPerFieldToJson
+        _$MatchingModelFieldMap['freeTimeActivities']!:
+            _$MatchingModelPerFieldToJson
                 .freeTimeActivities(freeTimeActivities as List<String>),
       if (freeTimeActivitiesFieldValue != null)
-        _$$MatchingModelImplFieldMap['freeTimeActivities']!:
+        _$MatchingModelFieldMap['freeTimeActivities']!:
             freeTimeActivitiesFieldValue,
     };
 
@@ -471,26 +471,26 @@ class _$MatchingModelDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (minAge != _sentinel)
-        _$$MatchingModelImplFieldMap['minAge']!:
-            _$$MatchingModelImplPerFieldToJson.minAge(minAge as int),
+        _$MatchingModelFieldMap['minAge']!:
+            _$MatchingModelPerFieldToJson.minAge(minAge as int),
       if (minAgeFieldValue != null)
-        _$$MatchingModelImplFieldMap['minAge']!: minAgeFieldValue,
+        _$MatchingModelFieldMap['minAge']!: minAgeFieldValue,
       if (maxAge != _sentinel)
-        _$$MatchingModelImplFieldMap['maxAge']!:
-            _$$MatchingModelImplPerFieldToJson.maxAge(maxAge as int),
+        _$MatchingModelFieldMap['maxAge']!:
+            _$MatchingModelPerFieldToJson.maxAge(maxAge as int),
       if (maxAgeFieldValue != null)
-        _$$MatchingModelImplFieldMap['maxAge']!: maxAgeFieldValue,
+        _$MatchingModelFieldMap['maxAge']!: maxAgeFieldValue,
       if (skills != _sentinel)
-        _$$MatchingModelImplFieldMap['skills']!:
-            _$$MatchingModelImplPerFieldToJson.skills(skills as List<String>),
+        _$MatchingModelFieldMap['skills']!:
+            _$MatchingModelPerFieldToJson.skills(skills as List<String>),
       if (skillsFieldValue != null)
-        _$$MatchingModelImplFieldMap['skills']!: skillsFieldValue,
+        _$MatchingModelFieldMap['skills']!: skillsFieldValue,
       if (freeTimeActivities != _sentinel)
-        _$$MatchingModelImplFieldMap['freeTimeActivities']!:
-            _$$MatchingModelImplPerFieldToJson
+        _$MatchingModelFieldMap['freeTimeActivities']!:
+            _$MatchingModelPerFieldToJson
                 .freeTimeActivities(freeTimeActivities as List<String>),
       if (freeTimeActivitiesFieldValue != null)
-        _$$MatchingModelImplFieldMap['freeTimeActivities']!:
+        _$MatchingModelFieldMap['freeTimeActivities']!:
             freeTimeActivitiesFieldValue,
     };
 
@@ -833,31 +833,29 @@ class _$MatchingModelQuery
     return _$MatchingModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$MatchingModelImplFieldMap['minAge']!,
+        _$MatchingModelFieldMap['minAge']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$MatchingModelImplPerFieldToJson.minAge(isEqualTo as int)
+            ? _$MatchingModelPerFieldToJson.minAge(isEqualTo as int)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$MatchingModelImplPerFieldToJson.minAge(isNotEqualTo as int)
+            ? _$MatchingModelPerFieldToJson.minAge(isNotEqualTo as int)
             : null,
         isLessThan: isLessThan != null
-            ? _$$MatchingModelImplPerFieldToJson.minAge(isLessThan as int)
+            ? _$MatchingModelPerFieldToJson.minAge(isLessThan as int)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$MatchingModelImplPerFieldToJson
-                .minAge(isLessThanOrEqualTo as int)
+            ? _$MatchingModelPerFieldToJson.minAge(isLessThanOrEqualTo as int)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$MatchingModelImplPerFieldToJson.minAge(isGreaterThan as int)
+            ? _$MatchingModelPerFieldToJson.minAge(isGreaterThan as int)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$MatchingModelImplPerFieldToJson
+            ? _$MatchingModelPerFieldToJson
                 .minAge(isGreaterThanOrEqualTo as int)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$MatchingModelImplPerFieldToJson.minAge(e)),
-        whereNotIn: whereNotIn
-            ?.map((e) => _$$MatchingModelImplPerFieldToJson.minAge(e)),
+        whereIn: whereIn?.map((e) => _$MatchingModelPerFieldToJson.minAge(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$MatchingModelPerFieldToJson.minAge(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -881,31 +879,29 @@ class _$MatchingModelQuery
     return _$MatchingModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$MatchingModelImplFieldMap['maxAge']!,
+        _$MatchingModelFieldMap['maxAge']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$MatchingModelImplPerFieldToJson.maxAge(isEqualTo as int)
+            ? _$MatchingModelPerFieldToJson.maxAge(isEqualTo as int)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$MatchingModelImplPerFieldToJson.maxAge(isNotEqualTo as int)
+            ? _$MatchingModelPerFieldToJson.maxAge(isNotEqualTo as int)
             : null,
         isLessThan: isLessThan != null
-            ? _$$MatchingModelImplPerFieldToJson.maxAge(isLessThan as int)
+            ? _$MatchingModelPerFieldToJson.maxAge(isLessThan as int)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$MatchingModelImplPerFieldToJson
-                .maxAge(isLessThanOrEqualTo as int)
+            ? _$MatchingModelPerFieldToJson.maxAge(isLessThanOrEqualTo as int)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$MatchingModelImplPerFieldToJson.maxAge(isGreaterThan as int)
+            ? _$MatchingModelPerFieldToJson.maxAge(isGreaterThan as int)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$MatchingModelImplPerFieldToJson
+            ? _$MatchingModelPerFieldToJson
                 .maxAge(isGreaterThanOrEqualTo as int)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$MatchingModelImplPerFieldToJson.maxAge(e)),
-        whereNotIn: whereNotIn
-            ?.map((e) => _$$MatchingModelImplPerFieldToJson.maxAge(e)),
+        whereIn: whereIn?.map((e) => _$MatchingModelPerFieldToJson.maxAge(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$MatchingModelPerFieldToJson.maxAge(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -929,38 +925,35 @@ class _$MatchingModelQuery
     return _$MatchingModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$MatchingModelImplFieldMap['skills']!,
+        _$MatchingModelFieldMap['skills']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$MatchingModelImplPerFieldToJson
-                .skills(isEqualTo as List<String>)
+            ? _$MatchingModelPerFieldToJson.skills(isEqualTo as List<String>)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$MatchingModelImplPerFieldToJson
-                .skills(isNotEqualTo as List<String>)
+            ? _$MatchingModelPerFieldToJson.skills(isNotEqualTo as List<String>)
             : null,
         isLessThan: isLessThan != null
-            ? _$$MatchingModelImplPerFieldToJson
-                .skills(isLessThan as List<String>)
+            ? _$MatchingModelPerFieldToJson.skills(isLessThan as List<String>)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$MatchingModelImplPerFieldToJson
+            ? _$MatchingModelPerFieldToJson
                 .skills(isLessThanOrEqualTo as List<String>)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$MatchingModelImplPerFieldToJson
+            ? _$MatchingModelPerFieldToJson
                 .skills(isGreaterThan as List<String>)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$MatchingModelImplPerFieldToJson
+            ? _$MatchingModelPerFieldToJson
                 .skills(isGreaterThanOrEqualTo as List<String>)
             : null,
         arrayContains: arrayContains != null
-            ? (_$$MatchingModelImplPerFieldToJson
-                    .skills([arrayContains as String]) as List?)!
+            ? (_$MatchingModelPerFieldToJson.skills([arrayContains as String])
+                    as List?)!
                 .single
             : null,
         arrayContainsAny: arrayContainsAny != null
-            ? _$$MatchingModelImplPerFieldToJson.skills(arrayContainsAny)
+            ? _$MatchingModelPerFieldToJson.skills(arrayContainsAny)
                 as Iterable<Object>?
             : null,
         isNull: isNull ??
@@ -986,39 +979,39 @@ class _$MatchingModelQuery
     return _$MatchingModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$MatchingModelImplFieldMap['freeTimeActivities']!,
+        _$MatchingModelFieldMap['freeTimeActivities']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$MatchingModelImplPerFieldToJson
+            ? _$MatchingModelPerFieldToJson
                 .freeTimeActivities(isEqualTo as List<String>)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$MatchingModelImplPerFieldToJson
+            ? _$MatchingModelPerFieldToJson
                 .freeTimeActivities(isNotEqualTo as List<String>)
             : null,
         isLessThan: isLessThan != null
-            ? _$$MatchingModelImplPerFieldToJson
+            ? _$MatchingModelPerFieldToJson
                 .freeTimeActivities(isLessThan as List<String>)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$MatchingModelImplPerFieldToJson
+            ? _$MatchingModelPerFieldToJson
                 .freeTimeActivities(isLessThanOrEqualTo as List<String>)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$MatchingModelImplPerFieldToJson
+            ? _$MatchingModelPerFieldToJson
                 .freeTimeActivities(isGreaterThan as List<String>)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$MatchingModelImplPerFieldToJson
+            ? _$MatchingModelPerFieldToJson
                 .freeTimeActivities(isGreaterThanOrEqualTo as List<String>)
             : null,
         arrayContains: arrayContains != null
-            ? (_$$MatchingModelImplPerFieldToJson
+            ? (_$MatchingModelPerFieldToJson
                     .freeTimeActivities([arrayContains as String]) as List?)!
                 .single
             : null,
         arrayContainsAny: arrayContainsAny != null
-            ? _$$MatchingModelImplPerFieldToJson
-                .freeTimeActivities(arrayContainsAny) as Iterable<Object>?
+            ? _$MatchingModelPerFieldToJson.freeTimeActivities(arrayContainsAny)
+                as Iterable<Object>?
             : null,
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
@@ -1187,9 +1180,8 @@ class _$MatchingModelQuery
     MatchingModelDocumentSnapshot? endBeforeDocument,
     MatchingModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$MatchingModelImplFieldMap['minAge']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$MatchingModelFieldMap['minAge']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1261,9 +1253,8 @@ class _$MatchingModelQuery
     MatchingModelDocumentSnapshot? endBeforeDocument,
     MatchingModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$MatchingModelImplFieldMap['maxAge']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$MatchingModelFieldMap['maxAge']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1335,9 +1326,8 @@ class _$MatchingModelQuery
     MatchingModelDocumentSnapshot? endBeforeDocument,
     MatchingModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$MatchingModelImplFieldMap['skills']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$MatchingModelFieldMap['skills']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1410,7 +1400,7 @@ class _$MatchingModelQuery
     MatchingModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$$MatchingModelImplFieldMap['freeTimeActivities']!,
+        _$MatchingModelFieldMap['freeTimeActivities']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1571,7 +1561,7 @@ class MatchingModelQueryDocumentSnapshot
 // ValidatorGenerator
 // **************************************************************************
 
-void _$assert_$MatchingModelImpl(_$MatchingModelImpl instance) {
+void _$assertMatchingModel(MatchingModel instance) {
   const Min(18).validate(instance.minAge, 'minAge');
 }
 
@@ -1579,8 +1569,8 @@ void _$assert_$MatchingModelImpl(_$MatchingModelImpl instance) {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$MatchingModelImpl _$$MatchingModelImplFromJson(Map<String, dynamic> json) =>
-    _$MatchingModelImpl(
+MatchingModel _$MatchingModelFromJson(Map<String, dynamic> json) =>
+    MatchingModel(
       minAge: (json['minAge'] as num).toInt(),
       maxAge: (json['maxAge'] as num).toInt(),
       skills:
@@ -1590,7 +1580,7 @@ _$MatchingModelImpl _$$MatchingModelImplFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-const _$$MatchingModelImplFieldMap = <String, String>{
+const _$MatchingModelFieldMap = <String, String>{
   'minAge': 'minAge',
   'maxAge': 'maxAge',
   'skills': 'skills',
@@ -1598,7 +1588,7 @@ const _$$MatchingModelImplFieldMap = <String, String>{
 };
 
 // ignore: unused_element
-abstract class _$$MatchingModelImplPerFieldToJson {
+abstract class _$MatchingModelPerFieldToJson {
   // ignore: unused_element
   static Object? minAge(int instance) => instance;
   // ignore: unused_element
@@ -1609,7 +1599,7 @@ abstract class _$$MatchingModelImplPerFieldToJson {
   static Object? freeTimeActivities(List<String> instance) => instance;
 }
 
-Map<String, dynamic> _$$MatchingModelImplToJson(_$MatchingModelImpl instance) =>
+Map<String, dynamic> _$MatchingModelToJson(MatchingModel instance) =>
     <String, dynamic>{
       'minAge': instance.minAge,
       'maxAge': instance.maxAge,

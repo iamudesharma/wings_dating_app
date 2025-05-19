@@ -9,22 +9,21 @@ part 'album_model.g.dart';
 
 @Collection<AlbumListModel>('allbums')
 @freezed
-class AlbumListModel with _$AlbumListModel {
+abstract class AlbumListModel with _$AlbumListModel {
   @JsonSerializable(
     createToJson: true,
     createFieldMap: true,
     createPerFieldToJson: true,
     explicitToJson: true,
   )
-  const factory AlbumListModel({
+  factory AlbumListModel({
     required List<String> imageUrls,
     required String name,
     required String userId,
     required String id,
   }) = _AlbumListModel;
 
-  factory AlbumListModel.fromJson(Map<String, Object?> json) =>
-      _$AlbumListModelFromJson(json);
+  factory AlbumListModel.fromJson(Map<String, Object?> json) => _$AlbumListModelFromJson(json);
 }
 
 // @Freezed(map: FreezedMapOptions.all, toStringOverride: true, toJson: true, fromJson: true)

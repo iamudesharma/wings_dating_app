@@ -6,7 +6,7 @@ part of 'call.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CallImpl _$$CallImplFromJson(Map<String, dynamic> json) => _$CallImpl(
+_Call _$CallFromJson(Map<String, dynamic> json) => _Call(
       callerId: json['callerId'] as String,
       callerName: json['callerName'] as String,
       callerPic: json['callerPic'] as String,
@@ -17,8 +17,7 @@ _$CallImpl _$$CallImplFromJson(Map<String, dynamic> json) => _$CallImpl(
       hasDialled: json['hasDialled'] as bool,
     );
 
-Map<String, dynamic> _$$CallImplToJson(_$CallImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$CallToJson(_Call instance) => <String, dynamic>{
       'callerId': instance.callerId,
       'callerName': instance.callerName,
       'callerPic': instance.callerPic,

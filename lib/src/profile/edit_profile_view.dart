@@ -330,8 +330,33 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 });
 
                                 if (widget.isEditProfile) {
+                                  final data = await Geolocator.getCurrentPosition();
+
+                                  GeoFirePoint myLocation = GeoFirePoint(GeoPoint(
+                                    data.latitude,
+                                    data.longitude,
+                                  ));
+                                  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
+                                  await ref.read(Dependency.profileProvider).updateUserDoc(
+                                        userdata!.copyWith(
+                                            bio: _bioController.text,
+                                            username: _usernameController.text,
+                                            position: GeoPointData(
+                                              geohash: myLocation.geohash,
+                                              geopoint: myLocation.geopoint,
+                                            ),
+                                            profileUrl:
+                                                await ref.read(ProfileController.userControllerProvider).uploadImage()),
+                                      );
+
+                                  setState(() {
+                                    _loading = false;
+                                  });
                                   return;
                                 }
+                                var permission = await Geolocator.checkPermission();
+
+                                print(permission);
 
                                 final data = await Geolocator.getCurrentPosition();
 

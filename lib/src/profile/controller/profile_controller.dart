@@ -44,6 +44,8 @@ class ProfileController extends ChangeNotifier {
 
   Future updateUserData(UserModel user) async {
     await ref.read(Dependency.profileProvider).updateUserDoc(user);
+    userModel = await ref.read(Dependency.profileProvider).getCurrentUser();
+    notifyListeners();
   }
 
   Future<void> pickImage({required ImageSource imageSource}) async {

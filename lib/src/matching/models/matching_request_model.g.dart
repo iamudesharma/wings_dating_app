@@ -313,23 +313,22 @@ class _$MatchingRequestModelDocumentReference
     final json = {
       ...model.toJson(),
       if (userIdFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['userId']!: userIdFieldValue,
+        _$MatchingRequestModelFieldMap['userId']!: userIdFieldValue,
       if (ageRangeFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['ageRange']!: ageRangeFieldValue,
+        _$MatchingRequestModelFieldMap['ageRange']!: ageRangeFieldValue,
       if (bodyTypesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['bodyTypes']!: bodyTypesFieldValue,
+        _$MatchingRequestModelFieldMap['bodyTypes']!: bodyTypesFieldValue,
       if (positionPreferencesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['positionPreferences']!:
+        _$MatchingRequestModelFieldMap['positionPreferences']!:
             positionPreferencesFieldValue,
       if (skillsFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['skills']!: skillsFieldValue,
+        _$MatchingRequestModelFieldMap['skills']!: skillsFieldValue,
       if (activitiesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['activities']!:
-            activitiesFieldValue,
+        _$MatchingRequestModelFieldMap['activities']!: activitiesFieldValue,
       if (createdAtFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['createdAt']!: createdAtFieldValue,
+        _$MatchingRequestModelFieldMap['createdAt']!: createdAtFieldValue,
       if (idFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['id']!: idFieldValue,
+        _$MatchingRequestModelFieldMap['id']!: idFieldValue,
     };
 
     final castedReference = reference.withConverter<Map<String, dynamic>>(
@@ -355,23 +354,22 @@ class _$MatchingRequestModelDocumentReference
     final json = {
       ...model.toJson(),
       if (userIdFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['userId']!: userIdFieldValue,
+        _$MatchingRequestModelFieldMap['userId']!: userIdFieldValue,
       if (ageRangeFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['ageRange']!: ageRangeFieldValue,
+        _$MatchingRequestModelFieldMap['ageRange']!: ageRangeFieldValue,
       if (bodyTypesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['bodyTypes']!: bodyTypesFieldValue,
+        _$MatchingRequestModelFieldMap['bodyTypes']!: bodyTypesFieldValue,
       if (positionPreferencesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['positionPreferences']!:
+        _$MatchingRequestModelFieldMap['positionPreferences']!:
             positionPreferencesFieldValue,
       if (skillsFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['skills']!: skillsFieldValue,
+        _$MatchingRequestModelFieldMap['skills']!: skillsFieldValue,
       if (activitiesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['activities']!:
-            activitiesFieldValue,
+        _$MatchingRequestModelFieldMap['activities']!: activitiesFieldValue,
       if (createdAtFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['createdAt']!: createdAtFieldValue,
+        _$MatchingRequestModelFieldMap['createdAt']!: createdAtFieldValue,
       if (idFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['id']!: idFieldValue,
+        _$MatchingRequestModelFieldMap['id']!: idFieldValue,
     };
 
     transaction.set(reference, json, options);
@@ -393,23 +391,22 @@ class _$MatchingRequestModelDocumentReference
     final json = {
       ...model.toJson(),
       if (userIdFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['userId']!: userIdFieldValue,
+        _$MatchingRequestModelFieldMap['userId']!: userIdFieldValue,
       if (ageRangeFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['ageRange']!: ageRangeFieldValue,
+        _$MatchingRequestModelFieldMap['ageRange']!: ageRangeFieldValue,
       if (bodyTypesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['bodyTypes']!: bodyTypesFieldValue,
+        _$MatchingRequestModelFieldMap['bodyTypes']!: bodyTypesFieldValue,
       if (positionPreferencesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['positionPreferences']!:
+        _$MatchingRequestModelFieldMap['positionPreferences']!:
             positionPreferencesFieldValue,
       if (skillsFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['skills']!: skillsFieldValue,
+        _$MatchingRequestModelFieldMap['skills']!: skillsFieldValue,
       if (activitiesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['activities']!:
-            activitiesFieldValue,
+        _$MatchingRequestModelFieldMap['activities']!: activitiesFieldValue,
       if (createdAtFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['createdAt']!: createdAtFieldValue,
+        _$MatchingRequestModelFieldMap['createdAt']!: createdAtFieldValue,
       if (idFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['id']!: idFieldValue,
+        _$MatchingRequestModelFieldMap['id']!: idFieldValue,
     };
 
     batch.set(reference, json, options);
@@ -467,53 +464,51 @@ class _$MatchingRequestModelDocumentReference
     );
     final json = {
       if (userId != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['userId']!:
-            _$$MatchingRequestModelImplPerFieldToJson.userId(userId as String),
+        _$MatchingRequestModelFieldMap['userId']!:
+            _$MatchingRequestModelPerFieldToJson.userId(userId as String),
       if (userIdFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['userId']!: userIdFieldValue,
+        _$MatchingRequestModelFieldMap['userId']!: userIdFieldValue,
       if (ageRange != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['ageRange']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['ageRange']!:
+            _$MatchingRequestModelPerFieldToJson
                 .ageRange(ageRange as RangeValue),
       if (ageRangeFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['ageRange']!: ageRangeFieldValue,
+        _$MatchingRequestModelFieldMap['ageRange']!: ageRangeFieldValue,
       if (bodyTypes != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['bodyTypes']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['bodyTypes']!:
+            _$MatchingRequestModelPerFieldToJson
                 .bodyTypes(bodyTypes as List<String>),
       if (bodyTypesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['bodyTypes']!: bodyTypesFieldValue,
+        _$MatchingRequestModelFieldMap['bodyTypes']!: bodyTypesFieldValue,
       if (positionPreferences != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['positionPreferences']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['positionPreferences']!:
+            _$MatchingRequestModelPerFieldToJson
                 .positionPreferences(positionPreferences as List<String>),
       if (positionPreferencesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['positionPreferences']!:
+        _$MatchingRequestModelFieldMap['positionPreferences']!:
             positionPreferencesFieldValue,
       if (skills != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['skills']!:
-            _$$MatchingRequestModelImplPerFieldToJson
-                .skills(skills as List<String>),
+        _$MatchingRequestModelFieldMap['skills']!:
+            _$MatchingRequestModelPerFieldToJson.skills(skills as List<String>),
       if (skillsFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['skills']!: skillsFieldValue,
+        _$MatchingRequestModelFieldMap['skills']!: skillsFieldValue,
       if (activities != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['activities']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['activities']!:
+            _$MatchingRequestModelPerFieldToJson
                 .activities(activities as List<String>),
       if (activitiesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['activities']!:
-            activitiesFieldValue,
+        _$MatchingRequestModelFieldMap['activities']!: activitiesFieldValue,
       if (createdAt != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['createdAt']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['createdAt']!:
+            _$MatchingRequestModelPerFieldToJson
                 .createdAt(createdAt as DateTime),
       if (createdAtFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['createdAt']!: createdAtFieldValue,
+        _$MatchingRequestModelFieldMap['createdAt']!: createdAtFieldValue,
       if (id != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['id']!:
-            _$$MatchingRequestModelImplPerFieldToJson.id(id as String),
+        _$MatchingRequestModelFieldMap['id']!:
+            _$MatchingRequestModelPerFieldToJson.id(id as String),
       if (idFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['id']!: idFieldValue,
+        _$MatchingRequestModelFieldMap['id']!: idFieldValue,
     };
 
     return reference.update(json);
@@ -572,53 +567,51 @@ class _$MatchingRequestModelDocumentReference
     );
     final json = {
       if (userId != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['userId']!:
-            _$$MatchingRequestModelImplPerFieldToJson.userId(userId as String),
+        _$MatchingRequestModelFieldMap['userId']!:
+            _$MatchingRequestModelPerFieldToJson.userId(userId as String),
       if (userIdFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['userId']!: userIdFieldValue,
+        _$MatchingRequestModelFieldMap['userId']!: userIdFieldValue,
       if (ageRange != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['ageRange']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['ageRange']!:
+            _$MatchingRequestModelPerFieldToJson
                 .ageRange(ageRange as RangeValue),
       if (ageRangeFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['ageRange']!: ageRangeFieldValue,
+        _$MatchingRequestModelFieldMap['ageRange']!: ageRangeFieldValue,
       if (bodyTypes != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['bodyTypes']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['bodyTypes']!:
+            _$MatchingRequestModelPerFieldToJson
                 .bodyTypes(bodyTypes as List<String>),
       if (bodyTypesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['bodyTypes']!: bodyTypesFieldValue,
+        _$MatchingRequestModelFieldMap['bodyTypes']!: bodyTypesFieldValue,
       if (positionPreferences != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['positionPreferences']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['positionPreferences']!:
+            _$MatchingRequestModelPerFieldToJson
                 .positionPreferences(positionPreferences as List<String>),
       if (positionPreferencesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['positionPreferences']!:
+        _$MatchingRequestModelFieldMap['positionPreferences']!:
             positionPreferencesFieldValue,
       if (skills != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['skills']!:
-            _$$MatchingRequestModelImplPerFieldToJson
-                .skills(skills as List<String>),
+        _$MatchingRequestModelFieldMap['skills']!:
+            _$MatchingRequestModelPerFieldToJson.skills(skills as List<String>),
       if (skillsFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['skills']!: skillsFieldValue,
+        _$MatchingRequestModelFieldMap['skills']!: skillsFieldValue,
       if (activities != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['activities']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['activities']!:
+            _$MatchingRequestModelPerFieldToJson
                 .activities(activities as List<String>),
       if (activitiesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['activities']!:
-            activitiesFieldValue,
+        _$MatchingRequestModelFieldMap['activities']!: activitiesFieldValue,
       if (createdAt != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['createdAt']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['createdAt']!:
+            _$MatchingRequestModelPerFieldToJson
                 .createdAt(createdAt as DateTime),
       if (createdAtFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['createdAt']!: createdAtFieldValue,
+        _$MatchingRequestModelFieldMap['createdAt']!: createdAtFieldValue,
       if (id != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['id']!:
-            _$$MatchingRequestModelImplPerFieldToJson.id(id as String),
+        _$MatchingRequestModelFieldMap['id']!:
+            _$MatchingRequestModelPerFieldToJson.id(id as String),
       if (idFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['id']!: idFieldValue,
+        _$MatchingRequestModelFieldMap['id']!: idFieldValue,
     };
 
     transaction.update(reference, json);
@@ -677,53 +670,51 @@ class _$MatchingRequestModelDocumentReference
     );
     final json = {
       if (userId != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['userId']!:
-            _$$MatchingRequestModelImplPerFieldToJson.userId(userId as String),
+        _$MatchingRequestModelFieldMap['userId']!:
+            _$MatchingRequestModelPerFieldToJson.userId(userId as String),
       if (userIdFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['userId']!: userIdFieldValue,
+        _$MatchingRequestModelFieldMap['userId']!: userIdFieldValue,
       if (ageRange != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['ageRange']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['ageRange']!:
+            _$MatchingRequestModelPerFieldToJson
                 .ageRange(ageRange as RangeValue),
       if (ageRangeFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['ageRange']!: ageRangeFieldValue,
+        _$MatchingRequestModelFieldMap['ageRange']!: ageRangeFieldValue,
       if (bodyTypes != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['bodyTypes']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['bodyTypes']!:
+            _$MatchingRequestModelPerFieldToJson
                 .bodyTypes(bodyTypes as List<String>),
       if (bodyTypesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['bodyTypes']!: bodyTypesFieldValue,
+        _$MatchingRequestModelFieldMap['bodyTypes']!: bodyTypesFieldValue,
       if (positionPreferences != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['positionPreferences']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['positionPreferences']!:
+            _$MatchingRequestModelPerFieldToJson
                 .positionPreferences(positionPreferences as List<String>),
       if (positionPreferencesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['positionPreferences']!:
+        _$MatchingRequestModelFieldMap['positionPreferences']!:
             positionPreferencesFieldValue,
       if (skills != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['skills']!:
-            _$$MatchingRequestModelImplPerFieldToJson
-                .skills(skills as List<String>),
+        _$MatchingRequestModelFieldMap['skills']!:
+            _$MatchingRequestModelPerFieldToJson.skills(skills as List<String>),
       if (skillsFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['skills']!: skillsFieldValue,
+        _$MatchingRequestModelFieldMap['skills']!: skillsFieldValue,
       if (activities != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['activities']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['activities']!:
+            _$MatchingRequestModelPerFieldToJson
                 .activities(activities as List<String>),
       if (activitiesFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['activities']!:
-            activitiesFieldValue,
+        _$MatchingRequestModelFieldMap['activities']!: activitiesFieldValue,
       if (createdAt != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['createdAt']!:
-            _$$MatchingRequestModelImplPerFieldToJson
+        _$MatchingRequestModelFieldMap['createdAt']!:
+            _$MatchingRequestModelPerFieldToJson
                 .createdAt(createdAt as DateTime),
       if (createdAtFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['createdAt']!: createdAtFieldValue,
+        _$MatchingRequestModelFieldMap['createdAt']!: createdAtFieldValue,
       if (id != _sentinel)
-        _$$MatchingRequestModelImplFieldMap['id']!:
-            _$$MatchingRequestModelImplPerFieldToJson.id(id as String),
+        _$MatchingRequestModelFieldMap['id']!:
+            _$MatchingRequestModelPerFieldToJson.id(id as String),
       if (idFieldValue != null)
-        _$$MatchingRequestModelImplFieldMap['id']!: idFieldValue,
+        _$MatchingRequestModelFieldMap['id']!: idFieldValue,
     };
 
     batch.update(reference, json);
@@ -1163,35 +1154,33 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     return _$MatchingRequestModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$MatchingRequestModelImplFieldMap['userId']!,
+        _$MatchingRequestModelFieldMap['userId']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
-                .userId(isEqualTo as String)
+            ? _$MatchingRequestModelPerFieldToJson.userId(isEqualTo as String)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .userId(isNotEqualTo as String)
             : null,
         isLessThan: isLessThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
-                .userId(isLessThan as String)
+            ? _$MatchingRequestModelPerFieldToJson.userId(isLessThan as String)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .userId(isLessThanOrEqualTo as String)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .userId(isGreaterThan as String)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .userId(isGreaterThanOrEqualTo as String)
             : null,
-        whereIn: whereIn
-            ?.map((e) => _$$MatchingRequestModelImplPerFieldToJson.userId(e)),
+        whereIn:
+            whereIn?.map((e) => _$MatchingRequestModelPerFieldToJson.userId(e)),
         whereNotIn: whereNotIn
-            ?.map((e) => _$$MatchingRequestModelImplPerFieldToJson.userId(e)),
+            ?.map((e) => _$MatchingRequestModelPerFieldToJson.userId(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -1215,35 +1204,35 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     return _$MatchingRequestModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$MatchingRequestModelImplFieldMap['ageRange']!,
+        _$MatchingRequestModelFieldMap['ageRange']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .ageRange(isEqualTo as RangeValue)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .ageRange(isNotEqualTo as RangeValue)
             : null,
         isLessThan: isLessThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .ageRange(isLessThan as RangeValue)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .ageRange(isLessThanOrEqualTo as RangeValue)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .ageRange(isGreaterThan as RangeValue)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .ageRange(isGreaterThanOrEqualTo as RangeValue)
             : null,
         whereIn: whereIn
-            ?.map((e) => _$$MatchingRequestModelImplPerFieldToJson.ageRange(e)),
+            ?.map((e) => _$MatchingRequestModelPerFieldToJson.ageRange(e)),
         whereNotIn: whereNotIn
-            ?.map((e) => _$$MatchingRequestModelImplPerFieldToJson.ageRange(e)),
+            ?.map((e) => _$MatchingRequestModelPerFieldToJson.ageRange(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -1267,39 +1256,39 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     return _$MatchingRequestModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$MatchingRequestModelImplFieldMap['bodyTypes']!,
+        _$MatchingRequestModelFieldMap['bodyTypes']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .bodyTypes(isEqualTo as List<String>)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .bodyTypes(isNotEqualTo as List<String>)
             : null,
         isLessThan: isLessThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .bodyTypes(isLessThan as List<String>)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .bodyTypes(isLessThanOrEqualTo as List<String>)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .bodyTypes(isGreaterThan as List<String>)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .bodyTypes(isGreaterThanOrEqualTo as List<String>)
             : null,
         arrayContains: arrayContains != null
-            ? (_$$MatchingRequestModelImplPerFieldToJson
+            ? (_$MatchingRequestModelPerFieldToJson
                     .bodyTypes([arrayContains as String]) as List?)!
                 .single
             : null,
         arrayContainsAny: arrayContainsAny != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
-                .bodyTypes(arrayContainsAny) as Iterable<Object>?
+            ? _$MatchingRequestModelPerFieldToJson.bodyTypes(arrayContainsAny)
+                as Iterable<Object>?
             : null,
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
@@ -1324,38 +1313,38 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     return _$MatchingRequestModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$MatchingRequestModelImplFieldMap['positionPreferences']!,
+        _$MatchingRequestModelFieldMap['positionPreferences']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .positionPreferences(isEqualTo as List<String>)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .positionPreferences(isNotEqualTo as List<String>)
             : null,
         isLessThan: isLessThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .positionPreferences(isLessThan as List<String>)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .positionPreferences(isLessThanOrEqualTo as List<String>)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .positionPreferences(isGreaterThan as List<String>)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .positionPreferences(isGreaterThanOrEqualTo as List<String>)
             : null,
         arrayContains: arrayContains != null
-            ? (_$$MatchingRequestModelImplPerFieldToJson
+            ? (_$MatchingRequestModelPerFieldToJson
                     .positionPreferences([arrayContains as String]) as List?)!
                 .single
             : null,
         arrayContainsAny: arrayContainsAny != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .positionPreferences(arrayContainsAny) as Iterable<Object>?
             : null,
         isNull: isNull ??
@@ -1381,38 +1370,38 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     return _$MatchingRequestModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$MatchingRequestModelImplFieldMap['skills']!,
+        _$MatchingRequestModelFieldMap['skills']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .skills(isEqualTo as List<String>)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .skills(isNotEqualTo as List<String>)
             : null,
         isLessThan: isLessThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .skills(isLessThan as List<String>)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .skills(isLessThanOrEqualTo as List<String>)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .skills(isGreaterThan as List<String>)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .skills(isGreaterThanOrEqualTo as List<String>)
             : null,
         arrayContains: arrayContains != null
-            ? (_$$MatchingRequestModelImplPerFieldToJson
+            ? (_$MatchingRequestModelPerFieldToJson
                     .skills([arrayContains as String]) as List?)!
                 .single
             : null,
         arrayContainsAny: arrayContainsAny != null
-            ? _$$MatchingRequestModelImplPerFieldToJson.skills(arrayContainsAny)
+            ? _$MatchingRequestModelPerFieldToJson.skills(arrayContainsAny)
                 as Iterable<Object>?
             : null,
         isNull: isNull ??
@@ -1438,39 +1427,39 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     return _$MatchingRequestModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$MatchingRequestModelImplFieldMap['activities']!,
+        _$MatchingRequestModelFieldMap['activities']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .activities(isEqualTo as List<String>)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .activities(isNotEqualTo as List<String>)
             : null,
         isLessThan: isLessThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .activities(isLessThan as List<String>)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .activities(isLessThanOrEqualTo as List<String>)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .activities(isGreaterThan as List<String>)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .activities(isGreaterThanOrEqualTo as List<String>)
             : null,
         arrayContains: arrayContains != null
-            ? (_$$MatchingRequestModelImplPerFieldToJson
+            ? (_$MatchingRequestModelPerFieldToJson
                     .activities([arrayContains as String]) as List?)!
                 .single
             : null,
         arrayContainsAny: arrayContainsAny != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
-                .activities(arrayContainsAny) as Iterable<Object>?
+            ? _$MatchingRequestModelPerFieldToJson.activities(arrayContainsAny)
+                as Iterable<Object>?
             : null,
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
@@ -1495,35 +1484,35 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     return _$MatchingRequestModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$MatchingRequestModelImplFieldMap['createdAt']!,
+        _$MatchingRequestModelFieldMap['createdAt']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .createdAt(isEqualTo as DateTime)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .createdAt(isNotEqualTo as DateTime)
             : null,
         isLessThan: isLessThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .createdAt(isLessThan as DateTime)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .createdAt(isLessThanOrEqualTo as DateTime)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .createdAt(isGreaterThan as DateTime)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .createdAt(isGreaterThanOrEqualTo as DateTime)
             : null,
-        whereIn: whereIn?.map(
-            (e) => _$$MatchingRequestModelImplPerFieldToJson.createdAt(e)),
-        whereNotIn: whereNotIn?.map(
-            (e) => _$$MatchingRequestModelImplPerFieldToJson.createdAt(e)),
+        whereIn: whereIn
+            ?.map((e) => _$MatchingRequestModelPerFieldToJson.createdAt(e)),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$MatchingRequestModelPerFieldToJson.createdAt(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -1547,33 +1536,31 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     return _$MatchingRequestModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$MatchingRequestModelImplFieldMap['id']!,
+        _$MatchingRequestModelFieldMap['id']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson.id(isEqualTo as String)
+            ? _$MatchingRequestModelPerFieldToJson.id(isEqualTo as String)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$MatchingRequestModelImplPerFieldToJson
-                .id(isNotEqualTo as String)
+            ? _$MatchingRequestModelPerFieldToJson.id(isNotEqualTo as String)
             : null,
         isLessThan: isLessThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson.id(isLessThan as String)
+            ? _$MatchingRequestModelPerFieldToJson.id(isLessThan as String)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .id(isLessThanOrEqualTo as String)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
-                .id(isGreaterThan as String)
+            ? _$MatchingRequestModelPerFieldToJson.id(isGreaterThan as String)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$MatchingRequestModelImplPerFieldToJson
+            ? _$MatchingRequestModelPerFieldToJson
                 .id(isGreaterThanOrEqualTo as String)
             : null,
-        whereIn: whereIn
-            ?.map((e) => _$$MatchingRequestModelImplPerFieldToJson.id(e)),
-        whereNotIn: whereNotIn
-            ?.map((e) => _$$MatchingRequestModelImplPerFieldToJson.id(e)),
+        whereIn:
+            whereIn?.map((e) => _$MatchingRequestModelPerFieldToJson.id(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$MatchingRequestModelPerFieldToJson.id(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -1742,7 +1729,7 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     MatchingRequestModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$$MatchingRequestModelImplFieldMap['userId']!,
+        _$MatchingRequestModelFieldMap['userId']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1816,7 +1803,7 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     MatchingRequestModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$$MatchingRequestModelImplFieldMap['ageRange']!,
+        _$MatchingRequestModelFieldMap['ageRange']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1890,7 +1877,7 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     MatchingRequestModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$$MatchingRequestModelImplFieldMap['bodyTypes']!,
+        _$MatchingRequestModelFieldMap['bodyTypes']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1964,7 +1951,7 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     MatchingRequestModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$$MatchingRequestModelImplFieldMap['positionPreferences']!,
+        _$MatchingRequestModelFieldMap['positionPreferences']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2038,7 +2025,7 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     MatchingRequestModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$$MatchingRequestModelImplFieldMap['skills']!,
+        _$MatchingRequestModelFieldMap['skills']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2112,7 +2099,7 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     MatchingRequestModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$$MatchingRequestModelImplFieldMap['activities']!,
+        _$MatchingRequestModelFieldMap['activities']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2186,7 +2173,7 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     MatchingRequestModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$$MatchingRequestModelImplFieldMap['createdAt']!,
+        _$MatchingRequestModelFieldMap['createdAt']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2259,9 +2246,8 @@ class _$MatchingRequestModelQuery extends QueryReference<MatchingRequestModel,
     MatchingRequestModelDocumentSnapshot? endBeforeDocument,
     MatchingRequestModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$MatchingRequestModelImplFieldMap['id']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$MatchingRequestModelFieldMap['id']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2425,9 +2411,9 @@ class MatchingRequestModelQueryDocumentSnapshot
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$MatchingRequestModelImpl _$$MatchingRequestModelImplFromJson(
+_MatchingRequestModel _$MatchingRequestModelFromJson(
         Map<String, dynamic> json) =>
-    _$MatchingRequestModelImpl(
+    _MatchingRequestModel(
       userId: json['userId'] as String,
       ageRange: RangeValue.fromJson(json['ageRange'] as Map<String, dynamic>),
       bodyTypes:
@@ -2445,7 +2431,7 @@ _$MatchingRequestModelImpl _$$MatchingRequestModelImplFromJson(
       id: json['id'] as String,
     );
 
-const _$$MatchingRequestModelImplFieldMap = <String, String>{
+const _$MatchingRequestModelFieldMap = <String, String>{
   'userId': 'userId',
   'ageRange': 'ageRange',
   'bodyTypes': 'bodyTypes',
@@ -2457,7 +2443,7 @@ const _$$MatchingRequestModelImplFieldMap = <String, String>{
 };
 
 // ignore: unused_element
-abstract class _$$MatchingRequestModelImplPerFieldToJson {
+abstract class _$MatchingRequestModelPerFieldToJson {
   // ignore: unused_element
   static Object? userId(String instance) => instance;
   // ignore: unused_element
@@ -2477,8 +2463,8 @@ abstract class _$$MatchingRequestModelImplPerFieldToJson {
   static Object? id(String instance) => instance;
 }
 
-Map<String, dynamic> _$$MatchingRequestModelImplToJson(
-        _$MatchingRequestModelImpl instance) =>
+Map<String, dynamic> _$MatchingRequestModelToJson(
+        _MatchingRequestModel instance) =>
     <String, dynamic>{
       'userId': instance.userId,
       'ageRange': instance.ageRange.toJson(),
@@ -2491,26 +2477,25 @@ Map<String, dynamic> _$$MatchingRequestModelImplToJson(
       'id': instance.id,
     };
 
-_$RangeValueImpl _$$RangeValueImplFromJson(Map<String, dynamic> json) =>
-    _$RangeValueImpl(
+_RangeValue _$RangeValueFromJson(Map<String, dynamic> json) => _RangeValue(
       start: (json['start'] as num).toDouble(),
       end: (json['end'] as num).toDouble(),
     );
 
-const _$$RangeValueImplFieldMap = <String, String>{
+const _$RangeValueFieldMap = <String, String>{
   'start': 'start',
   'end': 'end',
 };
 
 // ignore: unused_element
-abstract class _$$RangeValueImplPerFieldToJson {
+abstract class _$RangeValuePerFieldToJson {
   // ignore: unused_element
   static Object? start(double instance) => instance;
   // ignore: unused_element
   static Object? end(double instance) => instance;
 }
 
-Map<String, dynamic> _$$RangeValueImplToJson(_$RangeValueImpl instance) =>
+Map<String, dynamic> _$RangeValueToJson(_RangeValue instance) =>
     <String, dynamic>{
       'start': instance.start,
       'end': instance.end,
