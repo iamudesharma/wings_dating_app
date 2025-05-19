@@ -5,14 +5,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta_seo/meta_seo.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 // import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/repo/chat_repo.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:wings_dating_app/services/chat_services.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'widgets/profile_input_card.dart';
-
 
 @RoutePage()
 class OtherUserProfileView extends ConsumerStatefulWidget {
@@ -26,8 +28,7 @@ class OtherUserProfileView extends ConsumerStatefulWidget {
   final bool? isCurrentUser;
 
   @override
-  ConsumerState<OtherUserProfileView> createState() =>
-      _OtherUserProfileViewState();
+  ConsumerState<OtherUserProfileView> createState() => _OtherUserProfileViewState();
 }
 
 class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
@@ -41,8 +42,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
     );
     // var userData;
     // if (widget.isCurrentUser!) {
-    var currentUser =
-        ref.watch(ProfileController.userControllerProvider).userModel;
+    var currentUser = ref.watch(ProfileController.userControllerProvider).userModel;
     // } else {
     var otherUser = ref.watch(getUserByIdProvider(widget.id!));
     // }
@@ -69,9 +69,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
             meta.keywords(
               keywords: userData.bodyType.value,
             );
-            meta.ogImage(
-                ogImage: userData.profileUrl ??
-                    "https://img.icons8.com/ios/500/null.png");
+            meta.ogImage(ogImage: userData.profileUrl ?? "https://img.icons8.com/ios/500/null.png");
           }
           return CustomScrollView(
             slivers: [
@@ -138,8 +136,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                     width: MediaQuery.of(context).size.width,
                     child: CachedNetworkImage(
                       // color: Colors.white,
-                      imageUrl: (userData.profileUrl ??
-                          "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+                      imageUrl: (userData.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                       fit: BoxFit.contain,
                       color: Colors.white,
                     ),
@@ -170,34 +167,19 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
                             minWidth: MediaQuery.sizeOf(context).width * 0.3,
-                            maxWidth: MediaQuery.sizeOf(context).width * 0.5,
+                            maxWidth: MediaQuery.sizeOf(context).width,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ProfileInputCard(
-                                  title: "Role", value: userData.role.value),
-                              ProfileInputCard(
-                                  title: "Body Type",
-                                  value: userData.bodyType.value),
-                              ProfileInputCard(
-                                  title: "Ethnicity",
-                                  value: userData.ethnicity.value),
-                              ProfileInputCard(
-                                  title: "Relationship Status",
-                                  value: userData.relationshipStatus.value),
-                              ProfileInputCard(
-                                  title: "Looking for",
-                                  value: userData.lookingFor.value),
-                              ProfileInputCard(
-                                  title: "Where to meet",
-                                  value: userData.whereToMeet.value),
-                              ProfileInputCard(
-                                  title: "Height",
-                                  value: userData.height ?? "Do not Show"),
-                              ProfileInputCard(
-                                  title: "Weight",
-                                  value: userData.weight ?? "Do not Show"),
+                              ProfileInputCard(title: "Role", value: userData.role.value),
+                              ProfileInputCard(title: "Body Type", value: userData.bodyType.value),
+                              ProfileInputCard(title: "Ethnicity", value: userData.ethnicity.value),
+                              ProfileInputCard(title: "Relationship Status", value: userData.relationshipStatus.value),
+                              ProfileInputCard(title: "Looking for", value: userData.lookingFor.value),
+                              ProfileInputCard(title: "Where to meet", value: userData.whereToMeet.value),
+                              ProfileInputCard(title: "Height", value: userData.height ?? "Do not Show"),
+                              ProfileInputCard(title: "Weight", value: userData.weight ?? "Do not Show"),
                             ],
                           ),
                         ),
@@ -214,9 +196,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton.icon(
             icon: const Icon(Icons.chat_bubble),
-            label: currentUser!.blockList.contains(otherUser.value?.id)
-                ? const Text("Unblock")
-                : const Text("Message"),
+            label: currentUser!.blockList.contains(otherUser.value?.id) ? const Text("Unblock") : const Text("Message"),
             onPressed: () async {
               // Future.microtask(() async {
               //   ref.read(chatRepoProvider.notifier).connectUser(
@@ -224,10 +204,20 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
               //       );
               // });
 
-              ref
-                  .read(chatRepoProvider.notifier)
-                  .createChat(currentUser.id, otherUser.value!.id);
+              final channelState =
+                  await ref.read(chatRepoProvider.notifier).createChat(currentUser.id, otherUser.value!.id);
+              // AutoRouter.of(context).push( ChatRoute(channel: ));
+              // print(channel?.toJson());
+              final channel = await ref.read(chatClientProvider).queryChannelsOnline(
+                      filter: Filter.and([
+                    Filter.equal('type', 'messaging'), // Use your actual channel type here (e.g., 'messaging')
+                    Filter.in_(
+                        'members', [currentUser.id]), // Include the current user's ID in an $in filter for access
+                    Filter.in_('members', [otherUser.value!.id]), // Also include the other user's ID
+                  ]));
 
+              print("channel ${channel.length}");
+              context.router.push(ChatRoute(channel: channel[0], id: channel[0].id!));
               // Todo create chat one to one chat
             }),
       ),

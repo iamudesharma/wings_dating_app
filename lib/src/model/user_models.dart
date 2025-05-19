@@ -16,7 +16,7 @@ part 'user_models.g.dart';
 
 @Collection<UserModel>('users')
 @freezed
-class UserModel with _$UserModel {
+abstract class UserModel with _$UserModel {
   @JsonSerializable(
     createToJson: true,
     createFieldMap: true,

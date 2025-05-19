@@ -266,13 +266,12 @@ class _$AlbumListModelDocumentReference extends FirestoreDocumentReference<
     final json = {
       ...model.toJson(),
       if (imageUrlsFieldValue != null)
-        _$$AlbumListModelImplFieldMap['imageUrls']!: imageUrlsFieldValue,
+        _$AlbumListModelFieldMap['imageUrls']!: imageUrlsFieldValue,
       if (nameFieldValue != null)
-        _$$AlbumListModelImplFieldMap['name']!: nameFieldValue,
+        _$AlbumListModelFieldMap['name']!: nameFieldValue,
       if (userIdFieldValue != null)
-        _$$AlbumListModelImplFieldMap['userId']!: userIdFieldValue,
-      if (idFieldValue != null)
-        _$$AlbumListModelImplFieldMap['id']!: idFieldValue,
+        _$AlbumListModelFieldMap['userId']!: userIdFieldValue,
+      if (idFieldValue != null) _$AlbumListModelFieldMap['id']!: idFieldValue,
     };
 
     final castedReference = reference.withConverter<Map<String, dynamic>>(
@@ -294,13 +293,12 @@ class _$AlbumListModelDocumentReference extends FirestoreDocumentReference<
     final json = {
       ...model.toJson(),
       if (imageUrlsFieldValue != null)
-        _$$AlbumListModelImplFieldMap['imageUrls']!: imageUrlsFieldValue,
+        _$AlbumListModelFieldMap['imageUrls']!: imageUrlsFieldValue,
       if (nameFieldValue != null)
-        _$$AlbumListModelImplFieldMap['name']!: nameFieldValue,
+        _$AlbumListModelFieldMap['name']!: nameFieldValue,
       if (userIdFieldValue != null)
-        _$$AlbumListModelImplFieldMap['userId']!: userIdFieldValue,
-      if (idFieldValue != null)
-        _$$AlbumListModelImplFieldMap['id']!: idFieldValue,
+        _$AlbumListModelFieldMap['userId']!: userIdFieldValue,
+      if (idFieldValue != null) _$AlbumListModelFieldMap['id']!: idFieldValue,
     };
 
     transaction.set(reference, json, options);
@@ -318,13 +316,12 @@ class _$AlbumListModelDocumentReference extends FirestoreDocumentReference<
     final json = {
       ...model.toJson(),
       if (imageUrlsFieldValue != null)
-        _$$AlbumListModelImplFieldMap['imageUrls']!: imageUrlsFieldValue,
+        _$AlbumListModelFieldMap['imageUrls']!: imageUrlsFieldValue,
       if (nameFieldValue != null)
-        _$$AlbumListModelImplFieldMap['name']!: nameFieldValue,
+        _$AlbumListModelFieldMap['name']!: nameFieldValue,
       if (userIdFieldValue != null)
-        _$$AlbumListModelImplFieldMap['userId']!: userIdFieldValue,
-      if (idFieldValue != null)
-        _$$AlbumListModelImplFieldMap['id']!: idFieldValue,
+        _$AlbumListModelFieldMap['userId']!: userIdFieldValue,
+      if (idFieldValue != null) _$AlbumListModelFieldMap['id']!: idFieldValue,
     };
 
     batch.set(reference, json, options);
@@ -358,26 +355,24 @@ class _$AlbumListModelDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (imageUrls != _sentinel)
-        _$$AlbumListModelImplFieldMap['imageUrls']!:
-            _$$AlbumListModelImplPerFieldToJson
-                .imageUrls(imageUrls as List<String>),
+        _$AlbumListModelFieldMap['imageUrls']!:
+            _$AlbumListModelPerFieldToJson.imageUrls(imageUrls as List<String>),
       if (imageUrlsFieldValue != null)
-        _$$AlbumListModelImplFieldMap['imageUrls']!: imageUrlsFieldValue,
+        _$AlbumListModelFieldMap['imageUrls']!: imageUrlsFieldValue,
       if (name != _sentinel)
-        _$$AlbumListModelImplFieldMap['name']!:
-            _$$AlbumListModelImplPerFieldToJson.name(name as String),
+        _$AlbumListModelFieldMap['name']!:
+            _$AlbumListModelPerFieldToJson.name(name as String),
       if (nameFieldValue != null)
-        _$$AlbumListModelImplFieldMap['name']!: nameFieldValue,
+        _$AlbumListModelFieldMap['name']!: nameFieldValue,
       if (userId != _sentinel)
-        _$$AlbumListModelImplFieldMap['userId']!:
-            _$$AlbumListModelImplPerFieldToJson.userId(userId as String),
+        _$AlbumListModelFieldMap['userId']!:
+            _$AlbumListModelPerFieldToJson.userId(userId as String),
       if (userIdFieldValue != null)
-        _$$AlbumListModelImplFieldMap['userId']!: userIdFieldValue,
+        _$AlbumListModelFieldMap['userId']!: userIdFieldValue,
       if (id != _sentinel)
-        _$$AlbumListModelImplFieldMap['id']!:
-            _$$AlbumListModelImplPerFieldToJson.id(id as String),
-      if (idFieldValue != null)
-        _$$AlbumListModelImplFieldMap['id']!: idFieldValue,
+        _$AlbumListModelFieldMap['id']!:
+            _$AlbumListModelPerFieldToJson.id(id as String),
+      if (idFieldValue != null) _$AlbumListModelFieldMap['id']!: idFieldValue,
     };
 
     return reference.update(json);
@@ -412,26 +407,24 @@ class _$AlbumListModelDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (imageUrls != _sentinel)
-        _$$AlbumListModelImplFieldMap['imageUrls']!:
-            _$$AlbumListModelImplPerFieldToJson
-                .imageUrls(imageUrls as List<String>),
+        _$AlbumListModelFieldMap['imageUrls']!:
+            _$AlbumListModelPerFieldToJson.imageUrls(imageUrls as List<String>),
       if (imageUrlsFieldValue != null)
-        _$$AlbumListModelImplFieldMap['imageUrls']!: imageUrlsFieldValue,
+        _$AlbumListModelFieldMap['imageUrls']!: imageUrlsFieldValue,
       if (name != _sentinel)
-        _$$AlbumListModelImplFieldMap['name']!:
-            _$$AlbumListModelImplPerFieldToJson.name(name as String),
+        _$AlbumListModelFieldMap['name']!:
+            _$AlbumListModelPerFieldToJson.name(name as String),
       if (nameFieldValue != null)
-        _$$AlbumListModelImplFieldMap['name']!: nameFieldValue,
+        _$AlbumListModelFieldMap['name']!: nameFieldValue,
       if (userId != _sentinel)
-        _$$AlbumListModelImplFieldMap['userId']!:
-            _$$AlbumListModelImplPerFieldToJson.userId(userId as String),
+        _$AlbumListModelFieldMap['userId']!:
+            _$AlbumListModelPerFieldToJson.userId(userId as String),
       if (userIdFieldValue != null)
-        _$$AlbumListModelImplFieldMap['userId']!: userIdFieldValue,
+        _$AlbumListModelFieldMap['userId']!: userIdFieldValue,
       if (id != _sentinel)
-        _$$AlbumListModelImplFieldMap['id']!:
-            _$$AlbumListModelImplPerFieldToJson.id(id as String),
-      if (idFieldValue != null)
-        _$$AlbumListModelImplFieldMap['id']!: idFieldValue,
+        _$AlbumListModelFieldMap['id']!:
+            _$AlbumListModelPerFieldToJson.id(id as String),
+      if (idFieldValue != null) _$AlbumListModelFieldMap['id']!: idFieldValue,
     };
 
     transaction.update(reference, json);
@@ -466,26 +459,24 @@ class _$AlbumListModelDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (imageUrls != _sentinel)
-        _$$AlbumListModelImplFieldMap['imageUrls']!:
-            _$$AlbumListModelImplPerFieldToJson
-                .imageUrls(imageUrls as List<String>),
+        _$AlbumListModelFieldMap['imageUrls']!:
+            _$AlbumListModelPerFieldToJson.imageUrls(imageUrls as List<String>),
       if (imageUrlsFieldValue != null)
-        _$$AlbumListModelImplFieldMap['imageUrls']!: imageUrlsFieldValue,
+        _$AlbumListModelFieldMap['imageUrls']!: imageUrlsFieldValue,
       if (name != _sentinel)
-        _$$AlbumListModelImplFieldMap['name']!:
-            _$$AlbumListModelImplPerFieldToJson.name(name as String),
+        _$AlbumListModelFieldMap['name']!:
+            _$AlbumListModelPerFieldToJson.name(name as String),
       if (nameFieldValue != null)
-        _$$AlbumListModelImplFieldMap['name']!: nameFieldValue,
+        _$AlbumListModelFieldMap['name']!: nameFieldValue,
       if (userId != _sentinel)
-        _$$AlbumListModelImplFieldMap['userId']!:
-            _$$AlbumListModelImplPerFieldToJson.userId(userId as String),
+        _$AlbumListModelFieldMap['userId']!:
+            _$AlbumListModelPerFieldToJson.userId(userId as String),
       if (userIdFieldValue != null)
-        _$$AlbumListModelImplFieldMap['userId']!: userIdFieldValue,
+        _$AlbumListModelFieldMap['userId']!: userIdFieldValue,
       if (id != _sentinel)
-        _$$AlbumListModelImplFieldMap['id']!:
-            _$$AlbumListModelImplPerFieldToJson.id(id as String),
-      if (idFieldValue != null)
-        _$$AlbumListModelImplFieldMap['id']!: idFieldValue,
+        _$AlbumListModelFieldMap['id']!:
+            _$AlbumListModelPerFieldToJson.id(id as String),
+      if (idFieldValue != null) _$AlbumListModelFieldMap['id']!: idFieldValue,
     };
 
     batch.update(reference, json);
@@ -827,38 +818,38 @@ class _$AlbumListModelQuery
     return _$AlbumListModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$AlbumListModelImplFieldMap['imageUrls']!,
+        _$AlbumListModelFieldMap['imageUrls']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$AlbumListModelImplPerFieldToJson
+            ? _$AlbumListModelPerFieldToJson
                 .imageUrls(isEqualTo as List<String>)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$AlbumListModelImplPerFieldToJson
+            ? _$AlbumListModelPerFieldToJson
                 .imageUrls(isNotEqualTo as List<String>)
             : null,
         isLessThan: isLessThan != null
-            ? _$$AlbumListModelImplPerFieldToJson
+            ? _$AlbumListModelPerFieldToJson
                 .imageUrls(isLessThan as List<String>)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$AlbumListModelImplPerFieldToJson
+            ? _$AlbumListModelPerFieldToJson
                 .imageUrls(isLessThanOrEqualTo as List<String>)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$AlbumListModelImplPerFieldToJson
+            ? _$AlbumListModelPerFieldToJson
                 .imageUrls(isGreaterThan as List<String>)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$AlbumListModelImplPerFieldToJson
+            ? _$AlbumListModelPerFieldToJson
                 .imageUrls(isGreaterThanOrEqualTo as List<String>)
             : null,
         arrayContains: arrayContains != null
-            ? (_$$AlbumListModelImplPerFieldToJson
+            ? (_$AlbumListModelPerFieldToJson
                     .imageUrls([arrayContains as String]) as List?)!
                 .single
             : null,
         arrayContainsAny: arrayContainsAny != null
-            ? _$$AlbumListModelImplPerFieldToJson.imageUrls(arrayContainsAny)
+            ? _$AlbumListModelPerFieldToJson.imageUrls(arrayContainsAny)
                 as Iterable<Object>?
             : null,
         isNull: isNull ??
@@ -884,31 +875,29 @@ class _$AlbumListModelQuery
     return _$AlbumListModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$AlbumListModelImplFieldMap['name']!,
+        _$AlbumListModelFieldMap['name']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$AlbumListModelImplPerFieldToJson.name(isEqualTo as String)
+            ? _$AlbumListModelPerFieldToJson.name(isEqualTo as String)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$AlbumListModelImplPerFieldToJson.name(isNotEqualTo as String)
+            ? _$AlbumListModelPerFieldToJson.name(isNotEqualTo as String)
             : null,
         isLessThan: isLessThan != null
-            ? _$$AlbumListModelImplPerFieldToJson.name(isLessThan as String)
+            ? _$AlbumListModelPerFieldToJson.name(isLessThan as String)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$AlbumListModelImplPerFieldToJson
-                .name(isLessThanOrEqualTo as String)
+            ? _$AlbumListModelPerFieldToJson.name(isLessThanOrEqualTo as String)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$AlbumListModelImplPerFieldToJson.name(isGreaterThan as String)
+            ? _$AlbumListModelPerFieldToJson.name(isGreaterThan as String)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$AlbumListModelImplPerFieldToJson
+            ? _$AlbumListModelPerFieldToJson
                 .name(isGreaterThanOrEqualTo as String)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$AlbumListModelImplPerFieldToJson.name(e)),
+        whereIn: whereIn?.map((e) => _$AlbumListModelPerFieldToJson.name(e)),
         whereNotIn:
-            whereNotIn?.map((e) => _$$AlbumListModelImplPerFieldToJson.name(e)),
+            whereNotIn?.map((e) => _$AlbumListModelPerFieldToJson.name(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -932,32 +921,30 @@ class _$AlbumListModelQuery
     return _$AlbumListModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$AlbumListModelImplFieldMap['userId']!,
+        _$AlbumListModelFieldMap['userId']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$AlbumListModelImplPerFieldToJson.userId(isEqualTo as String)
+            ? _$AlbumListModelPerFieldToJson.userId(isEqualTo as String)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$AlbumListModelImplPerFieldToJson.userId(isNotEqualTo as String)
+            ? _$AlbumListModelPerFieldToJson.userId(isNotEqualTo as String)
             : null,
         isLessThan: isLessThan != null
-            ? _$$AlbumListModelImplPerFieldToJson.userId(isLessThan as String)
+            ? _$AlbumListModelPerFieldToJson.userId(isLessThan as String)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$AlbumListModelImplPerFieldToJson
+            ? _$AlbumListModelPerFieldToJson
                 .userId(isLessThanOrEqualTo as String)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$AlbumListModelImplPerFieldToJson
-                .userId(isGreaterThan as String)
+            ? _$AlbumListModelPerFieldToJson.userId(isGreaterThan as String)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$AlbumListModelImplPerFieldToJson
+            ? _$AlbumListModelPerFieldToJson
                 .userId(isGreaterThanOrEqualTo as String)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$AlbumListModelImplPerFieldToJson.userId(e)),
-        whereNotIn: whereNotIn
-            ?.map((e) => _$$AlbumListModelImplPerFieldToJson.userId(e)),
+        whereIn: whereIn?.map((e) => _$AlbumListModelPerFieldToJson.userId(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$AlbumListModelPerFieldToJson.userId(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -981,30 +968,29 @@ class _$AlbumListModelQuery
     return _$AlbumListModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$AlbumListModelImplFieldMap['id']!,
+        _$AlbumListModelFieldMap['id']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$AlbumListModelImplPerFieldToJson.id(isEqualTo as String)
+            ? _$AlbumListModelPerFieldToJson.id(isEqualTo as String)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$AlbumListModelImplPerFieldToJson.id(isNotEqualTo as String)
+            ? _$AlbumListModelPerFieldToJson.id(isNotEqualTo as String)
             : null,
         isLessThan: isLessThan != null
-            ? _$$AlbumListModelImplPerFieldToJson.id(isLessThan as String)
+            ? _$AlbumListModelPerFieldToJson.id(isLessThan as String)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$AlbumListModelImplPerFieldToJson
-                .id(isLessThanOrEqualTo as String)
+            ? _$AlbumListModelPerFieldToJson.id(isLessThanOrEqualTo as String)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$AlbumListModelImplPerFieldToJson.id(isGreaterThan as String)
+            ? _$AlbumListModelPerFieldToJson.id(isGreaterThan as String)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$AlbumListModelImplPerFieldToJson
+            ? _$AlbumListModelPerFieldToJson
                 .id(isGreaterThanOrEqualTo as String)
             : null,
-        whereIn: whereIn?.map((e) => _$$AlbumListModelImplPerFieldToJson.id(e)),
+        whereIn: whereIn?.map((e) => _$AlbumListModelPerFieldToJson.id(e)),
         whereNotIn:
-            whereNotIn?.map((e) => _$$AlbumListModelImplPerFieldToJson.id(e)),
+            whereNotIn?.map((e) => _$AlbumListModelPerFieldToJson.id(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -1173,7 +1159,7 @@ class _$AlbumListModelQuery
     AlbumListModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$$AlbumListModelImplFieldMap['imageUrls']!,
+        _$AlbumListModelFieldMap['imageUrls']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1246,9 +1232,8 @@ class _$AlbumListModelQuery
     AlbumListModelDocumentSnapshot? endBeforeDocument,
     AlbumListModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$AlbumListModelImplFieldMap['name']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$AlbumListModelFieldMap['name']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1320,9 +1305,8 @@ class _$AlbumListModelQuery
     AlbumListModelDocumentSnapshot? endBeforeDocument,
     AlbumListModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$AlbumListModelImplFieldMap['userId']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$AlbumListModelFieldMap['userId']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1395,7 +1379,7 @@ class _$AlbumListModelQuery
     AlbumListModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$AlbumListModelImplFieldMap['id']!, descending: descending);
+        .orderBy(_$AlbumListModelFieldMap['id']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1556,8 +1540,8 @@ class AlbumListModelQueryDocumentSnapshot
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AlbumListModelImpl _$$AlbumListModelImplFromJson(Map<String, dynamic> json) =>
-    _$AlbumListModelImpl(
+_AlbumListModel _$AlbumListModelFromJson(Map<String, dynamic> json) =>
+    _AlbumListModel(
       imageUrls:
           (json['imageUrls'] as List<dynamic>).map((e) => e as String).toList(),
       name: json['name'] as String,
@@ -1565,7 +1549,7 @@ _$AlbumListModelImpl _$$AlbumListModelImplFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
     );
 
-const _$$AlbumListModelImplFieldMap = <String, String>{
+const _$AlbumListModelFieldMap = <String, String>{
   'imageUrls': 'imageUrls',
   'name': 'name',
   'userId': 'userId',
@@ -1573,7 +1557,7 @@ const _$$AlbumListModelImplFieldMap = <String, String>{
 };
 
 // ignore: unused_element
-abstract class _$$AlbumListModelImplPerFieldToJson {
+abstract class _$AlbumListModelPerFieldToJson {
   // ignore: unused_element
   static Object? imageUrls(List<String> instance) => instance;
   // ignore: unused_element
@@ -1584,8 +1568,7 @@ abstract class _$$AlbumListModelImplPerFieldToJson {
   static Object? id(String instance) => instance;
 }
 
-Map<String, dynamic> _$$AlbumListModelImplToJson(
-        _$AlbumListModelImpl instance) =>
+Map<String, dynamic> _$AlbumListModelToJson(_AlbumListModel instance) =>
     <String, dynamic>{
       'imageUrls': instance.imageUrls,
       'name': instance.name,

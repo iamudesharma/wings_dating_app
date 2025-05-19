@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,57 +10,128 @@ part of 'user_models.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-UserModel _$UserModelFromJson(Map<String, dynamic> json) {
-  return _UserModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$UserModel {
-  String get username => throw _privateConstructorUsedError;
-  String? get bio => throw _privateConstructorUsedError;
-  List<String>? get albumUrl => throw _privateConstructorUsedError;
-  String? get profileUrl => throw _privateConstructorUsedError;
-  String? get birthday => throw _privateConstructorUsedError;
-  int? get age => throw _privateConstructorUsedError;
+  String get username;
+  String? get bio;
+  List<String>? get albumUrl;
+  String? get profileUrl;
+  String? get birthday;
+  int? get age;
   @JsonKey(name: "position")
-  GeoPointData? get position => throw _privateConstructorUsedError;
-  String? get dob => throw _privateConstructorUsedError;
-  String? get height => throw _privateConstructorUsedError;
-  String? get weight => throw _privateConstructorUsedError;
-  String? get lived => throw _privateConstructorUsedError;
-  Role get role => throw _privateConstructorUsedError;
-  BodyType get bodyType => throw _privateConstructorUsedError;
-  RelationshipStatus get relationshipStatus =>
-      throw _privateConstructorUsedError;
-  Ethnicity get ethnicity => throw _privateConstructorUsedError;
-  LookingFor get lookingFor => throw _privateConstructorUsedError;
-  WhereToMeet get whereToMeet => throw _privateConstructorUsedError;
-  bool get isOnline => throw _privateConstructorUsedError;
-  bool get isVerified => throw _privateConstructorUsedError;
-  bool get isBlocked => throw _privateConstructorUsedError;
-  List<String> get blockList => throw _privateConstructorUsedError;
-  String get id => throw _privateConstructorUsedError;
-  String get fcmToken => throw _privateConstructorUsedError;
-
-  /// Serializes this UserModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  GeoPointData? get position;
+  String? get dob;
+  String? get height;
+  String? get weight;
+  String? get lived;
+  Role get role;
+  BodyType get bodyType;
+  RelationshipStatus get relationshipStatus;
+  Ethnicity get ethnicity;
+  LookingFor get lookingFor;
+  WhereToMeet get whereToMeet;
+  bool get isOnline;
+  bool get isVerified;
+  bool get isBlocked;
+  List<String> get blockList;
+  String get id;
+  String get fcmToken;
 
   /// Create a copy of UserModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $UserModelCopyWith<UserModel> get copyWith =>
-      throw _privateConstructorUsedError;
+      _$UserModelCopyWithImpl<UserModel>(this as UserModel, _$identity);
+
+  /// Serializes this UserModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is UserModel &&
+            (identical(other.username, username) ||
+                other.username == username) &&
+            (identical(other.bio, bio) || other.bio == bio) &&
+            const DeepCollectionEquality().equals(other.albumUrl, albumUrl) &&
+            (identical(other.profileUrl, profileUrl) ||
+                other.profileUrl == profileUrl) &&
+            (identical(other.birthday, birthday) ||
+                other.birthday == birthday) &&
+            (identical(other.age, age) || other.age == age) &&
+            (identical(other.position, position) ||
+                other.position == position) &&
+            (identical(other.dob, dob) || other.dob == dob) &&
+            (identical(other.height, height) || other.height == height) &&
+            (identical(other.weight, weight) || other.weight == weight) &&
+            (identical(other.lived, lived) || other.lived == lived) &&
+            (identical(other.role, role) || other.role == role) &&
+            (identical(other.bodyType, bodyType) ||
+                other.bodyType == bodyType) &&
+            (identical(other.relationshipStatus, relationshipStatus) ||
+                other.relationshipStatus == relationshipStatus) &&
+            (identical(other.ethnicity, ethnicity) ||
+                other.ethnicity == ethnicity) &&
+            (identical(other.lookingFor, lookingFor) ||
+                other.lookingFor == lookingFor) &&
+            (identical(other.whereToMeet, whereToMeet) ||
+                other.whereToMeet == whereToMeet) &&
+            (identical(other.isOnline, isOnline) ||
+                other.isOnline == isOnline) &&
+            (identical(other.isVerified, isVerified) ||
+                other.isVerified == isVerified) &&
+            (identical(other.isBlocked, isBlocked) ||
+                other.isBlocked == isBlocked) &&
+            const DeepCollectionEquality().equals(other.blockList, blockList) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.fcmToken, fcmToken) ||
+                other.fcmToken == fcmToken));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        username,
+        bio,
+        const DeepCollectionEquality().hash(albumUrl),
+        profileUrl,
+        birthday,
+        age,
+        position,
+        dob,
+        height,
+        weight,
+        lived,
+        role,
+        bodyType,
+        relationshipStatus,
+        ethnicity,
+        lookingFor,
+        whereToMeet,
+        isOnline,
+        isVerified,
+        isBlocked,
+        const DeepCollectionEquality().hash(blockList),
+        id,
+        fcmToken
+      ]);
+
+  @override
+  String toString() {
+    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, id: $id, fcmToken: $fcmToken)';
+  }
 }
 
 /// @nodoc
-abstract class $UserModelCopyWith<$Res> {
-  factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) then) =
-      _$UserModelCopyWithImpl<$Res, UserModel>;
+abstract mixin class $UserModelCopyWith<$Res> {
+  factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) _then) =
+      _$UserModelCopyWithImpl;
   @useResult
   $Res call(
       {String username,
@@ -90,14 +162,11 @@ abstract class $UserModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
-    implements $UserModelCopyWith<$Res> {
-  _$UserModelCopyWithImpl(this._value, this._then);
+class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
+  _$UserModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final UserModel _self;
+  final $Res Function(UserModel) _then;
 
   /// Create a copy of UserModel
   /// with the given fields replaced by the non-null parameter values.
@@ -128,100 +197,100 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? id = null,
     Object? fcmToken = null,
   }) {
-    return _then(_value.copyWith(
+    return _then(_self.copyWith(
       username: null == username
-          ? _value.username
+          ? _self.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
       bio: freezed == bio
-          ? _value.bio
+          ? _self.bio
           : bio // ignore: cast_nullable_to_non_nullable
               as String?,
       albumUrl: freezed == albumUrl
-          ? _value.albumUrl
+          ? _self.albumUrl
           : albumUrl // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       profileUrl: freezed == profileUrl
-          ? _value.profileUrl
+          ? _self.profileUrl
           : profileUrl // ignore: cast_nullable_to_non_nullable
               as String?,
       birthday: freezed == birthday
-          ? _value.birthday
+          ? _self.birthday
           : birthday // ignore: cast_nullable_to_non_nullable
               as String?,
       age: freezed == age
-          ? _value.age
+          ? _self.age
           : age // ignore: cast_nullable_to_non_nullable
               as int?,
       position: freezed == position
-          ? _value.position
+          ? _self.position
           : position // ignore: cast_nullable_to_non_nullable
               as GeoPointData?,
       dob: freezed == dob
-          ? _value.dob
+          ? _self.dob
           : dob // ignore: cast_nullable_to_non_nullable
               as String?,
       height: freezed == height
-          ? _value.height
+          ? _self.height
           : height // ignore: cast_nullable_to_non_nullable
               as String?,
       weight: freezed == weight
-          ? _value.weight
+          ? _self.weight
           : weight // ignore: cast_nullable_to_non_nullable
               as String?,
       lived: freezed == lived
-          ? _value.lived
+          ? _self.lived
           : lived // ignore: cast_nullable_to_non_nullable
               as String?,
       role: null == role
-          ? _value.role
+          ? _self.role
           : role // ignore: cast_nullable_to_non_nullable
               as Role,
       bodyType: null == bodyType
-          ? _value.bodyType
+          ? _self.bodyType
           : bodyType // ignore: cast_nullable_to_non_nullable
               as BodyType,
       relationshipStatus: null == relationshipStatus
-          ? _value.relationshipStatus
+          ? _self.relationshipStatus
           : relationshipStatus // ignore: cast_nullable_to_non_nullable
               as RelationshipStatus,
       ethnicity: null == ethnicity
-          ? _value.ethnicity
+          ? _self.ethnicity
           : ethnicity // ignore: cast_nullable_to_non_nullable
               as Ethnicity,
       lookingFor: null == lookingFor
-          ? _value.lookingFor
+          ? _self.lookingFor
           : lookingFor // ignore: cast_nullable_to_non_nullable
               as LookingFor,
       whereToMeet: null == whereToMeet
-          ? _value.whereToMeet
+          ? _self.whereToMeet
           : whereToMeet // ignore: cast_nullable_to_non_nullable
               as WhereToMeet,
       isOnline: null == isOnline
-          ? _value.isOnline
+          ? _self.isOnline
           : isOnline // ignore: cast_nullable_to_non_nullable
               as bool,
       isVerified: null == isVerified
-          ? _value.isVerified
+          ? _self.isVerified
           : isVerified // ignore: cast_nullable_to_non_nullable
               as bool,
       isBlocked: null == isBlocked
-          ? _value.isBlocked
+          ? _self.isBlocked
           : isBlocked // ignore: cast_nullable_to_non_nullable
               as bool,
       blockList: null == blockList
-          ? _value.blockList
+          ? _self.blockList
           : blockList // ignore: cast_nullable_to_non_nullable
               as List<String>,
       id: null == id
-          ? _value.id
+          ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
       fcmToken: null == fcmToken
-          ? _value.fcmToken
+          ? _self.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
               as String,
-    ) as $Val);
+    ));
   }
 
   /// Create a copy of UserModel
@@ -229,184 +298,13 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   @override
   @pragma('vm:prefer-inline')
   $GeoPointDataCopyWith<$Res>? get position {
-    if (_value.position == null) {
+    if (_self.position == null) {
       return null;
     }
 
-    return $GeoPointDataCopyWith<$Res>(_value.position!, (value) {
-      return _then(_value.copyWith(position: value) as $Val);
+    return $GeoPointDataCopyWith<$Res>(_self.position!, (value) {
+      return _then(_self.copyWith(position: value));
     });
-  }
-}
-
-/// @nodoc
-abstract class _$$UserModelImplCopyWith<$Res>
-    implements $UserModelCopyWith<$Res> {
-  factory _$$UserModelImplCopyWith(
-          _$UserModelImpl value, $Res Function(_$UserModelImpl) then) =
-      __$$UserModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String username,
-      String? bio,
-      List<String>? albumUrl,
-      String? profileUrl,
-      String? birthday,
-      int? age,
-      @JsonKey(name: "position") GeoPointData? position,
-      String? dob,
-      String? height,
-      String? weight,
-      String? lived,
-      Role role,
-      BodyType bodyType,
-      RelationshipStatus relationshipStatus,
-      Ethnicity ethnicity,
-      LookingFor lookingFor,
-      WhereToMeet whereToMeet,
-      bool isOnline,
-      bool isVerified,
-      bool isBlocked,
-      List<String> blockList,
-      String id,
-      String fcmToken});
-
-  @override
-  $GeoPointDataCopyWith<$Res>? get position;
-}
-
-/// @nodoc
-class __$$UserModelImplCopyWithImpl<$Res>
-    extends _$UserModelCopyWithImpl<$Res, _$UserModelImpl>
-    implements _$$UserModelImplCopyWith<$Res> {
-  __$$UserModelImplCopyWithImpl(
-      _$UserModelImpl _value, $Res Function(_$UserModelImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of UserModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? username = null,
-    Object? bio = freezed,
-    Object? albumUrl = freezed,
-    Object? profileUrl = freezed,
-    Object? birthday = freezed,
-    Object? age = freezed,
-    Object? position = freezed,
-    Object? dob = freezed,
-    Object? height = freezed,
-    Object? weight = freezed,
-    Object? lived = freezed,
-    Object? role = null,
-    Object? bodyType = null,
-    Object? relationshipStatus = null,
-    Object? ethnicity = null,
-    Object? lookingFor = null,
-    Object? whereToMeet = null,
-    Object? isOnline = null,
-    Object? isVerified = null,
-    Object? isBlocked = null,
-    Object? blockList = null,
-    Object? id = null,
-    Object? fcmToken = null,
-  }) {
-    return _then(_$UserModelImpl(
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
-      bio: freezed == bio
-          ? _value.bio
-          : bio // ignore: cast_nullable_to_non_nullable
-              as String?,
-      albumUrl: freezed == albumUrl
-          ? _value._albumUrl
-          : albumUrl // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      profileUrl: freezed == profileUrl
-          ? _value.profileUrl
-          : profileUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      birthday: freezed == birthday
-          ? _value.birthday
-          : birthday // ignore: cast_nullable_to_non_nullable
-              as String?,
-      age: freezed == age
-          ? _value.age
-          : age // ignore: cast_nullable_to_non_nullable
-              as int?,
-      position: freezed == position
-          ? _value.position
-          : position // ignore: cast_nullable_to_non_nullable
-              as GeoPointData?,
-      dob: freezed == dob
-          ? _value.dob
-          : dob // ignore: cast_nullable_to_non_nullable
-              as String?,
-      height: freezed == height
-          ? _value.height
-          : height // ignore: cast_nullable_to_non_nullable
-              as String?,
-      weight: freezed == weight
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as String?,
-      lived: freezed == lived
-          ? _value.lived
-          : lived // ignore: cast_nullable_to_non_nullable
-              as String?,
-      role: null == role
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
-              as Role,
-      bodyType: null == bodyType
-          ? _value.bodyType
-          : bodyType // ignore: cast_nullable_to_non_nullable
-              as BodyType,
-      relationshipStatus: null == relationshipStatus
-          ? _value.relationshipStatus
-          : relationshipStatus // ignore: cast_nullable_to_non_nullable
-              as RelationshipStatus,
-      ethnicity: null == ethnicity
-          ? _value.ethnicity
-          : ethnicity // ignore: cast_nullable_to_non_nullable
-              as Ethnicity,
-      lookingFor: null == lookingFor
-          ? _value.lookingFor
-          : lookingFor // ignore: cast_nullable_to_non_nullable
-              as LookingFor,
-      whereToMeet: null == whereToMeet
-          ? _value.whereToMeet
-          : whereToMeet // ignore: cast_nullable_to_non_nullable
-              as WhereToMeet,
-      isOnline: null == isOnline
-          ? _value.isOnline
-          : isOnline // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isVerified: null == isVerified
-          ? _value.isVerified
-          : isVerified // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isBlocked: null == isBlocked
-          ? _value.isBlocked
-          : isBlocked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      blockList: null == blockList
-          ? _value._blockList
-          : blockList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      fcmToken: null == fcmToken
-          ? _value.fcmToken
-          : fcmToken // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
   }
 }
 
@@ -417,8 +315,8 @@ class __$$UserModelImplCopyWithImpl<$Res>
     createFieldMap: true,
     createPerFieldToJson: true,
     explicitToJson: true)
-class _$UserModelImpl implements _UserModel {
-  _$UserModelImpl(
+class _UserModel implements UserModel {
+  _UserModel(
       {required this.username,
       this.bio,
       final List<String>? albumUrl,
@@ -445,9 +343,8 @@ class _$UserModelImpl implements _UserModel {
       required this.fcmToken})
       : _albumUrl = albumUrl,
         _blockList = blockList;
-
-  factory _$UserModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$UserModelImplFromJson(json);
+  factory _UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
   @override
   final String username;
@@ -522,16 +419,26 @@ class _$UserModelImpl implements _UserModel {
   @override
   final String fcmToken;
 
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, id: $id, fcmToken: $fcmToken)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$UserModelCopyWith<_UserModel> get copyWith =>
+      __$UserModelCopyWithImpl<_UserModel>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$UserModelToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UserModelImpl &&
+            other is _UserModel &&
             (identical(other.username, username) ||
                 other.username == username) &&
             (identical(other.bio, bio) || other.bio == bio) &&
@@ -600,103 +507,194 @@ class _$UserModelImpl implements _UserModel {
         fcmToken
       ]);
 
-  /// Create a copy of UserModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$UserModelImplCopyWith<_$UserModelImpl> get copyWith =>
-      __$$UserModelImplCopyWithImpl<_$UserModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$UserModelImplToJson(
-      this,
-    );
+  String toString() {
+    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, id: $id, fcmToken: $fcmToken)';
   }
 }
 
-abstract class _UserModel implements UserModel {
-  factory _UserModel(
-      {required final String username,
-      final String? bio,
-      final List<String>? albumUrl,
-      final String? profileUrl,
-      final String? birthday,
-      final int? age,
-      @JsonKey(name: "position") final GeoPointData? position,
-      final String? dob,
-      final String? height,
-      final String? weight,
-      final String? lived,
-      final Role role,
-      final BodyType bodyType,
-      final RelationshipStatus relationshipStatus,
-      final Ethnicity ethnicity,
-      final LookingFor lookingFor,
-      final WhereToMeet whereToMeet,
-      final bool isOnline,
-      final bool isVerified,
-      final bool isBlocked,
-      final List<String> blockList,
-      required final String id,
-      required final String fcmToken}) = _$UserModelImpl;
+/// @nodoc
+abstract mixin class _$UserModelCopyWith<$Res>
+    implements $UserModelCopyWith<$Res> {
+  factory _$UserModelCopyWith(
+          _UserModel value, $Res Function(_UserModel) _then) =
+      __$UserModelCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String username,
+      String? bio,
+      List<String>? albumUrl,
+      String? profileUrl,
+      String? birthday,
+      int? age,
+      @JsonKey(name: "position") GeoPointData? position,
+      String? dob,
+      String? height,
+      String? weight,
+      String? lived,
+      Role role,
+      BodyType bodyType,
+      RelationshipStatus relationshipStatus,
+      Ethnicity ethnicity,
+      LookingFor lookingFor,
+      WhereToMeet whereToMeet,
+      bool isOnline,
+      bool isVerified,
+      bool isBlocked,
+      List<String> blockList,
+      String id,
+      String fcmToken});
 
-  factory _UserModel.fromJson(Map<String, dynamic> json) =
-      _$UserModelImpl.fromJson;
+  @override
+  $GeoPointDataCopyWith<$Res>? get position;
+}
 
-  @override
-  String get username;
-  @override
-  String? get bio;
-  @override
-  List<String>? get albumUrl;
-  @override
-  String? get profileUrl;
-  @override
-  String? get birthday;
-  @override
-  int? get age;
-  @override
-  @JsonKey(name: "position")
-  GeoPointData? get position;
-  @override
-  String? get dob;
-  @override
-  String? get height;
-  @override
-  String? get weight;
-  @override
-  String? get lived;
-  @override
-  Role get role;
-  @override
-  BodyType get bodyType;
-  @override
-  RelationshipStatus get relationshipStatus;
-  @override
-  Ethnicity get ethnicity;
-  @override
-  LookingFor get lookingFor;
-  @override
-  WhereToMeet get whereToMeet;
-  @override
-  bool get isOnline;
-  @override
-  bool get isVerified;
-  @override
-  bool get isBlocked;
-  @override
-  List<String> get blockList;
-  @override
-  String get id;
-  @override
-  String get fcmToken;
+/// @nodoc
+class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
+  __$UserModelCopyWithImpl(this._self, this._then);
+
+  final _UserModel _self;
+  final $Res Function(_UserModel) _then;
 
   /// Create a copy of UserModel
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UserModelImplCopyWith<_$UserModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? username = null,
+    Object? bio = freezed,
+    Object? albumUrl = freezed,
+    Object? profileUrl = freezed,
+    Object? birthday = freezed,
+    Object? age = freezed,
+    Object? position = freezed,
+    Object? dob = freezed,
+    Object? height = freezed,
+    Object? weight = freezed,
+    Object? lived = freezed,
+    Object? role = null,
+    Object? bodyType = null,
+    Object? relationshipStatus = null,
+    Object? ethnicity = null,
+    Object? lookingFor = null,
+    Object? whereToMeet = null,
+    Object? isOnline = null,
+    Object? isVerified = null,
+    Object? isBlocked = null,
+    Object? blockList = null,
+    Object? id = null,
+    Object? fcmToken = null,
+  }) {
+    return _then(_UserModel(
+      username: null == username
+          ? _self.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      bio: freezed == bio
+          ? _self.bio
+          : bio // ignore: cast_nullable_to_non_nullable
+              as String?,
+      albumUrl: freezed == albumUrl
+          ? _self._albumUrl
+          : albumUrl // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      profileUrl: freezed == profileUrl
+          ? _self.profileUrl
+          : profileUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      birthday: freezed == birthday
+          ? _self.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
+              as String?,
+      age: freezed == age
+          ? _self.age
+          : age // ignore: cast_nullable_to_non_nullable
+              as int?,
+      position: freezed == position
+          ? _self.position
+          : position // ignore: cast_nullable_to_non_nullable
+              as GeoPointData?,
+      dob: freezed == dob
+          ? _self.dob
+          : dob // ignore: cast_nullable_to_non_nullable
+              as String?,
+      height: freezed == height
+          ? _self.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as String?,
+      weight: freezed == weight
+          ? _self.weight
+          : weight // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lived: freezed == lived
+          ? _self.lived
+          : lived // ignore: cast_nullable_to_non_nullable
+              as String?,
+      role: null == role
+          ? _self.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as Role,
+      bodyType: null == bodyType
+          ? _self.bodyType
+          : bodyType // ignore: cast_nullable_to_non_nullable
+              as BodyType,
+      relationshipStatus: null == relationshipStatus
+          ? _self.relationshipStatus
+          : relationshipStatus // ignore: cast_nullable_to_non_nullable
+              as RelationshipStatus,
+      ethnicity: null == ethnicity
+          ? _self.ethnicity
+          : ethnicity // ignore: cast_nullable_to_non_nullable
+              as Ethnicity,
+      lookingFor: null == lookingFor
+          ? _self.lookingFor
+          : lookingFor // ignore: cast_nullable_to_non_nullable
+              as LookingFor,
+      whereToMeet: null == whereToMeet
+          ? _self.whereToMeet
+          : whereToMeet // ignore: cast_nullable_to_non_nullable
+              as WhereToMeet,
+      isOnline: null == isOnline
+          ? _self.isOnline
+          : isOnline // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isVerified: null == isVerified
+          ? _self.isVerified
+          : isVerified // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isBlocked: null == isBlocked
+          ? _self.isBlocked
+          : isBlocked // ignore: cast_nullable_to_non_nullable
+              as bool,
+      blockList: null == blockList
+          ? _self._blockList
+          : blockList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      fcmToken: null == fcmToken
+          ? _self.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+
+  /// Create a copy of UserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $GeoPointDataCopyWith<$Res>? get position {
+    if (_self.position == null) {
+      return null;
+    }
+
+    return $GeoPointDataCopyWith<$Res>(_self.position!, (value) {
+      return _then(_self.copyWith(position: value));
+    });
+  }
 }
+
+// dart format on

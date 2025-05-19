@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firestore_modeler/firestore_modeler.dart';
+// import 'package:firestore_modeler/firestore_modeler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 
 part 'matching_request_model.freezed.dart';
 part 'matching_request_model.g.dart';

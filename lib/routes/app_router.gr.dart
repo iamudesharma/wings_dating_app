@@ -408,6 +408,22 @@ class ProfileRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [SearchUsersView]
+class SearchUsersRoute extends PageRouteInfo<void> {
+  const SearchUsersRoute({List<PageRouteInfo>? children})
+    : super(SearchUsersRoute.name, initialChildren: children);
+
+  static const String name = 'SearchUsersRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SearchUsersView();
+    },
+  );
+}
+
+/// generated route for
 /// [SignOptionsView]
 class SignOptionsRoute extends PageRouteInfo<void> {
   const SignOptionsRoute({List<PageRouteInfo>? children})

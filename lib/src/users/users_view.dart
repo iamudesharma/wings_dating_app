@@ -16,6 +16,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/model/geo_point_data.dart';
 import 'package:wings_dating_app/src/users/widget/users_search_delegate.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -33,7 +34,7 @@ final isUserOnlineProvider = FutureProvider.family<bool, bool>(
   (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
 );
 
-final userListProvider = StreamProvider<List<UserModel?>?>((ref) => ref.read(profileRepoProvider).getUserList());
+final userListProvider = FutureProvider<List<UserModel?>?>((ref) => ref.read(profileRepoProvider).getUserList());
 
 @RoutePage()
 class UsersView extends ConsumerStatefulWidget {
@@ -151,116 +152,76 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
     final userList = ref.watch(userListProvider);
 
     return Scaffold(
-      body: RefreshIndicator.adaptive(
-        onRefresh: () async {
-          final currentLocation = await Geolocator.getCurrentPosition(
-            locationSettings: LocationSettings(
-              accuracy: LocationAccuracy.high,
-              distanceFilter: 1,
-            ),
-          );
-
-          logger.d("currentLocation ${currentLocation.toJson()}");
-          final currentUser = userData?.position?.geopoint;
-
-          if (currentLocation.latitude != currentUser?.latitude &&
-              currentLocation.longitude != currentUser?.longitude) {
-            GeoFirePoint geoFirePoint = GeoFirePoint(GeoPoint(currentLocation.latitude, currentLocation.longitude));
-
-            await ref.read(profileRepoProvider).updateUserDoc(userData!.copyWith(
-                    position: GeoPointData(
-                  geohash: geoFirePoint.geohash,
-                  geopoint: geoFirePoint.geopoint,
-                )));
-
-            return ref.refresh(userListProvider);
-          } else {
-            return ref.refresh(userListProvider);
-          }
-        },
-        child: ResponsiveBuilder(builder: (context, sizingInformation) {
-          return nullWidget ??
-              CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: AppBar(
-                      leadingWidth: 40,
-                      leading: CircleAvatar(
-                        backgroundImage: CachedNetworkImageProvider(
-                            userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                      ),
-                      title: Text(userData.username),
-                      actions: [
-                        SearchAnchor(
-                          viewBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                          viewSurfaceTintColor: Colors.black,
-                          builder: (context, controller) => InkWell(
-                              onTap: () {
-                                controller.openView();
-                              },
-                              child: const Icon(Icons.search)),
-                          suggestionsBuilder: (context, controller) {
-                            final userList = ref.watch(searchUsersProvider(controller.text));
-
-                            return [
-                              Container(
-                                child: userList.when(
-                                  loading: () => const Center(
-                                    child: CircularProgressIndicator.adaptive(),
-                                  ),
-                                  error: (error, stackTrace) => (error is Exception)
-                                      ? Center(
-                                          child: Text(error.toString()),
-                                        )
-                                      : Center(
-                                          child: Text(error.toString()),
-                                        ),
-                                  data: (data) => SizedBox(
-                                    height: MediaQuery.of(context).size.height,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: ListView.builder(
-                                      itemCount: data!.length,
-                                      itemBuilder: (context, index) {
-                                        final users = data[index];
-                                        return ListTile(
-                                          leading: CircleAvatar(
-                                            backgroundImage: CachedNetworkImageProvider(users!.profileUrl!),
-                                          ),
-                                          title: Text(users.username, style: const TextStyle(color: Colors.white)),
-                                          onTap: () {},
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ];
-                          },
-                          isFullScreen: sizingInformation.isMobile ? true : false,
-                        ),
-                      ],
+      body: ResponsiveBuilder(builder: (context, sizingInformation) {
+        return nullWidget ??
+            CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: AppBar(
+                    leadingWidth: 40,
+                    leading: CircleAvatar(
+                      backgroundImage: CachedNetworkImageProvider(
+                          userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                     ),
+                    title: Text(userData.username),
+                    actions: [
+                      InkWell(
+                          onTap: () {
+                            AutoRouter.of(context).push(const SearchUsersRoute());
+                          },
+                          child: Icon(Icons.search))
+                    ],
                   ),
-                  SliverToBoxAdapter(
-                    child: Row(
-                      children: [
-                        NavigationBarWidget(
-                          sizingInformation: sizingInformation,
-                        ),
-                        Expanded(
-                          flex: 5,
-                          child: userList.when(
-                            loading: () => const Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
-                            error: (error, stackTrace) => (error is Exception)
-                                ? Center(
-                                    child: Text(error.toString()),
-                                  )
-                                : Center(
-                                    child: Text(error.toString()),
-                                  ),
-                            data: (data) => SizedBox(
+                ),
+                SliverToBoxAdapter(
+                  child: Row(
+                    children: [
+                      NavigationBarWidget(
+                        sizingInformation: sizingInformation,
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: userList.when(
+                          loading: () => const Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                          error: (error, stackTrace) => (error is Exception)
+                              ? Center(
+                                  child: Text(error.toString()),
+                                )
+                              : Center(
+                                  child: Text(error.toString()),
+                                ),
+                          data: (data) => RefreshIndicator.adaptive(
+                            onRefresh: () async {
+                              final currentLocation = await Geolocator.getCurrentPosition(
+                                locationSettings: LocationSettings(
+                                  accuracy: LocationAccuracy.high,
+
+                                  // distanceFilter: 1,
+                                ),
+                              );
+
+                              logger.d("currentLocation ${currentLocation.toJson()}");
+                              final currentUser = userData.position?.geopoint;
+
+                              if (currentLocation.latitude != currentUser?.latitude &&
+                                  currentLocation.longitude != currentUser?.longitude) {
+                                GeoFirePoint geoFirePoint =
+                                    GeoFirePoint(GeoPoint(currentLocation.latitude, currentLocation.longitude));
+
+                                await ref.read(profileRepoProvider).updateUserDoc(userData!.copyWith(
+                                        position: GeoPointData(
+                                      geohash: geoFirePoint.geohash,
+                                      geopoint: geoFirePoint.geopoint,
+                                    )));
+
+                                return ref.refresh(userListProvider);
+                              } else {
+                                return ref.refresh(userListProvider);
+                              }
+                            },
+                            child: SizedBox(
                               height: sizingInformation.screenSize.height,
                               width: sizingInformation.screenSize.width,
                               child: GridView.builder(
@@ -278,7 +239,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
                                   return UserGridItem(
                                     onTapEditProfile: () async {
-                                      AutoTabsRouter.of(context).setActiveIndex(3);
+                                      AutoTabsRouter.of(context).setActiveIndex(4);
                                     },
                                     isCurrentUser: users?.id == userData.id ? true : false,
                                     users: users!,
@@ -289,13 +250,13 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              );
-        }),
-      ),
+                ),
+              ],
+            );
+      }),
     );
   }
 }

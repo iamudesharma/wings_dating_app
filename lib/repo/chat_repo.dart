@@ -14,13 +14,15 @@ class ChatRepo extends _$ChatRepo {
     return null;
   }
 
-  createChat(String currentUserId, String otherUserId) async {
-    await ref.read(chatClientProvider).createChannel(
+  Future<ChannelState?> createChat(String currentUserId, String otherUserId) async {
+    var createChannel = await ref.read(chatClientProvider).createChannel(
       "messaging",
       channelData: {
         "members": [currentUserId, otherUserId],
       },
     );
+
+    return createChannel;
   }
 
   connectUser({

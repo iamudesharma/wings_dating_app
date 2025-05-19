@@ -50,12 +50,13 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<UserModel> getCurrentUser() async {
     final usercollection = userCollection();
 
-    var userModels = SharedPrefs.instance.getUsers();
-    if (userModels != null) {
-      return userModels;
-    }
+    // var userModels = SharedPrefs.instance.getUsers();
+    // if (userModels != null) {
+    //   return userModels;
+    // }
     return await exceptionHandler<UserModel>(
       usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).get().then((value) {
+        print(value.data());
         return value.data()!;
       }),
     );
@@ -63,7 +64,7 @@ class ProfileRepo with RepositoryExceptionMixin {
 
   Future<bool> checkUserDocExist() async {
     final data = await userCollection().doc(FirebaseAuth.instance.currentUser!.uid).get();
-
+    print("data${data.id}");
     if (data.exists) {
       logger.i('User doc exist');
       return true;
@@ -94,53 +95,58 @@ class ProfileRepo with RepositoryExceptionMixin {
     );
   }
 
-  Stream<List<UserModel?>?> getUserList({int limit = 10}) {
+  Future<List<UserModel?>?> getUserListBySearch({int limit = 10, required GeoPoint geoPoint}) async {
     final usercollection = userCollection();
 
     final userModel = ref.read(ProfileController.userControllerProvider).userModel!;
 
-    logger.i(userModel.position);
+    final Future<List<DocumentSnapshot<UserModel?>>> stream = GeoCollectionReference<UserModel?>(usercollection)
+        .fetchWithin(
+            center: GeoFirePoint(geoPoint),
+            radiusInKm: 1000,
+            field: "position",
+            isCacheFirst: true,
+            queryBuilder: (query) => query.limit(limit),
+            geopointFrom: geopointFrom);
+
+    final userDoc = await stream;
+
+    final userListRaw = userDoc.map((event) {
+      return event.data();
+    }).toList()
+      ..removeWhere((element) => userModel.blockList.contains(element!.id));
+
+    return userListRaw;
+  }
+
+  Future<List<UserModel?>?> getUserList({int limit = 10}) async {
+    final usercollection = userCollection();
+
+    final userModel = ref.read(ProfileController.userControllerProvider).userModel!;
+
     GeoPoint center = GeoPoint(
       userModel.position!.geopoint.latitude,
       userModel.position!.geopoint.longitude,
     );
 
-    final Stream<List<DocumentSnapshot<UserModel?>>> stream =
-        GeoCollectionReference<UserModel?>(usercollection).subscribeWithin(
+    final Future<List<DocumentSnapshot<UserModel?>>> stream =
+        GeoCollectionReference<UserModel?>(usercollection).fetchWithin(
             center: GeoFirePoint(center),
             radiusInKm: 1000000,
             field: "position",
-            asBroadcastStream: true,
+            // asBroadcastStream: true,
             // strictMode: true,
             queryBuilder: (query) => query.limit(20),
             geopointFrom: geopointFrom);
 
-    final userListRaw = stream.map((event) {
-      logger.i(event.length);
+    final userDoc = await stream;
 
-      return event.map((e) {
-        return e.data();
-      }).toList()
-        ..removeWhere((element) => userModel.blockList.contains(element!.id));
-    });
+    final userListRaw = userDoc.map((event) {
+      return event.data();
+    }).toList()
+      ..removeWhere((element) => userModel.blockList.contains(element!.id));
 
     return userListRaw;
-
-    // logger.i(userListRaw.length);
-
-    // logger.i(userListRaw[0].data());
-
-    // final users = userListRaw
-    //     .map(
-    //       (e) => e.data(),
-    //     )
-    //     .toList();
-
-    // logger.v(users);
-    // print(users.length);
-    // print(users.first);
-
-    // return users;
   }
 
   Future<void> saveUserLocationData(String UserId, String Username, String imgae) async {}
