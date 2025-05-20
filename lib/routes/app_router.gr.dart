@@ -263,6 +263,22 @@ class EditProfileRouteArgs {
 }
 
 /// generated route for
+/// [FilterView]
+class FilterRoute extends PageRouteInfo<void> {
+  const FilterRoute({List<PageRouteInfo>? children})
+    : super(FilterRoute.name, initialChildren: children);
+
+  static const String name = 'FilterRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const FilterView();
+    },
+  );
+}
+
+/// generated route for
 /// [ImagePreviewView]
 class ImagePreviewRoute extends PageRouteInfo<ImagePreviewRouteArgs> {
   ImagePreviewRoute({

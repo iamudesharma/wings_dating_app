@@ -169,7 +169,12 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                           onTap: () {
                             AutoRouter.of(context).push(const SearchUsersRoute());
                           },
-                          child: Icon(Icons.search))
+                          child: Icon(Icons.search)),
+                      InkWell(
+                          onTap: () {
+                            AutoRouter.of(context).push(const FilterRoute());
+                          },
+                          child: Icon(Icons.filter_list_alt))
                     ],
                   ),
                 ),

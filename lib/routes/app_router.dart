@@ -11,6 +11,7 @@ import 'package:wings_dating_app/src/album/album_view.dart';
 import 'package:wings_dating_app/src/album/create_album_view.dart';
 import 'package:wings_dating_app/src/album/widget/image_preview.dart';
 import 'package:wings_dating_app/src/login.dart';
+import 'package:wings_dating_app/src/users/filters/filters_view.dart';
 
 import '../src/auth/sign_options.dart';
 import '../src/chats/chats_list_view.dart';
