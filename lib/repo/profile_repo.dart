@@ -14,6 +14,8 @@ import 'package:wings_dating_app/repo/repo_exception.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
+import '../helpers/extra_data.dart';
+
 part 'profile_repo.g.dart';
 
 @riverpod
@@ -50,13 +52,13 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<UserModel> getCurrentUser() async {
     final usercollection = userCollection();
 
-    // var userModels = SharedPrefs.instance.getUsers();
-    // if (userModels != null) {
-    //   return userModels;
-    // }
+    var userModels = SharedPrefs.instance.getUsers();
+    if (userModels != null) {
+      return userModels;
+    }
     return await exceptionHandler<UserModel>(
       usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).get().then((value) {
-        print(value.data());
+        SharedPrefs.instance.updateUser(value.data()!);
         return value.data()!;
       }),
     );
@@ -147,6 +149,97 @@ class ProfileRepo with RepositoryExceptionMixin {
       ..removeWhere((element) => userModel.blockList.contains(element!.id));
 
     return userListRaw;
+  }
+
+  Future<List<UserModel?>?> getFilterList({
+    required Map<String, dynamic> filters,
+    int limit = 20,
+  }) async {
+    final userCollectionRef = userCollection();
+    final currentUser = ref.read(ProfileController.userControllerProvider).userModel!;
+
+    final center = GeoPoint(
+      currentUser.position!.geopoint.latitude,
+      currentUser.position!.geopoint.longitude,
+    );
+
+    final geoCollection = GeoCollectionReference<UserModel?>(userCollectionRef);
+
+    final double radius =
+        filters['distance'] != null && filters['distance'] > 0 ? filters['distance'].toDouble() : 100000.0;
+
+    Query<UserModel?> queryBuilder(Query<UserModel?> query) {
+      if (filters['hasPhotos'] == true) {
+        query = query.where('profileUrl', isNotEqualTo: null);
+      }
+
+      if (filters['hasAlbums'] == true) {
+        query = query.where('albumUrl', isGreaterThan: []); // non-empty list
+      }
+
+      // Age range (client-verified after fetch)
+      if (filters['ageRange'] != null) {
+        final parts = filters['ageRange'].toString().split('-');
+        final minAge = int.tryParse(parts[0].trim()) ?? 18;
+        final maxAge = int.tryParse(parts[1].replaceAll(RegExp(r'[^\d]'), '').trim()) ?? 99;
+
+        query = query.where('age', isGreaterThanOrEqualTo: minAge).where('age', isLessThanOrEqualTo: maxAge);
+      }
+
+      if (filters['position'] != null && filters['position'].toString().isNotEmpty) {
+        query = query.where('role', isEqualTo: _mapPositionToRole(filters['position']));
+      }
+
+      if (filters['language'] != null && filters['language'].toString().isNotEmpty) {
+        query = query.where('lived', isEqualTo: filters['language']);
+      }
+
+      if (filters['lastSeen'] == 'Online now') {
+        query = query.where('isOnline', isEqualTo: true);
+      }
+
+      return query.limit(limit);
+    }
+
+    final snapshots = await geoCollection.fetchWithin(
+      center: GeoFirePoint(center),
+      radiusInKm: radius,
+      field: "position",
+      queryBuilder: queryBuilder,
+      geopointFrom: geopointFrom,
+    );
+
+    final rawUserList = snapshots.map((doc) => doc.data()).whereType<UserModel?>().toList();
+
+    final filteredList = rawUserList.where((user) {
+      if (user == null) return false;
+      if (currentUser.blockList.contains(user.id)) return false;
+
+      // Height range
+      if (filters['heightRange'] != null && filters['heightRange'].toString().isNotEmpty) {
+        if (!matchesHeightRange(user.height, filters['heightRange'])) return false;
+      }
+
+      // Weight range
+      if (filters['weightRange'] != null && filters['weightRange'].toString().isNotEmpty) {
+        if (!matchesWeightRange(user.weight, filters['weightRange'])) return false;
+      }
+
+      // Simulated face photo check (can be replaced with a real field if added)
+      if (filters['hasFacePics'] == true && user.profileUrl == null) return false;
+
+      // Interests (not in model currently — will skip unless added)
+      if (filters['interests'] != null && filters['interests'].isNotEmpty) {
+        // Assuming you store interests in a list field like `interests`
+        final userInterests = <String>[]; // Replace with real user field if added
+        final List<String> selectedInterests = List<String>.from(filters['interests']);
+        if (!selectedInterests.any((tag) => userInterests.contains(tag))) return false;
+      }
+
+      return true;
+    }).toList();
+
+    return filteredList;
   }
 
   Future<void> saveUserLocationData(String UserId, String Username, String imgae) async {}
@@ -301,6 +394,82 @@ class ProfileRepo with RepositoryExceptionMixin {
 
     logger.i(data.length);
     return data;
+  }
+
+  Future<void> addUserToFavorite(String id) async {
+    final userCollection = FirebaseFirestore.instance.collection('users');
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (currentUserId != null) {
+      await userCollection.doc(currentUserId).update({
+        "favoriteList": FieldValue.arrayUnion([id]),
+      });
+    }
+  }
+
+  Future<void> removeUserFromFavorite(String id) async {
+    final userCollection = FirebaseFirestore.instance.collection('users');
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (currentUserId != null) {
+      await userCollection.doc(currentUserId).update({
+        "favoriteList": FieldValue.arrayRemove([id]),
+      });
+    }
+  }
+}
+
+String _mapPositionToRole(String position) {
+  switch (position.toLowerCase()) {
+    case 'top':
+      return Role.top.value;
+    case 'vers top':
+      return Role.versTop.value;
+    case 'versatile':
+      return Role.versatile.value;
+    case 'vers bottom':
+      return Role.versBottom.value;
+    case 'bottom':
+      return Role.bottom.value;
+
+    default:
+      return Role.doNotShow.value;
+  }
+}
+
+bool matchesHeightRange(String? heightStr, String range) {
+  if (heightStr == null) return false;
+  final heightCm = double.tryParse(heightStr.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
+
+  switch (range) {
+    case '< 5\'5"':
+      return heightCm < 165;
+    case '5\'5" - 5\'10"':
+      return heightCm >= 165 && heightCm <= 178;
+    case '5\'11" - 6\'2"':
+      return heightCm >= 180 && heightCm <= 188;
+    case '6\'3" and above':
+      return heightCm > 190;
+    default:
+      return true;
+  }
+}
+
+bool matchesWeightRange(String? weightStr, String range) {
+  if (weightStr == null) return false;
+  final weightKg = double.tryParse(weightStr.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
+
+  switch (range) {
+    case '< 60kg':
+      return weightKg < 60;
+    case '60 - 75kg':
+      return weightKg >= 60 && weightKg <= 75;
+    case '76 - 90kg':
+      return weightKg > 75 && weightKg <= 90;
+    case '90kg+':
+      return weightKg > 90;
+    default:
+      return true;
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wings_dating_app/const/pref_util.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   final Widget child;
@@ -18,4 +19,13 @@ class ResponsiveLayout extends StatelessWidget {
       ),
     );
   }
+}
+
+bool isUserFavorite(String id) {
+  final data = SharedPrefs.instance.getUsers();
+
+  if (data != null) {
+    return data.favoriteList.contains(id);
+  }
+  return false;
 }

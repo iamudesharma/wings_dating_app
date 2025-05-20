@@ -5,6 +5,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,11 +32,32 @@ import 'widget/user_grid_item.dart';
 //   return ref.read(profileRepoProvider).getUserList();
 // });
 
+final user = FirebaseAuth.instance.currentUser;
+final DatabaseReference statusRef = FirebaseDatabase.instance.ref("status/${user!.uid}");
+
+final onlineStatus = {
+  "isOnline": true,
+  "lastSeen": ServerValue.timestamp,
+};
+
+final offlineStatus = {
+  "isOnline": false,
+  "lastSeen": ServerValue.timestamp,
+};
+
+void setPresence() {
+  statusRef.onDisconnect().set(offlineStatus).then((_) {
+    statusRef.set(onlineStatus);
+  });
+}
+
 final isUserOnlineProvider = FutureProvider.family<bool, bool>(
   (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
 );
 
-final userListProvider = FutureProvider<List<UserModel?>?>((ref) => ref.read(profileRepoProvider).getUserList());
+final userListProvider = FutureProvider.family<List<UserModel?>?, Map<String, dynamic>?>((ref, filters) {
+  return ref.read(profileRepoProvider).getFilterList(filters: filters ?? {});
+});
 
 @RoutePage()
 class UsersView extends ConsumerStatefulWidget {
@@ -45,7 +68,7 @@ class UsersView extends ConsumerStatefulWidget {
 }
 
 class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserver {
-  late StreamSubscription<List<ConnectivityResult>> connectivityStateSubscription;
+  // late StreamSubscription<List<ConnectivityResult>> connectivityStateSubscription;
   AppLifecycleState? appState;
 
   Widget? nullWidget;
@@ -101,17 +124,9 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
       });
     }
     WidgetsBinding.instance.addObserver(this);
+    setPresence();
 
     super.initState();
-
-    connectivityStateSubscription = Connectivity().onConnectivityChanged.listen((connectivityType) {
-      if (AppLifecycleState.resumed != appState) return;
-
-      if (connectivityType != ConnectivityResult.none) {}
-    });
-
-    appState = WidgetsBinding.instance.lifecycleState;
-    WidgetsBinding.instance.addObserver(this);
 
     saveCubeUserInFirebase();
   }
@@ -120,28 +135,34 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
   @override
   void dispose() {
-    connectivityStateSubscription.cancel();
+    // connectivityStateSubscription.cancel();
 
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    appState = state;
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final statusRef = FirebaseDatabase.instance.ref("status/${FirebaseAuth.instance.currentUser!.uid}");
 
-    if (AppLifecycleState.paused == state) {
-    } else if (AppLifecycleState.resumed == state) {
-      // // just for an example user was saved in the local storage
-      SharedPrefs.instance.init().then((sharedPrefs) async {});
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      statusRef.set({
+        "isOnline": false,
+        "lastSeen": ServerValue.timestamp,
+      });
+    } else if (state == AppLifecycleState.resumed) {
+      statusRef.set({
+        "isOnline": true,
+        "lastSeen": ServerValue.timestamp,
+      });
     }
   }
+
+  Map<String, dynamic>? filters;
 
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-
-    final _currentUser = ref.read(ProfileController.userControllerProvider).userModel;
   }
 
   bool? isOnline = false;
@@ -149,7 +170,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
   @override
   Widget build(BuildContext context) {
     final userData = ref.watch(ProfileController.userControllerProvider).userModel;
-    final userList = ref.watch(userListProvider);
+    final userList = ref.watch(userListProvider(filters));
 
     return Scaffold(
       body: ResponsiveBuilder(builder: (context, sizingInformation) {
@@ -170,11 +191,22 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                             AutoRouter.of(context).push(const SearchUsersRoute());
                           },
                           child: Icon(Icons.search)),
+                      SizedBox(width: 10),
                       InkWell(
                           onTap: () {
-                            AutoRouter.of(context).push(const FilterRoute());
+                            AutoRouter.of(context).push(const FilterRoute()).then((result) {
+                              // if (value != null) {
+                              if (result != null && result is Map<String, dynamic>) {
+                                setState(() {
+                                  filters = result;
+                                });
+                              }
+                              // ref.read(userListProvider(value as dynamic));
+                              // }
+                            });
                           },
-                          child: Icon(Icons.filter_list_alt))
+                          child: Icon(Icons.filter_list_alt)),
+                      SizedBox(width: 10),
                     ],
                   ),
                 ),
@@ -215,15 +247,15 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                                 GeoFirePoint geoFirePoint =
                                     GeoFirePoint(GeoPoint(currentLocation.latitude, currentLocation.longitude));
 
-                                await ref.read(profileRepoProvider).updateUserDoc(userData!.copyWith(
+                                await ref.read(profileRepoProvider).updateUserDoc(userData.copyWith(
                                         position: GeoPointData(
                                       geohash: geoFirePoint.geohash,
                                       geopoint: geoFirePoint.geopoint,
                                     )));
 
-                                return ref.refresh(userListProvider);
+                                return ref.refresh(userListProvider(filters));
                               } else {
-                                return ref.refresh(userListProvider);
+                                return ref.refresh(userListProvider(filters));
                               }
                             },
                             child: SizedBox(
@@ -232,7 +264,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                               child: GridView.builder(
                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: sizingInformation.isMobile
-                                      ? 3
+                                      ? 2
                                       : sizingInformation.isTablet
                                           ? 4
                                           : 5,

@@ -17,7 +17,6 @@ Future<Uint8List?> pickImageForm(ImageSource source) async {
     );
 
     if (result != null) {
-      // print("result.paths ${result.}");
       path = result.files.first.bytes;
     }
   } else if (Platform.isMacOS || Platform.isWindows) {
@@ -25,10 +24,16 @@ Future<Uint8List?> pickImageForm(ImageSource source) async {
       allowCompression: true,
       allowMultiple: false,
       type: FileType.image,
+      withData: true, // ensure bytes are loaded
     );
 
     if (result != null) {
-      path = result.files.single.bytes!;
+      if (result.files.single.bytes != null) {
+        path = result.files.single.bytes!;
+      } else if (result.files.single.path != null) {
+        final file = File(result.files.single.path!);
+        path = await file.readAsBytes();
+      }
     }
   } else {
     var image = await ImagePicker().pickImage(source: source, imageQuality: 80);

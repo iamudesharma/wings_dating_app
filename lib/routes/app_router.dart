@@ -85,6 +85,11 @@ class AppRouter extends RootStackRouter {
       keepHistory: true,
     ),
     AutoRoute(
+      page: FilterRoute.page,
+      path: "/filter-users",
+      keepHistory: true,
+    ),
+    AutoRoute(
         page: AddAdditionalInformationRoute.page,
         type: const RouteType.adaptive(),
         path: "/add-additional-information"),

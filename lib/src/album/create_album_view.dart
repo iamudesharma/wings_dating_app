@@ -41,9 +41,7 @@ class CreateAlbumView extends ConsumerWidget {
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.4,
                       width: MediaQuery.sizeOf(context).width * 0.4,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
                       child: (albumController.value?.imageUrls ?? []).isNotEmpty
                           ? Animate(
                               effects: [BlurEffect()],
@@ -63,8 +61,7 @@ class CreateAlbumView extends ConsumerWidget {
                       children: [
                         Text("Album Name"),
                         TextField(
-                          controller: TextEditingController(
-                              text: albumController.value?.name),
+                          controller: TextEditingController(text: albumController.value?.name),
                           onSubmitted: (value) {
                             // albumController.createAlbum(value);
                           },
@@ -94,10 +91,10 @@ class CreateAlbumView extends ConsumerWidget {
                         }
                       }
                     } else if (Platform.isMacOS || Platform.isWindows) {
-                      final file = await pickImageForm(ImageSource.camera);
+                      final file = await pickImageForm(ImageSource.gallery);
                       if (file != null) {
                         if (context.mounted) {
-                          openEditor(context, ref, id: id!, path: file);
+                          openEditor(context, ref, id: id ?? "", path: file);
                         }
                       }
                     } else {
@@ -110,12 +107,10 @@ class CreateAlbumView extends ConsumerWidget {
                           actions: [
                             ElevatedButton(
                               onPressed: () async {
-                                final file =
-                                    await pickImageForm(ImageSource.camera);
+                                final file = await pickImageForm(ImageSource.camera);
                                 if (file != null) {
                                   if (context.mounted) {
-                                    openEditor(context, ref,
-                                        id: id!, path: file);
+                                    openEditor(context, ref, id: id!, path: file);
                                   }
                                 }
                               },
@@ -123,12 +118,10 @@ class CreateAlbumView extends ConsumerWidget {
                             ),
                             ElevatedButton(
                               onPressed: () async {
-                                final file =
-                                    await pickImageForm(ImageSource.gallery);
+                                final file = await pickImageForm(ImageSource.gallery);
                                 if (file != null) {
                                   if (context.mounted) {
-                                    openEditor(context, ref,
-                                        id: id!, path: file);
+                                    openEditor(context, ref, id: id!, path: file);
                                   }
                                 }
                               },
@@ -145,9 +138,8 @@ class CreateAlbumView extends ConsumerWidget {
                     // ref.read(AlbumControllerProvider(id).notifier).addImage();
                   },
                   child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Theme.of(context).primaryColor),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(10), color: Theme.of(context).primaryColor),
                     child: const Center(child: Icon(Icons.add)),
                   ),
                 ),

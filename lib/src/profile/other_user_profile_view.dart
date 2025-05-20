@@ -1,20 +1,70 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart' as firebase_database;
 // import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta_seo/meta_seo.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 // import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/repo/chat_repo.dart';
+import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/services/chat_services.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
+import '../../const/pref_util.dart';
+import '../../helpers/responsive_layout.dart';
 import 'widgets/profile_input_card.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
+part 'other_user_profile_view.g.dart';
+
+@riverpod
+class Fav extends _$Fav {
+  Future<void> addUserToFavorite(String id) async {
+    final data = SharedPrefs.instance.getUsers();
+
+    if (data != null) {
+      final updatedFavorites = [...data.favoriteList, id];
+
+      SharedPrefs.instance.updateUser(data.copyWith(
+        favoriteList: updatedFavorites,
+      ));
+    }
+
+    await ref.read(profileRepoProvider).addUserToFavorite(id);
+    // Refresh state to reflect the addition
+    state = AsyncValue.data(true);
+  }
+
+  Future<void> removeUserFromFavorite(String id) async {
+    final data = SharedPrefs.instance.getUsers();
+
+    if (data != null && data.favoriteList.contains(id)) {
+      final updatedFavorites = data.favoriteList.where((favId) => favId != id).toList();
+
+      SharedPrefs.instance.updateUser(data.copyWith(
+        favoriteList: updatedFavorites,
+      ));
+    }
+
+    await ref.read(profileRepoProvider).removeUserFromFavorite(id);
+
+    // Refresh state to reflect the removal
+    state = AsyncValue.data(false);
+  }
+
+  @override
+  Future<bool> build(String id) async {
+    return Future.value(isUserFavorite(id));
+  }
+}
 
 @RoutePage()
 class OtherUserProfileView extends ConsumerStatefulWidget {
@@ -46,6 +96,8 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
     // } else {
     var otherUser = ref.watch(getUserByIdProvider(widget.id!));
     // }
+    firebase_database.DatabaseReference refData =
+        firebase_database.FirebaseDatabase.instance.ref('status/${widget.id}');
 
     return Scaffold(
       // backgroundColor: ,
@@ -134,11 +186,46 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                   child: SizedBox(
                     height: 250,
                     width: MediaQuery.of(context).size.width,
-                    child: CachedNetworkImage(
-                      // color: Colors.white,
-                      imageUrl: (userData.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                      fit: BoxFit.contain,
-                      color: Colors.white,
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: CachedNetworkImage(
+                            // color: Colors.white,
+                            imageUrl:
+                                (userData.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        Consumer(builder: (context, ref, child) {
+                          final isFav = ref.watch(favProvider(widget.id!));
+                          return isFav.when(
+                              error: (_, __) => SizedBox(),
+                              loading: () => SizedBox(),
+                              data: (value) => Positioned(
+                                    right: 10,
+                                    top: 10,
+                                    child: value
+                                        ? IconButton(
+                                            onPressed: () async {
+                                              await ref
+                                                  .read(favProvider(widget.id!).notifier)
+                                                  .removeUserFromFavorite(widget.id!);
+                                            },
+                                            icon: Icon(Icons.star),
+                                            color: Colors.red,
+                                          )
+                                        : IconButton(
+                                            onPressed: () async {
+                                              await ref
+                                                  .read(favProvider(widget.id!).notifier)
+                                                  .addUserToFavorite(widget.id!);
+                                            },
+                                            icon: Icon(Icons.star_border_outlined),
+                                            color: Colors.white,
+                                          ),
+                                  ));
+                        })
+                      ],
                     ),
                   ),
                 ),
@@ -149,6 +236,36 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      StreamBuilder<firebase_database.DatabaseEvent>(
+                        stream: refData.onValue,
+                        builder: (context, snapshot) {
+                          // print(snapshot.connectionState);
+                          if (snapshot.hasData) {
+                            bool isOnline = false;
+                            Timestamp? lastSeen;
+                            print("snapshot.data!.snapshot.value ${snapshot.data?.snapshot.value}");
+                            if (snapshot.data!.snapshot.value != null) {
+                              final data = snapshot.data!.snapshot.value as Map;
+                              isOnline = data['isOnline'];
+                              lastSeen = data['lastSeen'] != null
+                                  ? Timestamp.fromMillisecondsSinceEpoch(data['lastSeen'])
+                                  : null;
+                            } else {
+                              isOnline = false;
+                            }
+
+                            return isOnline == false && lastSeen != null
+                                ? Text("Last seen : ${timeago.format(
+                                    DateTime.fromMillisecondsSinceEpoch(lastSeen.millisecondsSinceEpoch),
+                                  )}")
+                                : CircleAvatar(
+                                    radius: 5,
+                                    backgroundColor: isOnline ? Colors.green : Colors.amber,
+                                  );
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      ),
                       Text(
                         "About",
                         style: Theme.of(context).textTheme.titleLarge,
@@ -204,20 +321,20 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
               //       );
               // });
 
-              final channelState =
-                  await ref.read(chatRepoProvider.notifier).createChat(currentUser.id, otherUser.value!.id);
-              // AutoRouter.of(context).push( ChatRoute(channel: ));
-              // print(channel?.toJson());
-              final channel = await ref.read(chatClientProvider).queryChannelsOnline(
-                      filter: Filter.and([
-                    Filter.equal('type', 'messaging'), // Use your actual channel type here (e.g., 'messaging')
-                    Filter.in_(
-                        'members', [currentUser.id]), // Include the current user's ID in an $in filter for access
-                    Filter.in_('members', [otherUser.value!.id]), // Also include the other user's ID
-                  ]));
+              // final channelState =
+              //     await ref.read(chatRepoProvider.notifier).createChat(currentUser.id, otherUser.value!.id);
+              // // AutoRouter.of(context).push( ChatRoute(channel: ));
+              // // print(channel?.toJson());
+              // final channel = await ref.read(chatClientProvider).queryChannelsOnline(
+              //         filter: Filter.and([
+              //       Filter.equal('type', 'messaging'), // Use your actual channel type here (e.g., 'messaging')
+              //       Filter.in_(
+              //           'members', [currentUser.id]), // Include the current user's ID in an $in filter for access
+              //       Filter.in_('members', [otherUser.value!.id]), // Also include the other user's ID
+              //     ]));
 
-              print("channel ${channel.length}");
-              context.router.push(ChatRoute(channel: channel[0], id: channel[0].id!));
+              // print("channel ${channel.length}");
+              // context.router.push(ChatRoute(channel: channel[0], id: channel[0].id!));
               // Todo create chat one to one chat
             }),
       ),

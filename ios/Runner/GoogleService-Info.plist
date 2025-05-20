@@ -32,5 +32,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:546119961072:ios:e18673a382af989fd9b535</string>
+	<key>DATABASE_URL</key>
+	<string>https://wings-dating-951ed-default-rtdb.asia-southeast1.firebasedatabase.app</string>
 </dict>
 </plist>

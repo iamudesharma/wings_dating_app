@@ -45,6 +45,7 @@ abstract class UserModel with _$UserModel {
     @Default(false) bool isVerified,
     @Default(false) bool isBlocked,
     @Default([]) List<String> blockList,
+    @Default([]) List<String> favoriteList,
     required String id,
     required String fcmToken,
   }) = _UserModel;
