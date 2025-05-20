@@ -82,10 +82,10 @@ class ProfileController extends ChangeNotifier {
     return image;
   }
 
-  String getDistance(GeoPoint coordinates) {
+  String getDistance(GeoPoint coordinates, {GeoPoint? userCoordinates}) {
     final data = Geolocator.distanceBetween(
-      userModel!.position!.geopoint.latitude,
-      userModel!.position!.geopoint.longitude,
+      userCoordinates?.latitude ?? userModel!.position!.geopoint.latitude,
+      userCoordinates?.longitude ?? userModel!.position!.geopoint.longitude,
       coordinates.latitude,
       coordinates.longitude,
     );
