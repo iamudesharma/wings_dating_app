@@ -128,6 +128,8 @@ dependencies:
   # firestore_modeler: ^0.2.0+1
   location_picker_flutter_map: ^3.1.0
   stream_chat_persistence: ^9.10.0
+  firebase_database: ^11.3.5
+  timeago: ^3.7.1
   # objectbox: ^4.1.0
   
   # objectbox_flutter_libs: ^4.1.0 

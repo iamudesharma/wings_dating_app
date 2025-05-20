@@ -156,6 +156,7 @@ abstract class UserModelDocumentReference
     FieldValue isVerifiedFieldValue,
     FieldValue isBlockedFieldValue,
     FieldValue blockListFieldValue,
+    FieldValue favoriteListFieldValue,
     FieldValue idFieldValue,
     FieldValue fcmTokenFieldValue,
   });
@@ -192,6 +193,7 @@ abstract class UserModelDocumentReference
     FieldValue isVerifiedFieldValue,
     FieldValue isBlockedFieldValue,
     FieldValue blockListFieldValue,
+    FieldValue favoriteListFieldValue,
     FieldValue idFieldValue,
     FieldValue fcmTokenFieldValue,
   });
@@ -228,6 +230,7 @@ abstract class UserModelDocumentReference
     FieldValue isVerifiedFieldValue,
     FieldValue isBlockedFieldValue,
     FieldValue blockListFieldValue,
+    FieldValue favoriteListFieldValue,
     FieldValue idFieldValue,
     FieldValue fcmTokenFieldValue,
   });
@@ -279,6 +282,8 @@ abstract class UserModelDocumentReference
     FieldValue isBlockedFieldValue,
     List<String> blockList,
     FieldValue blockListFieldValue,
+    List<String> favoriteList,
+    FieldValue favoriteListFieldValue,
     String id,
     FieldValue idFieldValue,
     String fcmToken,
@@ -332,6 +337,8 @@ abstract class UserModelDocumentReference
     FieldValue isBlockedFieldValue,
     List<String> blockList,
     FieldValue blockListFieldValue,
+    List<String> favoriteList,
+    FieldValue favoriteListFieldValue,
     String id,
     FieldValue idFieldValue,
     String fcmToken,
@@ -385,6 +392,8 @@ abstract class UserModelDocumentReference
     FieldValue isBlockedFieldValue,
     List<String> blockList,
     FieldValue blockListFieldValue,
+    List<String> favoriteList,
+    FieldValue favoriteListFieldValue,
     String id,
     FieldValue idFieldValue,
     String fcmToken,
@@ -444,6 +453,7 @@ class _$UserModelDocumentReference
     FieldValue? isVerifiedFieldValue,
     FieldValue? isBlockedFieldValue,
     FieldValue? blockListFieldValue,
+    FieldValue? favoriteListFieldValue,
     FieldValue? idFieldValue,
     FieldValue? fcmTokenFieldValue,
   }) async {
@@ -488,6 +498,8 @@ class _$UserModelDocumentReference
         _$UserModelFieldMap['isBlocked']!: isBlockedFieldValue,
       if (blockListFieldValue != null)
         _$UserModelFieldMap['blockList']!: blockListFieldValue,
+      if (favoriteListFieldValue != null)
+        _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
       if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
       if (fcmTokenFieldValue != null)
         _$UserModelFieldMap['fcmToken']!: fcmTokenFieldValue,
@@ -525,6 +537,7 @@ class _$UserModelDocumentReference
     FieldValue? isVerifiedFieldValue,
     FieldValue? isBlockedFieldValue,
     FieldValue? blockListFieldValue,
+    FieldValue? favoriteListFieldValue,
     FieldValue? idFieldValue,
     FieldValue? fcmTokenFieldValue,
   }) {
@@ -569,6 +582,8 @@ class _$UserModelDocumentReference
         _$UserModelFieldMap['isBlocked']!: isBlockedFieldValue,
       if (blockListFieldValue != null)
         _$UserModelFieldMap['blockList']!: blockListFieldValue,
+      if (favoriteListFieldValue != null)
+        _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
       if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
       if (fcmTokenFieldValue != null)
         _$UserModelFieldMap['fcmToken']!: fcmTokenFieldValue,
@@ -602,6 +617,7 @@ class _$UserModelDocumentReference
     FieldValue? isVerifiedFieldValue,
     FieldValue? isBlockedFieldValue,
     FieldValue? blockListFieldValue,
+    FieldValue? favoriteListFieldValue,
     FieldValue? idFieldValue,
     FieldValue? fcmTokenFieldValue,
   }) {
@@ -646,6 +662,8 @@ class _$UserModelDocumentReference
         _$UserModelFieldMap['isBlocked']!: isBlockedFieldValue,
       if (blockListFieldValue != null)
         _$UserModelFieldMap['blockList']!: blockListFieldValue,
+      if (favoriteListFieldValue != null)
+        _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
       if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
       if (fcmTokenFieldValue != null)
         _$UserModelFieldMap['fcmToken']!: fcmTokenFieldValue,
@@ -697,6 +715,8 @@ class _$UserModelDocumentReference
     FieldValue? isBlockedFieldValue,
     Object? blockList = _sentinel,
     FieldValue? blockListFieldValue,
+    Object? favoriteList = _sentinel,
+    FieldValue? favoriteListFieldValue,
     Object? id = _sentinel,
     FieldValue? idFieldValue,
     Object? fcmToken = _sentinel,
@@ -785,6 +805,10 @@ class _$UserModelDocumentReference
     assert(
       blockList == _sentinel || blockListFieldValue == null,
       "Cannot specify both blockList and blockListFieldValue",
+    );
+    assert(
+      favoriteList == _sentinel || favoriteListFieldValue == null,
+      "Cannot specify both favoriteList and favoriteListFieldValue",
     );
     assert(
       id == _sentinel || idFieldValue == null,
@@ -896,6 +920,11 @@ class _$UserModelDocumentReference
             _$UserModelPerFieldToJson.blockList(blockList as List<String>),
       if (blockListFieldValue != null)
         _$UserModelFieldMap['blockList']!: blockListFieldValue,
+      if (favoriteList != _sentinel)
+        _$UserModelFieldMap['favoriteList']!: _$UserModelPerFieldToJson
+            .favoriteList(favoriteList as List<String>),
+      if (favoriteListFieldValue != null)
+        _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
       if (id != _sentinel)
         _$UserModelFieldMap['id']!: _$UserModelPerFieldToJson.id(id as String),
       if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
@@ -953,6 +982,8 @@ class _$UserModelDocumentReference
     FieldValue? isBlockedFieldValue,
     Object? blockList = _sentinel,
     FieldValue? blockListFieldValue,
+    Object? favoriteList = _sentinel,
+    FieldValue? favoriteListFieldValue,
     Object? id = _sentinel,
     FieldValue? idFieldValue,
     Object? fcmToken = _sentinel,
@@ -1041,6 +1072,10 @@ class _$UserModelDocumentReference
     assert(
       blockList == _sentinel || blockListFieldValue == null,
       "Cannot specify both blockList and blockListFieldValue",
+    );
+    assert(
+      favoriteList == _sentinel || favoriteListFieldValue == null,
+      "Cannot specify both favoriteList and favoriteListFieldValue",
     );
     assert(
       id == _sentinel || idFieldValue == null,
@@ -1152,6 +1187,11 @@ class _$UserModelDocumentReference
             _$UserModelPerFieldToJson.blockList(blockList as List<String>),
       if (blockListFieldValue != null)
         _$UserModelFieldMap['blockList']!: blockListFieldValue,
+      if (favoriteList != _sentinel)
+        _$UserModelFieldMap['favoriteList']!: _$UserModelPerFieldToJson
+            .favoriteList(favoriteList as List<String>),
+      if (favoriteListFieldValue != null)
+        _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
       if (id != _sentinel)
         _$UserModelFieldMap['id']!: _$UserModelPerFieldToJson.id(id as String),
       if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
@@ -1209,6 +1249,8 @@ class _$UserModelDocumentReference
     FieldValue? isBlockedFieldValue,
     Object? blockList = _sentinel,
     FieldValue? blockListFieldValue,
+    Object? favoriteList = _sentinel,
+    FieldValue? favoriteListFieldValue,
     Object? id = _sentinel,
     FieldValue? idFieldValue,
     Object? fcmToken = _sentinel,
@@ -1297,6 +1339,10 @@ class _$UserModelDocumentReference
     assert(
       blockList == _sentinel || blockListFieldValue == null,
       "Cannot specify both blockList and blockListFieldValue",
+    );
+    assert(
+      favoriteList == _sentinel || favoriteListFieldValue == null,
+      "Cannot specify both favoriteList and favoriteListFieldValue",
     );
     assert(
       id == _sentinel || idFieldValue == null,
@@ -1408,6 +1454,11 @@ class _$UserModelDocumentReference
             _$UserModelPerFieldToJson.blockList(blockList as List<String>),
       if (blockListFieldValue != null)
         _$UserModelFieldMap['blockList']!: blockListFieldValue,
+      if (favoriteList != _sentinel)
+        _$UserModelFieldMap['favoriteList']!: _$UserModelPerFieldToJson
+            .favoriteList(favoriteList as List<String>),
+      if (favoriteListFieldValue != null)
+        _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
       if (id != _sentinel)
         _$UserModelFieldMap['id']!: _$UserModelPerFieldToJson.id(id as String),
       if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
@@ -1737,6 +1788,18 @@ abstract class UserModelQuery
     bool? isNull,
   });
 
+  UserModelQuery whereFavoriteList({
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
+    String? arrayContains,
+    List<String>? arrayContainsAny,
+    bool? isNull,
+  });
+
   UserModelQuery whereId({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -2047,6 +2110,18 @@ abstract class UserModelQuery
   });
 
   UserModelQuery orderByBlockList({
+    bool descending = false,
+    List<String> startAt,
+    List<String> startAfter,
+    List<String> endAt,
+    List<String> endBefore,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  });
+
+  UserModelQuery orderByFavoriteList({
     bool descending = false,
     List<String> startAt,
     List<String> startAfter,
@@ -3165,6 +3240,61 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$UserModelPerFieldToJson.blockList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
+        isNull: isNull ??
+            (isEqualTo == null ? false : null) ??
+            (isNotEqualTo == null ? true : null),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery whereFavoriteList({
+    Object? isEqualTo = _sentinel,
+    Object? isNotEqualTo = _sentinel,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<String>? arrayContainsAny,
+    bool? isNull,
+  }) {
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$UserModelFieldMap['favoriteList']!,
+        isEqualTo: isEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.favoriteList(isEqualTo as List<String>)
+            : null,
+        isNotEqualTo: isNotEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson
+                .favoriteList(isNotEqualTo as List<String>)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$UserModelPerFieldToJson.favoriteList(isLessThan as List<String>)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .favoriteList(isLessThanOrEqualTo as List<String>)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$UserModelPerFieldToJson
+                .favoriteList(isGreaterThan as List<String>)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .favoriteList(isGreaterThanOrEqualTo as List<String>)
+            : null,
+        arrayContains: arrayContains != null
+            ? (_$UserModelPerFieldToJson.favoriteList([arrayContains as String])
+                    as List?)!
+                .single
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$UserModelPerFieldToJson.favoriteList(arrayContainsAny)
                 as Iterable<Object>?
             : null,
         isNull: isNull ??
@@ -4947,6 +5077,79 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
   }
 
   @override
+  UserModelQuery orderByFavoriteList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['favoriteList']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
   UserModelQuery orderById({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -5228,6 +5431,10 @@ _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      favoriteList: (json['favoriteList'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       id: json['id'] as String,
       fcmToken: json['fcmToken'] as String,
     );
@@ -5254,6 +5461,7 @@ const _$UserModelFieldMap = <String, String>{
   'isVerified': 'isVerified',
   'isBlocked': 'isBlocked',
   'blockList': 'blockList',
+  'favoriteList': 'favoriteList',
   'id': 'id',
   'fcmToken': 'fcmToken',
 };
@@ -5306,6 +5514,8 @@ abstract class _$UserModelPerFieldToJson {
   // ignore: unused_element
   static Object? blockList(List<String> instance) => instance;
   // ignore: unused_element
+  static Object? favoriteList(List<String> instance) => instance;
+  // ignore: unused_element
   static Object? id(String instance) => instance;
   // ignore: unused_element
   static Object? fcmToken(String instance) => instance;
@@ -5335,6 +5545,7 @@ Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
       'isVerified': instance.isVerified,
       'isBlocked': instance.isBlocked,
       'blockList': instance.blockList,
+      'favoriteList': instance.favoriteList,
       'id': instance.id,
       'fcmToken': instance.fcmToken,
     };

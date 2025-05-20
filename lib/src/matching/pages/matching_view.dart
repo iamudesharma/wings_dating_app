@@ -20,7 +20,7 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
   @override
   Widget build(BuildContext context) {
     // For demonstration, reusing the userListProvider. Replace with actual matching logic provider.
-    final potentialMatches = ref.watch(userListProvider);
+    final potentialMatches = ref.watch(userListProvider({}));
 
     return Scaffold(
       body: ResponsiveBuilder(

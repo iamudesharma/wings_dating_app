@@ -1,18 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
 class UserGridItem extends ConsumerStatefulWidget {
-  const UserGridItem(
-      {super.key,
-      required this.users,
-      this.isCurrentUser = false,
-      this.onTapEditProfile});
+  const UserGridItem({super.key, required this.users, this.isCurrentUser = false, this.onTapEditProfile});
 
   final UserModel users;
 
@@ -27,8 +26,7 @@ class UserGridItem extends ConsumerStatefulWidget {
 class _UserGridItemState extends ConsumerState<UserGridItem> {
   @override
   Widget build(BuildContext context) {
-    // final userActive = ref.watch(userLastActiveProvider(widget.users.cubeUser.id!));
-
+    DatabaseReference refData = FirebaseDatabase.instance.ref('status/${widget.users.id}');
     return InkWell(
       onTap: () {
         FirebaseAnalytics.instance.logEvent(
@@ -50,8 +48,8 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: CachedNetworkImageProvider(widget.users.profileUrl ??
-                "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+            image: CachedNetworkImageProvider(
+                widget.users.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
             fit: BoxFit.cover,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -64,9 +62,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
             child: Row(
               children: [
                 Text(
-                  ref
-                      .read(ProfileController.userControllerProvider)
-                      .getDistance(
+                  ref.read(ProfileController.userControllerProvider).getDistance(
                         GeoPoint(
                           widget.users.position!.geopoint.latitude,
                           widget.users.position!.geopoint.longitude,
@@ -79,20 +75,43 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                 ),
                 const Spacer(),
                 widget.isCurrentUser!
-                    ? InkWell(
-                        onTap: widget.onTapEditProfile,
-                        child: const Icon(Icons.edit))
+                    ? InkWell(onTap: widget.onTapEditProfile, child: const Icon(Icons.edit))
                     : Align(
                         alignment: Alignment.topRight,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            radius: 5,
-                            backgroundColor: widget.users.isOnline
-                                ? Colors.green
-                                : Colors.amber,
-                          ),
-                        ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: StreamBuilder<DatabaseEvent>(
+                              stream: refData.onValue,
+                              builder: (context, snapshot) {
+                                // print(snapshot.connectionState);
+                                if (snapshot.hasData) {
+                                  bool isOnline = false;
+                                  Timestamp? lastSeen;
+                                  print("snapshot.data!.snapshot.value ${snapshot.data?.snapshot.value}");
+                                  if (snapshot.data!.snapshot.value != null) {
+                                    final data = snapshot.data!.snapshot.value as Map;
+                                    isOnline = data['isOnline'];
+                                    lastSeen = data['lastSeen'] != null
+                                        ? Timestamp.fromMillisecondsSinceEpoch(data['lastSeen'])
+                                        : null;
+                                  } else {
+                                    isOnline = false;
+                                  }
+
+                                  return isOnline == false && lastSeen != null
+                                      ? Text(timeago.format(
+                                          DateTime.fromMillisecondsSinceEpoch(lastSeen.millisecondsSinceEpoch),
+                                          locale: 'en_short',
+                                          
+                                        ))
+                                      : CircleAvatar(
+                                          radius: 5,
+                                          backgroundColor: isOnline ? Colors.green : Colors.amber,
+                                        );
+                                }
+                                return CircularProgressIndicator();
+                              },
+                            )),
                       ),
               ],
             ),

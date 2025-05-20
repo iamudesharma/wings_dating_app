@@ -37,6 +37,7 @@ mixin _$UserModel {
   bool get isVerified;
   bool get isBlocked;
   List<String> get blockList;
+  List<String> get favoriteList;
   String get id;
   String get fcmToken;
 
@@ -88,6 +89,8 @@ mixin _$UserModel {
             (identical(other.isBlocked, isBlocked) ||
                 other.isBlocked == isBlocked) &&
             const DeepCollectionEquality().equals(other.blockList, blockList) &&
+            const DeepCollectionEquality()
+                .equals(other.favoriteList, favoriteList) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.fcmToken, fcmToken) ||
                 other.fcmToken == fcmToken));
@@ -118,13 +121,14 @@ mixin _$UserModel {
         isVerified,
         isBlocked,
         const DeepCollectionEquality().hash(blockList),
+        const DeepCollectionEquality().hash(favoriteList),
         id,
         fcmToken
       ]);
 
   @override
   String toString() {
-    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, id: $id, fcmToken: $fcmToken)';
+    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, favoriteList: $favoriteList, id: $id, fcmToken: $fcmToken)';
   }
 }
 
@@ -155,6 +159,7 @@ abstract mixin class $UserModelCopyWith<$Res> {
       bool isVerified,
       bool isBlocked,
       List<String> blockList,
+      List<String> favoriteList,
       String id,
       String fcmToken});
 
@@ -194,6 +199,7 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
     Object? isVerified = null,
     Object? isBlocked = null,
     Object? blockList = null,
+    Object? favoriteList = null,
     Object? id = null,
     Object? fcmToken = null,
   }) {
@@ -282,6 +288,10 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
           ? _self.blockList
           : blockList // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      favoriteList: null == favoriteList
+          ? _self.favoriteList
+          : favoriteList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -339,10 +349,12 @@ class _UserModel implements UserModel {
       this.isVerified = false,
       this.isBlocked = false,
       final List<String> blockList = const [],
+      final List<String> favoriteList = const [],
       required this.id,
       required this.fcmToken})
       : _albumUrl = albumUrl,
-        _blockList = blockList;
+        _blockList = blockList,
+        _favoriteList = favoriteList;
   factory _UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
 
@@ -414,6 +426,15 @@ class _UserModel implements UserModel {
     return EqualUnmodifiableListView(_blockList);
   }
 
+  final List<String> _favoriteList;
+  @override
+  @JsonKey()
+  List<String> get favoriteList {
+    if (_favoriteList is EqualUnmodifiableListView) return _favoriteList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_favoriteList);
+  }
+
   @override
   final String id;
   @override
@@ -473,6 +494,8 @@ class _UserModel implements UserModel {
                 other.isBlocked == isBlocked) &&
             const DeepCollectionEquality()
                 .equals(other._blockList, _blockList) &&
+            const DeepCollectionEquality()
+                .equals(other._favoriteList, _favoriteList) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.fcmToken, fcmToken) ||
                 other.fcmToken == fcmToken));
@@ -503,13 +526,14 @@ class _UserModel implements UserModel {
         isVerified,
         isBlocked,
         const DeepCollectionEquality().hash(_blockList),
+        const DeepCollectionEquality().hash(_favoriteList),
         id,
         fcmToken
       ]);
 
   @override
   String toString() {
-    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, id: $id, fcmToken: $fcmToken)';
+    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, favoriteList: $favoriteList, id: $id, fcmToken: $fcmToken)';
   }
 }
 
@@ -543,6 +567,7 @@ abstract mixin class _$UserModelCopyWith<$Res>
       bool isVerified,
       bool isBlocked,
       List<String> blockList,
+      List<String> favoriteList,
       String id,
       String fcmToken});
 
@@ -583,6 +608,7 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
     Object? isVerified = null,
     Object? isBlocked = null,
     Object? blockList = null,
+    Object? favoriteList = null,
     Object? id = null,
     Object? fcmToken = null,
   }) {
@@ -670,6 +696,10 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
       blockList: null == blockList
           ? _self._blockList
           : blockList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      favoriteList: null == favoriteList
+          ? _self._favoriteList
+          : favoriteList // ignore: cast_nullable_to_non_nullable
               as List<String>,
       id: null == id
           ? _self.id
