@@ -11,13 +11,15 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class UserGridItem extends ConsumerStatefulWidget {
-  const UserGridItem({super.key, required this.users, this.isCurrentUser = false, this.onTapEditProfile});
+  const UserGridItem(
+      {super.key, required this.users, this.isCurrentUser = false, this.onTapEditProfile, this.userCoordinates});
 
   final UserModel users;
 
   final bool? isCurrentUser;
 
   final VoidCallback? onTapEditProfile;
+  final GeoPoint? userCoordinates;
 
   @override
   ConsumerState<UserGridItem> createState() => _UserGridItemState();
@@ -67,6 +69,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                           widget.users.position!.geopoint.latitude,
                           widget.users.position!.geopoint.longitude,
                         ),
+                        userCoordinates: widget.userCoordinates,
                       ),
                   style: const TextStyle(
                     fontWeight: FontWeight.normal,
@@ -102,7 +105,6 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                                       ? Text(timeago.format(
                                           DateTime.fromMillisecondsSinceEpoch(lastSeen.millisecondsSinceEpoch),
                                           locale: 'en_short',
-                                          
                                         ))
                                       : CircleAvatar(
                                           radius: 5,

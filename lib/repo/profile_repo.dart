@@ -102,12 +102,12 @@ class ProfileRepo with RepositoryExceptionMixin {
 
     final userModel = ref.read(ProfileController.userControllerProvider).userModel!;
 
-    final Future<List<DocumentSnapshot<UserModel?>>> stream = GeoCollectionReference<UserModel?>(usercollection)
-        .fetchWithin(
+    final Future<List<DocumentSnapshot<UserModel?>>> stream =
+        GeoCollectionReference<UserModel?>(usercollection).fetchWithin(
             center: GeoFirePoint(geoPoint),
             radiusInKm: 1000,
             field: "position",
-            isCacheFirst: true,
+            // isCacheFirst: true,
             queryBuilder: (query) => query.limit(limit),
             geopointFrom: geopointFrom);
 
