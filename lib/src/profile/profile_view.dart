@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -47,9 +49,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                   IconButton(
                     icon: Icon(Icons.app_blocking),
                     onPressed: () {
-                      context.router.push(
-                        const UserBlockListRoute(),
-                      );
+                      FirebaseAuth.instance.signOut().then((value) {
+                        context.router.replaceAll([const SignOptionsRoute()]);
+                      });
                     },
                   ),
                 ],

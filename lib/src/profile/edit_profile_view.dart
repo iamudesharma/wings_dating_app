@@ -342,8 +342,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                             bio: _bioController.text,
                                             username: _usernameController.text,
                                             position: GeoPointData(
-                                              geohash: myLocation.geohash,
-                                              geopoint: myLocation.geopoint,
+                                              // geohash: myLocation.geohash,
+                                              geopoint: [myLocation.geopoint.longitude, myLocation.geopoint.latitude],
                                             ),
                                             profileUrl:
                                                 await ref.read(ProfileController.userControllerProvider).uploadImage()),
@@ -368,7 +368,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 int age = calculateAge(_selectedDate!);
 
                                 UserModel user = UserModel(
-                                  fcmToken: "",
+                                  fcmToken: "dejkedk",
                                   // fcmToken: token ?? "",
                                   dob: _dobController.text,
                                   isOnline: true,
@@ -377,12 +377,12 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   username: _usernameController.text,
                                   bio: _bioController.text,
                                   age: age,
-                                  profileUrl: await ref.read(ProfileController.userControllerProvider).uploadImage(),
+                                  albumUrl: [],
                                   birthday: _dobController.text,
 
                                   position: GeoPointData(
-                                    geohash: myLocation.geohash,
-                                    geopoint: myLocation.geopoint,
+                                    // geohash: myLocation.geohash,
+                                    geopoint: [myLocation.geopoint.longitude, myLocation.geopoint.latitude],
                                   ),
                                 );
 

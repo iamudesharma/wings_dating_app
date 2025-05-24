@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wings_dating_app/const/http_templete.dart';
 import 'package:wings_dating_app/const/pref_util.dart';
 import 'package:wings_dating_app/dependency/dependencies.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
@@ -19,7 +22,7 @@ import '../helpers/extra_data.dart';
 part 'profile_repo.g.dart';
 
 @riverpod
-ProfileRepo profileRepo(ProfileRepoRef ref) {
+ProfileRepo profileRepo(Ref ref) {
   return ProfileRepo(ref);
 }
 
@@ -28,18 +31,19 @@ class ProfileRepo with RepositoryExceptionMixin {
 
   ProfileRepo(this.ref);
 
-  CollectionReference<UserModel> userCollection() {
-    final data = ref.read(Dependency.firebaseStoreProvider).collection("users").withConverter<UserModel>(
-          fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
-          toFirestore: (user, _) => user.toJson(),
-        );
+  // CollectionReference<UserModel> userCollection() {
+  //   final data = ref.read(Dependency.firebaseStoreProvider).collection("users").withConverter<UserModel>(
+  //         fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
+  //         toFirestore: (user, _) => user.toJson(),
+  //       );
 
-    return data;
-  }
+  //   return data;
+  // }
 
+  HttpTemplate httpTemplate = HttpTemplate();
   Future<void> createUserDoc(UserModel userModel) async {
-    final usercollection = userCollection();
-    await usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).set(userModel);
+    logger.i("createUserDoc userModel${userModel.toJson()}");
+    final createUser = await httpTemplate.post("/users", body: userModel.toJson());
   }
 
   // Future<void> updateUserDoc(UserModel userModel) async {
@@ -50,350 +54,242 @@ class ProfileRepo with RepositoryExceptionMixin {
   // }
 
   Future<UserModel> getCurrentUser() async {
-    final usercollection = userCollection();
+    final currentUserId = ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
 
-    var userModels = SharedPrefs.instance.getUsers();
-    if (userModels != null) {
-      return userModels;
+    try {
+      final Map<String, dynamic> response = await httpTemplate.get("/users/$currentUserId");
+      print("getCurrentUser response: $response");
+
+      // Check if response contains 'data' key and it's a Map
+      if (response.containsKey('data') && response['data'] is Map<String, dynamic>) {
+        final Map<String, dynamic> userMap = response['data'];
+
+        print("getCurrentUser userMap: $userMap");
+        print("userMap runtimeType: ${userMap.runtimeType}");
+
+        return UserModel.fromJson(userMap);
+      } else {
+        throw Exception('Failed to fetch user: ${response['message'] ?? response}');
+      }
+    } catch (e) {
+      print("Error in getCurrentUser: $e");
+      rethrow;
     }
-    return await exceptionHandler<UserModel>(
-      usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).get().then((value) {
-        SharedPrefs.instance.updateUser(value.data()!);
-        return value.data()!;
-      }),
-    );
   }
 
   Future<bool> checkUserDocExist() async {
-    final data = await userCollection().doc(FirebaseAuth.instance.currentUser!.uid).get();
-    print("data${data.id}");
-    if (data.exists) {
-      logger.i('User doc exist');
+    try {
+      await getCurrentUser();
       return true;
-    } else {
-      logger.i('User doc does not exist');
+    } catch (e) {
       return false;
     }
   }
 
   Future<void> updateUserDoc(UserModel userModel) async {
-    final usercollection = userCollection();
-    await exceptionHandler<void>(
-        usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).update(userModel.toJson()));
-
-    await SharedPrefs.instance.updateUser(userModel);
+    logger.i("updateUserDoc userModel");
+    await httpTemplate.put("/users/${userModel.id}", body: userModel.toJson());
+    // await SharedPrefs.instance.updateUser(userModel);
   }
 
-  Future<void> updateLocation(dynamic pointData) async {
-    logger.e(pointData);
-    final usercollection = userCollection();
+  // Future<void> updateLocation(dynamic pointData) async {
+  //   logger.e(pointData);
+  //   final usercollection = userCollection();
 
-    await exceptionHandler<void>(
-      usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).update(
-        {
-          "position": pointData,
-        },
-      ),
-    );
-  }
+  //   await exceptionHandler<void>(
+  //     usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).update(
+  //       {
+  //         "position": pointData,
+  //       },
+  //     ),
+  //   );
+  // }
 
   Future<List<UserModel?>?> getUserListBySearch({int limit = 10, required GeoPoint geoPoint}) async {
-    final usercollection = userCollection();
+    try {
+      final userModel = ref.read(ProfileController.userControllerProvider).userModel!;
 
-    final userModel = ref.read(ProfileController.userControllerProvider).userModel!;
+      String query =
+          "lng=${userModel.position!.geopoint[0]}&lat=${userModel.position!.geopoint[1]}&distance=5000000&userId=${userModel.id}";
+      final response = await httpTemplate.get(
+        "users/near/?$query",
+      );
 
-    final Future<List<DocumentSnapshot<UserModel?>>> stream =
-        GeoCollectionReference<UserModel?>(usercollection).fetchWithin(
-            center: GeoFirePoint(geoPoint),
-            radiusInKm: 1000,
-            field: "position",
-            // isCacheFirst: true,
-            queryBuilder: (query) => query.limit(limit),
-            geopointFrom: geopointFrom);
+      // Check if response contains 'data' key and it's a Map
+      print("users runtimeType: ${response["data"].runtimeType}");
 
-    final userDoc = await stream;
+      if (response.containsKey('data') && response['data'] is List<dynamic>) {
+        final List<dynamic> users = response['data'];
+        // final Map<String, dynamic> userMap = response['data'];
 
-    final userListRaw = userDoc.map((event) {
-      return event.data();
-    }).toList()
-      ..removeWhere((element) => userModel.blockList.contains(element!.id));
+        print("users userMap: $users");
+        print("users runtimeType: ${users.runtimeType}");
 
-    return userListRaw;
+        return (users).map((e) => UserModel.fromJson(e)).toList();
+      } else {
+        throw Exception('Failed to fetch user: ${response['message'] ?? response}');
+      }
+    } catch (e) {
+      return [];
+    }
   }
 
   Future<List<UserModel?>?> getUserList({int limit = 10}) async {
-    final usercollection = userCollection();
+    try {
+      final userModel = await getCurrentUser();
+      // Defensive null check for position and geopoint list
+      final geopoint = userModel.position?.geopoint;
+      if (geopoint == null || geopoint.length < 2) {
+        logger.e("User position or geopoint is null or incomplete");
+        return [];
+      }
+      String query = "lng=${geopoint[0]}&lat=${geopoint[1]}&distance=50000000&userId=${userModel.id}";
+      final response = await httpTemplate.get("/users/near/?$query");
+      print("users runtimeType: ${response["data"].runtimeType}");
+      print("users runtimeType: ${response["data"]}");
 
-    final userModel = ref.read(ProfileController.userControllerProvider).userModel!;
-
-    GeoPoint center = GeoPoint(
-      userModel.position!.geopoint.latitude,
-      userModel.position!.geopoint.longitude,
-    );
-
-    final Future<List<DocumentSnapshot<UserModel?>>> stream =
-        GeoCollectionReference<UserModel?>(usercollection).fetchWithin(
-            center: GeoFirePoint(center),
-            radiusInKm: 1000000,
-            field: "position",
-            // asBroadcastStream: true,
-            // strictMode: true,
-            queryBuilder: (query) => query.limit(20),
-            geopointFrom: geopointFrom);
-
-    final userDoc = await stream;
-
-    final userListRaw = userDoc.map((event) {
-      return event.data();
-    }).toList()
-      ..removeWhere((element) => userModel.blockList.contains(element!.id));
-
-    return userListRaw;
+      if (response.containsKey('data') && response['data'] is List<dynamic>) {
+        final List<dynamic> users = response['data'];
+        print("users userMap: $users");
+        print("users runtimeType: ${users.runtimeType}");
+        return users.map((e) => UserModel.fromJson(e)).toList();
+      } else {
+        throw Exception('Failed to fetch user: ${response['message'] ?? response}');
+      }
+    } catch (e) {
+      logger.e("Error fetching user list: $e");
+      return [];
+    }
   }
 
   Future<List<UserModel?>?> getFilterList({
     required Map<String, dynamic> filters,
     int limit = 20,
   }) async {
-    final userCollectionRef = userCollection();
-    final currentUser = ref.read(ProfileController.userControllerProvider).userModel!;
+    print("getFilterList filters: $filters");
+    // final userCollectionRef = userCollection();
+    // final currentUser = ref.read(ProfileController.userControllerProvider).userModel!;
 
-    final center = GeoPoint(
-      currentUser.position!.geopoint.latitude,
-      currentUser.position!.geopoint.longitude,
-    );
+    // final center = GeoPoint(
+    //   currentUser.position!.geopoint.latitude,
+    //   currentUser.position!.geopoint.longitude,
+    // );
 
-    final geoCollection = GeoCollectionReference<UserModel?>(userCollectionRef);
+    // final geoCollection = GeoCollectionReference<UserModel?>(userCollectionRef);
 
-    final double radius =
-        filters['distance'] != null && filters['distance'] > 0 ? filters['distance'].toDouble() : 100000.0;
+    // final double radius =
+    //     filters['distance'] != null && filters['distance'] > 0 ? filters['distance'].toDouble() : 100000.0;
 
-    Query<UserModel?> queryBuilder(Query<UserModel?> query) {
-      if (filters['hasPhotos'] == true) {
-        query = query.where('profileUrl', isNotEqualTo: null);
-      }
+    // Query<UserModel?> queryBuilder(Query<UserModel?> query) {
+    //   if (filters['hasPhotos'] == true) {
+    //     query = query.where('profileUrl', isNotEqualTo: null);
+    //   }
 
-      if (filters['hasAlbums'] == true) {
-        query = query.where('albumUrl', isGreaterThan: []); // non-empty list
-      }
+    //   if (filters['hasAlbums'] == true) {
+    //     query = query.where('albumUrl', isGreaterThan: []); // non-empty list
+    //   }
 
-      // Age range (client-verified after fetch)
-      if (filters['ageRange'] != null) {
-        final parts = filters['ageRange'].toString().split('-');
-        final minAge = int.tryParse(parts[0].trim()) ?? 18;
-        final maxAge = int.tryParse(parts[1].replaceAll(RegExp(r'[^\d]'), '').trim()) ?? 99;
+    //   // Age range (client-verified after fetch)
+    //   if (filters['ageRange'] != null) {
+    //     final parts = filters['ageRange'].toString().split('-');
+    //     final minAge = int.tryParse(parts[0].trim()) ?? 18;
+    //     final maxAge = int.tryParse(parts[1].replaceAll(RegExp(r'[^\d]'), '').trim()) ?? 99;
 
-        query = query.where('age', isGreaterThanOrEqualTo: minAge).where('age', isLessThanOrEqualTo: maxAge);
-      }
+    //     query = query.where('age', isGreaterThanOrEqualTo: minAge).where('age', isLessThanOrEqualTo: maxAge);
+    //   }
 
-      if (filters['position'] != null && filters['position'].toString().isNotEmpty) {
-        query = query.where('role', isEqualTo: _mapPositionToRole(filters['position']));
-      }
+    //   if (filters['position'] != null && filters['position'].toString().isNotEmpty) {
+    //     query = query.where('role', isEqualTo: _mapPositionToRole(filters['position']));
+    //   }
 
-      if (filters['language'] != null && filters['language'].toString().isNotEmpty) {
-        query = query.where('lived', isEqualTo: filters['language']);
-      }
+    //   if (filters['language'] != null && filters['language'].toString().isNotEmpty) {
+    //     query = query.where('lived', isEqualTo: filters['language']);
+    //   }
 
-      if (filters['lastSeen'] == 'Online now') {
-        query = query.where('isOnline', isEqualTo: true);
-      }
+    //   if (filters['lastSeen'] == 'Online now') {
+    //     query = query.where('isOnline', isEqualTo: true);
+    //   }
 
-      return query.limit(limit);
-    }
+    //   return query.limit(limit);
+    // }
 
-    final snapshots = await geoCollection.fetchWithin(
-      center: GeoFirePoint(center),
-      radiusInKm: radius,
-      field: "position",
-      queryBuilder: queryBuilder,
-      geopointFrom: geopointFrom,
-    );
+    // final snapshots = await geoCollection.fetchWithin(
+    //   center: GeoFirePoint(center),
+    //   radiusInKm: radius,
+    //   field: "position",
+    //   queryBuilder: queryBuilder,
+    //   geopointFrom: geopointFrom,
+    // );
 
-    final rawUserList = snapshots.map((doc) => doc.data()).whereType<UserModel?>().toList();
+    // final rawUserList = snapshots.map((doc) => doc.data()).whereType<UserModel?>().toList();
 
-    final filteredList = rawUserList.where((user) {
-      if (user == null) return false;
-      if (currentUser.blockList.contains(user.id)) return false;
+    // final filteredList = rawUserList.where((user) {
+    //   if (user == null) return false;
+    //   if (currentUser.blockList.contains(user.id)) return false;
 
-      // Height range
-      if (filters['heightRange'] != null && filters['heightRange'].toString().isNotEmpty) {
-        if (!matchesHeightRange(user.height, filters['heightRange'])) return false;
-      }
+    //   // Height range
+    //   if (filters['heightRange'] != null && filters['heightRange'].toString().isNotEmpty) {
+    //     if (!matchesHeightRange(user.height, filters['heightRange'])) return false;
+    //   }
 
-      // Weight range
-      if (filters['weightRange'] != null && filters['weightRange'].toString().isNotEmpty) {
-        if (!matchesWeightRange(user.weight, filters['weightRange'])) return false;
-      }
+    //   // Weight range
+    //   if (filters['weightRange'] != null && filters['weightRange'].toString().isNotEmpty) {
+    //     if (!matchesWeightRange(user.weight, filters['weightRange'])) return false;
+    //   }
 
-      // Simulated face photo check (can be replaced with a real field if added)
-      if (filters['hasFacePics'] == true && user.profileUrl == null) return false;
+    //   // Simulated face photo check (can be replaced with a real field if added)
+    //   if (filters['hasFacePics'] == true && user.profileUrl == null) return false;
 
-      // Interests (not in model currently — will skip unless added)
-      if (filters['interests'] != null && filters['interests'].isNotEmpty) {
-        // Assuming you store interests in a list field like `interests`
-        final userInterests = <String>[]; // Replace with real user field if added
-        final List<String> selectedInterests = List<String>.from(filters['interests']);
-        if (!selectedInterests.any((tag) => userInterests.contains(tag))) return false;
-      }
+    //   // Interests (not in model currently — will skip unless added)
+    //   if (filters['interests'] != null && filters['interests'].isNotEmpty) {
+    //     // Assuming you store interests in a list field like `interests`
+    //     final userInterests = <String>[]; // Replace with real user field if added
+    //     final List<String> selectedInterests = List<String>.from(filters['interests']);
+    //     if (!selectedInterests.any((tag) => userInterests.contains(tag))) return false;
+    //   }
 
-      return true;
-    }).toList();
+    //   return true;
+    // }).toList();
 
-    return filteredList;
-  }
-
-  Future<void> saveUserLocationData(String UserId, String Username, String imgae) async {}
-
-  Future makeOnline(String userId, bool isOnline) async {
-    final usercollection = userCollection();
-
-    usercollection.doc(userId).update({
-      "isOnline": isOnline,
-    });
+    // return filteredList;
+    return [];
   }
 
   Future<UserModel?> getUserById(String id) async {
-    final usercollection = userCollection();
-
-    logger.w(id);
-
-    final data = await usercollection
-        .where(
-          "id",
-          isEqualTo: id,
-        )
-        .limit(1)
-        .get();
-
-    final users = data.docs.first.data();
-
-    return users;
+    final user = await httpTemplate.get("/users/$id");
+    return UserModel.fromJson(user['data']);
+    // return users;
   }
 
-  Future<UserModel?> getUserByCubeId(int id) async {
-    final usercollection = userCollection();
+  Future<void> addToBlockList({required String id, required int cubeId}) async {}
 
-    logger.w(id);
-
-    final data = await usercollection
-        .where(
-          "cubeUser.id",
-          isEqualTo: id,
-        )
-        .limit(1)
-        .get();
-
-    final users = data.docs.first.data();
-
-    return users;
-  }
-
-  Future<void> addToBlockList({required String id, required int cubeId}) async {
-    // final usercollection = userCollection();
-
-    // var listName = 'blockList';
-
-    // var items = [
-    //   CubePrivacyListItem(cubeId, CubePrivacyAction.deny, isMutual: true),
-    // ];
-
-    // CubeChatConnection.instance.privacyListsManager?.createList(listName, items).then((users) {
-    //   // privacy list created
-    // }).catchError((exception) {
-    //   // error occurred during creation privacy list
-    // });
-
-    // await usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).update({
-    //   "blockList": FieldValue.arrayUnion([id])
-    // });
-    // ref.read(ProfileController.userControllerProvider.notifier).userModel!.blockList.add(id);
-  }
-
-  Future removeToBlockList({required String id, required int cubeId}) async {
-    // try {
-    //   final usercollection = userCollection();
-
-    //   var listName = 'blockList';
-
-    //   var items = [
-    //     CubePrivacyListItem(cubeId, CubePrivacyAction.deny, isMutual: true),
-    //   ];
-
-    //   CubeChatConnection.instance.privacyListsManager
-    //       ?.declineDefaultList()
-    //       .then((voidResult) => CubeChatConnection.instance.privacyListsManager?.createList(listName, items))
-    //       .then((list) => CubeChatConnection.instance.privacyListsManager?.setDefaultList(listName))
-    //       .then((updatedList) {});
-
-    //   await usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).update({
-    //     "blockList": FieldValue.arrayRemove(
-    //       [id],
-    //     ),
-    //   });
-    // } catch (e) {
-    //   throw e;
-    // }
-  }
+  Future removeToBlockList({required String id, required int cubeId}) async {}
 
   Future<List<UserModel?>> getBlockList() async {
-    final usercollection = userCollection();
-
-    final data = await usercollection.doc(ref.read(Dependency.firebaseAuthProvider).currentUser!.uid).get();
-
-    final userList = await data.get("blockList");
-
-    logger.w(userList);
-
-    if (userList.isEmpty) {
-      return [];
-    } else {
-      final id = await usercollection.where("id", whereIn: userList).get();
-
-      logger.w(id.docs.length);
-      final users = id.docs.map((e) => e.data()).toList();
-      logger.w(users);
-
-      if (users.isEmpty) {
-        return [];
-      }
-      return users;
-    }
+    return [];
   }
 
-  Future<bool> isUserOnline(bool isOnline) async {
-    final usercollection = userCollection();
-
-    await usercollection.doc(FirebaseAuth.instance.currentUser?.uid).update({
-      "isOnline": isOnline,
-    });
-
-    return isOnline;
-  }
-
-  Future updateImage(String path) async {
-    final usercollection = userCollection();
-
-    await ref
+  Future<String> updateImage(String path) async {
+    final value = await ref
         .read(Dependency.firebaseStorageProvider)
         .ref("image")
         .child(DateTime.now().microsecondsSinceEpoch.toString())
-        .putFile(File(path))
-        .then((value) async {
-      usercollection
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .update({"profileUrl": await value.ref.getDownloadURL()});
-    });
+        .putFile(File(path));
+
+    final image = await value.ref.getDownloadURL();
+    return image;
   }
 
   Future<List<UserModel?>?> searchUser(String query) async {
-    final usercollection = userCollection();
+    // final usercollection = userCollection();
 
-    final docs = usercollection.where("username", isGreaterThanOrEqualTo: query).get();
+    // final docs = usercollection.where("username", isGreaterThanOrEqualTo: query).get();
 
-    final data = await docs.then((value) => value.docs.map((e) => e.data()).toList());
+    // final data = await docs.then((value) => value.docs.map((e) => e.data()).toList());
 
-    logger.i(data.length);
-    return data;
+    // logger.i(data.length);
+    // return data;
+    return [];
   }
 
   Future<void> addUserToFavorite(String id) async {
@@ -433,7 +329,7 @@ String _mapPositionToRole(String position) {
       return Role.bottom.value;
 
     default:
-      return Role.doNotShow.value;
+      return Role.doNotShow.name;
   }
 }
 
@@ -473,4 +369,24 @@ bool matchesWeightRange(String? weightStr, String range) {
   }
 }
 
-GeoPoint geopointFrom(UserModel? data) => data!.position!.geopoint;
+// GeoPoint geopointFrom(UserModel? data) => data!.position!.geopoint;
+
+Map<String, dynamic> _normalizeUserMap(Map<String, dynamic> userMap) {
+  // Map backend camelCase values to display values expected by the enums
+  const mapping = {
+    "doNotShow": "Do not show",
+    "top": "Top",
+    "versTop": "Vers Top",
+    "versatile": "Versatile",
+    "versBottom": "Vers Bottom",
+    "bottom": "Bottom",
+    // Add more mappings for other enums if needed
+  };
+
+  for (final key in ['role', 'bodyType', 'relationshipStatus', 'ethnicity', 'lookingFor', 'whereToMeet']) {
+    if (userMap[key] != null && mapping.containsKey(userMap[key])) {
+      userMap[key] = mapping[userMap[key]];
+    }
+  }
+  return userMap;
+}

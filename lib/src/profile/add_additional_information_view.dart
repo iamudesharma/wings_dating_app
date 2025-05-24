@@ -1,19 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/send_notification.dart';
-import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/model/geo_point_data.dart';
 
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/edit_profile_view.dart';
-import 'package:wings_dating_app/src/users/users_view.dart';
 
 import '../../dependency/dependencies.dart';
 import '../../helpers/extra_data.dart';
@@ -298,8 +294,8 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                       final data = profiledata?.copyWith(
                         bodyType: bodyType,
                         position: GeoPointData(
-                          geohash: profiledata.position?.geohash ?? "",
-                          geopoint: profiledata.position?.geopoint ?? GeoPoint(0, 0),
+                          type: "Point",
+                          geopoint: profiledata.position?.geopoint ?? [0, 0],
                         ),
                       );
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);

@@ -20,11 +20,9 @@ mixin _$GeoPointData {
       createFieldMap: true,
       createPerFieldToJson: true,
       explicitToJson: true)
-  @GeoPointConverter()
-  @JsonKey(name: "geopoint")
-  GeoPoint get geopoint; // ignore: invalid_annotation_target
-  @JsonKey(name: "geohash")
-  String get geohash;
+  @JsonKey(name: "coordinates")
+  List<double> get geopoint;
+  String get type;
 
   /// Create a copy of GeoPointData
   /// with the given fields replaced by the non-null parameter values.
@@ -42,18 +40,18 @@ mixin _$GeoPointData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is GeoPointData &&
-            (identical(other.geopoint, geopoint) ||
-                other.geopoint == geopoint) &&
-            (identical(other.geohash, geohash) || other.geohash == geohash));
+            const DeepCollectionEquality().equals(other.geopoint, geopoint) &&
+            (identical(other.type, type) || other.type == type));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, geopoint, geohash);
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(geopoint), type);
 
   @override
   String toString() {
-    return 'GeoPointData(geopoint: $geopoint, geohash: $geohash)';
+    return 'GeoPointData(geopoint: $geopoint, type: $type)';
   }
 }
 
@@ -69,10 +67,9 @@ abstract mixin class $GeoPointDataCopyWith<$Res> {
           createFieldMap: true,
           createPerFieldToJson: true,
           explicitToJson: true)
-      @GeoPointConverter()
-      @JsonKey(name: "geopoint")
-      GeoPoint geopoint,
-      @JsonKey(name: "geohash") String geohash});
+      @JsonKey(name: "coordinates")
+      List<double> geopoint,
+      String type});
 }
 
 /// @nodoc
@@ -88,16 +85,16 @@ class _$GeoPointDataCopyWithImpl<$Res> implements $GeoPointDataCopyWith<$Res> {
   @override
   $Res call({
     Object? geopoint = null,
-    Object? geohash = null,
+    Object? type = null,
   }) {
     return _then(_self.copyWith(
       geopoint: null == geopoint
           ? _self.geopoint
           : geopoint // ignore: cast_nullable_to_non_nullable
-              as GeoPoint,
-      geohash: null == geohash
-          ? _self.geohash
-          : geohash // ignore: cast_nullable_to_non_nullable
+              as List<double>,
+      type: null == type
+          ? _self.type
+          : type // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -112,26 +109,30 @@ class _GeoPointData implements GeoPointData {
           createFieldMap: true,
           createPerFieldToJson: true,
           explicitToJson: true)
-      @GeoPointConverter()
-      @JsonKey(name: "geopoint")
-      required this.geopoint,
-      @JsonKey(name: "geohash") required this.geohash});
+      @JsonKey(name: "coordinates")
+      required final List<double> geopoint,
+      this.type = "Point"})
+      : _geopoint = geopoint;
   factory _GeoPointData.fromJson(Map<String, dynamic> json) =>
       _$GeoPointDataFromJson(json);
 
+  final List<double> _geopoint;
   @override
   @JsonSerializable(
       createToJson: true,
       createFieldMap: true,
       createPerFieldToJson: true,
       explicitToJson: true)
-  @GeoPointConverter()
-  @JsonKey(name: "geopoint")
-  final GeoPoint geopoint;
-// ignore: invalid_annotation_target
+  @JsonKey(name: "coordinates")
+  List<double> get geopoint {
+    if (_geopoint is EqualUnmodifiableListView) return _geopoint;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_geopoint);
+  }
+
   @override
-  @JsonKey(name: "geohash")
-  final String geohash;
+  @JsonKey()
+  final String type;
 
   /// Create a copy of GeoPointData
   /// with the given fields replaced by the non-null parameter values.
@@ -153,18 +154,18 @@ class _GeoPointData implements GeoPointData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _GeoPointData &&
-            (identical(other.geopoint, geopoint) ||
-                other.geopoint == geopoint) &&
-            (identical(other.geohash, geohash) || other.geohash == geohash));
+            const DeepCollectionEquality().equals(other._geopoint, _geopoint) &&
+            (identical(other.type, type) || other.type == type));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, geopoint, geohash);
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_geopoint), type);
 
   @override
   String toString() {
-    return 'GeoPointData(geopoint: $geopoint, geohash: $geohash)';
+    return 'GeoPointData(geopoint: $geopoint, type: $type)';
   }
 }
 
@@ -182,10 +183,9 @@ abstract mixin class _$GeoPointDataCopyWith<$Res>
           createFieldMap: true,
           createPerFieldToJson: true,
           explicitToJson: true)
-      @GeoPointConverter()
-      @JsonKey(name: "geopoint")
-      GeoPoint geopoint,
-      @JsonKey(name: "geohash") String geohash});
+      @JsonKey(name: "coordinates")
+      List<double> geopoint,
+      String type});
 }
 
 /// @nodoc
@@ -202,16 +202,16 @@ class __$GeoPointDataCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   $Res call({
     Object? geopoint = null,
-    Object? geohash = null,
+    Object? type = null,
   }) {
     return _then(_GeoPointData(
       geopoint: null == geopoint
-          ? _self.geopoint
+          ? _self._geopoint
           : geopoint // ignore: cast_nullable_to_non_nullable
-              as GeoPoint,
-      geohash: null == geohash
-          ? _self.geohash
-          : geohash // ignore: cast_nullable_to_non_nullable
+              as List<double>,
+      type: null == type
+          ? _self.type
+          : type // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

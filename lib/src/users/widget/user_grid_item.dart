@@ -66,8 +66,8 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                 Text(
                   ref.read(ProfileController.userControllerProvider).getDistance(
                         GeoPoint(
-                          widget.users.position!.geopoint.latitude,
-                          widget.users.position!.geopoint.longitude,
+                          widget.users.position!.geopoint[1],
+                          widget.users.position!.geopoint[0],
                         ),
                         userCoordinates: widget.userCoordinates,
                       ),

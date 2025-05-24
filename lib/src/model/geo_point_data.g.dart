@@ -8,13 +8,14 @@ part of 'geo_point_data.dart';
 
 _GeoPointData _$GeoPointDataFromJson(Map<String, dynamic> json) =>
     _GeoPointData(
-      geopoint: const GeoPointConverter()
-          .fromJson(json['geopoint'] as Map<String, dynamic>),
-      geohash: json['geohash'] as String,
+      geopoint: (json['coordinates'] as List<dynamic>)
+          .map((e) => (e as num).toDouble())
+          .toList(),
+      type: json['type'] as String? ?? "Point",
     );
 
 Map<String, dynamic> _$GeoPointDataToJson(_GeoPointData instance) =>
     <String, dynamic>{
-      'geopoint': const GeoPointConverter().toJson(instance.geopoint),
-      'geohash': instance.geohash,
+      'coordinates': instance.geopoint,
+      'type': instance.type,
     };

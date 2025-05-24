@@ -17,19 +17,17 @@ import 'package:flutter/material.dart';
 
 // import 'package:connectycube_sdk/connectycube_sdk.dart';
 // import 'package:velocity_x/velocity_x.dart';
-import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/album/album_view.dart';
-import 'package:wings_dating_app/src/model/user_models.dart';
 
 int? time;
 const int messagesPerPage = 50;
 int lastPartSize = 0;
-final _chatUserData =
-    FutureProvider.autoDispose.family<UserModel?, int>((ref, id) {
-  ref.keepAlive();
-  return ref.read(profileRepoProvider).getUserByCubeId(id);
-});
+// final _chatUserData =
+//     FutureProvider.autoDispose.family<UserModel?, int>((ref, id) {
+//   ref.keepAlive();
+//   return ref.read(profileRepoProvider).getUserByCubeId(id);
+// });
 
 // final getMessageListProvider =
 //     StreamProvider<PagedResult<CubeMessage?>?>((ref) {
@@ -119,25 +117,26 @@ class PickUpAlbum extends ConsumerWidget {
                 onTap: () {
                   final channel = StreamChannel.of(context).channel;
 
-                  channel.sendMessage(
-                    Message(
-                      text: 'My Album',
-                      attachments: [
-                        Attachment(
-                          uploadState: const UploadState.success(),
-                          type: 'album',
-                          extraData: {
-                            'image_id': data[index].id,
-                            'name': data[index].name,
-                            'imageUrls': data[index].imageUrls
-                          },
-                        ),
-                      ],
-                    ),
-                  );
+                  // channel.sendMessage(
+                  //   Message(
+                  //     text: 'My Album',
+                  //     attachments: [
+                  //       Attachment(
+                  //         uploadState: const UploadState.success(),
+                  //         type: 'album',
+                  //         extraData: {
+                  //           'image_id': data[index].id,
+                  //           'name': data[index].name,
+                  //           'imageUrls': data[index].imageUrls
+                  //         },
+                  //       ),
+                  //     ],
+                  //   ),
+                  // );
+               
                 },
                 child: Image.network(
-                  data[index].imageUrls[0],
+                  data[index].photos[0],
                 ),
               ),
             ),
