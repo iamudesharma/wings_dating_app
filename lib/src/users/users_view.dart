@@ -51,12 +51,12 @@ void setPresence() {
   });
 }
 
-final isUserOnlineProvider = FutureProvider.family<bool, bool>(
-  (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
-);
+// final isUserOnlineProvider = FutureProvider.family<bool, bool>(
+//   (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
+// );
 
 final userListProvider = FutureProvider.family<List<UserModel?>?, Map<String, dynamic>?>((ref, filters) {
-  return ref.read(profileRepoProvider).getFilterList(filters: filters ?? {});
+  return ref.read(profileRepoProvider).getUserList(limit: 10);
 });
 
 @RoutePage()
@@ -240,23 +240,23 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                               );
 
                               logger.d("currentLocation ${currentLocation.toJson()}");
-                              final currentUser = userData.position?.geopoint;
+                              // final currentUser = userData.position?.geopoint;
 
-                              if (currentLocation.latitude != currentUser?.latitude &&
-                                  currentLocation.longitude != currentUser?.longitude) {
-                                GeoFirePoint geoFirePoint =
-                                    GeoFirePoint(GeoPoint(currentLocation.latitude, currentLocation.longitude));
+                              // if (currentLocation.latitude != currentUser?.latitude &&
+                              //     currentLocation.longitude != currentUser?.longitude) {
+                              //   GeoFirePoint geoFirePoint =
+                              //       GeoFirePoint(GeoPoint(currentLocation.latitude, currentLocation.longitude));
 
-                                await ref.read(profileRepoProvider).updateUserDoc(userData.copyWith(
-                                        position: GeoPointData(
-                                      geohash: geoFirePoint.geohash,
-                                      geopoint: geoFirePoint.geopoint,
-                                    )));
+                              //   await ref.read(profileRepoProvider).updateUserDoc(userData.copyWith(
+                              //           position: GeoPointData(
+                              //         geohash: geoFirePoint.geohash,
+                              //         geopoint: geoFirePoint.geopoint,
+                              //       )));
 
-                                return ref.refresh(userListProvider(filters));
-                              } else {
-                                return ref.refresh(userListProvider(filters));
-                              }
+                              //   return ref.refresh(userListProvider(filters));
+                              // } else {
+                              return ref.refresh(userListProvider(filters));
+                              // }
                             },
                             child: SizedBox(
                               height: sizingInformation.screenSize.height,

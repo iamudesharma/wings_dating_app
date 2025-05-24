@@ -21,8 +21,8 @@ mixin _$UserModel {
   String? get profileUrl;
   String? get birthday;
   int? get age;
-  @JsonKey(name: "position")
-  GeoPointData? get position;
+  GeoPointData?
+      get position; // Custom model matching { type: "Point", coordinates: [lon, lat] }
   String? get dob;
   String? get height;
   String? get weight;
@@ -34,10 +34,13 @@ mixin _$UserModel {
   LookingFor get lookingFor;
   WhereToMeet get whereToMeet;
   bool get isOnline;
+  DateTime? get lastSeen; // Added
+  double? get distance; // Added
   bool get isVerified;
   bool get isBlocked;
   List<String> get blockList;
   List<String> get favoriteList;
+  List<String> get interests; // Added
   String get id;
   String get fcmToken;
 
@@ -84,6 +87,10 @@ mixin _$UserModel {
                 other.whereToMeet == whereToMeet) &&
             (identical(other.isOnline, isOnline) ||
                 other.isOnline == isOnline) &&
+            (identical(other.lastSeen, lastSeen) ||
+                other.lastSeen == lastSeen) &&
+            (identical(other.distance, distance) ||
+                other.distance == distance) &&
             (identical(other.isVerified, isVerified) ||
                 other.isVerified == isVerified) &&
             (identical(other.isBlocked, isBlocked) ||
@@ -91,6 +98,7 @@ mixin _$UserModel {
             const DeepCollectionEquality().equals(other.blockList, blockList) &&
             const DeepCollectionEquality()
                 .equals(other.favoriteList, favoriteList) &&
+            const DeepCollectionEquality().equals(other.interests, interests) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.fcmToken, fcmToken) ||
                 other.fcmToken == fcmToken));
@@ -118,17 +126,20 @@ mixin _$UserModel {
         lookingFor,
         whereToMeet,
         isOnline,
+        lastSeen,
+        distance,
         isVerified,
         isBlocked,
         const DeepCollectionEquality().hash(blockList),
         const DeepCollectionEquality().hash(favoriteList),
+        const DeepCollectionEquality().hash(interests),
         id,
         fcmToken
       ]);
 
   @override
   String toString() {
-    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, favoriteList: $favoriteList, id: $id, fcmToken: $fcmToken)';
+    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, lastSeen: $lastSeen, distance: $distance, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, favoriteList: $favoriteList, interests: $interests, id: $id, fcmToken: $fcmToken)';
   }
 }
 
@@ -144,7 +155,7 @@ abstract mixin class $UserModelCopyWith<$Res> {
       String? profileUrl,
       String? birthday,
       int? age,
-      @JsonKey(name: "position") GeoPointData? position,
+      GeoPointData? position,
       String? dob,
       String? height,
       String? weight,
@@ -156,10 +167,13 @@ abstract mixin class $UserModelCopyWith<$Res> {
       LookingFor lookingFor,
       WhereToMeet whereToMeet,
       bool isOnline,
+      DateTime? lastSeen,
+      double? distance,
       bool isVerified,
       bool isBlocked,
       List<String> blockList,
       List<String> favoriteList,
+      List<String> interests,
       String id,
       String fcmToken});
 
@@ -196,10 +210,13 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
     Object? lookingFor = null,
     Object? whereToMeet = null,
     Object? isOnline = null,
+    Object? lastSeen = freezed,
+    Object? distance = freezed,
     Object? isVerified = null,
     Object? isBlocked = null,
     Object? blockList = null,
     Object? favoriteList = null,
+    Object? interests = null,
     Object? id = null,
     Object? fcmToken = null,
   }) {
@@ -276,6 +293,14 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
           ? _self.isOnline
           : isOnline // ignore: cast_nullable_to_non_nullable
               as bool,
+      lastSeen: freezed == lastSeen
+          ? _self.lastSeen
+          : lastSeen // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      distance: freezed == distance
+          ? _self.distance
+          : distance // ignore: cast_nullable_to_non_nullable
+              as double?,
       isVerified: null == isVerified
           ? _self.isVerified
           : isVerified // ignore: cast_nullable_to_non_nullable
@@ -291,6 +316,10 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
       favoriteList: null == favoriteList
           ? _self.favoriteList
           : favoriteList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      interests: null == interests
+          ? _self.interests
+          : interests // ignore: cast_nullable_to_non_nullable
               as List<String>,
       id: null == id
           ? _self.id
@@ -334,7 +363,7 @@ class _UserModel implements UserModel {
           "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
       this.birthday,
       this.age,
-      @JsonKey(name: "position") this.position,
+      this.position,
       this.dob,
       this.height,
       this.weight,
@@ -346,15 +375,19 @@ class _UserModel implements UserModel {
       this.lookingFor = LookingFor.doNotShow,
       this.whereToMeet = WhereToMeet.doNotShow,
       this.isOnline = false,
+      this.lastSeen,
+      this.distance,
       this.isVerified = false,
       this.isBlocked = false,
       final List<String> blockList = const [],
       final List<String> favoriteList = const [],
+      final List<String> interests = const [],
       required this.id,
       required this.fcmToken})
       : _albumUrl = albumUrl,
         _blockList = blockList,
-        _favoriteList = favoriteList;
+        _favoriteList = favoriteList,
+        _interests = interests;
   factory _UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
 
@@ -380,8 +413,8 @@ class _UserModel implements UserModel {
   @override
   final int? age;
   @override
-  @JsonKey(name: "position")
   final GeoPointData? position;
+// Custom model matching { type: "Point", coordinates: [lon, lat] }
   @override
   final String? dob;
   @override
@@ -412,6 +445,12 @@ class _UserModel implements UserModel {
   @JsonKey()
   final bool isOnline;
   @override
+  final DateTime? lastSeen;
+// Added
+  @override
+  final double? distance;
+// Added
+  @override
   @JsonKey()
   final bool isVerified;
   @override
@@ -435,6 +474,16 @@ class _UserModel implements UserModel {
     return EqualUnmodifiableListView(_favoriteList);
   }
 
+  final List<String> _interests;
+  @override
+  @JsonKey()
+  List<String> get interests {
+    if (_interests is EqualUnmodifiableListView) return _interests;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_interests);
+  }
+
+// Added
   @override
   final String id;
   @override
@@ -488,6 +537,10 @@ class _UserModel implements UserModel {
                 other.whereToMeet == whereToMeet) &&
             (identical(other.isOnline, isOnline) ||
                 other.isOnline == isOnline) &&
+            (identical(other.lastSeen, lastSeen) ||
+                other.lastSeen == lastSeen) &&
+            (identical(other.distance, distance) ||
+                other.distance == distance) &&
             (identical(other.isVerified, isVerified) ||
                 other.isVerified == isVerified) &&
             (identical(other.isBlocked, isBlocked) ||
@@ -496,6 +549,8 @@ class _UserModel implements UserModel {
                 .equals(other._blockList, _blockList) &&
             const DeepCollectionEquality()
                 .equals(other._favoriteList, _favoriteList) &&
+            const DeepCollectionEquality()
+                .equals(other._interests, _interests) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.fcmToken, fcmToken) ||
                 other.fcmToken == fcmToken));
@@ -523,17 +578,20 @@ class _UserModel implements UserModel {
         lookingFor,
         whereToMeet,
         isOnline,
+        lastSeen,
+        distance,
         isVerified,
         isBlocked,
         const DeepCollectionEquality().hash(_blockList),
         const DeepCollectionEquality().hash(_favoriteList),
+        const DeepCollectionEquality().hash(_interests),
         id,
         fcmToken
       ]);
 
   @override
   String toString() {
-    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, favoriteList: $favoriteList, id: $id, fcmToken: $fcmToken)';
+    return 'UserModel(username: $username, bio: $bio, albumUrl: $albumUrl, profileUrl: $profileUrl, birthday: $birthday, age: $age, position: $position, dob: $dob, height: $height, weight: $weight, lived: $lived, role: $role, bodyType: $bodyType, relationshipStatus: $relationshipStatus, ethnicity: $ethnicity, lookingFor: $lookingFor, whereToMeet: $whereToMeet, isOnline: $isOnline, lastSeen: $lastSeen, distance: $distance, isVerified: $isVerified, isBlocked: $isBlocked, blockList: $blockList, favoriteList: $favoriteList, interests: $interests, id: $id, fcmToken: $fcmToken)';
   }
 }
 
@@ -552,7 +610,7 @@ abstract mixin class _$UserModelCopyWith<$Res>
       String? profileUrl,
       String? birthday,
       int? age,
-      @JsonKey(name: "position") GeoPointData? position,
+      GeoPointData? position,
       String? dob,
       String? height,
       String? weight,
@@ -564,10 +622,13 @@ abstract mixin class _$UserModelCopyWith<$Res>
       LookingFor lookingFor,
       WhereToMeet whereToMeet,
       bool isOnline,
+      DateTime? lastSeen,
+      double? distance,
       bool isVerified,
       bool isBlocked,
       List<String> blockList,
       List<String> favoriteList,
+      List<String> interests,
       String id,
       String fcmToken});
 
@@ -605,10 +666,13 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
     Object? lookingFor = null,
     Object? whereToMeet = null,
     Object? isOnline = null,
+    Object? lastSeen = freezed,
+    Object? distance = freezed,
     Object? isVerified = null,
     Object? isBlocked = null,
     Object? blockList = null,
     Object? favoriteList = null,
+    Object? interests = null,
     Object? id = null,
     Object? fcmToken = null,
   }) {
@@ -685,6 +749,14 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
           ? _self.isOnline
           : isOnline // ignore: cast_nullable_to_non_nullable
               as bool,
+      lastSeen: freezed == lastSeen
+          ? _self.lastSeen
+          : lastSeen // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      distance: freezed == distance
+          ? _self.distance
+          : distance // ignore: cast_nullable_to_non_nullable
+              as double?,
       isVerified: null == isVerified
           ? _self.isVerified
           : isVerified // ignore: cast_nullable_to_non_nullable
@@ -700,6 +772,10 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
       favoriteList: null == favoriteList
           ? _self._favoriteList
           : favoriteList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      interests: null == interests
+          ? _self._interests
+          : interests // ignore: cast_nullable_to_non_nullable
               as List<String>,
       id: null == id
           ? _self.id

@@ -84,8 +84,8 @@ class ProfileController extends ChangeNotifier {
 
   String getDistance(GeoPoint coordinates, {GeoPoint? userCoordinates}) {
     final data = Geolocator.distanceBetween(
-      userCoordinates?.latitude ?? userModel!.position!.geopoint.latitude,
-      userCoordinates?.longitude ?? userModel!.position!.geopoint.longitude,
+      userCoordinates?.latitude ?? userModel!.position!.geopoint[1],
+      userCoordinates?.longitude ?? userModel!.position!.geopoint[0],
       coordinates.latitude,
       coordinates.longitude,
     );

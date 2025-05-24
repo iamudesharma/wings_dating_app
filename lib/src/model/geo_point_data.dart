@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:wings_dating_app/src/model/user_models.dart';
 
 part 'geo_point_data.freezed.dart';
 part 'geo_point_data.g.dart';
@@ -16,11 +15,12 @@ abstract class GeoPointData with _$GeoPointData {
     )
 
     // ignore: invalid_annotation_target
-    @GeoPointConverter()
-    @JsonKey(name: "geopoint")
-    required GeoPoint geopoint,
+    // @GeoPointConverter()
+    @JsonKey(name: "coordinates")
+    required List<double> geopoint,
+    @Default("Point") String type,
     // ignore: invalid_annotation_target
-    @JsonKey(name: "geohash") required String geohash,
+    // @JsonKey(name: "geohash") required String geohash,
   }) = _GeoPointData;
 
   factory GeoPointData.fromJson(Map<String, Object?> json) => _$GeoPointDataFromJson(json);

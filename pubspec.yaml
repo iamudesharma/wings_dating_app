@@ -130,6 +130,7 @@ dependencies:
   stream_chat_persistence: ^9.10.0
   firebase_database: ^11.3.5
   timeago: ^3.7.1
+  http: ^1.4.0
   # objectbox: ^4.1.0
   
   # objectbox_flutter_libs: ^4.1.0 

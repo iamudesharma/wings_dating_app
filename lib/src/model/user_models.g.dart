@@ -153,10 +153,13 @@ abstract class UserModelDocumentReference
     FieldValue lookingForFieldValue,
     FieldValue whereToMeetFieldValue,
     FieldValue isOnlineFieldValue,
+    FieldValue lastSeenFieldValue,
+    FieldValue distanceFieldValue,
     FieldValue isVerifiedFieldValue,
     FieldValue isBlockedFieldValue,
     FieldValue blockListFieldValue,
     FieldValue favoriteListFieldValue,
+    FieldValue interestsFieldValue,
     FieldValue idFieldValue,
     FieldValue fcmTokenFieldValue,
   });
@@ -190,10 +193,13 @@ abstract class UserModelDocumentReference
     FieldValue lookingForFieldValue,
     FieldValue whereToMeetFieldValue,
     FieldValue isOnlineFieldValue,
+    FieldValue lastSeenFieldValue,
+    FieldValue distanceFieldValue,
     FieldValue isVerifiedFieldValue,
     FieldValue isBlockedFieldValue,
     FieldValue blockListFieldValue,
     FieldValue favoriteListFieldValue,
+    FieldValue interestsFieldValue,
     FieldValue idFieldValue,
     FieldValue fcmTokenFieldValue,
   });
@@ -227,10 +233,13 @@ abstract class UserModelDocumentReference
     FieldValue lookingForFieldValue,
     FieldValue whereToMeetFieldValue,
     FieldValue isOnlineFieldValue,
+    FieldValue lastSeenFieldValue,
+    FieldValue distanceFieldValue,
     FieldValue isVerifiedFieldValue,
     FieldValue isBlockedFieldValue,
     FieldValue blockListFieldValue,
     FieldValue favoriteListFieldValue,
+    FieldValue interestsFieldValue,
     FieldValue idFieldValue,
     FieldValue fcmTokenFieldValue,
   });
@@ -276,6 +285,10 @@ abstract class UserModelDocumentReference
     FieldValue whereToMeetFieldValue,
     bool isOnline,
     FieldValue isOnlineFieldValue,
+    DateTime? lastSeen,
+    FieldValue lastSeenFieldValue,
+    double? distance,
+    FieldValue distanceFieldValue,
     bool isVerified,
     FieldValue isVerifiedFieldValue,
     bool isBlocked,
@@ -284,6 +297,8 @@ abstract class UserModelDocumentReference
     FieldValue blockListFieldValue,
     List<String> favoriteList,
     FieldValue favoriteListFieldValue,
+    List<String> interests,
+    FieldValue interestsFieldValue,
     String id,
     FieldValue idFieldValue,
     String fcmToken,
@@ -331,6 +346,10 @@ abstract class UserModelDocumentReference
     FieldValue whereToMeetFieldValue,
     bool isOnline,
     FieldValue isOnlineFieldValue,
+    DateTime? lastSeen,
+    FieldValue lastSeenFieldValue,
+    double? distance,
+    FieldValue distanceFieldValue,
     bool isVerified,
     FieldValue isVerifiedFieldValue,
     bool isBlocked,
@@ -339,6 +358,8 @@ abstract class UserModelDocumentReference
     FieldValue blockListFieldValue,
     List<String> favoriteList,
     FieldValue favoriteListFieldValue,
+    List<String> interests,
+    FieldValue interestsFieldValue,
     String id,
     FieldValue idFieldValue,
     String fcmToken,
@@ -386,6 +407,10 @@ abstract class UserModelDocumentReference
     FieldValue whereToMeetFieldValue,
     bool isOnline,
     FieldValue isOnlineFieldValue,
+    DateTime? lastSeen,
+    FieldValue lastSeenFieldValue,
+    double? distance,
+    FieldValue distanceFieldValue,
     bool isVerified,
     FieldValue isVerifiedFieldValue,
     bool isBlocked,
@@ -394,6 +419,8 @@ abstract class UserModelDocumentReference
     FieldValue blockListFieldValue,
     List<String> favoriteList,
     FieldValue favoriteListFieldValue,
+    List<String> interests,
+    FieldValue interestsFieldValue,
     String id,
     FieldValue idFieldValue,
     String fcmToken,
@@ -450,10 +477,13 @@ class _$UserModelDocumentReference
     FieldValue? lookingForFieldValue,
     FieldValue? whereToMeetFieldValue,
     FieldValue? isOnlineFieldValue,
+    FieldValue? lastSeenFieldValue,
+    FieldValue? distanceFieldValue,
     FieldValue? isVerifiedFieldValue,
     FieldValue? isBlockedFieldValue,
     FieldValue? blockListFieldValue,
     FieldValue? favoriteListFieldValue,
+    FieldValue? interestsFieldValue,
     FieldValue? idFieldValue,
     FieldValue? fcmTokenFieldValue,
   }) async {
@@ -492,6 +522,10 @@ class _$UserModelDocumentReference
         _$UserModelFieldMap['whereToMeet']!: whereToMeetFieldValue,
       if (isOnlineFieldValue != null)
         _$UserModelFieldMap['isOnline']!: isOnlineFieldValue,
+      if (lastSeenFieldValue != null)
+        _$UserModelFieldMap['lastSeen']!: lastSeenFieldValue,
+      if (distanceFieldValue != null)
+        _$UserModelFieldMap['distance']!: distanceFieldValue,
       if (isVerifiedFieldValue != null)
         _$UserModelFieldMap['isVerified']!: isVerifiedFieldValue,
       if (isBlockedFieldValue != null)
@@ -500,6 +534,8 @@ class _$UserModelDocumentReference
         _$UserModelFieldMap['blockList']!: blockListFieldValue,
       if (favoriteListFieldValue != null)
         _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
+      if (interestsFieldValue != null)
+        _$UserModelFieldMap['interests']!: interestsFieldValue,
       if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
       if (fcmTokenFieldValue != null)
         _$UserModelFieldMap['fcmToken']!: fcmTokenFieldValue,
@@ -534,10 +570,13 @@ class _$UserModelDocumentReference
     FieldValue? lookingForFieldValue,
     FieldValue? whereToMeetFieldValue,
     FieldValue? isOnlineFieldValue,
+    FieldValue? lastSeenFieldValue,
+    FieldValue? distanceFieldValue,
     FieldValue? isVerifiedFieldValue,
     FieldValue? isBlockedFieldValue,
     FieldValue? blockListFieldValue,
     FieldValue? favoriteListFieldValue,
+    FieldValue? interestsFieldValue,
     FieldValue? idFieldValue,
     FieldValue? fcmTokenFieldValue,
   }) {
@@ -576,6 +615,10 @@ class _$UserModelDocumentReference
         _$UserModelFieldMap['whereToMeet']!: whereToMeetFieldValue,
       if (isOnlineFieldValue != null)
         _$UserModelFieldMap['isOnline']!: isOnlineFieldValue,
+      if (lastSeenFieldValue != null)
+        _$UserModelFieldMap['lastSeen']!: lastSeenFieldValue,
+      if (distanceFieldValue != null)
+        _$UserModelFieldMap['distance']!: distanceFieldValue,
       if (isVerifiedFieldValue != null)
         _$UserModelFieldMap['isVerified']!: isVerifiedFieldValue,
       if (isBlockedFieldValue != null)
@@ -584,6 +627,8 @@ class _$UserModelDocumentReference
         _$UserModelFieldMap['blockList']!: blockListFieldValue,
       if (favoriteListFieldValue != null)
         _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
+      if (interestsFieldValue != null)
+        _$UserModelFieldMap['interests']!: interestsFieldValue,
       if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
       if (fcmTokenFieldValue != null)
         _$UserModelFieldMap['fcmToken']!: fcmTokenFieldValue,
@@ -614,10 +659,13 @@ class _$UserModelDocumentReference
     FieldValue? lookingForFieldValue,
     FieldValue? whereToMeetFieldValue,
     FieldValue? isOnlineFieldValue,
+    FieldValue? lastSeenFieldValue,
+    FieldValue? distanceFieldValue,
     FieldValue? isVerifiedFieldValue,
     FieldValue? isBlockedFieldValue,
     FieldValue? blockListFieldValue,
     FieldValue? favoriteListFieldValue,
+    FieldValue? interestsFieldValue,
     FieldValue? idFieldValue,
     FieldValue? fcmTokenFieldValue,
   }) {
@@ -656,6 +704,10 @@ class _$UserModelDocumentReference
         _$UserModelFieldMap['whereToMeet']!: whereToMeetFieldValue,
       if (isOnlineFieldValue != null)
         _$UserModelFieldMap['isOnline']!: isOnlineFieldValue,
+      if (lastSeenFieldValue != null)
+        _$UserModelFieldMap['lastSeen']!: lastSeenFieldValue,
+      if (distanceFieldValue != null)
+        _$UserModelFieldMap['distance']!: distanceFieldValue,
       if (isVerifiedFieldValue != null)
         _$UserModelFieldMap['isVerified']!: isVerifiedFieldValue,
       if (isBlockedFieldValue != null)
@@ -664,6 +716,8 @@ class _$UserModelDocumentReference
         _$UserModelFieldMap['blockList']!: blockListFieldValue,
       if (favoriteListFieldValue != null)
         _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
+      if (interestsFieldValue != null)
+        _$UserModelFieldMap['interests']!: interestsFieldValue,
       if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
       if (fcmTokenFieldValue != null)
         _$UserModelFieldMap['fcmToken']!: fcmTokenFieldValue,
@@ -709,6 +763,10 @@ class _$UserModelDocumentReference
     FieldValue? whereToMeetFieldValue,
     Object? isOnline = _sentinel,
     FieldValue? isOnlineFieldValue,
+    Object? lastSeen = _sentinel,
+    FieldValue? lastSeenFieldValue,
+    Object? distance = _sentinel,
+    FieldValue? distanceFieldValue,
     Object? isVerified = _sentinel,
     FieldValue? isVerifiedFieldValue,
     Object? isBlocked = _sentinel,
@@ -717,6 +775,8 @@ class _$UserModelDocumentReference
     FieldValue? blockListFieldValue,
     Object? favoriteList = _sentinel,
     FieldValue? favoriteListFieldValue,
+    Object? interests = _sentinel,
+    FieldValue? interestsFieldValue,
     Object? id = _sentinel,
     FieldValue? idFieldValue,
     Object? fcmToken = _sentinel,
@@ -795,6 +855,14 @@ class _$UserModelDocumentReference
       "Cannot specify both isOnline and isOnlineFieldValue",
     );
     assert(
+      lastSeen == _sentinel || lastSeenFieldValue == null,
+      "Cannot specify both lastSeen and lastSeenFieldValue",
+    );
+    assert(
+      distance == _sentinel || distanceFieldValue == null,
+      "Cannot specify both distance and distanceFieldValue",
+    );
+    assert(
       isVerified == _sentinel || isVerifiedFieldValue == null,
       "Cannot specify both isVerified and isVerifiedFieldValue",
     );
@@ -809,6 +877,10 @@ class _$UserModelDocumentReference
     assert(
       favoriteList == _sentinel || favoriteListFieldValue == null,
       "Cannot specify both favoriteList and favoriteListFieldValue",
+    );
+    assert(
+      interests == _sentinel || interestsFieldValue == null,
+      "Cannot specify both interests and interestsFieldValue",
     );
     assert(
       id == _sentinel || idFieldValue == null,
@@ -905,6 +977,16 @@ class _$UserModelDocumentReference
             _$UserModelPerFieldToJson.isOnline(isOnline as bool),
       if (isOnlineFieldValue != null)
         _$UserModelFieldMap['isOnline']!: isOnlineFieldValue,
+      if (lastSeen != _sentinel)
+        _$UserModelFieldMap['lastSeen']!:
+            _$UserModelPerFieldToJson.lastSeen(lastSeen as DateTime?),
+      if (lastSeenFieldValue != null)
+        _$UserModelFieldMap['lastSeen']!: lastSeenFieldValue,
+      if (distance != _sentinel)
+        _$UserModelFieldMap['distance']!:
+            _$UserModelPerFieldToJson.distance(distance as double?),
+      if (distanceFieldValue != null)
+        _$UserModelFieldMap['distance']!: distanceFieldValue,
       if (isVerified != _sentinel)
         _$UserModelFieldMap['isVerified']!:
             _$UserModelPerFieldToJson.isVerified(isVerified as bool),
@@ -925,6 +1007,11 @@ class _$UserModelDocumentReference
             .favoriteList(favoriteList as List<String>),
       if (favoriteListFieldValue != null)
         _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
+      if (interests != _sentinel)
+        _$UserModelFieldMap['interests']!:
+            _$UserModelPerFieldToJson.interests(interests as List<String>),
+      if (interestsFieldValue != null)
+        _$UserModelFieldMap['interests']!: interestsFieldValue,
       if (id != _sentinel)
         _$UserModelFieldMap['id']!: _$UserModelPerFieldToJson.id(id as String),
       if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
@@ -976,6 +1063,10 @@ class _$UserModelDocumentReference
     FieldValue? whereToMeetFieldValue,
     Object? isOnline = _sentinel,
     FieldValue? isOnlineFieldValue,
+    Object? lastSeen = _sentinel,
+    FieldValue? lastSeenFieldValue,
+    Object? distance = _sentinel,
+    FieldValue? distanceFieldValue,
     Object? isVerified = _sentinel,
     FieldValue? isVerifiedFieldValue,
     Object? isBlocked = _sentinel,
@@ -984,6 +1075,8 @@ class _$UserModelDocumentReference
     FieldValue? blockListFieldValue,
     Object? favoriteList = _sentinel,
     FieldValue? favoriteListFieldValue,
+    Object? interests = _sentinel,
+    FieldValue? interestsFieldValue,
     Object? id = _sentinel,
     FieldValue? idFieldValue,
     Object? fcmToken = _sentinel,
@@ -1062,6 +1155,14 @@ class _$UserModelDocumentReference
       "Cannot specify both isOnline and isOnlineFieldValue",
     );
     assert(
+      lastSeen == _sentinel || lastSeenFieldValue == null,
+      "Cannot specify both lastSeen and lastSeenFieldValue",
+    );
+    assert(
+      distance == _sentinel || distanceFieldValue == null,
+      "Cannot specify both distance and distanceFieldValue",
+    );
+    assert(
       isVerified == _sentinel || isVerifiedFieldValue == null,
       "Cannot specify both isVerified and isVerifiedFieldValue",
     );
@@ -1076,6 +1177,10 @@ class _$UserModelDocumentReference
     assert(
       favoriteList == _sentinel || favoriteListFieldValue == null,
       "Cannot specify both favoriteList and favoriteListFieldValue",
+    );
+    assert(
+      interests == _sentinel || interestsFieldValue == null,
+      "Cannot specify both interests and interestsFieldValue",
     );
     assert(
       id == _sentinel || idFieldValue == null,
@@ -1172,6 +1277,16 @@ class _$UserModelDocumentReference
             _$UserModelPerFieldToJson.isOnline(isOnline as bool),
       if (isOnlineFieldValue != null)
         _$UserModelFieldMap['isOnline']!: isOnlineFieldValue,
+      if (lastSeen != _sentinel)
+        _$UserModelFieldMap['lastSeen']!:
+            _$UserModelPerFieldToJson.lastSeen(lastSeen as DateTime?),
+      if (lastSeenFieldValue != null)
+        _$UserModelFieldMap['lastSeen']!: lastSeenFieldValue,
+      if (distance != _sentinel)
+        _$UserModelFieldMap['distance']!:
+            _$UserModelPerFieldToJson.distance(distance as double?),
+      if (distanceFieldValue != null)
+        _$UserModelFieldMap['distance']!: distanceFieldValue,
       if (isVerified != _sentinel)
         _$UserModelFieldMap['isVerified']!:
             _$UserModelPerFieldToJson.isVerified(isVerified as bool),
@@ -1192,6 +1307,11 @@ class _$UserModelDocumentReference
             .favoriteList(favoriteList as List<String>),
       if (favoriteListFieldValue != null)
         _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
+      if (interests != _sentinel)
+        _$UserModelFieldMap['interests']!:
+            _$UserModelPerFieldToJson.interests(interests as List<String>),
+      if (interestsFieldValue != null)
+        _$UserModelFieldMap['interests']!: interestsFieldValue,
       if (id != _sentinel)
         _$UserModelFieldMap['id']!: _$UserModelPerFieldToJson.id(id as String),
       if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
@@ -1243,6 +1363,10 @@ class _$UserModelDocumentReference
     FieldValue? whereToMeetFieldValue,
     Object? isOnline = _sentinel,
     FieldValue? isOnlineFieldValue,
+    Object? lastSeen = _sentinel,
+    FieldValue? lastSeenFieldValue,
+    Object? distance = _sentinel,
+    FieldValue? distanceFieldValue,
     Object? isVerified = _sentinel,
     FieldValue? isVerifiedFieldValue,
     Object? isBlocked = _sentinel,
@@ -1251,6 +1375,8 @@ class _$UserModelDocumentReference
     FieldValue? blockListFieldValue,
     Object? favoriteList = _sentinel,
     FieldValue? favoriteListFieldValue,
+    Object? interests = _sentinel,
+    FieldValue? interestsFieldValue,
     Object? id = _sentinel,
     FieldValue? idFieldValue,
     Object? fcmToken = _sentinel,
@@ -1329,6 +1455,14 @@ class _$UserModelDocumentReference
       "Cannot specify both isOnline and isOnlineFieldValue",
     );
     assert(
+      lastSeen == _sentinel || lastSeenFieldValue == null,
+      "Cannot specify both lastSeen and lastSeenFieldValue",
+    );
+    assert(
+      distance == _sentinel || distanceFieldValue == null,
+      "Cannot specify both distance and distanceFieldValue",
+    );
+    assert(
       isVerified == _sentinel || isVerifiedFieldValue == null,
       "Cannot specify both isVerified and isVerifiedFieldValue",
     );
@@ -1343,6 +1477,10 @@ class _$UserModelDocumentReference
     assert(
       favoriteList == _sentinel || favoriteListFieldValue == null,
       "Cannot specify both favoriteList and favoriteListFieldValue",
+    );
+    assert(
+      interests == _sentinel || interestsFieldValue == null,
+      "Cannot specify both interests and interestsFieldValue",
     );
     assert(
       id == _sentinel || idFieldValue == null,
@@ -1439,6 +1577,16 @@ class _$UserModelDocumentReference
             _$UserModelPerFieldToJson.isOnline(isOnline as bool),
       if (isOnlineFieldValue != null)
         _$UserModelFieldMap['isOnline']!: isOnlineFieldValue,
+      if (lastSeen != _sentinel)
+        _$UserModelFieldMap['lastSeen']!:
+            _$UserModelPerFieldToJson.lastSeen(lastSeen as DateTime?),
+      if (lastSeenFieldValue != null)
+        _$UserModelFieldMap['lastSeen']!: lastSeenFieldValue,
+      if (distance != _sentinel)
+        _$UserModelFieldMap['distance']!:
+            _$UserModelPerFieldToJson.distance(distance as double?),
+      if (distanceFieldValue != null)
+        _$UserModelFieldMap['distance']!: distanceFieldValue,
       if (isVerified != _sentinel)
         _$UserModelFieldMap['isVerified']!:
             _$UserModelPerFieldToJson.isVerified(isVerified as bool),
@@ -1459,6 +1607,11 @@ class _$UserModelDocumentReference
             .favoriteList(favoriteList as List<String>),
       if (favoriteListFieldValue != null)
         _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
+      if (interests != _sentinel)
+        _$UserModelFieldMap['interests']!:
+            _$UserModelPerFieldToJson.interests(interests as List<String>),
+      if (interestsFieldValue != null)
+        _$UserModelFieldMap['interests']!: interestsFieldValue,
       if (id != _sentinel)
         _$UserModelFieldMap['id']!: _$UserModelPerFieldToJson.id(id as String),
       if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
@@ -1752,6 +1905,30 @@ abstract class UserModelQuery
     bool? isNull,
   });
 
+  UserModelQuery whereLastSeen({
+    DateTime? isEqualTo,
+    DateTime? isNotEqualTo,
+    DateTime? isLessThan,
+    DateTime? isLessThanOrEqualTo,
+    DateTime? isGreaterThan,
+    DateTime? isGreaterThanOrEqualTo,
+    List<DateTime?>? whereIn,
+    List<DateTime?>? whereNotIn,
+    bool? isNull,
+  });
+
+  UserModelQuery whereDistance({
+    double? isEqualTo,
+    double? isNotEqualTo,
+    double? isLessThan,
+    double? isLessThanOrEqualTo,
+    double? isGreaterThan,
+    double? isGreaterThanOrEqualTo,
+    List<double?>? whereIn,
+    List<double?>? whereNotIn,
+    bool? isNull,
+  });
+
   UserModelQuery whereIsVerified({
     bool? isEqualTo,
     bool? isNotEqualTo,
@@ -1789,6 +1966,18 @@ abstract class UserModelQuery
   });
 
   UserModelQuery whereFavoriteList({
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
+    String? arrayContains,
+    List<String>? arrayContainsAny,
+    bool? isNull,
+  });
+
+  UserModelQuery whereInterests({
     List<String>? isEqualTo,
     List<String>? isNotEqualTo,
     List<String>? isLessThan,
@@ -2085,6 +2274,30 @@ abstract class UserModelQuery
     UserModelDocumentSnapshot? startAfterDocument,
   });
 
+  UserModelQuery orderByLastSeen({
+    bool descending = false,
+    DateTime? startAt,
+    DateTime? startAfter,
+    DateTime? endAt,
+    DateTime? endBefore,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  });
+
+  UserModelQuery orderByDistance({
+    bool descending = false,
+    double? startAt,
+    double? startAfter,
+    double? endAt,
+    double? endBefore,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  });
+
   UserModelQuery orderByIsVerified({
     bool descending = false,
     bool startAt,
@@ -2122,6 +2335,18 @@ abstract class UserModelQuery
   });
 
   UserModelQuery orderByFavoriteList({
+    bool descending = false,
+    List<String> startAt,
+    List<String> startAfter,
+    List<String> endAt,
+    List<String> endBefore,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  });
+
+  UserModelQuery orderByInterests({
     bool descending = false,
     List<String> startAt,
     List<String> startAfter,
@@ -3106,6 +3331,99 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
   }
 
   @override
+  UserModelQuery whereLastSeen({
+    Object? isEqualTo = _sentinel,
+    Object? isNotEqualTo = _sentinel,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    List<DateTime?>? whereIn,
+    List<DateTime?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$UserModelFieldMap['lastSeen']!,
+        isEqualTo: isEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.lastSeen(isEqualTo as DateTime?)
+            : null,
+        isNotEqualTo: isNotEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.lastSeen(isNotEqualTo as DateTime?)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$UserModelPerFieldToJson.lastSeen(isLessThan as DateTime?)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .lastSeen(isLessThanOrEqualTo as DateTime?)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$UserModelPerFieldToJson.lastSeen(isGreaterThan as DateTime?)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .lastSeen(isGreaterThanOrEqualTo as DateTime?)
+            : null,
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.lastSeen(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.lastSeen(e)),
+        isNull: isNull ??
+            (isEqualTo == null ? false : null) ??
+            (isNotEqualTo == null ? true : null),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery whereDistance({
+    Object? isEqualTo = _sentinel,
+    Object? isNotEqualTo = _sentinel,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    List<double?>? whereIn,
+    List<double?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$UserModelFieldMap['distance']!,
+        isEqualTo: isEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.distance(isEqualTo as double?)
+            : null,
+        isNotEqualTo: isNotEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.distance(isNotEqualTo as double?)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$UserModelPerFieldToJson.distance(isLessThan as double?)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson.distance(isLessThanOrEqualTo as double?)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$UserModelPerFieldToJson.distance(isGreaterThan as double?)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .distance(isGreaterThanOrEqualTo as double?)
+            : null,
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.distance(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.distance(e)),
+        isNull: isNull ??
+            (isEqualTo == null ? false : null) ??
+            (isNotEqualTo == null ? true : null),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
   UserModelQuery whereIsVerified({
     Object? isEqualTo = _sentinel,
     Object? isNotEqualTo = _sentinel,
@@ -3295,6 +3613,59 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$UserModelPerFieldToJson.favoriteList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
+        isNull: isNull ??
+            (isEqualTo == null ? false : null) ??
+            (isNotEqualTo == null ? true : null),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery whereInterests({
+    Object? isEqualTo = _sentinel,
+    Object? isNotEqualTo = _sentinel,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<String>? arrayContainsAny,
+    bool? isNull,
+  }) {
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$UserModelFieldMap['interests']!,
+        isEqualTo: isEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.interests(isEqualTo as List<String>)
+            : null,
+        isNotEqualTo: isNotEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.interests(isNotEqualTo as List<String>)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$UserModelPerFieldToJson.interests(isLessThan as List<String>)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .interests(isLessThanOrEqualTo as List<String>)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$UserModelPerFieldToJson.interests(isGreaterThan as List<String>)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .interests(isGreaterThanOrEqualTo as List<String>)
+            : null,
+        arrayContains: arrayContains != null
+            ? (_$UserModelPerFieldToJson.interests([arrayContains as String])
+                    as List?)!
+                .single
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$UserModelPerFieldToJson.interests(arrayContainsAny)
                 as Iterable<Object>?
             : null,
         isNull: isNull ??
@@ -4858,6 +5229,152 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
   }
 
   @override
+  UserModelQuery orderByLastSeen({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['lastSeen']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery orderByDistance({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['distance']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
   UserModelQuery orderByIsVerified({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -5090,6 +5607,79 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
   }) {
     final query = $referenceWithoutCursor
         .orderBy(_$UserModelFieldMap['favoriteList']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery orderByInterests({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['interests']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -5425,6 +6015,10 @@ _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
           $enumDecodeNullable(_$WhereToMeetEnumMap, json['whereToMeet']) ??
               WhereToMeet.doNotShow,
       isOnline: json['isOnline'] as bool? ?? false,
+      lastSeen: json['lastSeen'] == null
+          ? null
+          : DateTime.parse(json['lastSeen'] as String),
+      distance: (json['distance'] as num?)?.toDouble(),
       isVerified: json['isVerified'] as bool? ?? false,
       isBlocked: json['isBlocked'] as bool? ?? false,
       blockList: (json['blockList'] as List<dynamic>?)
@@ -5432,6 +6026,10 @@ _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
               .toList() ??
           const [],
       favoriteList: (json['favoriteList'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      interests: (json['interests'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
@@ -5458,10 +6056,13 @@ const _$UserModelFieldMap = <String, String>{
   'lookingFor': 'lookingFor',
   'whereToMeet': 'whereToMeet',
   'isOnline': 'isOnline',
+  'lastSeen': 'lastSeen',
+  'distance': 'distance',
   'isVerified': 'isVerified',
   'isBlocked': 'isBlocked',
   'blockList': 'blockList',
   'favoriteList': 'favoriteList',
+  'interests': 'interests',
   'id': 'id',
   'fcmToken': 'fcmToken',
 };
@@ -5508,6 +6109,10 @@ abstract class _$UserModelPerFieldToJson {
   // ignore: unused_element
   static Object? isOnline(bool instance) => instance;
   // ignore: unused_element
+  static Object? lastSeen(DateTime? instance) => instance?.toIso8601String();
+  // ignore: unused_element
+  static Object? distance(double? instance) => instance;
+  // ignore: unused_element
   static Object? isVerified(bool instance) => instance;
   // ignore: unused_element
   static Object? isBlocked(bool instance) => instance;
@@ -5515,6 +6120,8 @@ abstract class _$UserModelPerFieldToJson {
   static Object? blockList(List<String> instance) => instance;
   // ignore: unused_element
   static Object? favoriteList(List<String> instance) => instance;
+  // ignore: unused_element
+  static Object? interests(List<String> instance) => instance;
   // ignore: unused_element
   static Object? id(String instance) => instance;
   // ignore: unused_element
@@ -5542,82 +6149,84 @@ Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
       'lookingFor': _$LookingForEnumMap[instance.lookingFor]!,
       'whereToMeet': _$WhereToMeetEnumMap[instance.whereToMeet]!,
       'isOnline': instance.isOnline,
+      'lastSeen': instance.lastSeen?.toIso8601String(),
+      'distance': instance.distance,
       'isVerified': instance.isVerified,
       'isBlocked': instance.isBlocked,
       'blockList': instance.blockList,
       'favoriteList': instance.favoriteList,
+      'interests': instance.interests,
       'id': instance.id,
       'fcmToken': instance.fcmToken,
     };
 
 const _$RoleEnumMap = {
-  Role.doNotShow: 'doNotShow',
-  Role.top: 'top',
-  Role.versTop: 'versTop',
-  Role.versatile: 'versatile',
-  Role.versBottom: 'versBottom',
-  Role.bottom: 'bottom',
+  Role.doNotShow: 'Do not show',
+  Role.top: 'Top',
+  Role.versTop: 'Vers Top',
+  Role.versatile: 'Versatile',
+  Role.versBottom: 'Vers Bottom',
+  Role.bottom: 'Bottom',
 };
 
 const _$BodyTypeEnumMap = {
-  BodyType.doNotShow: 'doNotShow',
-  BodyType.slim: 'slim',
-  BodyType.average: 'average',
-  BodyType.athletic: 'athletic',
-  BodyType.muscular: 'muscular',
-  BodyType.large: 'large',
-  BodyType.fit: 'fit',
-  BodyType.stocky: 'stocky',
-  BodyType.heavy: 'heavy',
+  BodyType.doNotShow: 'Do not show',
+  BodyType.slim: 'Slim',
+  BodyType.average: 'Average',
+  BodyType.athletic: 'Athletic',
+  BodyType.muscular: 'Muscular',
+  BodyType.large: 'Large',
+  BodyType.fit: 'Fit',
+  BodyType.stocky: 'Stocky',
+  BodyType.heavy: 'Heavy',
 };
 
 const _$RelationshipStatusEnumMap = {
-  RelationshipStatus.doNotShow: 'doNotShow',
-  RelationshipStatus.single: 'single',
-  RelationshipStatus.dating: 'dating',
-  RelationshipStatus.openRelationship: 'openRelationship',
-  RelationshipStatus.married: 'married',
-  RelationshipStatus.divorced: 'divorced',
-  RelationshipStatus.widowed: 'widowed',
-  RelationshipStatus.complicated: 'complicated',
-  RelationshipStatus.inLove: 'inLove',
-  RelationshipStatus.engaged: 'engaged',
-  RelationshipStatus.partnered: 'partnered',
+  RelationshipStatus.doNotShow: 'Do not show',
+  RelationshipStatus.single: 'Single',
+  RelationshipStatus.dating: 'Dating',
+  RelationshipStatus.openRelationship: 'Open Relationship',
+  RelationshipStatus.married: 'Married',
+  RelationshipStatus.divorced: 'Divorced',
+  RelationshipStatus.widowed: 'Widowed',
+  RelationshipStatus.complicated: 'Complicated',
+  RelationshipStatus.inLove: 'In Love',
+  RelationshipStatus.engaged: 'Engaged',
+  RelationshipStatus.partnered: 'Partnered',
 };
 
 const _$EthnicityEnumMap = {
-  Ethnicity.doNotShow: 'doNotShow',
-  Ethnicity.asian: 'asian',
-  Ethnicity.black: 'black',
-  Ethnicity.caucasian: 'caucasian',
-  Ethnicity.hispanic: 'hispanic',
-  Ethnicity.indian: 'indian',
-  Ethnicity.middleEastern: 'middleEastern',
-  Ethnicity.nativeAmerican: 'nativeAmerican',
-  Ethnicity.pacificIslander: 'pacificIslander',
-  Ethnicity.mixed: 'mixed',
-  Ethnicity.other: 'other',
-  Ethnicity.partnered: 'partnered',
+  Ethnicity.doNotShow: 'Do not show',
+  Ethnicity.asian: 'Asian',
+  Ethnicity.black: 'Black',
+  Ethnicity.caucasian: 'Caucasian',
+  Ethnicity.hispanic: 'Hispanic',
+  Ethnicity.indian: 'Indian',
+  Ethnicity.middleEastern: 'Middle Eastern',
+  Ethnicity.nativeAmerican: 'Native American',
+  Ethnicity.pacificIslander: 'Pacific Islander',
+  Ethnicity.mixed: 'Mixed',
+  Ethnicity.other: 'Other',
 };
 
 const _$LookingForEnumMap = {
-  LookingFor.doNotShow: 'doNotShow',
-  LookingFor.chat: 'chat',
-  LookingFor.dates: 'dates',
-  LookingFor.friends: 'friends',
-  LookingFor.networking: 'networking',
-  LookingFor.longTerm: 'longTerm',
-  LookingFor.shortTerm: 'shortTerm',
-  LookingFor.casual: 'casual',
-  LookingFor.rightNow: 'rightNow',
+  LookingFor.doNotShow: 'Do not show',
+  LookingFor.chat: 'Chat',
+  LookingFor.dates: 'Dates',
+  LookingFor.friends: 'Friends',
+  LookingFor.networking: 'Networking',
+  LookingFor.longTerm: 'Long Term',
+  LookingFor.shortTerm: 'Short Term',
+  LookingFor.casual: 'Casual',
+  LookingFor.rightNow: 'Right Now',
 };
 
 const _$WhereToMeetEnumMap = {
-  WhereToMeet.doNotShow: 'doNotShow',
-  WhereToMeet.myPlace: 'myPlace',
-  WhereToMeet.yourPlace: 'yourPlace',
-  WhereToMeet.hotel: 'hotel',
-  WhereToMeet.bar: 'bar',
-  WhereToMeet.restaurant: 'restaurant',
-  WhereToMeet.coffeeShop: 'coffeeShop',
+  WhereToMeet.doNotShow: 'Do not show',
+  WhereToMeet.myPlace: 'My Place',
+  WhereToMeet.yourPlace: 'Your Place',
+  WhereToMeet.hotel: 'Hotel',
+  WhereToMeet.bar: 'Bar',
+  WhereToMeet.restaurant: 'Restaurant',
+  WhereToMeet.coffeeShop: 'Coffee Shop',
 };
