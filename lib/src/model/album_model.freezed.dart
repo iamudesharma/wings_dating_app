@@ -14,136 +14,236 @@ part of 'album_model.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$AlbumListModel {
-  List<String> get imageUrls;
+mixin _$UserAlbumModel {
+  String get ownerId;
   String get name;
-  String get userId;
-  String get id;
+  List<String> get photos;
+  List<String> get sharedWith;
+  DateTime get createdAt;
+  DateTime get updatedAt;
+  bool get isShared;
+  AlbumOwnerModel? get owner;
+  @JsonKey(name: "_id")
+  String? get id;
 
-  /// Create a copy of AlbumListModel
+  /// Create a copy of UserAlbumModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $AlbumListModelCopyWith<AlbumListModel> get copyWith =>
-      _$AlbumListModelCopyWithImpl<AlbumListModel>(
-          this as AlbumListModel, _$identity);
+  $UserAlbumModelCopyWith<UserAlbumModel> get copyWith =>
+      _$UserAlbumModelCopyWithImpl<UserAlbumModel>(
+          this as UserAlbumModel, _$identity);
 
-  /// Serializes this AlbumListModel to a JSON map.
+  /// Serializes this UserAlbumModel to a JSON map.
   Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is AlbumListModel &&
-            const DeepCollectionEquality().equals(other.imageUrls, imageUrls) &&
+            other is UserAlbumModel &&
+            (identical(other.ownerId, ownerId) || other.ownerId == ownerId) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
+            const DeepCollectionEquality().equals(other.photos, photos) &&
+            const DeepCollectionEquality()
+                .equals(other.sharedWith, sharedWith) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.isShared, isShared) ||
+                other.isShared == isShared) &&
+            (identical(other.owner, owner) || other.owner == owner) &&
             (identical(other.id, id) || other.id == id));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(imageUrls), name, userId, id);
+  int get hashCode => Object.hash(
+      runtimeType,
+      ownerId,
+      name,
+      const DeepCollectionEquality().hash(photos),
+      const DeepCollectionEquality().hash(sharedWith),
+      createdAt,
+      updatedAt,
+      isShared,
+      owner,
+      id);
 
   @override
   String toString() {
-    return 'AlbumListModel(imageUrls: $imageUrls, name: $name, userId: $userId, id: $id)';
+    return 'UserAlbumModel(ownerId: $ownerId, name: $name, photos: $photos, sharedWith: $sharedWith, createdAt: $createdAt, updatedAt: $updatedAt, isShared: $isShared, owner: $owner, id: $id)';
   }
 }
 
 /// @nodoc
-abstract mixin class $AlbumListModelCopyWith<$Res> {
-  factory $AlbumListModelCopyWith(
-          AlbumListModel value, $Res Function(AlbumListModel) _then) =
-      _$AlbumListModelCopyWithImpl;
+abstract mixin class $UserAlbumModelCopyWith<$Res> {
+  factory $UserAlbumModelCopyWith(
+          UserAlbumModel value, $Res Function(UserAlbumModel) _then) =
+      _$UserAlbumModelCopyWithImpl;
   @useResult
-  $Res call({List<String> imageUrls, String name, String userId, String id});
+  $Res call(
+      {String ownerId,
+      String name,
+      List<String> photos,
+      List<String> sharedWith,
+      DateTime createdAt,
+      DateTime updatedAt,
+      bool isShared,
+      AlbumOwnerModel? owner,
+      @JsonKey(name: "_id") String? id});
+
+  $AlbumOwnerModelCopyWith<$Res>? get owner;
 }
 
 /// @nodoc
-class _$AlbumListModelCopyWithImpl<$Res>
-    implements $AlbumListModelCopyWith<$Res> {
-  _$AlbumListModelCopyWithImpl(this._self, this._then);
+class _$UserAlbumModelCopyWithImpl<$Res>
+    implements $UserAlbumModelCopyWith<$Res> {
+  _$UserAlbumModelCopyWithImpl(this._self, this._then);
 
-  final AlbumListModel _self;
-  final $Res Function(AlbumListModel) _then;
+  final UserAlbumModel _self;
+  final $Res Function(UserAlbumModel) _then;
 
-  /// Create a copy of AlbumListModel
+  /// Create a copy of UserAlbumModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? imageUrls = null,
+    Object? ownerId = null,
     Object? name = null,
-    Object? userId = null,
-    Object? id = null,
+    Object? photos = null,
+    Object? sharedWith = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? isShared = null,
+    Object? owner = freezed,
+    Object? id = freezed,
   }) {
     return _then(_self.copyWith(
-      imageUrls: null == imageUrls
-          ? _self.imageUrls
-          : imageUrls // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+      ownerId: null == ownerId
+          ? _self.ownerId
+          : ownerId // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      userId: null == userId
-          ? _self.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      id: null == id
+      photos: null == photos
+          ? _self.photos
+          : photos // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      sharedWith: null == sharedWith
+          ? _self.sharedWith
+          : sharedWith // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _self.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      isShared: null == isShared
+          ? _self.isShared
+          : isShared // ignore: cast_nullable_to_non_nullable
+              as bool,
+      owner: freezed == owner
+          ? _self.owner
+          : owner // ignore: cast_nullable_to_non_nullable
+              as AlbumOwnerModel?,
+      id: freezed == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
+  }
+
+  /// Create a copy of UserAlbumModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $AlbumOwnerModelCopyWith<$Res>? get owner {
+    if (_self.owner == null) {
+      return null;
+    }
+
+    return $AlbumOwnerModelCopyWith<$Res>(_self.owner!, (value) {
+      return _then(_self.copyWith(owner: value));
+    });
   }
 }
 
 /// @nodoc
 
 @JsonSerializable(
+    explicitToJson: true,
     createToJson: true,
     createFieldMap: true,
-    createPerFieldToJson: true,
-    explicitToJson: true)
-class _AlbumListModel implements AlbumListModel {
-  _AlbumListModel(
-      {required final List<String> imageUrls,
+    createPerFieldToJson: true)
+class _UserAlbumModel implements UserAlbumModel {
+  const _UserAlbumModel(
+      {required this.ownerId,
       required this.name,
-      required this.userId,
-      required this.id})
-      : _imageUrls = imageUrls;
-  factory _AlbumListModel.fromJson(Map<String, dynamic> json) =>
-      _$AlbumListModelFromJson(json);
+      final List<String> photos = const [],
+      final List<String> sharedWith = const [],
+      required this.createdAt,
+      required this.updatedAt,
+      this.isShared = false,
+      this.owner,
+      @JsonKey(name: "_id") this.id})
+      : _photos = photos,
+        _sharedWith = sharedWith;
+  factory _UserAlbumModel.fromJson(Map<String, dynamic> json) =>
+      _$UserAlbumModelFromJson(json);
 
-  final List<String> _imageUrls;
   @override
-  List<String> get imageUrls {
-    if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
+  final String ownerId;
+  @override
+  final String name;
+  final List<String> _photos;
+  @override
+  @JsonKey()
+  List<String> get photos {
+    if (_photos is EqualUnmodifiableListView) return _photos;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_imageUrls);
+    return EqualUnmodifiableListView(_photos);
+  }
+
+  final List<String> _sharedWith;
+  @override
+  @JsonKey()
+  List<String> get sharedWith {
+    if (_sharedWith is EqualUnmodifiableListView) return _sharedWith;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_sharedWith);
   }
 
   @override
-  final String name;
+  final DateTime createdAt;
   @override
-  final String userId;
+  final DateTime updatedAt;
   @override
-  final String id;
+  @JsonKey()
+  final bool isShared;
+  @override
+  final AlbumOwnerModel? owner;
+  @override
+  @JsonKey(name: "_id")
+  final String? id;
 
-  /// Create a copy of AlbumListModel
+  /// Create a copy of UserAlbumModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$AlbumListModelCopyWith<_AlbumListModel> get copyWith =>
-      __$AlbumListModelCopyWithImpl<_AlbumListModel>(this, _$identity);
+  _$UserAlbumModelCopyWith<_UserAlbumModel> get copyWith =>
+      __$UserAlbumModelCopyWithImpl<_UserAlbumModel>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$AlbumListModelToJson(
+    return _$UserAlbumModelToJson(
       this,
     );
   }
@@ -152,72 +252,140 @@ class _AlbumListModel implements AlbumListModel {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _AlbumListModel &&
-            const DeepCollectionEquality()
-                .equals(other._imageUrls, _imageUrls) &&
+            other is _UserAlbumModel &&
+            (identical(other.ownerId, ownerId) || other.ownerId == ownerId) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
+            const DeepCollectionEquality().equals(other._photos, _photos) &&
+            const DeepCollectionEquality()
+                .equals(other._sharedWith, _sharedWith) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.isShared, isShared) ||
+                other.isShared == isShared) &&
+            (identical(other.owner, owner) || other.owner == owner) &&
             (identical(other.id, id) || other.id == id));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_imageUrls), name, userId, id);
+  int get hashCode => Object.hash(
+      runtimeType,
+      ownerId,
+      name,
+      const DeepCollectionEquality().hash(_photos),
+      const DeepCollectionEquality().hash(_sharedWith),
+      createdAt,
+      updatedAt,
+      isShared,
+      owner,
+      id);
 
   @override
   String toString() {
-    return 'AlbumListModel(imageUrls: $imageUrls, name: $name, userId: $userId, id: $id)';
+    return 'UserAlbumModel(ownerId: $ownerId, name: $name, photos: $photos, sharedWith: $sharedWith, createdAt: $createdAt, updatedAt: $updatedAt, isShared: $isShared, owner: $owner, id: $id)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$AlbumListModelCopyWith<$Res>
-    implements $AlbumListModelCopyWith<$Res> {
-  factory _$AlbumListModelCopyWith(
-          _AlbumListModel value, $Res Function(_AlbumListModel) _then) =
-      __$AlbumListModelCopyWithImpl;
+abstract mixin class _$UserAlbumModelCopyWith<$Res>
+    implements $UserAlbumModelCopyWith<$Res> {
+  factory _$UserAlbumModelCopyWith(
+          _UserAlbumModel value, $Res Function(_UserAlbumModel) _then) =
+      __$UserAlbumModelCopyWithImpl;
   @override
   @useResult
-  $Res call({List<String> imageUrls, String name, String userId, String id});
+  $Res call(
+      {String ownerId,
+      String name,
+      List<String> photos,
+      List<String> sharedWith,
+      DateTime createdAt,
+      DateTime updatedAt,
+      bool isShared,
+      AlbumOwnerModel? owner,
+      @JsonKey(name: "_id") String? id});
+
+  @override
+  $AlbumOwnerModelCopyWith<$Res>? get owner;
 }
 
 /// @nodoc
-class __$AlbumListModelCopyWithImpl<$Res>
-    implements _$AlbumListModelCopyWith<$Res> {
-  __$AlbumListModelCopyWithImpl(this._self, this._then);
+class __$UserAlbumModelCopyWithImpl<$Res>
+    implements _$UserAlbumModelCopyWith<$Res> {
+  __$UserAlbumModelCopyWithImpl(this._self, this._then);
 
-  final _AlbumListModel _self;
-  final $Res Function(_AlbumListModel) _then;
+  final _UserAlbumModel _self;
+  final $Res Function(_UserAlbumModel) _then;
 
-  /// Create a copy of AlbumListModel
+  /// Create a copy of UserAlbumModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? imageUrls = null,
+    Object? ownerId = null,
     Object? name = null,
-    Object? userId = null,
-    Object? id = null,
+    Object? photos = null,
+    Object? sharedWith = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? isShared = null,
+    Object? owner = freezed,
+    Object? id = freezed,
   }) {
-    return _then(_AlbumListModel(
-      imageUrls: null == imageUrls
-          ? _self._imageUrls
-          : imageUrls // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+    return _then(_UserAlbumModel(
+      ownerId: null == ownerId
+          ? _self.ownerId
+          : ownerId // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      userId: null == userId
-          ? _self.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      id: null == id
+      photos: null == photos
+          ? _self._photos
+          : photos // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      sharedWith: null == sharedWith
+          ? _self._sharedWith
+          : sharedWith // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _self.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      isShared: null == isShared
+          ? _self.isShared
+          : isShared // ignore: cast_nullable_to_non_nullable
+              as bool,
+      owner: freezed == owner
+          ? _self.owner
+          : owner // ignore: cast_nullable_to_non_nullable
+              as AlbumOwnerModel?,
+      id: freezed == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
+  }
+
+  /// Create a copy of UserAlbumModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $AlbumOwnerModelCopyWith<$Res>? get owner {
+    if (_self.owner == null) {
+      return null;
+    }
+
+    return $AlbumOwnerModelCopyWith<$Res>(_self.owner!, (value) {
+      return _then(_self.copyWith(owner: value));
+    });
   }
 }
 

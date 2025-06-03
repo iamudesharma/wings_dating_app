@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'album_controller.dart';
+part of 'album_details_view.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$albumControllerHash() => r'e75a546dd32e82c7485dd7d0ea416dbf18862b11';
+String _$albumDetailsHash() => r'74e72a8d85cf49e8a6734ef729a3d4401d8fa706';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,8 +29,8 @@ class _SystemHash {
   }
 }
 
-abstract class _$AlbumController
-    extends BuildlessAsyncNotifier<UserAlbumModel> {
+abstract class _$AlbumDetails
+    extends BuildlessAutoDisposeAsyncNotifier<UserAlbumModel> {
   late final String id;
 
   FutureOr<UserAlbumModel> build(
@@ -38,71 +38,69 @@ abstract class _$AlbumController
   );
 }
 
-/// See also [AlbumController].
-@ProviderFor(AlbumController)
-const albumControllerProvider = AlbumControllerFamily();
+/// See also [AlbumDetails].
+@ProviderFor(AlbumDetails)
+const albumDetailsProvider = AlbumDetailsFamily();
 
-/// See also [AlbumController].
-class AlbumControllerFamily extends Family<AsyncValue<UserAlbumModel>> {
-  /// See also [AlbumController].
-  const AlbumControllerFamily();
+/// See also [AlbumDetails].
+class AlbumDetailsFamily extends Family<AsyncValue<UserAlbumModel>> {
+  /// See also [AlbumDetails].
+  const AlbumDetailsFamily();
 
-  /// See also [AlbumController].
-  AlbumControllerProvider call(
+  /// See also [AlbumDetails].
+  AlbumDetailsProvider call(
     String id,
   ) {
-    return AlbumControllerProvider(
+    return AlbumDetailsProvider(
       id,
     );
   }
 
   @override
-  AlbumControllerProvider getProviderOverride(
-    covariant AlbumControllerProvider provider,
+  AlbumDetailsProvider getProviderOverride(
+    covariant AlbumDetailsProvider provider,
   ) {
     return call(
       provider.id,
     );
   }
 
-  static final Iterable<ProviderOrFamily> _dependencies =
-      const <ProviderOrFamily>[];
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
   Iterable<ProviderOrFamily>? get dependencies => _dependencies;
 
-  static final Iterable<ProviderOrFamily> _allTransitiveDependencies =
-      const <ProviderOrFamily>{};
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
   Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'albumControllerProvider';
+  String? get name => r'albumDetailsProvider';
 }
 
-/// See also [AlbumController].
-class AlbumControllerProvider
-    extends AsyncNotifierProviderImpl<AlbumController, UserAlbumModel> {
-  /// See also [AlbumController].
-  AlbumControllerProvider(
+/// See also [AlbumDetails].
+class AlbumDetailsProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<AlbumDetails, UserAlbumModel> {
+  /// See also [AlbumDetails].
+  AlbumDetailsProvider(
     String id,
   ) : this._internal(
-          () => AlbumController()..id = id,
-          from: albumControllerProvider,
-          name: r'albumControllerProvider',
+          () => AlbumDetails()..id = id,
+          from: albumDetailsProvider,
+          name: r'albumDetailsProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$albumControllerHash,
-          dependencies: AlbumControllerFamily._dependencies,
+                  : _$albumDetailsHash,
+          dependencies: AlbumDetailsFamily._dependencies,
           allTransitiveDependencies:
-              AlbumControllerFamily._allTransitiveDependencies,
+              AlbumDetailsFamily._allTransitiveDependencies,
           id: id,
         );
 
-  AlbumControllerProvider._internal(
+  AlbumDetailsProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -116,7 +114,7 @@ class AlbumControllerProvider
 
   @override
   FutureOr<UserAlbumModel> runNotifierBuild(
-    covariant AlbumController notifier,
+    covariant AlbumDetails notifier,
   ) {
     return notifier.build(
       id,
@@ -124,10 +122,10 @@ class AlbumControllerProvider
   }
 
   @override
-  Override overrideWith(AlbumController Function() create) {
+  Override overrideWith(AlbumDetails Function() create) {
     return ProviderOverride(
       origin: this,
-      override: AlbumControllerProvider._internal(
+      override: AlbumDetailsProvider._internal(
         () => create()..id = id,
         from: from,
         name: null,
@@ -140,14 +138,14 @@ class AlbumControllerProvider
   }
 
   @override
-  AsyncNotifierProviderElement<AlbumController, UserAlbumModel>
+  AutoDisposeAsyncNotifierProviderElement<AlbumDetails, UserAlbumModel>
       createElement() {
-    return _AlbumControllerProviderElement(this);
+    return _AlbumDetailsProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is AlbumControllerProvider && other.id == id;
+    return other is AlbumDetailsProvider && other.id == id;
   }
 
   @override
@@ -161,18 +159,18 @@ class AlbumControllerProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin AlbumControllerRef on AsyncNotifierProviderRef<UserAlbumModel> {
+mixin AlbumDetailsRef on AutoDisposeAsyncNotifierProviderRef<UserAlbumModel> {
   /// The parameter `id` of this provider.
   String get id;
 }
 
-class _AlbumControllerProviderElement
-    extends AsyncNotifierProviderElement<AlbumController, UserAlbumModel>
-    with AlbumControllerRef {
-  _AlbumControllerProviderElement(super.provider);
+class _AlbumDetailsProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<AlbumDetails,
+        UserAlbumModel> with AlbumDetailsRef {
+  _AlbumDetailsProviderElement(super.provider);
 
   @override
-  String get id => (origin as AlbumControllerProvider).id;
+  String get id => (origin as AlbumDetailsProvider).id;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

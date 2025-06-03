@@ -37,7 +37,7 @@ final sharedAlbumProvider =
 );
 
 typedef _$SharedAlbum = AsyncNotifier<List<GetMessageResponse>>;
-String _$albumClassHash() => r'7faeaf0ed3379950868e327442c1f65206f47d30';
+String _$albumClassHash() => r'af37c3cd9bdcf071ac25362aa4246ce9b9a21a8c';
 
 /// See also [AlbumClass].
 @ProviderFor(AlbumClass)

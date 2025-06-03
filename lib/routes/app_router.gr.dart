@@ -176,32 +176,33 @@ class ChatRouteArgs {
 /// generated route for
 /// [CreateAlbumView]
 class CreateAlbumRoute extends PageRouteInfo<CreateAlbumRouteArgs> {
-  CreateAlbumRoute({Key? key, String? id, List<PageRouteInfo>? children})
-    : super(
-        CreateAlbumRoute.name,
-        args: CreateAlbumRouteArgs(key: key, id: id),
-        initialChildren: children,
-      );
+  CreateAlbumRoute({
+    Key? key,
+    required String id,
+    List<PageRouteInfo>? children,
+  }) : super(
+         CreateAlbumRoute.name,
+         args: CreateAlbumRouteArgs(key: key, id: id),
+         initialChildren: children,
+       );
 
   static const String name = 'CreateAlbumRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<CreateAlbumRouteArgs>(
-        orElse: () => const CreateAlbumRouteArgs(),
-      );
+      final args = data.argsAs<CreateAlbumRouteArgs>();
       return CreateAlbumView(key: args.key, id: args.id);
     },
   );
 }
 
 class CreateAlbumRouteArgs {
-  const CreateAlbumRouteArgs({this.key, this.id});
+  const CreateAlbumRouteArgs({this.key, required this.id});
 
   final Key? key;
 
-  final String? id;
+  final String id;
 
   @override
   String toString() {

@@ -2,40 +2,52 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:wings_dating_app/helpers/image_picker.dart';
+import 'package:wings_dating_app/repo/albums_repo.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/album/album_view.dart';
 import 'package:wings_dating_app/src/album/controller/album_controller.dart';
+import 'package:wings_dating_app/src/model/album_model.dart';
+
+part 'album_details_view.g.dart';
+
+@riverpod
+class AlbumDetails extends _$AlbumDetails {
+  @override
+  FutureOr<UserAlbumModel> build(String id) async {
+    return ref.read(albumsRepoProvider).getAlbumsById(id);
+  }
+}
 
 @RoutePage()
 class AlbumDetailsView extends ConsumerWidget {
-  const AlbumDetailsView(
-      {super.key, required this.id, this.isPreview = false, this.channel});
+  const AlbumDetailsView({super.key, required this.id, this.isPreview = false, this.channel});
   final String id;
   final bool isPreview;
   final Channel? channel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final albums = ref.watch(AlbumControllerProvider(id));
+    final albums = ref.watch(AlbumDetailsProvider(id));
 
     final albumsWidget = albums.when(
       data: (data) => SliverGrid.builder(
-        itemCount: data?.imageUrls.length,
+        itemCount: data.photos.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
         ),
         itemBuilder: (context, index) {
-          print("data image  ${data?.imageUrls}");
+          // print("data image  ${data?.photos}");
           return GestureDetector(
             onTap: () {
               AutoRouter.of(context).push(ImagePreviewRoute(
-                path: data?.imageUrls[index] ?? "",
+                path: data?.photos[index] ?? "",
               ));
             },
             child: Image.network(
-              data?.imageUrls[index] ?? "",
+              data?.photos[index] ?? "",
             ),
           );
         },
@@ -73,9 +85,7 @@ class AlbumDetailsView extends ConsumerWidget {
                   }
                 }
               },
-              child: Text((albums.value?.imageUrls.length ?? 0) > 0
-                  ? "Add More"
-                  : "Create Album")),
+              child: Text((albums.value?.photos.length ?? 0) > 0 ? "Add More" : "Create Album")),
         ],
       ),
       body: CustomScrollView(
