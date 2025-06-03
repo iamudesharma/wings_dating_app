@@ -109,6 +109,7 @@ class AlbumView extends ConsumerWidget {
                         itemBuilder: (context, index) {
                           final album = allAlbums[index];
                           return _AlbumCard(
+                            isShared: album.isShared,
                             name: album.name,
                             imageUrl: album.photos.isNotEmpty ? album.photos.first : null,
                             onTap: () {
@@ -141,7 +142,6 @@ class _AlbumCard extends StatelessWidget {
     this.imageUrl,
     required this.onTap,
     this.isShared = false,
-    super.key,
   });
 
   @override

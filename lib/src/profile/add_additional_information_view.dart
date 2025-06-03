@@ -15,15 +15,15 @@ import '../../dependency/dependencies.dart';
 import '../../helpers/extra_data.dart';
 import '../../helpers/logger.dart';
 
-final weightProvider = StateProvider<String>((ref) {
+final weightProvider = StateProvider.autoDispose<String>((ref) {
   return "Do not show";
 });
 
-final heightProvider = StateProvider<String>((ref) {
+final heightProvider = StateProvider.autoDispose<String>((ref) {
   return "Do not show";
 });
 
-final albumListProvider = StateProvider<List<String>?>((ref) {
+final albumListProvider = StateProvider.autoDispose<List<String>?>((ref) {
   return [];
 });
 
@@ -42,19 +42,43 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
   ) {
     ref.watch(Dependency.profileProvider);
     final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
-    final role = ref.watch(roleProvider);
-    final bodyType = ref.watch(bodyTypeProvider);
 
-    final relationshipStatus = ref.watch(relationshipStatusProvider);
-    final ethnicity = ref.watch(ethnicityProvider);
-    final lookingFor = ref.watch(lookingForProvider);
+    // Safely watch providers with null checks
+    Role role;
+    BodyType bodyType;
+    RelationshipStatus relationshipStatus;
+    Ethnicity ethnicity;
+    LookingFor lookingFor;
+    WhereToMeet whereTomeet;
+    String weight;
+    String height;
 
-    final whereTomeet = ref.watch(whereToMeetProvider);
-    final weight = ref.watch(weightProvider);
-    final height = ref.watch(heightProvider);
-    ref.watch(albumListProvider);
+    try {
+      role = ref.watch(roleProvider);
+      bodyType = ref.watch(bodyTypeProvider);
+      relationshipStatus = ref.watch(relationshipStatusProvider);
+      ethnicity = ref.watch(ethnicityProvider);
+      lookingFor = ref.watch(lookingForProvider);
+      whereTomeet = ref.watch(whereToMeetProvider);
+      weight = ref.watch(weightProvider);
+      height = ref.watch(heightProvider);
+      ref.watch(albumListProvider);
+    } catch (e) {
+      logger.e("Error accessing providers: $e");
+      // Set default values if providers can't be accessed
+      role = Role.doNotShow;
+      bodyType = BodyType.doNotShow;
+      relationshipStatus = RelationshipStatus.doNotShow;
+      ethnicity = Ethnicity.doNotShow;
+      lookingFor = LookingFor.doNotShow;
+      whereTomeet = WhereToMeet.doNotShow;
+      weight = "Do not show";
+      height = "Do not show";
+    }
 
-    logger.i(profiledata?.role.index);
+    if (profiledata != null) {
+      logger.i(profiledata.role.index);
+    }
     return Scaffold(
       body: CustomScrollView(
         slivers: [

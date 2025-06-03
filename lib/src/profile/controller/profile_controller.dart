@@ -112,29 +112,29 @@ String meterToKm(double meter) {
 
 final roleProvider = StateProvider<Role>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.role;
+  return userdata?.role ?? Role.doNotShow;
 });
 
 final bodyTypeProvider = StateProvider<BodyType>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.bodyType;
+  return userdata?.bodyType ?? BodyType.doNotShow;
 });
 
 final relationshipStatusProvider = StateProvider<RelationshipStatus>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.relationshipStatus;
+  return userdata?.relationshipStatus ?? RelationshipStatus.doNotShow;
 });
 
 final ethnicityProvider = StateProvider<Ethnicity>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.ethnicity;
+  return userdata?.ethnicity ?? Ethnicity.doNotShow;
 });
 final lookingForProvider = StateProvider<LookingFor>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.lookingFor;
+  return userdata?.lookingFor ?? LookingFor.doNotShow;
 });
 
 final whereToMeetProvider = StateProvider<WhereToMeet>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.whereToMeet;
+  return userdata?.whereToMeet ?? WhereToMeet.doNotShow;
 });

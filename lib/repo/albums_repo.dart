@@ -98,7 +98,8 @@ class AlbumsRepo {
   }
 
   Future<UserAlbumModel> getAlbumsById(String id) async {
-    final response = await httpTemplate.get("/albums/$id");
+    final response = await httpTemplate.get("/albums/$id?userId="
+        "${ref.read(Dependency.firebaseAuthProvider).currentUser!.uid}");
 
     if (response["code"] == 200) {
       // final albumList = response["data"] as List<dynamic>;

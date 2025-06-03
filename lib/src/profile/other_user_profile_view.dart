@@ -13,10 +13,10 @@ import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/profile_view.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 import '../../const/pref_util.dart';
 import '../../helpers/responsive_layout.dart';
-import 'widgets/profile_input_card.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 part 'other_user_profile_view.g.dart';
@@ -86,253 +86,359 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
         'user_id': widget.id as Object,
       },
     );
-    // var userData;
-    // if (widget.isCurrentUser!) {
-    var currentUser = ref.watch(ProfileController.userControllerProvider).userModel;
-    // } else {
-    var otherUser = ref.watch(getUserByIdProvider(widget.id!));
-    // }
-    firebase_database.DatabaseReference refData =
-        firebase_database.FirebaseDatabase.instance.ref('status/${widget.id}');
+    final currentUser = ref.watch(ProfileController.userControllerProvider).userModel;
+    final otherUser = ref.watch(getUserByIdProvider(widget.id!));
+    final refData = firebase_database.FirebaseDatabase.instance.ref('status/${widget.id}');
 
-    return Scaffold(
-      // backgroundColor: ,
-      body: otherUser.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
-        error: (error, stackTrace) => (error is Exception)
-            ? const Center(
-                child: Text("User not found"),
-              )
-            : const Center(
-                child: Text("Something went wrong"),
-              ),
-        data: (userData) {
-          if (kIsWeb) {
-            MetaSEO meta = MetaSEO();
-
-            meta.author(author: userData!.username);
-            meta.description(description: userData.bio ?? "No Bio");
-            meta.keywords(
-              keywords: userData.bodyType.value,
-            );
-            meta.ogImage(ogImage: userData.profileUrl ?? "https://img.icons8.com/ios/500/null.png");
-          }
-          return CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                leading: AutoLeadingButton(),
-                pinned: true,
-
-                actions: [
-                  PopupMenuButton<int>(
-                    padding: EdgeInsets.zero,
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        onTap: () async {
-                          // await ref
-                          //     .read(userListProvider.notifier)
-                          //     .addToBlockList(userData!.id);
-
-                          // ignore: use_build_context_synchronously
-                          context.router.back();
-                          // AutoRouter.of(context).replace(const DashboardRoute());
-                        },
-                        value: 1,
-                        // row has two child icon and text.
-                        child: const Row(
-                          children: [
-                            Icon(Icons.block),
-                            SizedBox(
-                              // sized box with width 10
-                              width: 10,
-                            ),
-                            Text("Block")
-                          ],
-                        ),
-                      ),
-                      // popupmenu item 2
-                      const PopupMenuItem(
-                        value: 2,
-                        // row has two child icon and text
-                        child: Row(
-                          children: [
-                            Icon(Icons.chrome_reader_mode),
-                            SizedBox(
-                              // sized box with width 10
-                              width: 10,
-                            ),
-                            Text("About")
-                          ],
-                        ),
-                      ),
-                    ],
-                    offset: const Offset(0, 100),
-                    color: Colors.black,
-                    elevation: 2,
+    return ResponsiveBuilder(
+      builder: (context, sizingInformation) {
+        final isDesktop = sizingInformation.isDesktop;
+        final isTablet = sizingInformation.isTablet;
+        final double maxWidth = isDesktop
+            ? 700
+            : isTablet
+                ? 550
+                : double.infinity;
+        return Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(56),
+            child: Container(
+              color: Theme.of(context).colorScheme.background,
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => context.router.maybePop(),
+                    color: Theme.of(context).colorScheme.onBackground,
                   ),
-                ],
-                // centerTitle: true,
-                title: Text(userData!.username),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 250,
-                    width: MediaQuery.of(context).size.width,
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: CachedNetworkImage(
-                            // color: Colors.white,
-                            imageUrl:
-                                (userData.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        Consumer(builder: (context, ref, child) {
-                          final isFav = ref.watch(favProvider(widget.id!));
-                          return isFav.when(
-                              error: (_, __) => SizedBox(),
-                              loading: () => SizedBox(),
-                              data: (value) => Positioned(
-                                    right: 10,
-                                    top: 10,
-                                    child: value
-                                        ? IconButton(
-                                            onPressed: () async {
-                                              await ref
-                                                  .read(favProvider(widget.id!).notifier)
-                                                  .removeUserFromFavorite(widget.id!);
-                                            },
-                                            icon: Icon(Icons.star),
-                                            color: Colors.red,
-                                          )
-                                        : IconButton(
-                                            onPressed: () async {
-                                              await ref
-                                                  .read(favProvider(widget.id!).notifier)
-                                                  .addUserToFavorite(widget.id!);
-                                            },
-                                            icon: Icon(Icons.star_border_outlined),
-                                            color: Colors.white,
-                                          ),
-                                  ));
-                        })
-                      ],
+                  Expanded(
+                    child: otherUser.when(
+                      data: (userData) =>
+                          Text(userData?.username ?? "Profile", style: Theme.of(context).textTheme.titleLarge),
+                      loading: () => const Text("Profile"),
+                      error: (_, __) => const Text("Profile"),
                     ),
                   ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      StreamBuilder<firebase_database.DatabaseEvent>(
-                        stream: refData.onValue,
-                        builder: (context, snapshot) {
-                          // print(snapshot.connectionState);
-                          if (snapshot.hasData) {
-                            bool isOnline = false;
-                            Timestamp? lastSeen;
-                            print("snapshot.data!.snapshot.value ${snapshot.data?.snapshot.value}");
-                            if (snapshot.data!.snapshot.value != null) {
-                              final data = snapshot.data!.snapshot.value as Map;
-                              isOnline = data['isOnline'];
-                              lastSeen = data['lastSeen'] != null
-                                  ? Timestamp.fromMillisecondsSinceEpoch(data['lastSeen'])
-                                  : null;
-                            } else {
-                              isOnline = false;
-                            }
-
-                            return isOnline == false && lastSeen != null
-                                ? Text("Last seen : ${timeago.format(
-                                    DateTime.fromMillisecondsSinceEpoch(lastSeen.millisecondsSinceEpoch),
-                                  )}")
-                                : CircleAvatar(
-                                    radius: 5,
-                                    backgroundColor: isOnline ? Colors.green : Colors.amber,
-                                  );
-                          }
-                          return CircularProgressIndicator();
-                        },
-                      ),
-                      Text(
-                        "About",
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      // 10.heightBox,
-                      SizedBox(height: 20),
-
-                      Text(
-                        userData.bio ?? "",
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      // 20.heightBox,
-                      SizedBox(height: 20),
-
-                      Center(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minWidth: MediaQuery.sizeOf(context).width * 0.3,
-                            maxWidth: MediaQuery.sizeOf(context).width,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ProfileInputCard(title: "Role", value: userData.role.value),
-                              ProfileInputCard(title: "Body Type", value: userData.bodyType.value),
-                              ProfileInputCard(title: "Ethnicity", value: userData.ethnicity.value),
-                              ProfileInputCard(title: "Relationship Status", value: userData.relationshipStatus.value),
-                              ProfileInputCard(title: "Looking for", value: userData.lookingFor.value),
-                              ProfileInputCard(title: "Where to meet", value: userData.whereToMeet.value),
-                              ProfileInputCard(title: "Height", value: userData.height ?? "Do not Show"),
-                              ProfileInputCard(title: "Weight", value: userData.weight ?? "Do not Show"),
-                            ],
+                  otherUser.when(
+                    data: (userData) => PopupMenuButton<int>(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          onTap: () => context.router.maybePop(),
+                          value: 1,
+                          child: const Row(
+                            children: [Icon(Icons.block), SizedBox(width: 10), Text("Block")],
                           ),
                         ),
+                        const PopupMenuItem(
+                          value: 2,
+                          child: Row(
+                            children: [Icon(Icons.chrome_reader_mode), SizedBox(width: 10), Text("About")],
+                          ),
+                        ),
+                      ],
+                      color: Theme.of(context).colorScheme.surface,
+                      elevation: 2,
+                    ),
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, __) => const SizedBox.shrink(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxWidth),
+              child: otherUser.when(
+                loading: () => const Center(child: CircularProgressIndicator.adaptive()),
+                error: (error, stackTrace) => (error is Exception)
+                    ? const Center(child: Text("User not found"))
+                    : const Center(child: Text("Something went wrong")),
+                data: (userData) {
+                  if (userData == null) {
+                    return const Center(child: Text("User not found"));
+                  }
+                  if (kIsWeb) {
+                    MetaSEO meta = MetaSEO();
+                    meta.author(author: userData.username);
+                    meta.description(description: userData.bio ?? "No Bio");
+                    meta.keywords(keywords: userData.bodyType.value);
+                    meta.ogImage(ogImage: userData.profileUrl ?? "https://img.icons8.com/ios/500/null.png");
+                  }
+                  return ListView(
+                    padding: EdgeInsets.symmetric(
+                      vertical: isDesktop
+                          ? 32
+                          : isTablet
+                              ? 24
+                              : 16,
+                      horizontal: isDesktop
+                          ? 32
+                          : isTablet
+                              ? 24
+                              : 8,
+                    ),
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 16),
+                          Center(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.25),
+                                    blurRadius: 24,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                ],
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.background,
+                                  width: 6,
+                                ),
+                              ),
+                              child: ClipOval(
+                                child: (userData.profileUrl != null && userData.profileUrl!.isNotEmpty)
+                                    ? CachedNetworkImage(
+                                        imageUrl: userData.profileUrl!,
+                                        width: 140,
+                                        height: 140,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) => Container(
+                                          width: 140,
+                                          height: 140,
+                                          color: Theme.of(context).colorScheme.surfaceVariant,
+                                          child: Icon(Icons.person,
+                                              size: 60,
+                                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                                        ),
+                                        errorWidget: (context, url, error) => Container(
+                                          width: 140,
+                                          height: 140,
+                                          color: Theme.of(context).colorScheme.surfaceVariant,
+                                          child: Icon(Icons.person,
+                                              size: 60,
+                                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                                        ),
+                                      )
+                                    : Container(
+                                        width: 140,
+                                        height: 140,
+                                        color: Theme.of(context).colorScheme.surfaceVariant,
+                                        child: Icon(Icons.person,
+                                            size: 60, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                                      ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Consumer(builder: (context, ref, child) {
+                            final isFav = ref.watch(favProvider(widget.id!));
+                            return isFav.when(
+                              error: (_, __) => const SizedBox(),
+                              loading: () => const SizedBox(),
+                              data: (value) => Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(30),
+                                  onTap: () async {
+                                    final favNotifier = ref.read(favProvider(widget.id!).notifier);
+                                    if (value) {
+                                      await favNotifier.removeUserFromFavorite(widget.id!);
+                                    } else {
+                                      await favNotifier.addUserToFavorite(widget.id!);
+                                    }
+                                  },
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 300),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: value
+                                          ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                                          : Theme.of(context).colorScheme.surfaceVariant,
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(
+                                        color: value
+                                            ? Theme.of(context).colorScheme.primary
+                                            : Theme.of(context).colorScheme.outline,
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          value ? Icons.favorite : Icons.favorite_border,
+                                          color: value
+                                              ? Theme.of(context).colorScheme.primary
+                                              : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          value ? 'Favorited' : 'Favorite',
+                                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                color: value
+                                                    ? Theme.of(context).colorScheme.primary
+                                                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                          const SizedBox(height: 24),
+                          Card(
+                            elevation: 6,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                            color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  StreamBuilder<firebase_database.DatabaseEvent>(
+                                    stream: refData.onValue,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        bool isOnline = false;
+                                        Timestamp? lastSeen;
+                                        if (snapshot.data!.snapshot.value != null) {
+                                          final data = snapshot.data!.snapshot.value as Map;
+                                          isOnline = data['isOnline'];
+                                          lastSeen = data['lastSeen'] != null
+                                              ? Timestamp.fromMillisecondsSinceEpoch(data['lastSeen'])
+                                              : null;
+                                        } else {
+                                          isOnline = false;
+                                        }
+                                        return Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 7,
+                                              backgroundColor: isOnline ? Colors.green : Colors.amber,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            isOnline == false && lastSeen != null
+                                                ? Text(
+                                                    "Last seen: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(lastSeen.millisecondsSinceEpoch))}",
+                                                    style: const TextStyle(fontSize: 13, color: Colors.black54),
+                                                  )
+                                                : Text(
+                                                    isOnline ? "Online" : "Offline",
+                                                    style: const TextStyle(fontSize: 13, color: Colors.black54),
+                                                  ),
+                                          ],
+                                        );
+                                      }
+                                      return const SizedBox(height: 20);
+                                    },
+                                  ),
+                                  const SizedBox(height: 18),
+                                  Text(
+                                    "About",
+                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                        fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    userData.bio ?? "",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 24),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).colorScheme.primary.withOpacity(0.07),
+                                      borderRadius: BorderRadius.circular(18),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        _profileDetailRow(Icons.person, "Role", userData.role.value),
+                                        _profileDetailRow(
+                                            Icons.accessibility_new, "Body Type", userData.bodyType.value),
+                                        _profileDetailRow(Icons.people, "Ethnicity", userData.ethnicity.value),
+                                        _profileDetailRow(
+                                            Icons.favorite, "Relationship Status", userData.relationshipStatus.value),
+                                        _profileDetailRow(Icons.search, "Looking for", userData.lookingFor.value),
+                                        _profileDetailRow(Icons.place, "Where to meet", userData.whereToMeet.value),
+                                        _profileDetailRow(Icons.height, "Height", userData.height ?? "Do not Show"),
+                                        _profileDetailRow(
+                                            Icons.monitor_weight, "Weight", userData.weight ?? "Do not Show"),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
-                  ),
-                ),
+                  );
+                },
               ),
-            ],
-          );
-        },
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ElevatedButton.icon(
-            icon: const Icon(Icons.chat_bubble),
-            label: currentUser!.blockList.contains(otherUser.value?.id) ? const Text("Unblock") : const Text("Message"),
-            onPressed: () async {
-              // Future.microtask(() async {
-              //   ref.read(chatRepoProvider.notifier).connectUser(
-              //         user: await ref.read(Dependency.profileProvider).getCurrentUser(),
-              //       );
-              // });
+            ),
+          ),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: otherUser.when(
+              data: (userData) => ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                icon: Icon(Icons.chat_bubble, color: Theme.of(context).colorScheme.onPrimary),
+                label: (currentUser != null && userData != null && currentUser.blockList.contains(userData.id))
+                    ? Text("Unblock", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
+                    : Text("Message", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+                onPressed: () async {
+                  // Todo: create chat one to one chat
+                },
+              ),
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
-              // final channelState =
-              //     await ref.read(chatRepoProvider.notifier).createChat(currentUser.id, otherUser.value!.id);
-              // // AutoRouter.of(context).push( ChatRoute(channel: ));
-              // // print(channel?.toJson());
-              // final channel = await ref.read(chatClientProvider).queryChannelsOnline(
-              //         filter: Filter.and([
-              //       Filter.equal('type', 'messaging'), // Use your actual channel type here (e.g., 'messaging')
-              //       Filter.in_(
-              //           'members', [currentUser.id]), // Include the current user's ID in an $in filter for access
-              //       Filter.in_('members', [otherUser.value!.id]), // Also include the other user's ID
-              //     ]));
-
-              // print("channel ${channel.length}");
-              // context.router.push(ChatRoute(channel: channel[0], id: channel[0].id!));
-              // Todo create chat one to one chat
-            }),
+  Widget _profileDetailRow(IconData icon, String title, String? value) {
+    if (value == null) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        children: [
+          Icon(icon, color: Theme.of(context).colorScheme.primary, size: 22),
+          const SizedBox(width: 12),
+          Text(
+            title + ':',
+            style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 15),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

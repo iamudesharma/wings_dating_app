@@ -10,7 +10,7 @@ class HttpTemplate {
   final Duration timeout;
 
   HttpTemplate({
-    this.baseUrl = "http://192.168.1.12:3000",
+    this.baseUrl = "http://localhost:3000",
     this.defaultHeaders = const {'Content-Type': 'application/json'},
     this.timeout = const Duration(seconds: 10),
   });
