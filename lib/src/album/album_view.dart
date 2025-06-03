@@ -3,7 +3,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -13,10 +12,11 @@ import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/album/controller/album_controller.dart';
 import 'package:wings_dating_app/src/model/album_model.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // part 'album_view.g.dart';
 
-final getAllAlbumsProvider = FutureProvider<List<AlbumListModel>>((ref) async {
+final getAllAlbumsProvider = FutureProvider<List<UserAlbumModel>>((ref) async {
   return ref.read(albumsRepoProvider).getAllAlbums();
 });
 
@@ -24,125 +24,194 @@ final getAllAlbumsProvider = FutureProvider<List<AlbumListModel>>((ref) async {
 class AlbumView extends ConsumerWidget {
   const AlbumView({super.key});
 
+  void _showCreateAlbumDialog(BuildContext context, WidgetRef ref) {
+    final nameController = TextEditingController();
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Create New Album'),
+        content: TextField(
+          controller: nameController,
+          decoration: const InputDecoration(hintText: 'Album Name'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (nameController.text.trim().isEmpty || userId == null) return;
+              final album = UserAlbumModel(
+                ownerId: userId,
+                name: nameController.text.trim(),
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              );
+              await ref.read(AlbumControllerProvider(userId).notifier).createAlbum(album);
+              Navigator.of(context).pop();
+            },
+            child: const Text('Create'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    final albumController = ref.watch(getAllAlbumsProvider);
+    // final sharedAlbums = ref.watch(sharedAlbumProvider);
+    final isWide = MediaQuery.of(context).size.width > 600;
+
     return RefreshIndicator(
-      onRefresh: () => Future.delayed(
-        const Duration(seconds: 1),
-      ),
+      onRefresh: () async {
+        if (userId != null) {
+          return await ref.refresh(getAllAlbumsProvider);
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
-          // leading: const AutoLeadingButton(),
-          title: const Text("Chats"),
+          title: const Text("Albums"),
           actions: [
-            GestureDetector(
-                onTap: () async {
-                  // final image = await pickImageForm(ImageSource.gallery);
-                  // if (image != null) {
-                  context.router.push(CreateAlbumRoute());
-
-                  // }
-                },
-                child: Text("Create Album")),
+            IconButton(
+              icon: const Icon(Icons.add_photo_alternate_rounded),
+              tooltip: 'Create Album',
+              onPressed: () => _showCreateAlbumDialog(context, ref),
+            ),
           ],
         ),
-        body: ResponsiveBuilder(builder: (context, sizingInformation) {
-          final albums = ref.watch(getAllAlbumsProvider);
-          final sharedAlbums = ref.watch(sharedAlbumProvider);
-          return Row(
-            children: [
-              NavigationBarWidget(
-                sizingInformation: sizingInformation,
-              ),
-              Expanded(
+        body: ResponsiveBuilder(
+          builder: (context, sizingInformation) {
+            return Row(
+              children: [
+                if (isWide) NavigationBarWidget(sizingInformation: sizingInformation),
+                Expanded(
                   flex: 4,
-                  child: albums.when(
-                    data: (data) => GridView.builder(
+                  child: albumController.when(
+                    data: (albums) {
+                      final allAlbums = albums ?? <UserAlbumModel>[];
+                      // final shared = sharedAlbums.value ?? [];
+                      if (allAlbums.isEmpty) {
+                        return const Center(child: Text('No albums found. Create your first album!'));
+                      }
+                      return GridView.builder(
+                        padding: const EdgeInsets.all(16),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3),
-                        itemCount:
-                            data.length + (sharedAlbums.value?.length ?? 0),
+                          crossAxisCount: isWide ? 4 : 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.85,
+                        ),
+                        itemCount: allAlbums.length,
                         itemBuilder: (context, index) {
-                          print("index ${index >= data.length}");
-                          if (index >= data.length) {
-                            final sharedAlbum =
-                                sharedAlbums.value![index - data.length];
-                            final image = List.from(sharedAlbum
-                                .message
-                                .attachments
-                                .first
-                                .extraData["imageUrls"] as dynamic);
-                            return ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Stack(
-                                children: [
-                                  Animate(
-                                    effects: [BlurEffect()],
-                                    child: Positioned.fill(
-                                        child: Image.network(
-                                      image.first,
-                                      fit: BoxFit.cover,
-                                    )),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Stack(
-                              children: [
-                                if (data[index].imageUrls.isNotEmpty)
-                                  Animate(
-                                    effects: [BlurEffect()],
-                                    child: Positioned.fill(
-                                        child: Image.network(
-                                      data[index].imageUrls[index],
-                                      fit: BoxFit.cover,
-                                    )),
-                                  ),
-                                Center(
-                                  child: InkWell(
-                                    onTap: () {
-                                      context.router.push(
-                                          CreateAlbumRoute(id: data[index].id));
-
-                                      // context.router.push(AlbumDetailsRoute(id: data[index].id));
-                                    },
-                                    child: Card(
-                                      color: Colors.black12,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          data[index].name,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 21,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          final album = allAlbums[index];
+                          return _AlbumCard(
+                            name: album.name,
+                            imageUrl: album.photos.isNotEmpty ? album.photos.first : null,
+                            onTap: () {
+                              context.router.push(CreateAlbumRoute(id: album.id ?? album.ownerId));
+                            },
                           );
-                        }),
-                    loading: () => const Center(
-                        child: CircularProgressIndicator.adaptive()),
-                    error: (error, stackTrace) =>
-                        Center(child: Text(error.toString())),
-                  )),
-            ],
-          );
-        }),
+                        },
+                      );
+                    },
+                    loading: () => const Center(child: CircularProgressIndicator.adaptive()),
+                    error: (error, stackTrace) => Center(child: Text(error.toString())),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
 }
 
-Future<void> openEditor(BuildContext context, WidgetRef ref,
-    {required Uint8List path, required String id}) async {
+class _AlbumCard extends StatelessWidget {
+  final String name;
+  final String? imageUrl;
+  final VoidCallback onTap;
+  final bool isShared;
+  const _AlbumCard({
+    required this.name,
+    this.imageUrl,
+    required this.onTap,
+    this.isShared = false,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Stack(
+          children: [
+            if (imageUrl != null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.network(
+                  imageUrl!,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                  loadingBuilder: (context, child, progress) =>
+                      progress == null ? child : const Center(child: CircularProgressIndicator()),
+                  errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.broken_image)),
+                ),
+              ),
+            if (isShared)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.purple.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text(
+                    'Shared',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
+                ),
+              ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+                ),
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Future<void> openEditor(BuildContext context, WidgetRef ref, {required Uint8List path, required String id}) async {
   await Navigator.push(
     context,
     MaterialPageRoute(
@@ -151,12 +220,9 @@ Future<void> openEditor(BuildContext context, WidgetRef ref,
               path,
               callbacks: ProImageEditorCallbacks(
                 onImageEditingComplete: (bytes) async {
-                  final _path = await uploadFileToFirebaseAlbum(bytes);
-
-                  await ref
-                      .read(AlbumControllerProvider(id).notifier)
-                      .addImage(_path);
-
+                  final uploadedPath = await uploadFileToFirebaseAlbum(bytes);
+                  // Add image to album after upload
+                  await ref.read(AlbumControllerProvider(id).notifier).addImageToAlbum(uploadedPath);
                   if (context.mounted) {
                     Navigator.pop(context);
                   }
@@ -167,12 +233,11 @@ Future<void> openEditor(BuildContext context, WidgetRef ref,
               path,
               callbacks: ProImageEditorCallbacks(
                 onImageEditingComplete: (bytes) async {
-                  final path = await uploadFileToFirebaseAlbum(bytes);
-
-                  await ref
-                      .read(AlbumControllerProvider(id).notifier)
-                      .addImage(path);
-
+                  final uploadedPath = await uploadFileToFirebaseAlbum(bytes);
+                  // Add image to album after upload
+                  await ref.read(AlbumControllerProvider(id).notifier).addImageToAlbum(
+                        uploadedPath,
+                      );
                   if (context.mounted) {
                     Navigator.pop(context);
                   }

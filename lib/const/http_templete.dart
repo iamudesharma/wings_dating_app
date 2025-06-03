@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'error_handling_template.dart';
@@ -9,7 +10,7 @@ class HttpTemplate {
   final Duration timeout;
 
   HttpTemplate({
-    this.baseUrl = "http://localhost:3000",
+    this.baseUrl = "http://192.168.1.12:3000",
     this.defaultHeaders = const {'Content-Type': 'application/json'},
     this.timeout = const Duration(seconds: 10),
   });

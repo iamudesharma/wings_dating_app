@@ -43,7 +43,16 @@ class ProfileRepo with RepositoryExceptionMixin {
   HttpTemplate httpTemplate = HttpTemplate();
   Future<void> createUserDoc(UserModel userModel) async {
     logger.i("createUserDoc userModel${userModel.toJson()}");
-    final createUser = await httpTemplate.post("/users", body: userModel.toJson());
+    try {
+      final createUser = await httpTemplate.post("/users", body: userModel.toJson());
+    } catch (e) {
+      logger.i("createUserDoc userModel${e}");
+      // Handle the error appropriately
+      logger.e("Error creating user document: $e");
+      rethrow; // or handle it in a way that fits your app's logic
+
+      // TODO
+    }
   }
 
   // Future<void> updateUserDoc(UserModel userModel) async {
@@ -152,12 +161,24 @@ class ProfileRepo with RepositoryExceptionMixin {
         final List<dynamic> users = response['data'];
         print("users userMap: $users");
         print("users runtimeType: ${users.runtimeType}");
-        return users.map((e) => UserModel.fromJson(e)).toList();
+        return users
+            .map((e) {
+              print("users runtimeType: ${e.runtimeType}");
+              // Defensive: Only parse if e is Map<String, dynamic> and has required fields
+              if (e is Map<String, dynamic> && e['id'] != null && e['id'] is String) {
+                return UserModel.fromJson(e);
+              } else {
+                logger.e("Skipping invalid user entry: $e");
+                return null;
+              }
+            })
+            .where((e) => e != null)
+            .toList();
       } else {
         throw Exception('Failed to fetch user: ${response['message'] ?? response}');
       }
-    } catch (e) {
-      logger.e("Error fetching user list: $e");
+    } catch (e, st) {
+      logger.e("Error fetching user list: $e $st");
       return [];
     }
   }
@@ -293,25 +314,22 @@ class ProfileRepo with RepositoryExceptionMixin {
   }
 
   Future<void> addUserToFavorite(String id) async {
-    final userCollection = FirebaseFirestore.instance.collection('users');
+    // final userCollection = FirebaseFirestore.instance.collection('users');
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-    if (currentUserId != null) {
-      await userCollection.doc(currentUserId).update({
-        "favoriteList": FieldValue.arrayUnion([id]),
-      });
-    }
+    final response = await httpTemplate.post("/users/$currentUserId/favorite/$id");
+
+    // if (currentUserId != null) {
+    //   await userCollection.doc(currentUserId).update({
+    //     "favoriteList": FieldValue.arrayUnion([id]),
+    //   });
+    // }
   }
 
   Future<void> removeUserFromFavorite(String id) async {
-    final userCollection = FirebaseFirestore.instance.collection('users');
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-    if (currentUserId != null) {
-      await userCollection.doc(currentUserId).update({
-        "favoriteList": FieldValue.arrayRemove([id]),
-      });
-    }
+    final response = await httpTemplate.delete("/users/$currentUserId/favorite/$id");
   }
 }
 
