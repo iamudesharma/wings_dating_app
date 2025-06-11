@@ -1,23 +1,15 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
-// import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/const/http_templete.dart';
-import 'package:wings_dating_app/const/pref_util.dart';
 import 'package:wings_dating_app/dependency/dependencies.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
 import 'package:wings_dating_app/repo/repo_exception.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
+import 'package:wings_dating_app/src/model/engagement_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
-
-import '../helpers/extra_data.dart';
 
 part 'profile_repo.g.dart';
 
@@ -31,22 +23,13 @@ class ProfileRepo with RepositoryExceptionMixin {
 
   ProfileRepo(this.ref);
 
-  // CollectionReference<UserModel> userCollection() {
-  //   final data = ref.read(Dependency.firebaseStoreProvider).collection("users").withConverter<UserModel>(
-  //         fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
-  //         toFirestore: (user, _) => user.toJson(),
-  //       );
-
-  //   return data;
-  // }
-
   HttpTemplate httpTemplate = HttpTemplate();
   Future<void> createUserDoc(UserModel userModel) async {
-    logger.i("createUserDoc userModel${userModel.toJson()}");
+    logger.i("createUserDoc userModel");
     try {
-      final createUser = await httpTemplate.post("/users", body: userModel.toJson());
+      await httpTemplate.post("/users", body: userModel.toJson());
     } catch (e) {
-      logger.i("createUserDoc userModel${e}");
+      logger.i("createUserDoc userModel");
       // Handle the error appropriately
       logger.e("Error creating user document: $e");
       rethrow; // or handle it in a way that fits your app's logic
@@ -313,11 +296,12 @@ class ProfileRepo with RepositoryExceptionMixin {
     return [];
   }
 
-  Future<void> addUserToFavorite(String id) async {
+  Future<FavoriteResponse> addUserToFavorite(String id) async {
     // final userCollection = FirebaseFirestore.instance.collection('users');
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
     final response = await httpTemplate.post("/users/$currentUserId/favorite/$id");
+    return FavoriteResponse.fromJson(response);
 
     // if (currentUserId != null) {
     //   await userCollection.doc(currentUserId).update({
@@ -326,85 +310,63 @@ class ProfileRepo with RepositoryExceptionMixin {
     // }
   }
 
-  Future<void> removeUserFromFavorite(String id) async {
+  Future<FavoriteResponse> removeUserFromFavorite(String id) async {
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
     final response = await httpTemplate.delete("/users/$currentUserId/favorite/$id");
+    return FavoriteResponse.fromJson(response);
   }
-}
 
-String _mapPositionToRole(String position) {
-  switch (position.toLowerCase()) {
-    case 'top':
-      return Role.top.value;
-    case 'vers top':
-      return Role.versTop.value;
-    case 'versatile':
-      return Role.versatile.value;
-    case 'vers bottom':
-      return Role.versBottom.value;
-    case 'bottom':
-      return Role.bottom.value;
-
-    default:
-      return Role.doNotShow.name;
+  Future<TapResponse> sendTap(String targetUserId) async {
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserId == null) {
+      throw Exception('No current user logged in');
+    }
+    final response = await httpTemplate.post("/users/$currentUserId/tap/$targetUserId");
+    return TapResponse.fromJson(response);
   }
-}
 
-bool matchesHeightRange(String? heightStr, String range) {
-  if (heightStr == null) return false;
-  final heightCm = double.tryParse(heightStr.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
-
-  switch (range) {
-    case '< 5\'5"':
-      return heightCm < 165;
-    case '5\'5" - 5\'10"':
-      return heightCm >= 165 && heightCm <= 178;
-    case '5\'11" - 6\'2"':
-      return heightCm >= 180 && heightCm <= 188;
-    case '6\'3" and above':
-      return heightCm > 190;
-    default:
-      return true;
-  }
-}
-
-bool matchesWeightRange(String? weightStr, String range) {
-  if (weightStr == null) return false;
-  final weightKg = double.tryParse(weightStr.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
-
-  switch (range) {
-    case '< 60kg':
-      return weightKg < 60;
-    case '60 - 75kg':
-      return weightKg >= 60 && weightKg <= 75;
-    case '76 - 90kg':
-      return weightKg > 75 && weightKg <= 90;
-    case '90kg+':
-      return weightKg > 90;
-    default:
-      return true;
-  }
-}
-
-// GeoPoint geopointFrom(UserModel? data) => data!.position!.geopoint;
-
-Map<String, dynamic> _normalizeUserMap(Map<String, dynamic> userMap) {
-  // Map backend camelCase values to display values expected by the enums
-  const mapping = {
-    "doNotShow": "Do not show",
-    "top": "Top",
-    "versTop": "Vers Top",
-    "versatile": "Versatile",
-    "versBottom": "Vers Bottom",
-    "bottom": "Bottom",
-    // Add more mappings for other enums if needed
-  };
-
-  for (final key in ['role', 'bodyType', 'relationshipStatus', 'ethnicity', 'lookingFor', 'whereToMeet']) {
-    if (userMap[key] != null && mapping.containsKey(userMap[key])) {
-      userMap[key] = mapping[userMap[key]];
+  Future<UserTapStats> getUserTapStats(String userId) async {
+    final response = await httpTemplate.get("/users/$userId/taps");
+    // Defensive: If API returns a top-level success/message/remainingTaps/tappedBy, wrap as needed
+    if (response['success'] != null && response['message'] != null) {
+      return UserTapStats.fromJson(response);
+    } else if (response['data'] != null) {
+      // Some APIs wrap the result in a 'data' key
+      return UserTapStats.fromJson(response['data']);
+    } else {
+      // Defensive fallback: try to parse whatever is returned
+      return UserTapStats.fromJson(response);
     }
   }
-  return userMap;
+
+  /// Log that the current user visited another user's profile
+  Future<ProfileVisitResponse> visitProfile(String targetUserId) async {
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserId == null) {
+      throw Exception('No current user logged in');
+    }
+    final response = await httpTemplate.post("/users/$targetUserId/view/$currentUserId");
+    return ProfileVisitResponse.fromJson(response);
+  }
+
+  /// Get the list of profiles the current user has visited
+  Future<PaginatedVisitsResponse> getVisitedProfiles({int page = 1, int limit = 20}) async {
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserId == null) {
+      throw Exception('No current user logged in');
+    }
+    final response = await httpTemplate.get("/users/$currentUserId/visited?page=$page&limit=$limit");
+    return PaginatedVisitsResponse.fromJson(response);
+  }
+
+  /// Get the list of users who have visited the current user's profile
+  Future<PaginatedVisitsResponse> getProfileVisitors({int page = 1, int limit = 20}) async {
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserId == null) {
+      throw Exception('No current user logged in');
+    }
+    final response = await httpTemplate.get("/users/$currentUserId/visitors?page=$page&limit=$limit");
+    return PaginatedVisitsResponse.fromJson(response);
+  }
 }

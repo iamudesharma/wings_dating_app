@@ -11,6 +11,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:wings_dating_app/src/model/user_models.dart';
+import 'package:wings_dating_app/src/model/engagement_models.dart';
 
 import '../../../dependency/dependencies.dart';
 import '../../../helpers/extra_data.dart';
@@ -99,6 +100,23 @@ class ProfileController extends ChangeNotifier {
 
   Future<void> addToBlockList({required String id, required int cubeId}) async {
     await ref.read(Dependency.profileProvider).removeToBlockList(id: id, cubeId: cubeId);
+  }
+
+  /// Call this when a user visits another user's profile
+  Future<void> visitProfile(String targetUserId) async {
+    await ref.read(Dependency.profileProvider).visitProfile(targetUserId);
+  }
+
+  /// Get the list of profiles the current user has visited
+  Future<List<VisitRecord>> getVisitedProfiles() async {
+    final response = await ref.read(Dependency.profileProvider).getVisitedProfiles();
+    return response.visits;
+  }
+
+  /// Get the list of users who have visited the current user's profile
+  Future<List<VisitRecord>> getProfileVisitors() async {
+    final response = await ref.read(Dependency.profileProvider).getProfileVisitors();
+    return response.visits;
   }
 }
 

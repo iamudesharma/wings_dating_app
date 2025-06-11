@@ -425,6 +425,22 @@ class ProfileRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ProfileVisitsView]
+class ProfileVisitsRoute extends PageRouteInfo<void> {
+  const ProfileVisitsRoute({List<PageRouteInfo>? children})
+    : super(ProfileVisitsRoute.name, initialChildren: children);
+
+  static const String name = 'ProfileVisitsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ProfileVisitsView();
+    },
+  );
+}
+
+/// generated route for
 /// [SearchUsersView]
 class SearchUsersRoute extends PageRouteInfo<void> {
   const SearchUsersRoute({List<PageRouteInfo>? children})

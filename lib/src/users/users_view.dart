@@ -22,15 +22,12 @@ import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/model/geo_point_data.dart';
 import 'package:wings_dating_app/src/users/widget/users_search_delegate.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:wings_dating_app/src/users/widget/tap_list_view.dart';
 
 import '../../const/pref_util.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
 import 'widget/user_grid_item.dart';
-
-// final userListProvider = FutureProvider<List<UserModel>?>((ref) async {
-//   return ref.read(profileRepoProvider).getUserList();
-// });
 
 final user = FirebaseAuth.instance.currentUser;
 final DatabaseReference statusRef = FirebaseDatabase.instance.ref("status/${user!.uid}");
@@ -186,6 +183,17 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                     ),
                     title: Text(userData.username),
                     actions: [
+                      IconButton(
+                        icon: Icon(Icons.whatshot),
+                        tooltip: 'View Taps',
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => TapListView(userId: userData.id),
+                            ),
+                          );
+                        },
+                      ),
                       InkWell(
                           onTap: () {
                             AutoRouter.of(context).push(const SearchUsersRoute());
@@ -195,14 +203,11 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                       InkWell(
                           onTap: () {
                             AutoRouter.of(context).push(const FilterRoute()).then((result) {
-                              // if (value != null) {
                               if (result != null && result is Map<String, dynamic>) {
                                 setState(() {
                                   filters = result;
                                 });
                               }
-                              // ref.read(userListProvider(value as dynamic));
-                              // }
                             });
                           },
                           child: Icon(Icons.filter_list_alt)),

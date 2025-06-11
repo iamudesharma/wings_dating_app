@@ -78,6 +78,101 @@ class OtherUserProfileView extends ConsumerStatefulWidget {
 }
 
 class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
+  bool hasTapped = false;
+  String tapError = '';
+
+  @override
+  void initState() {
+    super.initState();
+    print('DEBUG: OtherUserProfileView initState called for user ID: ${widget.id}');
+    Future.delayed(Duration.zero, () async {
+      print('DEBUG: Starting async operations in initState');
+      // Record profile visit first, which might give us the tap status
+      await _recordProfileVisit();
+      // Then check tap status as fallback if not already set
+      await _checkTapStatus();
+    });
+  }
+
+  Future<void> _recordProfileVisit() async {
+    print('DEBUG: _recordProfileVisit called - UPDATED');
+    final currentUser = ref.read(ProfileController.userControllerProvider).userModel;
+    final viewedUserId = widget.id;
+
+    print('DEBUG: Current user: ${currentUser?.id}, Viewed user: $viewedUserId');
+
+    if (currentUser == null) {
+      print('DEBUG: No current user - skipping visit recording');
+      return;
+    }
+
+    if (viewedUserId == null) {
+      print('DEBUG: No viewed user ID - skipping visit recording');
+      return;
+    }
+
+    if (currentUser.id == viewedUserId) {
+      print('DEBUG: Self-visit detected - skipping visit recording');
+      return;
+    }
+
+    try {
+      print('DEBUG: Recording profile visit - Viewer: ${currentUser.id}, Viewed: $viewedUserId');
+      final result = await ref.read(profileRepoProvider).visitProfile(viewedUserId);
+      print('DEBUG: Profile visit recorded successfully: ${result.toString()}');
+
+      // Check if the response includes engagement status
+      if (result.engagementStatus != null) {
+        final engagementStatus = result.engagementStatus!;
+        print('DEBUG: Found engagement status in visit response: ${engagementStatus.toString()}');
+
+        setState(() {
+          hasTapped = engagementStatus.hasTapped;
+        });
+        print('DEBUG: Updated hasTapped from visit response: $hasTapped');
+      }
+    } catch (e) {
+      print('DEBUG: Error recording profile visit: $e');
+    }
+  }
+
+  Future<void> _checkTapStatus() async {
+    print('DEBUG: _checkTapStatus called - UPDATED');
+    final currentUser = ref.read(ProfileController.userControllerProvider).userModel;
+    final viewedUserId = widget.id;
+    if (currentUser == null || viewedUserId == null) return;
+
+    // Only check tap status if we haven't already got it from the profile visit
+    if (hasTapped) {
+      print('DEBUG: Tap status already known from profile visit');
+      return;
+    }
+
+    try {
+      // Fallback: Fetch tap stats for the viewed user
+      final tapStats = await ref.read(profileRepoProvider).getUserTapStats(viewedUserId);
+      print("DEBUG: Fallback tap stats: $tapStats");
+
+      // Check both new format (engagementStatus) and old format (tappedBy array)
+      bool tapStatus = false;
+
+      if (tapStats.engagementStatus != null) {
+        tapStatus = tapStats.engagementStatus!.hasTapped;
+        print('DEBUG: Got tap status from new format: $tapStatus');
+      } else if (tapStats.tappedBy.contains(currentUser.id)) {
+        // Fallback to old format
+        tapStatus = true;
+        print('DEBUG: Got tap status from old format: $tapStatus');
+      }
+
+      setState(() {
+        hasTapped = tapStatus;
+      });
+    } catch (e) {
+      print('DEBUG: Error checking tap status: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     FirebaseAnalytics.instance.logEvent(
@@ -238,59 +333,58 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                           Consumer(builder: (context, ref, child) {
                             final isFav = ref.watch(favProvider(widget.id!));
                             return isFav.when(
-                              error: (_, __) => const SizedBox(),
-                              loading: () => const SizedBox(),
-                              data: (value) => Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(30),
-                                  onTap: () async {
-                                    final favNotifier = ref.read(favProvider(widget.id!).notifier);
-                                    if (value) {
-                                      await favNotifier.removeUserFromFavorite(widget.id!);
-                                    } else {
-                                      await favNotifier.addUserToFavorite(widget.id!);
-                                    }
-                                  },
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      color: value
-                                          ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-                                          : Theme.of(context).colorScheme.surfaceVariant,
-                                      borderRadius: BorderRadius.circular(30),
-                                      border: Border.all(
-                                        color: value
-                                            ? Theme.of(context).colorScheme.primary
-                                            : Theme.of(context).colorScheme.outline,
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          value ? Icons.favorite : Icons.favorite_border,
-                                          color: value
-                                              ? Theme.of(context).colorScheme.primary
-                                              : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          value ? 'Favorited' : 'Favorite',
-                                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                error: (_, __) => const SizedBox(),
+                                loading: () => const SizedBox(),
+                                data: (value) => Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(30),
+                                        onTap: () async {
+                                          final favNotifier = ref.read(favProvider(widget.id!).notifier);
+                                          if (value) {
+                                            await favNotifier.removeUserFromFavorite(widget.id!);
+                                          } else {
+                                            await favNotifier.addUserToFavorite(widget.id!);
+                                          }
+                                        },
+                                        child: AnimatedContainer(
+                                          duration: const Duration(milliseconds: 300),
+                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                          decoration: BoxDecoration(
+                                            color: value
+                                                ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                                                : Theme.of(context).colorScheme.surfaceVariant,
+                                            borderRadius: BorderRadius.circular(30),
+                                            border: Border.all(
+                                              color: value
+                                                  ? Theme.of(context).colorScheme.primary
+                                                  : Theme.of(context).colorScheme.outline,
+                                              width: 1.5,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                value ? Icons.favorite : Icons.favorite_border,
                                                 color: value
                                                     ? Theme.of(context).colorScheme.primary
                                                     : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                                               ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                value ? 'Favorited' : 'Favorite',
+                                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                      color: value
+                                                          ? Theme.of(context).colorScheme.primary
+                                                          : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
+                                      ),
+                                    ));
                           }),
                           const SizedBox(height: 24),
                           Card(
@@ -394,20 +488,71 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(16.0),
             child: otherUser.when(
-              data: (userData) => ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                icon: Icon(Icons.chat_bubble, color: Theme.of(context).colorScheme.onPrimary),
-                label: (currentUser != null && userData != null && currentUser.blockList.contains(userData.id))
-                    ? Text("Unblock", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
-                    : Text("Message", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
-                onPressed: () async {
-                  // Todo: create chat one to one chat
-                },
+              data: (userData) => Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      icon: Icon(
+                        Icons.whatshot,
+                        color: hasTapped
+                            ? Colors.red // or Colors.yellow for fire effect
+                            : Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      label: Text(
+                        hasTapped ? "Tapped" : "Tap",
+                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                      ),
+                      onPressed: hasTapped
+                          ? null
+                          : () async {
+                              try {
+                                final tapResponse = await ref.read(profileRepoProvider).sendTap(userData!.id);
+                                setState(() {
+                                  hasTapped = true;
+                                  tapError = '';
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(tapResponse.message)),
+                                );
+                              } catch (e) {
+                                if (e.toString().contains('already tapped')) {
+                                  setState(() {
+                                    hasTapped = true;
+                                    tapError = 'You have already tapped this user today';
+                                  });
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Failed to send tap: ${e.toString()}')),
+                                );
+                              }
+                            },
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      icon: Icon(Icons.chat_bubble, color: Theme.of(context).colorScheme.onPrimary),
+                      label: (currentUser != null && userData != null && currentUser.blockList.contains(userData.id))
+                          ? Text("Unblock", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
+                          : Text("Message", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+                      onPressed: () async {
+                        // Todo: create chat one to one chat
+                      },
+                    ),
+                  ),
+                ],
               ),
               loading: () => const SizedBox.shrink(),
               error: (_, __) => const SizedBox.shrink(),

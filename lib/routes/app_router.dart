@@ -22,6 +22,7 @@ import '../src/profile/add_additional_information_view.dart';
 import '../src/profile/edit_profile_view.dart';
 import '../src/profile/other_user_profile_view.dart';
 import '../src/profile/profile_view.dart';
+import '../src/profile/profile_visits_view.dart';
 import '../src/profile/user_block_list_view.dart';
 import '../src/users/search/search_users_view.dart';
 import '../src/users/users_view.dart';
@@ -103,6 +104,11 @@ class AppRouter extends RootStackRouter {
     AutoRoute(
       page: CreateAlbumRoute.page,
       type: const RouteType.adaptive(),
+    ),
+    AutoRoute(
+      page: ProfileVisitsRoute.page,
+      path: "/profile-visits",
+      keepHistory: true,
     ),
   ];
 }
