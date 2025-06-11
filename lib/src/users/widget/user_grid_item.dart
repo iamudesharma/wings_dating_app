@@ -8,7 +8,6 @@ import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class UserGridItem extends ConsumerStatefulWidget {
   const UserGridItem(
@@ -29,6 +28,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
   @override
   Widget build(BuildContext context) {
     DatabaseReference refData = FirebaseDatabase.instance.ref('status/${widget.users.id}');
+    final theme = Theme.of(context);
     return InkWell(
       onTap: () {
         FirebaseAnalytics.instance.logEvent(
@@ -40,6 +40,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
         if (widget.isCurrentUser!) {
           AutoTabsRouter.of(context).setActiveIndex(3);
         } else {
+          print('DEBUG: Navigating to OtherUserProfileView for user: ${widget.users.id}');
           AutoRouter.of(context).push(
             OtherUserProfileRoute(
               id: widget.users.id,
@@ -47,148 +48,194 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
           );
         }
       },
+      borderRadius: BorderRadius.circular(18),
       child: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: CachedNetworkImageProvider(
-                widget.users.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-            fit: BoxFit.cover,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.10),
+              blurRadius: 16,
+              offset: const Offset(0, 8),
+            ),
+          ],
+          gradient: LinearGradient(
+            colors: [
+              theme.colorScheme.surface.withOpacity(0.85),
+              theme.colorScheme.primary.withOpacity(0.10),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: Theme.of(context).primaryColor.withOpacity(0.6),
         ),
-        // ignore: prefer_const_literals_to_create_immutables
-        child: Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Text(
-                  ref.read(ProfileController.userControllerProvider).getDistance(
-                        GeoPoint(
-                          widget.users.position!.geopoint[1],
-                          widget.users.position!.geopoint[0],
-                        ),
-                        userCoordinates: widget.userCoordinates,
+        child: Stack(
+          children: [
+            // Profile image
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: CachedNetworkImage(
+                  imageUrl: widget.users.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
+                  fit: BoxFit.cover,
+                  color: Colors.black.withOpacity(0.18),
+                  colorBlendMode: BlendMode.darken,
+                ),
+              ),
+            ),
+            // Glassmorphism overlay
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(18),
+                  color: Colors.white.withOpacity(0.10),
+                  // Optionally add blur effect if desired
+                ),
+              ),
+            ),
+            // Content
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Online status and edit button
+                  Row(
+                    children: [
+                      StreamBuilder<DatabaseEvent>(
+                        stream: refData.onValue,
+                        builder: (context, snapshot) {
+                          bool isOnline = false;
+                          if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+                            final data = snapshot.data!.snapshot.value as Map;
+                            isOnline = data['isOnline'] ?? false;
+                          }
+                          return Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2),
+                              color: isOnline ? Colors.greenAccent : Colors.amber,
+                              boxShadow: [
+                                if (isOnline)
+                                  BoxShadow(
+                                    color: Colors.greenAccent.withOpacity(0.5),
+                                    blurRadius: 8,
+                                    spreadRadius: 2,
+                                  ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 10,
+                      const Spacer(),
+                      if (widget.isCurrentUser!)
+                        InkWell(
+                          onTap: widget.onTapEditProfile,
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withOpacity(0.12),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.edit, size: 18, color: theme.colorScheme.primary),
+                          ),
+                        ),
+                    ],
                   ),
-                ),
-                const Spacer(),
-                widget.isCurrentUser!
-                    ? InkWell(onTap: widget.onTapEditProfile, child: const Icon(Icons.edit))
-                    : Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: StreamBuilder<DatabaseEvent>(
-                              stream: refData.onValue,
-                              builder: (context, snapshot) {
-                                // print(snapshot.connectionState);
-                                if (snapshot.hasData) {
-                                  bool isOnline = false;
-                                  Timestamp? lastSeen;
-                                  print("snapshot.data!.snapshot.value ${snapshot.data?.snapshot.value}");
-                                  if (snapshot.data!.snapshot.value != null) {
-                                    final data = snapshot.data!.snapshot.value as Map;
-                                    isOnline = data['isOnline'];
-                                    lastSeen = data['lastSeen'] != null
-                                        ? Timestamp.fromMillisecondsSinceEpoch(data['lastSeen'])
-                                        : null;
-                                  } else {
-                                    isOnline = false;
-                                  }
-
-                                  return isOnline == false && lastSeen != null
-                                      ? Text(timeago.format(
-                                          DateTime.fromMillisecondsSinceEpoch(lastSeen.millisecondsSinceEpoch),
-                                          locale: 'en_short',
-                                        ))
-                                      : CircleAvatar(
-                                          radius: 5,
-                                          backgroundColor: isOnline ? Colors.green : Colors.amber,
-                                        );
-                                }
-                                return CircularProgressIndicator();
-                              },
-                            )),
-                      ),
-              ],
-            ),
-          ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 50,
-                      child: Text(
-                        widget.users.username,
-                        maxLines: 2,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10,
-                          overflow: TextOverflow.ellipsis,
+                  const SizedBox(height: 12),
+                  // Circular profile image
+                  // CircleAvatar(
+                  //   radius: 32,
+                  //   backgroundColor: Colors.white,
+                  //   child: CircleAvatar(
+                  //     radius: 29,
+                  //     backgroundImage: CachedNetworkImageProvider(
+                  //       widget.users.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
+                  //     ),
+                  //   ),
+                  // ),
+                  const SizedBox(height: 10),
+                  // Username and age
+                  Text(
+                    widget.users.username,
+                    maxLines: 1,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 4,
                         ),
-                      ),
+                      ],
                     ),
-                    Text(
-                      widget.users.age.toString(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 10,
-                      ),
+                  ),
+                  Text(
+                    "${widget.users.age} years",
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
-                ),
-                const Spacer(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    widget.users.height == null
-                        ? const SizedBox.shrink()
-                        : Text(
-                            widget.users.height!,
-                            style: const TextStyle(
-                              fontSize: 10,
+                  ),
+                  const SizedBox(height: 8),
+                  // Height and weight with icons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (widget.users.height != null)
+                        Row(
+                          children: [
+                            Icon(Icons.height, size: 16, color: Colors.white70),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.users.height!,
+                              style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70),
                             ),
-                          ),
-                    widget.users.weight == null
-                        ? const SizedBox.shrink()
-                        : Text(
-                            widget.users.weight!,
-                            style: const TextStyle(
-                              fontSize: 10,
+                          ],
+                        ),
+                      if (widget.users.height != null && widget.users.weight != null) const SizedBox(width: 12),
+                      if (widget.users.weight != null)
+                        Row(
+                          children: [
+                            Icon(Icons.monitor_weight, size: 16, color: Colors.white70),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.users.weight!,
+                              style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70),
                             ),
-                          ),
-                    // if (!widget.isCurrentUser!)
-                    // userActive.when(
-                    //   data: (value) {
-                    //     return Text(
-                    //       DateTime.fromMillisecondsSinceEpoch(value).day.toString(),
-                    //       style: const TextStyle(
-                    //         fontSize: 10,
-                    //       ),
-                    //     );
-                    //   },
-                    //   loading: () => const SizedBox.shrink(),
-                    //   error: (error, stack) {
-                    //     // print(error);
-                    //     return const SizedBox.shrink();
-                    //   },
-                    // )
-                  ],
-                ),
-              ],
+                          ],
+                        ),
+                    ],
+                  ),
+                  const Spacer(),
+                  // Distance (if available)
+                  if (widget.users.position != null && widget.userCoordinates != null)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.location_on, size: 16, color: Colors.white70),
+                        const SizedBox(width: 4),
+                        Text(
+                          ref.read(ProfileController.userControllerProvider).getDistance(
+                                GeoPoint(
+                                  widget.users.position!.geopoint[1],
+                                  widget.users.position!.geopoint[0],
+                                ),
+                                userCoordinates: widget.userCoordinates,
+                              ),
+                          style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 10),
+                  // Optionally, add a favorite/like button here for more interactivity
+                ],
+              ),
             ),
-          )
-        ]),
+          ],
+        ),
       ),
     );
   }

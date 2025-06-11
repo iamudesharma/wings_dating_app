@@ -89,19 +89,31 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                                     children: [],
                                   ),
                                   const Spacer(),
-                                  ElevatedButton.icon(
-                                    onPressed: () async {
-                                      // await ref.read(profileRepoProvider).getUserList();
+                                  Column(
+                                    children: [
+                                      ElevatedButton.icon(
+                                        onPressed: () async {
+                                          context.router.push(const ProfileVisitsRoute());
+                                        },
+                                        icon: const Icon(Icons.visibility, size: 16),
+                                        label: const Text("Profile Visits"),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      ElevatedButton.icon(
+                                        onPressed: () async {
+                                          // await ref.read(profileRepoProvider).getUserList();
 
-                                      context.router.push(
-                                        EditProfileRoute(isEditProfile: true),
-                                      );
-                                    },
-                                    icon: const Icon(Icons.edit, size: 10),
-                                    label: const Text(
-                                      "Edit Profile",
-                                      // style: Theme.of(context).textTheme.bodySmall,
-                                    ),
+                                          context.router.push(
+                                            EditProfileRoute(isEditProfile: true),
+                                          );
+                                        },
+                                        icon: const Icon(Icons.edit, size: 10),
+                                        label: const Text(
+                                          "Edit Profile",
+                                          // style: Theme.of(context).textTheme.bodySmall,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
