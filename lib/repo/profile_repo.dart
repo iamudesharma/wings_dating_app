@@ -6,9 +6,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/const/http_templete.dart';
 import 'package:wings_dating_app/dependency/dependencies.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
+import 'package:wings_dating_app/helpers/shared_prefs.dart';
 import 'package:wings_dating_app/repo/repo_exception.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/model/engagement_models.dart';
+import 'package:wings_dating_app/src/model/paginated_response.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
 part 'profile_repo.g.dart';
@@ -46,20 +48,23 @@ class ProfileRepo with RepositoryExceptionMixin {
   // }
 
   Future<UserModel> getCurrentUser() async {
+    // Try to get user from shared preferences first
+    final cachedUser = await SharedPrefs.instance.getUser();
+    if (cachedUser != null) {
+      print("Loaded user from SharedPrefs");
+      return cachedUser;
+    }
     final currentUserId = ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
-
     try {
       final Map<String, dynamic> response = await httpTemplate.get("/users/$currentUserId");
       print("getCurrentUser response: $response");
-
-      // Check if response contains 'data' key and it's a Map
       if (response.containsKey('data') && response['data'] is Map<String, dynamic>) {
         final Map<String, dynamic> userMap = response['data'];
-
         print("getCurrentUser userMap: $userMap");
         print("userMap runtimeType: ${userMap.runtimeType}");
-
-        return UserModel.fromJson(userMap);
+        final user = UserModel.fromJson(userMap);
+        await SharedPrefs.instance.saveUser(user); // Save to shared prefs
+        return user;
       } else {
         throw Exception('Failed to fetch user: ${response['message'] ?? response}');
       }
@@ -81,6 +86,7 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<void> updateUserDoc(UserModel userModel) async {
     logger.i("updateUserDoc userModel");
     await httpTemplate.put("/users/${userModel.id}", body: userModel.toJson());
+    await SharedPrefs.instance.saveUser(userModel); // Update shared prefs
     // await SharedPrefs.instance.updateUser(userModel);
   }
 
@@ -126,137 +132,115 @@ class ProfileRepo with RepositoryExceptionMixin {
     }
   }
 
-  Future<List<UserModel?>?> getUserList({int limit = 10}) async {
+  Future<PaginatedUserResponse> getUserList({int page = 1, int limit = 20}) async {
     try {
       final userModel = await getCurrentUser();
       // Defensive null check for position and geopoint list
       final geopoint = userModel.position?.geopoint;
       if (geopoint == null || geopoint.length < 2) {
         logger.e("User position or geopoint is null or incomplete");
-        return [];
+        return PaginatedUserResponse(
+          data: [],
+          total: 0,
+          page: page,
+          totalPages: 0,
+          hasNext: false,
+          hasPrev: false,
+        );
       }
-      String query = "lng=${geopoint[0]}&lat=${geopoint[1]}&distance=50000000&userId=${userModel.id}";
+      String query =
+          "lng=${geopoint[0]}&lat=${geopoint[1]}&distance=50000000&userId=${userModel.id}&page=$page&limit=$limit";
       final response = await httpTemplate.get("/users/near/?$query");
-      print("users runtimeType: ${response["data"].runtimeType}");
-      print("users runtimeType: ${response["data"]}");
 
-      if (response.containsKey('data') && response['data'] is List<dynamic>) {
-        final List<dynamic> users = response['data'];
-        print("users userMap: $users");
-        print("users runtimeType: ${users.runtimeType}");
-        return users
-            .map((e) {
-              print("users runtimeType: ${e.runtimeType}");
-              // Defensive: Only parse if e is Map<String, dynamic> and has required fields
-              if (e is Map<String, dynamic> && e['id'] != null && e['id'] is String) {
-                return UserModel.fromJson(e);
-              } else {
-                logger.e("Skipping invalid user entry: $e");
-                return null;
-              }
-            })
-            .where((e) => e != null)
-            .toList();
+      if (response.containsKey('data')) {
+        return PaginatedUserResponse.fromJson(response);
       } else {
         throw Exception('Failed to fetch user: ${response['message'] ?? response}');
       }
     } catch (e, st) {
       logger.e("Error fetching user list: $e $st");
-      return [];
+      return PaginatedUserResponse(
+        data: [],
+        total: 0,
+        page: page,
+        totalPages: 0,
+        hasNext: false,
+        hasPrev: false,
+      );
     }
   }
 
-  Future<List<UserModel?>?> getFilterList({
+  Future<PaginatedUserResponse> getFilterList({
     required Map<String, dynamic> filters,
+    int page = 1,
     int limit = 20,
   }) async {
     print("getFilterList filters: $filters");
-    // final userCollectionRef = userCollection();
-    // final currentUser = ref.read(ProfileController.userControllerProvider).userModel!;
+    try {
+      final currentUser = ref.read(ProfileController.userControllerProvider).userModel;
+      if (currentUser == null) throw Exception('No current user logged in');
+      final geopoint = currentUser.position?.geopoint;
+      if (geopoint == null || geopoint.length < 2) {
+        logger.e("User position or geopoint is null or incomplete");
+        return PaginatedUserResponse(
+          data: [],
+          total: 0,
+          page: page,
+          totalPages: 0,
+          hasNext: false,
+          hasPrev: false,
+        );
+      }
+      // Parse age range
+      int? minAge;
+      int? maxAge;
+      if (filters['ageRange'] != null && filters['ageRange'].toString().contains('-')) {
+        final parts = filters['ageRange'].toString().split('-');
+        minAge = int.tryParse(parts[0].trim());
+        maxAge = int.tryParse(parts[1].replaceAll(RegExp(r'[^\d]'), '').trim());
+      }
+      // Build query params
+      final params = <String, dynamic>{
+        'lng': geopoint[0],
+        'lat': geopoint[1],
+        'distance': filters['distance'] ?? 100,
+        'userId': currentUser.id,
+        'page': page,
+        'limit': limit,
+        if (minAge != null) 'ageMin': minAge,
+        if (maxAge != null) 'ageMax': maxAge,
+        if (filters['position'] != null && filters['position'].toString().isNotEmpty) 'position': filters['position'],
+        if (filters['hasPhotos'] == true) 'hasPhotos': true,
+        if (filters['hasFacePics'] == true) 'hasFacePics': true,
+        if (filters['hasAlbums'] == true) 'hasAlbums': true,
+        if (filters['lastSeen'] != null && filters['lastSeen'].toString().isNotEmpty) 'lastSeen': filters['lastSeen'],
+        if (filters['interests'] != null && (filters['interests'] as List).isNotEmpty)
+          'interests': (filters['interests'] as List).join(','),
+        if (filters['heightRange'] != null && filters['heightRange'].toString().isNotEmpty)
+          'heightRange': filters['heightRange'],
+        if (filters['weightRange'] != null && filters['weightRange'].toString().isNotEmpty)
+          'weightRange': filters['weightRange'],
+        if (filters['language'] != null && filters['language'].toString().isNotEmpty) 'language': filters['language'],
+      };
+      final uriParams = params.entries.map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}").join('&');
+      final response = await httpTemplate.get("/users/discover?$uriParams");
 
-    // final center = GeoPoint(
-    //   currentUser.position!.geopoint.latitude,
-    //   currentUser.position!.geopoint.longitude,
-    // );
-
-    // final geoCollection = GeoCollectionReference<UserModel?>(userCollectionRef);
-
-    // final double radius =
-    //     filters['distance'] != null && filters['distance'] > 0 ? filters['distance'].toDouble() : 100000.0;
-
-    // Query<UserModel?> queryBuilder(Query<UserModel?> query) {
-    //   if (filters['hasPhotos'] == true) {
-    //     query = query.where('profileUrl', isNotEqualTo: null);
-    //   }
-
-    //   if (filters['hasAlbums'] == true) {
-    //     query = query.where('albumUrl', isGreaterThan: []); // non-empty list
-    //   }
-
-    //   // Age range (client-verified after fetch)
-    //   if (filters['ageRange'] != null) {
-    //     final parts = filters['ageRange'].toString().split('-');
-    //     final minAge = int.tryParse(parts[0].trim()) ?? 18;
-    //     final maxAge = int.tryParse(parts[1].replaceAll(RegExp(r'[^\d]'), '').trim()) ?? 99;
-
-    //     query = query.where('age', isGreaterThanOrEqualTo: minAge).where('age', isLessThanOrEqualTo: maxAge);
-    //   }
-
-    //   if (filters['position'] != null && filters['position'].toString().isNotEmpty) {
-    //     query = query.where('role', isEqualTo: _mapPositionToRole(filters['position']));
-    //   }
-
-    //   if (filters['language'] != null && filters['language'].toString().isNotEmpty) {
-    //     query = query.where('lived', isEqualTo: filters['language']);
-    //   }
-
-    //   if (filters['lastSeen'] == 'Online now') {
-    //     query = query.where('isOnline', isEqualTo: true);
-    //   }
-
-    //   return query.limit(limit);
-    // }
-
-    // final snapshots = await geoCollection.fetchWithin(
-    //   center: GeoFirePoint(center),
-    //   radiusInKm: radius,
-    //   field: "position",
-    //   queryBuilder: queryBuilder,
-    //   geopointFrom: geopointFrom,
-    // );
-
-    // final rawUserList = snapshots.map((doc) => doc.data()).whereType<UserModel?>().toList();
-
-    // final filteredList = rawUserList.where((user) {
-    //   if (user == null) return false;
-    //   if (currentUser.blockList.contains(user.id)) return false;
-
-    //   // Height range
-    //   if (filters['heightRange'] != null && filters['heightRange'].toString().isNotEmpty) {
-    //     if (!matchesHeightRange(user.height, filters['heightRange'])) return false;
-    //   }
-
-    //   // Weight range
-    //   if (filters['weightRange'] != null && filters['weightRange'].toString().isNotEmpty) {
-    //     if (!matchesWeightRange(user.weight, filters['weightRange'])) return false;
-    //   }
-
-    //   // Simulated face photo check (can be replaced with a real field if added)
-    //   if (filters['hasFacePics'] == true && user.profileUrl == null) return false;
-
-    //   // Interests (not in model currently — will skip unless added)
-    //   if (filters['interests'] != null && filters['interests'].isNotEmpty) {
-    //     // Assuming you store interests in a list field like `interests`
-    //     final userInterests = <String>[]; // Replace with real user field if added
-    //     final List<String> selectedInterests = List<String>.from(filters['interests']);
-    //     if (!selectedInterests.any((tag) => userInterests.contains(tag))) return false;
-    //   }
-
-    //   return true;
-    // }).toList();
-
-    // return filteredList;
-    return [];
+      if (response.containsKey('data')) {
+        return PaginatedUserResponse.fromJson(response);
+      } else {
+        throw Exception('Failed to fetch user: ${response['message'] ?? response}');
+      }
+    } catch (e, st) {
+      logger.e("Error fetching user list: $e $st");
+      return PaginatedUserResponse(
+        data: [],
+        total: 0,
+        page: page,
+        totalPages: 0,
+        hasNext: false,
+        hasPrev: false,
+      );
+    }
   }
 
   Future<UserModel?> getUserById(String id) async {
@@ -347,7 +331,7 @@ class ProfileRepo with RepositoryExceptionMixin {
       throw Exception('No current user logged in');
     }
     final response = await httpTemplate.post("/users/$targetUserId/view/$currentUserId");
-    return ProfileVisitResponse.fromJson(response);
+    return ProfileVisitResponse.fromJson(response["data"]);
   }
 
   /// Get the list of profiles the current user has visited
@@ -357,7 +341,7 @@ class ProfileRepo with RepositoryExceptionMixin {
       throw Exception('No current user logged in');
     }
     final response = await httpTemplate.get("/users/$currentUserId/visited?page=$page&limit=$limit");
-    return PaginatedVisitsResponse.fromJson(response);
+    return PaginatedVisitsResponse.fromJson(response["data"]);
   }
 
   /// Get the list of users who have visited the current user's profile
@@ -367,6 +351,6 @@ class ProfileRepo with RepositoryExceptionMixin {
       throw Exception('No current user logged in');
     }
     final response = await httpTemplate.get("/users/$currentUserId/visitors?page=$page&limit=$limit");
-    return PaginatedVisitsResponse.fromJson(response);
+    return PaginatedVisitsResponse.fromJson(response["data"]);
   }
 }
