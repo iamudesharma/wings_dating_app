@@ -1,54 +1,38 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'filters_provider.dart';
 
 @RoutePage()
-class FilterView extends StatefulWidget {
+class FilterView extends ConsumerWidget {
   const FilterView({super.key});
 
   @override
-  State<FilterView> createState() => _FilterViewState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filters = ref.watch(userFiltersProvider);
+    final filtersNotifier = ref.read(userFiltersProvider.notifier);
 
-class _FilterViewState extends State<FilterView> {
-  bool _filterEnabled = false;
+    // Watch filter options
+    final ageRanges = ref.watch(ageRangesProvider);
+    final positions = ref.watch(positionsProvider);
+    final lastSeenOptions = ref.watch(lastSeenOptionsProvider);
+    final interestOptions = ref.watch(interestOptionsProvider);
+    final heightRanges = ref.watch(heightRangesProvider);
+    final weightRanges = ref.watch(weightRangesProvider);
+    final languageOptions = ref.watch(languageOptionsProvider);
 
-  // Age, Position, Photos
-  String _selectedAgeRange = '18 - 22 yrs';
-  String _selectedPosition = '';
-  bool _hasPhotos = false;
-  bool _hasFacePics = false;
-  bool _hasAlbums = false;
-
-  // New filters
-  double _distance = 10; // in km
-  String _lastSeen = '';
-  List<String> _selectedInterests = [];
-  String _selectedHeightRange = '';
-  String _selectedWeightRange = '';
-  String _selectedLanguage = '';
-
-  final List<String> _positions = ['Top', 'Vers Top', 'Versatile', 'Vers Bottom', 'Bottom', 'Side', 'Not Specified'];
-  final List<String> _ageRanges = ['18 - 22 yrs', '23 - 30 yrs', '31 - 40 yrs', '41+ yrs'];
-  final List<String> _lastSeenOptions = ['Online now', 'Last 24 hours', 'Last 7 days', 'Last 30 days'];
-  final List<String> _interestOptions = ['Travel', 'Music', 'Fitness', 'Reading', 'Gaming', 'Cooking'];
-  final List<String> _heightRanges = ['< 5\'5"', '5\'5" - 5\'10"', '5\'11" - 6\'2"', '6\'3" and above'];
-  final List<String> _weightRanges = ['< 60kg', '60 - 75kg', '76 - 90kg', '90kg+'];
-  final List<String> _languageOptions = ['English', 'Spanish', 'French', 'German', 'Chinese'];
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Filters'),
+        title: const Text('Filters'),
         actions: [
           Switch(
-            value: _filterEnabled,
-            onChanged: (val) => setState(() => _filterEnabled = val),
+            value: filters.enabled,
+            onChanged: (_) => filtersNotifier.toggleEnabled(),
             activeColor: Colors.yellow,
           ),
         ],
         leading: IconButton(
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -56,38 +40,58 @@ class _FilterViewState extends State<FilterView> {
         padding: const EdgeInsets.all(16),
         children: [
           _buildSectionTitle('Age Range'),
-          _buildDropdown(_ageRanges, _selectedAgeRange, (val) => setState(() => _selectedAgeRange = val)),
+          _buildDropdown(
+            ageRanges,
+            filters.ageRange,
+            (val) => filtersNotifier.updateAgeRange(val),
+          ),
           _buildSectionTitle('Position'),
-          _buildPositionGrid(),
+          _buildPositionGrid(positions, filters.position, filtersNotifier),
           _buildSectionTitle('Photos'),
-          _buildPhotosOptions(),
+          _buildPhotosOptions(filters, filtersNotifier),
           _buildSectionTitle('Distance (km)'),
           Slider(
-            value: _distance,
+            value: filters.distance,
             min: 1,
             max: 100,
             divisions: 20,
-            label: '${_distance.round()} km',
-            onChanged: (val) => setState(() => _distance = val),
+            label: '${filters.distance.round()} km',
+            onChanged: (val) => filtersNotifier.updateDistance(val),
           ),
           _buildSectionTitle('Last Seen'),
-          _buildChips(_lastSeenOptions, _lastSeen, (val) => setState(() => _lastSeen = val)),
+          _buildChips(
+            lastSeenOptions,
+            filters.lastSeen,
+            (val) => filtersNotifier.updateLastSeen(val),
+          ),
           _buildSectionTitle('Interests'),
-          _buildMultiSelectChips(),
+          _buildMultiSelectChips(interestOptions, filters.interests, filtersNotifier),
           _buildSectionTitle('Height Range'),
-          _buildDropdown(_heightRanges, _selectedHeightRange, (val) => setState(() => _selectedHeightRange = val)),
+          _buildDropdown(
+            heightRanges,
+            filters.heightRange,
+            (val) => filtersNotifier.updateHeightRange(val),
+          ),
           _buildSectionTitle('Weight Range'),
-          _buildDropdown(_weightRanges, _selectedWeightRange, (val) => setState(() => _selectedWeightRange = val)),
+          _buildDropdown(
+            weightRanges,
+            filters.weightRange,
+            (val) => filtersNotifier.updateWeightRange(val),
+          ),
           _buildSectionTitle('Language'),
-          _buildDropdown(_languageOptions, _selectedLanguage, (val) => setState(() => _selectedLanguage = val)),
-          SizedBox(height: 24),
+          _buildDropdown(
+            languageOptions,
+            filters.language,
+            (val) => filtersNotifier.updateLanguage(val),
+          ),
+          const SizedBox(height: 24),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              shape: StadiumBorder(),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: const StadiumBorder(),
             ),
-            onPressed: _filterEnabled ? _applyFilters : null,
-            child: Text('Apply', style: TextStyle(fontSize: 16)),
+            onPressed: filters.enabled ? () => _applyFilters(context, ref) : null,
+            child: const Text('Apply', style: TextStyle(fontSize: 16)),
           ),
         ],
       ),
@@ -97,7 +101,7 @@ class _FilterViewState extends State<FilterView> {
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
     );
   }
 
@@ -132,23 +136,21 @@ class _FilterViewState extends State<FilterView> {
     );
   }
 
-  Widget _buildMultiSelectChips() {
+  Widget _buildMultiSelectChips(List<String> options, List<String> selectedInterests, UserFilters filtersNotifier) {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
-      children: _interestOptions.map((interest) {
-        final isSelected = _selectedInterests.contains(interest);
+      children: options.map((interest) {
+        final isSelected = selectedInterests.contains(interest);
         return FilterChip(
           label: Text(interest),
           selected: isSelected,
           onSelected: (val) {
-            setState(() {
-              if (val) {
-                _selectedInterests.add(interest);
-              } else {
-                _selectedInterests.remove(interest);
-              }
-            });
+            if (val) {
+              filtersNotifier.addInterest(interest);
+            } else {
+              filtersNotifier.removeInterest(interest);
+            }
           },
           selectedColor: Colors.yellow,
           backgroundColor: Colors.grey[800],
@@ -158,16 +160,16 @@ class _FilterViewState extends State<FilterView> {
     );
   }
 
-  Widget _buildPositionGrid() {
+  Widget _buildPositionGrid(List<String> positions, String selectedPosition, UserFilters filtersNotifier) {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
-      children: _positions.map((pos) {
-        final selected = _selectedPosition == pos;
+      children: positions.map((pos) {
+        final selected = selectedPosition == pos;
         return ChoiceChip(
           label: Text(pos),
           selected: selected,
-          onSelected: (_) => setState(() => _selectedPosition = pos),
+          onSelected: (_) => filtersNotifier.updatePosition(pos),
           selectedColor: Colors.yellow,
           backgroundColor: Colors.grey[800],
           labelStyle: TextStyle(color: selected ? Colors.black : Colors.white),
@@ -176,43 +178,31 @@ class _FilterViewState extends State<FilterView> {
     );
   }
 
-  Widget _buildPhotosOptions() {
+  Widget _buildPhotosOptions(FiltersModel filters, UserFilters filtersNotifier) {
     return Column(
       children: [
         CheckboxListTile(
-          title: Text('Has photos'),
-          value: _hasPhotos,
-          onChanged: (val) => setState(() => _hasPhotos = val ?? false),
+          title: const Text('Has photos'),
+          value: filters.hasPhotos,
+          onChanged: (val) => filtersNotifier.updateHasPhotos(val ?? false),
         ),
         CheckboxListTile(
-          title: Text('Has face pics'),
-          value: _hasFacePics,
-          onChanged: (val) => setState(() => _hasFacePics = val ?? false),
+          title: const Text('Has face pics'),
+          value: filters.hasFacePics,
+          onChanged: (val) => filtersNotifier.updateHasFacePics(val ?? false),
         ),
         CheckboxListTile(
-          title: Text('Has album(s)'),
-          value: _hasAlbums,
-          onChanged: (val) => setState(() => _hasAlbums = val ?? false),
+          title: const Text('Has album(s)'),
+          value: filters.hasAlbums,
+          onChanged: (val) => filtersNotifier.updateHasAlbums(val ?? false),
         ),
       ],
     );
   }
 
-  void _applyFilters() {
-    final filters = {
-      'enabled': _filterEnabled,
-      'ageRange': _selectedAgeRange,
-      'position': _selectedPosition,
-      'hasPhotos': _hasPhotos,
-      'hasFacePics': _hasFacePics,
-      'hasAlbums': _hasAlbums,
-      'distance': _distance.round(),
-      'lastSeen': _lastSeen,
-      'interests': _selectedInterests,
-      'heightRange': _selectedHeightRange,
-      'weightRange': _selectedWeightRange,
-      'language': _selectedLanguage,
-    };
+  void _applyFilters(BuildContext context, WidgetRef ref) {
+    final filtersNotifier = ref.read(userFiltersProvider.notifier);
+    final filters = filtersNotifier.applyFilters();
     print('Applying filters: $filters');
     Navigator.pop(context, filters);
   }
