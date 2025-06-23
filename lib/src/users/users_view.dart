@@ -1,10 +1,5 @@
-import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,19 +7,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-// import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
-import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
-import 'package:wings_dating_app/src/model/geo_point_data.dart';
-import 'package:wings_dating_app/src/users/widget/users_search_delegate.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:wings_dating_app/src/users/widget/tap_list_view.dart';
+import 'package:wings_dating_app/src/users/providers/paginated_users_provider.dart';
 
-import '../../const/pref_util.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
 import 'widget/user_grid_item.dart';
@@ -51,10 +41,6 @@ void setPresence() {
 // final isUserOnlineProvider = FutureProvider.family<bool, bool>(
 //   (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
 // );
-
-final userListProvider = FutureProvider.family<List<UserModel?>?, Map<String, dynamic>?>((ref, filters) {
-  return ref.read(profileRepoProvider).getUserList(limit: 10);
-});
 
 @RoutePage()
 class UsersView extends ConsumerStatefulWidget {
@@ -167,7 +153,18 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
   @override
   Widget build(BuildContext context) {
     final userData = ref.watch(ProfileController.userControllerProvider).userModel;
-    final userList = ref.watch(userListProvider(filters));
+    final usersProvider = paginatedUsersProvider(filters);
+    final usersState = ref.watch(usersProvider);
+    final usersNotifier = ref.watch(usersProvider.notifier);
+
+    // Load initial users
+    ref.listen(usersProvider, (prev, current) {
+      if (prev == null && current.users.isEmpty && !current.isLoading) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          usersNotifier.loadUsers(refresh: true);
+        });
+      }
+    });
 
     return Scaffold(
       body: ResponsiveBuilder(builder: (context, sizingInformation) {
@@ -207,6 +204,9 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                                 setState(() {
                                   filters = result;
                                 });
+                                // Update filters and refresh
+                                usersNotifier.updateFilters(result);
+                                usersNotifier.loadUsers(refresh: true);
                               }
                             });
                           },
@@ -223,74 +223,18 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                       ),
                       Expanded(
                         flex: 5,
-                        child: userList.when(
-                          loading: () => const Center(
-                            child: CircularProgressIndicator.adaptive(),
-                          ),
-                          error: (error, stackTrace) => (error is Exception)
-                              ? Center(
-                                  child: Text(error.toString()),
-                                )
-                              : Center(
-                                  child: Text(error.toString()),
-                                ),
-                          data: (data) => RefreshIndicator.adaptive(
-                            onRefresh: () async {
-                              final currentLocation = await Geolocator.getCurrentPosition(
-                                locationSettings: LocationSettings(
-                                  accuracy: LocationAccuracy.high,
-
-                                  // distanceFilter: 1,
-                                ),
-                              );
-
-                              logger.d("currentLocation ${currentLocation.toJson()}");
-                              // final currentUser = userData.position?.geopoint;
-
-                              // if (currentLocation.latitude != currentUser?.latitude &&
-                              //     currentLocation.longitude != currentUser?.longitude) {
-                              //   GeoFirePoint geoFirePoint =
-                              //       GeoFirePoint(GeoPoint(currentLocation.latitude, currentLocation.longitude));
-
-                              //   await ref.read(profileRepoProvider).updateUserDoc(userData.copyWith(
-                              //           position: GeoPointData(
-                              //         geohash: geoFirePoint.geohash,
-                              //         geopoint: geoFirePoint.geopoint,
-                              //       )));
-
-                              //   return ref.refresh(userListProvider(filters));
-                              // } else {
-                              return ref.refresh(userListProvider(filters));
-                              // }
-                            },
-                            child: SizedBox(
-                              height: sizingInformation.screenSize.height,
-                              width: sizingInformation.screenSize.width,
-                              child: GridView.builder(
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: sizingInformation.isMobile
-                                      ? 2
-                                      : sizingInformation.isTablet
-                                          ? 4
-                                          : 5,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 10,
-                                ),
-                                itemBuilder: (context, index) {
-                                  final users = data[index];
-
-                                  return UserGridItem(
-                                    onTapEditProfile: () async {
-                                      AutoTabsRouter.of(context).setActiveIndex(4);
-                                    },
-                                    isCurrentUser: users?.id == userData.id ? true : false,
-                                    users: users!,
-                                  ).animate().shake();
-                                },
-                                itemCount: data!.length,
+                        child: RefreshIndicator.adaptive(
+                          onRefresh: () async {
+                            final currentLocation = await Geolocator.getCurrentPosition(
+                              locationSettings: LocationSettings(
+                                accuracy: LocationAccuracy.high,
                               ),
-                            ),
-                          ),
+                            );
+
+                            logger.d("currentLocation ${currentLocation.toJson()}");
+                            await usersNotifier.refresh();
+                          },
+                          child: _buildUserGrid(sizingInformation, usersState, usersNotifier, userData),
                         ),
                       ),
                     ],
@@ -299,6 +243,90 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
               ],
             );
       }),
+    );
+  }
+
+  Widget _buildUserGrid(
+    SizingInformation sizingInformation,
+    PaginatedUsersState usersState,
+    PaginatedUsers usersNotifier,
+    UserModel userData,
+  ) {
+    if (usersState.isLoading && usersState.users.isEmpty) {
+      return const Center(child: CircularProgressIndicator.adaptive());
+    }
+
+    if (usersState.error != null && usersState.users.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Error: ${usersState.error}'),
+            ElevatedButton(
+              onPressed: () => usersNotifier.loadUsers(refresh: true),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (usersState.users.isEmpty) {
+      return const Center(
+        child: Text('No users found'),
+      );
+    }
+
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollInfo) {
+        if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent &&
+            usersState.hasNext &&
+            !usersState.isLoadingMore) {
+          usersNotifier.loadMore();
+        }
+        return false;
+      },
+      child: SizedBox(
+        height: sizingInformation.screenSize.height,
+        width: sizingInformation.screenSize.width,
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: sizingInformation.isMobile
+                ? 2
+                : sizingInformation.isTablet
+                    ? 4
+                    : 5,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 0.75,
+          ),
+          itemBuilder: (context, index) {
+            // Show loading indicator at the end if loading more
+            if (index == usersState.users.length) {
+              if (usersState.isLoadingMore) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }
+
+            final user = usersState.users[index];
+
+            return UserGridItem(
+              onTapEditProfile: () async {
+                AutoTabsRouter.of(context).setActiveIndex(4);
+              },
+              isCurrentUser: user.id == userData.id,
+              users: user,
+            ).animate().shake();
+          },
+          itemCount: usersState.users.length + (usersState.isLoadingMore ? 1 : 0),
+        ),
+      ),
     );
   }
 }
