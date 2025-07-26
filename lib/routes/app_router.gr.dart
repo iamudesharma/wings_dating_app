@@ -11,6 +11,45 @@
 part of 'app_router.dart';
 
 /// generated route for
+/// [AIChatScreen]
+class AIChatRoute extends PageRouteInfo<AIChatRouteArgs> {
+  AIChatRoute({
+    Key? key,
+    Model model = Model.gemma3GpuLocalAsset,
+    List<PageRouteInfo>? children,
+  }) : super(
+         AIChatRoute.name,
+         args: AIChatRouteArgs(key: key, model: model),
+         initialChildren: children,
+       );
+
+  static const String name = 'AIChatRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<AIChatRouteArgs>(
+        orElse: () => const AIChatRouteArgs(),
+      );
+      return AIChatScreen(key: args.key, model: args.model);
+    },
+  );
+}
+
+class AIChatRouteArgs {
+  const AIChatRouteArgs({this.key, this.model = Model.deepseek});
+
+  final Key? key;
+
+  final Model model;
+
+  @override
+  String toString() {
+    return 'AIChatRouteArgs{key: $key, model: $model}';
+  }
+}
+
+/// generated route for
 /// [AddAdditionalInformationView]
 class AddAdditionalInformationRoute extends PageRouteInfo<void> {
   const AddAdditionalInformationRoute({List<PageRouteInfo>? children})
@@ -96,22 +135,6 @@ class AlbumRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const AlbumView();
-    },
-  );
-}
-
-/// generated route for
-/// [BooksTabView]
-class BooksTab extends PageRouteInfo<void> {
-  const BooksTab({List<PageRouteInfo>? children})
-    : super(BooksTab.name, initialChildren: children);
-
-  static const String name = 'BooksTab';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const BooksTabView();
     },
   );
 }

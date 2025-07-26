@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -159,10 +160,44 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
     // Load initial users
     ref.listen(usersProvider, (prev, current) {
-      if (prev == null && current.users.isEmpty && !current.isLoading) {
+      print('UsersView: ref.listen triggered');
+      print('UsersView: prev = $prev');
+      print('UsersView: current.users.length = ${current.users.length}');
+      print('UsersView: current.isLoading = ${current.isLoading}');
+      print('UsersView: current.error = ${current.error}');
+
+      // Check individual conditions
+      final prevIsNull = prev == null;
+      final usersIsEmpty = current.users.isEmpty;
+      final notLoading = !current.isLoading;
+
+      print('UsersView: prevIsNull = $prevIsNull');
+      print('UsersView: usersIsEmpty = $usersIsEmpty');
+      print('UsersView: notLoading = $notLoading');
+
+      if (prevIsNull && usersIsEmpty && notLoading) {
+        print('UsersView: All conditions met, triggering loadUsers');
         WidgetsBinding.instance.addPostFrameCallback((_) {
+          print('UsersView: Executing loadUsers(refresh: true) in post frame callback');
           usersNotifier.loadUsers(refresh: true);
         });
+      } else {
+        print('UsersView: Conditions not met, not triggering loadUsers');
+      }
+    });
+
+    // Alternative trigger - load users on first build if no users
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('UsersView: Post frame callback - checking if we need to load users');
+      print('UsersView: usersState.users.length = ${usersState.users.length}');
+      print('UsersView: usersState.isLoading = ${usersState.isLoading}');
+      print('UsersView: usersState.error = ${usersState.error}');
+
+      if (usersState.users.isEmpty && !usersState.isLoading && usersState.error == null) {
+        print('UsersView: Alternative trigger - loading users because list is empty and not loading');
+        usersNotifier.loadUsers(refresh: true);
+      } else {
+        print('UsersView: Alternative trigger - not loading users');
       }
     });
 
@@ -253,27 +288,140 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
     UserModel userData,
   ) {
     if (usersState.isLoading && usersState.users.isEmpty) {
-      return const Center(child: CircularProgressIndicator.adaptive());
-    }
-
-    if (usersState.error != null && usersState.users.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Error: ${usersState.error}'),
-            ElevatedButton(
-              onPressed: () => usersNotifier.loadUsers(refresh: true),
-              child: const Text('Retry'),
+            const CircularProgressIndicator.adaptive(),
+            const SizedBox(height: 16),
+            Text(
+              'Discovering amazing people...',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  ),
             ),
           ],
         ),
       );
     }
 
+    if (usersState.error != null && usersState.users.isEmpty) {
+      return Center(
+        child: Container(
+          margin: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.errorContainer,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 48,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Oops! Something went wrong',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onErrorContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                usersState.error!,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onErrorContainer,
+                    ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                onPressed: () => usersNotifier.loadUsers(refresh: true),
+                icon: const Icon(Icons.refresh),
+                label: const Text('Try Again'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (usersState.users.isEmpty) {
-      return const Center(
-        child: Text('No users found'),
+      return Center(
+        child: Container(
+          margin: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Theme.of(context).colorScheme.primaryContainer,
+                Theme.of(context).colorScheme.secondaryContainer,
+              ],
+            ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.people_outline,
+                  size: 48,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'No users found',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Try adjusting your filters or check back later',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.8),
+                    ),
+              ),
+            ],
+          ),
+        ),
       );
     }
 
@@ -286,45 +434,185 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
         }
         return false;
       },
-      child: SizedBox(
+      child: Container(
         height: sizingInformation.screenSize.height,
         width: sizingInformation.screenSize.width,
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: sizingInformation.isMobile
-                ? 2
-                : sizingInformation.isTablet
-                    ? 4
-                    : 5,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 0.75,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              Theme.of(context).colorScheme.surface.withOpacity(0.8),
+            ],
           ),
-          itemBuilder: (context, index) {
-            // Show loading indicator at the end if loading more
-            if (index == usersState.users.length) {
-              if (usersState.isLoadingMore) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: CircularProgressIndicator(),
+        ),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(sizingInformation.isMobile ? 12 : 16),
+          child: Column(
+            children: [
+              // Header section
+              Container(
+                margin: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
                   ),
-                );
-              }
-              return const SizedBox.shrink();
-            }
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Discover People',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                              ),
+                        ),
+                        Text(
+                          '${usersState.users.length} people nearby',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+                              ),
+                        ),
+                      ],
+                    ),
+                    if (usersState.hasNext)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          'More available',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
 
-            final user = usersState.users[index];
+              // Users grid
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: sizingInformation.isMobile
+                      ? 2
+                      : sizingInformation.isTablet
+                          ? 3
+                          : 4,
+                  mainAxisSpacing: sizingInformation.isMobile ? 16 : 20,
+                  crossAxisSpacing: sizingInformation.isMobile ? 16 : 20,
+                  childAspectRatio: 0.68, // Adjusted to accommodate more content
+                ),
+                itemBuilder: (context, index) {
+                  final user = usersState.users[index];
 
-            return UserGridItem(
-              onTapEditProfile: () async {
-                AutoTabsRouter.of(context).setActiveIndex(4);
-              },
-              isCurrentUser: user.id == userData.id,
-              users: user,
-            ).animate().shake();
-          },
-          itemCount: usersState.users.length + (usersState.isLoadingMore ? 1 : 0),
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 15,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: UserGridItem(
+                      onTapEditProfile: () async {
+                        AutoTabsRouter.of(context).setActiveIndex(4);
+                      },
+                      isCurrentUser: user.id == userData.id,
+                      users: user,
+                      userCoordinates: userData.position != null
+                          ? GeoPoint(userData.position!.geopoint[1], userData.position!.geopoint[0])
+                          : null,
+                    ),
+                  )
+                      .animate()
+                      .fadeIn(duration: const Duration(milliseconds: 300))
+                      .slideY(begin: 0.2, end: 0, duration: const Duration(milliseconds: 400))
+                      .then(delay: const Duration(milliseconds: 100))
+                      .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.0, 1.0));
+                },
+                itemCount: usersState.users.length,
+              ),
+
+              // Loading more indicator
+              if (usersState.isLoadingMore)
+                Container(
+                  margin: const EdgeInsets.only(top: 24),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    children: [
+                      const CircularProgressIndicator.adaptive(),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Loading more amazing people...',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              // End of list message
+              if (!usersState.hasNext && usersState.users.isNotEmpty)
+                Container(
+                  margin: const EdgeInsets.only(top: 24),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                        Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.check_circle_outline,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        "You've seen everyone nearby!",
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

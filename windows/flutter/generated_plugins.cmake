@@ -17,7 +17,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   media_kit_video
   record_windows
   share_plus
-  sqlite3_flutter_libs
   thumblr_windows
   url_launcher_windows
   volume_controller

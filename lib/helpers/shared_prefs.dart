@@ -9,19 +9,47 @@ class SharedPrefs {
   static final SharedPrefs instance = SharedPrefs._();
 
   Future<void> saveUser(UserModel user) async {
+    // Validate user data before saving
+    if (user.id.isEmpty) {
+      print("SharedPrefs: Cannot save user with empty ID");
+      return;
+    }
+
     final prefs = await SharedPreferences.getInstance();
     final userJson = jsonEncode(user.toJson());
     await prefs.setString(userKey, userJson);
+    print("SharedPrefs: Successfully saved user ${user.username} (${user.id})");
   }
 
   Future<UserModel?> getUser() async {
     final prefs = await SharedPreferences.getInstance();
     final userJson = prefs.getString(userKey);
-    if (userJson == null) return null;
+    if (userJson == null) {
+      print("SharedPrefs: No user data found in storage");
+      return null;
+    }
+
+    if (userJson.isEmpty) {
+      print("SharedPrefs: User data is empty string");
+      return null;
+    }
+
     try {
       final map = jsonDecode(userJson) as Map<String, dynamic>;
-      return UserModel.fromJson(map);
-    } catch (_) {
+      final user = UserModel.fromJson(map);
+
+      // Validate essential fields
+      if (user.id.isEmpty) {
+        print("SharedPrefs: User data is missing required ID field");
+        await clearUser(); // Clear invalid data
+        return null;
+      }
+
+      print("SharedPrefs: Successfully loaded user ${user.username} (${user.id})");
+      return user;
+    } catch (e) {
+      print("SharedPrefs: Error parsing user data: $e");
+      await clearUser(); // Clear corrupted data
       return null;
     }
   }

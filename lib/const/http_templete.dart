@@ -10,10 +10,14 @@ class HttpTemplate {
   final Duration timeout;
 
   HttpTemplate({
-    this.baseUrl = "http://localhost:3001",
+    String? baseUrl,
     this.defaultHeaders = const {'Content-Type': 'application/json'},
     this.timeout = const Duration(seconds: 10),
-  });
+  }) : baseUrl = baseUrl ??
+            // (Platform.isAndroid ? "http://192.168.1.8:3000" :
+            "http://localhost:3000"
+  //  )
+  ;
 
   Future<Map<String, dynamic>> get(String endpoint) async {
     logger.i('GET request to $baseUrl$endpoint');

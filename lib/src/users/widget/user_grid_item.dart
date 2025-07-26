@@ -7,16 +7,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
+import 'package:wings_dating_app/src/users/providers/favorites_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 class UserGridItem extends ConsumerStatefulWidget {
-  const UserGridItem(
-      {super.key, required this.users, this.isCurrentUser = false, this.onTapEditProfile, this.userCoordinates});
+  const UserGridItem({
+    super.key,
+    required this.users,
+    this.isCurrentUser = false,
+    this.onTapEditProfile,
+    this.userCoordinates,
+  });
 
   final UserModel users;
-
   final bool? isCurrentUser;
-
   final VoidCallback? onTapEditProfile;
   final GeoPoint? userCoordinates;
 
@@ -25,6 +29,55 @@ class UserGridItem extends ConsumerStatefulWidget {
 }
 
 class _UserGridItemState extends ConsumerState<UserGridItem> {
+  bool isProcessingFavorite = false;
+
+  bool get isFavorited => ref.watch(favoritesProvider).contains(widget.users.id);
+
+  Future<void> _toggleFavorite() async {
+    if (isProcessingFavorite) return;
+
+    print('UserGridItem: Toggling favorite for user: ${widget.users.id}');
+    print('UserGridItem: Current favorite status: $isFavorited');
+
+    setState(() {
+      isProcessingFavorite = true;
+    });
+
+    try {
+      final success = await ref.read(favoritesProvider.notifier).toggleFavorite(widget.users.id);
+
+      if (success) {
+        print('UserGridItem: Successfully toggled favorite');
+      } else {
+        print('UserGridItem: Failed to toggle favorite');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to update favorite. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      print('UserGridItem: Error toggling favorite: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to update favorite. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isProcessingFavorite = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     DatabaseReference refData = FirebaseDatabase.instance.ref('status/${widget.users.id}');
@@ -82,13 +135,21 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                 ),
               ),
             ),
-            // Glassmorphism overlay
+            // Glassmorphism overlay with better gradient
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(18),
-                  color: Colors.white.withOpacity(0.10),
-                  // Optionally add blur effect if desired
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.2),
+                      Colors.black.withOpacity(0.6),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
                 ),
               ),
             ),
@@ -96,9 +157,9 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Online status and edit button
+                  // Top row: Online status, verified badge, and edit button
                   Row(
                     children: [
                       StreamBuilder<DatabaseEvent>(
@@ -128,116 +189,309 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                           );
                         },
                       ),
+                      const SizedBox(width: 8),
+                      if (widget.users.isVerified)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.verified, size: 12, color: Colors.white),
+                              const SizedBox(width: 2),
+                              Text(
+                                'Verified',
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      if (isFavorited && !widget.isCurrentUser!)
+                        Container(
+                          margin: const EdgeInsets.only(left: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.pink.withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.favorite, size: 10, color: Colors.white),
+                              const SizedBox(width: 2),
+                              Text(
+                                'Liked',
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       const Spacer(),
                       if (widget.isCurrentUser!)
                         InkWell(
                           onTap: widget.onTapEditProfile,
                           borderRadius: BorderRadius.circular(16),
                           child: Container(
-                            padding: const EdgeInsets.all(4),
+                            padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withOpacity(0.12),
+                              color: Colors.white.withOpacity(0.2),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(Icons.edit, size: 18, color: theme.colorScheme.primary),
+                            child: Icon(Icons.edit, size: 16, color: Colors.white),
                           ),
                         ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  // Circular profile image
-                  // CircleAvatar(
-                  //   radius: 32,
-                  //   backgroundColor: Colors.white,
-                  //   child: CircleAvatar(
-                  //     radius: 29,
-                  //     backgroundImage: CachedNetworkImageProvider(
-                  //       widget.users.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
-                  //     ),
-                  //   ),
-                  // ),
-                  const SizedBox(height: 10),
-                  // Username and age
-                  Text(
-                    widget.users.username,
-                    maxLines: 1,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black.withOpacity(0.3),
-                          blurRadius: 4,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    "${widget.users.age} years",
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  // Height and weight with icons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+
+                  const Spacer(),
+
+                  // Main user info at bottom
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (widget.users.height != null)
-                        Row(
-                          children: [
-                            Icon(Icons.height, size: 16, color: Colors.white70),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.users.height!,
-                              style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70),
+                      // Username and age with better styling
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.users.username,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black.withOpacity(0.5),
+                                    blurRadius: 4,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
+                          ),
+                          if (widget.users.age != null)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                "${widget.users.age}",
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      // Bio preview (if available)
+                      if (widget.users.bio != null && widget.users.bio!.isNotEmpty)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            widget.users.bio!,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: Colors.white.withOpacity(0.9),
+                              fontSize: 11,
+                            ),
+                          ),
                         ),
-                      if (widget.users.height != null && widget.users.weight != null) const SizedBox(width: 12),
-                      if (widget.users.weight != null)
-                        Row(
-                          children: [
-                            Icon(Icons.monitor_weight, size: 16, color: Colors.white70),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.users.weight!,
-                              style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70),
+
+                      const SizedBox(height: 8),
+
+                      // Tags row with multiple info chips
+                      Wrap(
+                        spacing: 4,
+                        runSpacing: 4,
+                        children: [
+                          // Distance chip
+                          if (widget.users.position != null && widget.userCoordinates != null)
+                            _buildInfoChip(
+                              icon: Icons.location_on,
+                              text: ref.read(ProfileController.userControllerProvider).getDistance(
+                                    GeoPoint(
+                                      widget.users.position!.geopoint[1],
+                                      widget.users.position!.geopoint[0],
+                                    ),
+                                    userCoordinates: widget.userCoordinates,
+                                  ),
+                              color: Colors.red.withOpacity(0.8),
                             ),
-                          ],
+
+                          // Height chip
+                          if (widget.users.height != null && widget.users.height!.isNotEmpty)
+                            _buildInfoChip(
+                              icon: Icons.height,
+                              text: widget.users.height!,
+                              color: Colors.purple.withOpacity(0.8),
+                            ),
+
+                          // Role chip
+                          if (widget.users.role.name != 'doNotShow')
+                            _buildInfoChip(
+                              icon: Icons.work,
+                              text: _formatEnumValue(widget.users.role.name),
+                              color: Colors.orange.withOpacity(0.8),
+                            ),
+
+                          // Relationship status chip
+                          if (widget.users.relationshipStatus.name != 'doNotShow')
+                            _buildInfoChip(
+                              icon: Icons.favorite,
+                              text: _formatEnumValue(widget.users.relationshipStatus.name),
+                              color: Colors.pink.withOpacity(0.8),
+                            ),
+
+                          // Looking for chip
+                          if (widget.users.lookingFor.name != 'doNotShow')
+                            _buildInfoChip(
+                              icon: Icons.search,
+                              text: _formatEnumValue(widget.users.lookingFor.name),
+                              color: Colors.green.withOpacity(0.8),
+                            ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      // Interests tags (if available)
+                      if (widget.users.interests.isNotEmpty)
+                        Wrap(
+                          spacing: 3,
+                          runSpacing: 3,
+                          children: widget.users.interests.take(3).map((interest) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.3),
+                                  width: 0.5,
+                                ),
+                              ),
+                              child: Text(
+                                interest,
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 9,
+                                ),
+                              ),
+                            );
+                          }).toList(),
                         ),
                     ],
                   ),
-                  const Spacer(),
-                  // Distance (if available)
-                  if (widget.users.position != null && widget.userCoordinates != null)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.location_on, size: 16, color: Colors.white70),
-                        const SizedBox(width: 4),
-                        Text(
-                          ref.read(ProfileController.userControllerProvider).getDistance(
-                                GeoPoint(
-                                  widget.users.position!.geopoint[1],
-                                  widget.users.position!.geopoint[0],
-                                ),
-                                userCoordinates: widget.userCoordinates,
-                              ),
-                          style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70),
-                        ),
-                      ],
-                    ),
-                  const SizedBox(height: 10),
-                  // Optionally, add a favorite/like button here for more interactivity
                 ],
               ),
             ),
+
+            // Like/Favorite button in bottom right (only for other users)
+            if (!widget.isCurrentUser!)
+              Positioned(
+                bottom: 12,
+                right: 12,
+                child: InkWell(
+                  onTap: isProcessingFavorite ? null : _toggleFavorite,
+                  borderRadius: BorderRadius.circular(20),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: isFavorited ? Colors.red.withOpacity(0.9) : Colors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                      border: isFavorited ? null : Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: isFavorited ? Colors.red.withOpacity(0.3) : Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: isProcessingFavorite
+                        ? SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                isFavorited ? Colors.white : Colors.red,
+                              ),
+                            ),
+                          )
+                        : Icon(
+                            isFavorited ? Icons.favorite : Icons.favorite_border,
+                            color: isFavorited ? Colors.white : Colors.white,
+                            size: 16,
+                          ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildInfoChip({
+    required IconData icon,
+    required String text,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 10, color: Colors.white),
+          const SizedBox(width: 2),
+          Text(
+            text,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 9,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatEnumValue(String enumValue) {
+    // Convert camelCase to readable format
+    return enumValue
+        .replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}')
+        .trim()
+        .split(' ')
+        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+        .join(' ');
   }
 }
 

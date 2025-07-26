@@ -34,5 +34,10 @@
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+   <script type="module">
+  import { FilesetResolver, LlmInference } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-genai';
+  window.FilesetResolver = FilesetResolver;
+  window.LlmInference = LlmInference;
+  </script>
 </body>
 </html>

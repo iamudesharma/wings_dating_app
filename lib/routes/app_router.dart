@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
+import 'package:wings_dating_app/src/ai_wingman/models/model.dart';
 import 'package:wings_dating_app/src/album/album_details_view.dart';
 import 'package:wings_dating_app/src/album/album_view.dart';
 import 'package:wings_dating_app/src/album/create_album_view.dart';
@@ -14,6 +15,7 @@ import 'package:wings_dating_app/src/login.dart';
 import 'package:wings_dating_app/src/users/filters/filters_view.dart';
 
 import '../src/auth/sign_options.dart';
+import '../src/ai_wingman/pages/ai_wingman_view.dart';
 import '../src/chats/chats_list_view.dart';
 import '../src/chats/pages/chat_view.dart';
 import '../src/dashboard.dart';
@@ -47,18 +49,12 @@ class AppRouter extends RootStackRouter {
       page: DashboardRoute.page,
       path: "/",
       children: [
-        RedirectRoute(path: '', redirectTo: 'users'),
-        AutoRoute(page: BooksTab.page, path: "user", children: [
-          AutoRoute(page: UsersRoute.page, path: "", initial: true),
-          AutoRoute(page: ChatListRoute.page, path: "", keepHistory: true, children: []),
-          AutoRoute(
-            page: AlbumRoute.page,
-            path: "",
-            keepHistory: true,
-          ),
-          AutoRoute(page: MatchingRoute.page, keepHistory: true, path: "", children: []),
-          AutoRoute(page: ProfileRoute.page, keepHistory: true, path: "", children: []),
-        ])
+        AutoRoute(page: UsersRoute.page, path: "users", initial: true),
+        AutoRoute(page: ChatListRoute.page, path: "chats", keepHistory: true),
+        AutoRoute(page: AlbumRoute.page, path: "album", keepHistory: true),
+        AutoRoute(page: MatchingRoute.page, path: "matching", keepHistory: true),
+        AutoRoute(page: AIChatRoute.page, path: "ai-wingman", keepHistory: true),
+        AutoRoute(page: ProfileRoute.page, path: "profile", keepHistory: true),
       ],
       guards: [
         AuthGuard(ref: ref),
@@ -111,9 +107,4 @@ class AppRouter extends RootStackRouter {
       keepHistory: true,
     ),
   ];
-}
-
-@RoutePage(name: 'BooksTab')
-class BooksTabView extends AutoRouter {
-  const BooksTabView({super.key});
 }
