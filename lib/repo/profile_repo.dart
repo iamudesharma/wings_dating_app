@@ -6,7 +6,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/const/http_templete.dart';
 import 'package:wings_dating_app/dependency/dependencies.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
-import 'package:wings_dating_app/helpers/shared_prefs.dart';
 import 'package:wings_dating_app/repo/repo_exception.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/model/engagement_models.dart';
@@ -48,12 +47,6 @@ class ProfileRepo with RepositoryExceptionMixin {
   // }
 
   Future<UserModel> getCurrentUser() async {
-    // Try to get user from shared preferences first
-    final cachedUser = await SharedPrefs.instance.getUser();
-    if (cachedUser != null) {
-      print("Loaded user from SharedPrefs");
-      return cachedUser;
-    }
     final currentUserId = ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
     try {
       final Map<String, dynamic> response = await httpTemplate.get("/users/$currentUserId");
@@ -63,7 +56,6 @@ class ProfileRepo with RepositoryExceptionMixin {
         print("getCurrentUser userMap: $userMap");
         print("userMap runtimeType: ${userMap.runtimeType}");
         final user = UserModel.fromJson(userMap);
-        await SharedPrefs.instance.saveUser(user); // Save to shared prefs
         return user;
       } else {
         throw Exception('Failed to fetch user: ${response['message'] ?? response}');
@@ -86,8 +78,6 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<void> updateUserDoc(UserModel userModel) async {
     logger.i("updateUserDoc userModel");
     await httpTemplate.put("/users/${userModel.id}", body: userModel.toJson());
-    await SharedPrefs.instance.saveUser(userModel); // Update shared prefs
-    // await SharedPrefs.instance.updateUser(userModel);
   }
 
   // Future<void> updateLocation(dynamic pointData) async {
@@ -152,9 +142,56 @@ class ProfileRepo with RepositoryExceptionMixin {
           "lng=${geopoint[0]}&lat=${geopoint[1]}&distance=50000000&userId=${userModel.id}&page=$page&limit=$limit";
       final response = await httpTemplate.get("/users/near/?$query");
 
+      print("Raw API response: $response");
+      print("Response type: ${response.runtimeType}");
+      print("Response keys: ${response.keys}");
+
       if (response.containsKey('data')) {
-        return PaginatedUserResponse.fromJson(response);
+        final data = response['data'];
+        print("Data field type: ${data.runtimeType}");
+        print("Data field value: $data");
+
+        // Handle different response structures
+        if (data is Map<String, dynamic>) {
+          // If data is a map, it might contain the actual paginated structure
+          print("Data is Map, checking for nested structure");
+          if (data.containsKey('data') && data['data'] is List) {
+            print("Found nested data structure");
+            return PaginatedUserResponse.fromJson(data);
+          } else if (data.containsKey('users') && data['users'] is List) {
+            print("Found users field in data");
+            // Convert to expected structure
+            final convertedResponse = {
+              'data': data['users'],
+              'total': data['total'] ?? 0,
+              'page': data['page'] ?? page,
+              'totalPages': data['totalPages'] ?? 0,
+              'hasNext': data['hasNext'] ?? false,
+              'hasPrev': data['hasPrev'] ?? false,
+            };
+            return PaginatedUserResponse.fromJson(convertedResponse);
+          } else {
+            print("Data map doesn't contain expected list field");
+            throw Exception('Unexpected data structure: $data');
+          }
+        } else if (data is List) {
+          print("Data is List, creating paginated response");
+          // If data is directly a list, wrap it in pagination structure
+          final convertedResponse = {
+            'data': data,
+            'total': response['total'] ?? data.length,
+            'page': response['page'] ?? page,
+            'totalPages': response['totalPages'] ?? 1,
+            'hasNext': response['hasNext'] ?? false,
+            'hasPrev': response['hasPrev'] ?? false,
+          };
+          return PaginatedUserResponse.fromJson(convertedResponse);
+        } else {
+          print("Data is neither Map nor List: ${data.runtimeType}");
+          throw Exception('Unexpected data type: ${data.runtimeType}');
+        }
       } else {
+        print("Response doesn't contain 'data' key");
         throw Exception('Failed to fetch user: ${response['message'] ?? response}');
       }
     } catch (e, st) {
@@ -225,9 +262,56 @@ class ProfileRepo with RepositoryExceptionMixin {
       final uriParams = params.entries.map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}").join('&');
       final response = await httpTemplate.get("/users/discover?$uriParams");
 
+      print("Filter API response: $response");
+      print("Filter response type: ${response.runtimeType}");
+      print("Filter response keys: ${response.keys}");
+
       if (response.containsKey('data')) {
-        return PaginatedUserResponse.fromJson(response);
+        final data = response['data'];
+        print("Filter data field type: ${data.runtimeType}");
+        print("Filter data field value: $data");
+
+        // Handle different response structures
+        if (data is Map<String, dynamic>) {
+          // If data is a map, it might contain the actual paginated structure
+          print("Filter data is Map, checking for nested structure");
+          if (data.containsKey('data') && data['data'] is List) {
+            print("Found nested data structure");
+            return PaginatedUserResponse.fromJson(data);
+          } else if (data.containsKey('users') && data['users'] is List) {
+            print("Found users field in data");
+            // Convert to expected structure
+            final convertedResponse = {
+              'data': data['users'],
+              'total': data['total'] ?? 0,
+              'page': data['page'] ?? page,
+              'totalPages': data['totalPages'] ?? 0,
+              'hasNext': data['hasNext'] ?? false,
+              'hasPrev': data['hasPrev'] ?? false,
+            };
+            return PaginatedUserResponse.fromJson(convertedResponse);
+          } else {
+            print("Filter data map doesn't contain expected list field");
+            throw Exception('Unexpected data structure: $data');
+          }
+        } else if (data is List) {
+          print("Filter data is List, creating paginated response");
+          // If data is directly a list, wrap it in pagination structure
+          final convertedResponse = {
+            'data': data,
+            'total': response['total'] ?? data.length,
+            'page': response['page'] ?? page,
+            'totalPages': response['totalPages'] ?? 1,
+            'hasNext': response['hasNext'] ?? false,
+            'hasPrev': response['hasPrev'] ?? false,
+          };
+          return PaginatedUserResponse.fromJson(convertedResponse);
+        } else {
+          print("Filter data is neither Map nor List: ${data.runtimeType}");
+          throw Exception('Unexpected data type: ${data.runtimeType}');
+        }
       } else {
+        print("Filter response doesn't contain 'data' key");
         throw Exception('Failed to fetch user: ${response['message'] ?? response}');
       }
     } catch (e, st) {
@@ -284,8 +368,30 @@ class ProfileRepo with RepositoryExceptionMixin {
     // final userCollection = FirebaseFirestore.instance.collection('users');
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-    final response = await httpTemplate.post("/users/$currentUserId/favorite/$id");
-    return FavoriteResponse.fromJson(response);
+    try {
+      logger.i("Adding user $id to favorites for user $currentUserId");
+
+      final response = await httpTemplate.post(
+        "/users/$currentUserId/favourite/$id", // Changed from 'favorite' to 'favourite'
+        body: {
+          'action': 'add_favorite',
+          'targetUserId': id,
+          'timestamp': DateTime.now().toIso8601String(),
+        },
+      );
+
+      logger.i("Add to favorite response: $response");
+
+      // Handle different response structures
+      if (response.containsKey('data')) {
+        return FavoriteResponse.fromJson(response['data']);
+      } else {
+        return FavoriteResponse.fromJson(response);
+      }
+    } catch (e) {
+      logger.e("Error adding user to favorites: $e");
+      rethrow;
+    }
 
     // if (currentUserId != null) {
     //   await userCollection.doc(currentUserId).update({
@@ -297,8 +403,24 @@ class ProfileRepo with RepositoryExceptionMixin {
   Future<FavoriteResponse> removeUserFromFavorite(String id) async {
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-    final response = await httpTemplate.delete("/users/$currentUserId/favorite/$id");
-    return FavoriteResponse.fromJson(response);
+    try {
+      logger.i("Removing user $id from favorites for user $currentUserId");
+
+      final response =
+          await httpTemplate.delete("/users/$currentUserId/favourite/$id"); // Changed from 'favorite' to 'favourite'
+
+      logger.i("Remove from favorite response: $response");
+
+      // Handle different response structures
+      if (response.containsKey('data')) {
+        return FavoriteResponse.fromJson(response['data']);
+      } else {
+        return FavoriteResponse.fromJson(response);
+      }
+    } catch (e) {
+      logger.e("Error removing user from favorites: $e");
+      rethrow;
+    }
   }
 
   Future<TapResponse> sendTap(String targetUserId) async {

@@ -6,7 +6,7 @@ part of 'paginated_users_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$paginatedUsersHash() => r'61e90d0014fadc53ef49d91f8fea4d3d4c45be3a';
+String _$paginatedUsersHash() => r'd2f48a91ed30fcf5b565c42a07c1a505c04fc85c';
 
 /// Copied from Dart SDK
 class _SystemHash {

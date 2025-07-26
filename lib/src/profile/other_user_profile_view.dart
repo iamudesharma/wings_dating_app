@@ -11,11 +11,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
-import 'package:wings_dating_app/src/profile/profile_view.dart';
+import 'package:wings_dating_app/src/profile/providers/profile_providers.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-import '../../const/pref_util.dart';
 import '../../helpers/responsive_layout.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -24,41 +23,20 @@ part 'other_user_profile_view.g.dart';
 @riverpod
 class Fav extends _$Fav {
   Future<void> addUserToFavorite(String id) async {
-    final data = SharedPrefs.instance.getUsers();
-
-    if (data != null) {
-      final updatedFavorites = [...data.favoriteList, id];
-
-      SharedPrefs.instance.updateUser(data.copyWith(
-        favoriteList: updatedFavorites,
-      ));
-    }
-
     await ref.read(profileRepoProvider).addUserToFavorite(id);
     // Refresh state to reflect the addition
     state = AsyncValue.data(true);
   }
 
   Future<void> removeUserFromFavorite(String id) async {
-    final data = SharedPrefs.instance.getUsers();
-
-    if (data != null && data.favoriteList.contains(id)) {
-      final updatedFavorites = data.favoriteList.where((favId) => favId != id).toList();
-
-      SharedPrefs.instance.updateUser(data.copyWith(
-        favoriteList: updatedFavorites,
-      ));
-    }
-
     await ref.read(profileRepoProvider).removeUserFromFavorite(id);
-
     // Refresh state to reflect the removal
     state = AsyncValue.data(false);
   }
 
   @override
   Future<bool> build(String id) async {
-    return Future.value(isUserFavorite(id));
+    return await isUserFavorite(id);
   }
 }
 

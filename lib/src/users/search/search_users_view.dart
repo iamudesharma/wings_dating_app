@@ -232,6 +232,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/users/widget/user_grid_item.dart';
+import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
 import '../../model/user_models.dart';
 part 'search_users_view.g.dart';

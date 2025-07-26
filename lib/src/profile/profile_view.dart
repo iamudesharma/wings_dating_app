@@ -6,20 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-import 'package:wings_dating_app/src/model/user_models.dart';
-
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
-import '../../repo/profile_repo.dart';
 import '../../routes/app_router.dart';
 import 'widgets/profile_input_card.dart';
 
 // import 'package:velocity_x/velocity_x.dart';
-
-final getUserByIdProvider = FutureProvider.family<UserModel?, String>((ref, id) {
-  return ref.read(profileRepoProvider).getUserById(id);
-});
 
 @RoutePage()
 class ProfileView extends ConsumerStatefulWidget {

@@ -43,11 +43,12 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
           lazyLoad: true,
           drawer: const Drawer(),
           backgroundColor: Colors.black,
-          routes: const [
+          routes: [
             UsersRoute(),
             ChatListRoute(),
             AlbumRoute(),
             MatchingRoute(),
+            AIChatRoute(),
             ProfileRoute(),
           ],
           bottomNavigationBuilder: size.isMobile
@@ -81,6 +82,12 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                             label: 'Matching',
                             icon: Icon(
                               Icons.person_2_outlined,
+                            ),
+                          ),
+                          NavigationDestination(
+                            label: 'AI Wingman',
+                            icon: Icon(
+                              Icons.smart_toy,
                             ),
                           ),
                           NavigationDestination(

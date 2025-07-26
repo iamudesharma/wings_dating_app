@@ -47,3 +47,8 @@ app.*.map.json
 lib/config/app_config.dart
 
 lib/const/app_const.dart
+
+memory-bank
+assets/gemma3-1b-it-int4.task
+assets/model
+.github

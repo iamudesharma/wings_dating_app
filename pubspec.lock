@@ -508,14 +508,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
-  drift:
-    dependency: transitive
-    description:
-      name: drift
-      sha256: b584ddeb2b74436735dd2cf746d2d021e19a9a6770f409212fd5cbc2814ada85
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.26.1"
   dropdown_search:
     dependency: transitive
     description:
@@ -929,6 +921,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.0.1"
+  flutter_gemma:
+    dependency: "direct main"
+    description:
+      name: flutter_gemma
+      sha256: "3bf366864170092f2a3fb45998286cab1bcb00a249fc4ef5fed7b9e7c9f29a5d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.0"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -1047,7 +1047,7 @@ packages:
     source: hosted
     version: "9.1.1"
   flutter_markdown:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_markdown
       sha256: "634622a3a826d67cb05c0e3e576d1812c430fa98404e95b60b131775c73d76ec"
@@ -1600,6 +1600,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.15"
+  large_file_handler:
+    dependency: transitive
+    description:
+      name: large_file_handler
+      sha256: c2ecaf552e8039119bbe3a094d15aecbafe833899f30b2dcfbb513eddf76b36f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
   latlong2:
     dependency: transitive
     description:
@@ -2413,22 +2421,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
-  sqlite3:
-    dependency: transitive
-    description:
-      name: sqlite3
-      sha256: "310af39c40dd0bb2058538333c9d9840a2725ae0b9f77e4fd09ad6696aa8f66e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.7.5"
-  sqlite3_flutter_libs:
-    dependency: transitive
-    description:
-      name: sqlite3_flutter_libs
-      sha256: "1a96b59227828d9eb1463191d684b37a27d66ee5ed7597fcf42eee6452c88a14"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.32"
   stack_trace:
     dependency: transitive
     description:
@@ -2474,14 +2466,6 @@ packages:
     description:
       name: stream_chat_flutter_core
       sha256: "55f049294e803fe4a4d234d405fe3fbf9e6c705c1286a3d758f744545a0ec4eb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.10.0"
-  stream_chat_persistence:
-    dependency: "direct main"
-    description:
-      name: stream_chat_persistence
-      sha256: "1bf1b5394c2787936ffe20836f023f9e6aacd99d7a82a4acd8d1efed693e37c5"
       url: "https://pub.dev"
     source: hosted
     version: "9.10.0"
@@ -2630,13 +2614,13 @@ packages:
     source: hosted
     version: "3.0.0"
   url_launcher:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: url_launcher
-      sha256: "9d06212b1362abc2f0f0d78e6f09f726608c74e3b9462e8368bb03314aa8d603"
+      sha256: f6a7e5c4835bb4e3026a04793a4199ca2d14c739ec378fdfe23fc8075d0439f8
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.1"
+    version: "6.3.2"
   url_launcher_android:
     dependency: transitive
     description:
