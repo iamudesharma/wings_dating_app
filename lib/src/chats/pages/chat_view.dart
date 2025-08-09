@@ -3,8 +3,12 @@
 // import 'package:chat_sample/src/utils/api_utils.dart';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:emojis/emoji.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+// import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// ignore: unused_import
+// import 'package:get_it/get_it.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
@@ -14,11 +18,15 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 // ignore: depend_on_referenced_packages
 // import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:substring_highlight/substring_highlight.dart';
+// import 'package:substring_highlight/substring_highlight.dart';
 
 // import 'package:connectycube_sdk/connectycube_sdk.dart';
 // import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
+// import 'package:wings_dating_app/src/ai_wingman/models/model.dart' show Model;
 import 'package:wings_dating_app/src/album/album_view.dart';
+import 'package:wings_dating_app/src/chats/pages/gemma_auto_compelete.dart';
 
 int? time;
 const int messagesPerPage = 50;
@@ -74,6 +82,30 @@ class ChatView extends StatelessWidget {
               ),
             ),
             StreamMessageInput(
+              enableVoiceRecording: true,
+              customAutocompleteTriggers: [
+                StreamAutocompleteTrigger(
+                  trigger: ':',
+                  minimumRequiredCharacters: 2,
+                  optionsViewBuilder: (
+                    context,
+                    autocompleteQuery,
+                    messageEditingController,
+                  ) {
+                    final query = autocompleteQuery.query;
+                    return StreamGemmaAutocompleteOptions(
+                      query: query,
+                      onOptionSelected: (emoji) {
+                        // accepting the autocomplete option.
+                        StreamAutocomplete.of(context).acceptAutocompleteOption(
+                          emoji,
+                          keepTrigger: false,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
               actionsBuilder: (context, defaultActions) {
                 return defaultActions
                   ..add(
@@ -133,7 +165,6 @@ class PickUpAlbum extends ConsumerWidget {
                   //     ],
                   //   ),
                   // );
-               
                 },
                 child: Image.network(
                   data[index].photos[0],
@@ -151,10 +182,8 @@ class PickUpAlbum extends ConsumerWidget {
 
 class AlbumBuilder extends StreamAttachmentWidgetBuilder {
   @override
-  Widget build(BuildContext context, Message message,
-      Map<String, List<Attachment>> attachments) {
-    final attachment =
-        message.attachments.first.extraData["imageUrls"] as dynamic;
+  Widget build(BuildContext context, Message message, Map<String, List<Attachment>> attachments) {
+    final attachment = message.attachments.first.extraData["imageUrls"] as dynamic;
     final imageId = message.attachments.first.extraData["image_id"] as dynamic;
 
     return GestureDetector(
@@ -180,5 +209,69 @@ class AlbumBuilder extends StreamAttachmentWidgetBuilder {
   bool canHandle(Message message, Map<String, List<Attachment>> attachments) {
     final types = attachments.keys;
     return types.contains("album");
+  }
+}
+
+// import 'package:emojis/emoji.dart';
+// import 'package:flutter/material.dart';
+
+// import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+// import 'package:substring_highlight/substring_highlight.dart';
+
+// /// Overlay for displaying emoji that can be used
+class StreamEmojiAutocompleteOptions extends StatelessWidget {
+  /// Constructor for creating a [StreamEmojiAutocompleteOptions]
+  const StreamEmojiAutocompleteOptions({
+    super.key,
+    required this.query,
+    this.onEmojiSelected,
+  });
+
+  /// Query for searching emoji.
+  final String query;
+
+  /// Callback called when an emoji is selected.
+  final ValueSetter<Emoji>? onEmojiSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final emojis = Emoji.all().where((it) {
+      final normalizedQuery = query.toUpperCase();
+      final normalizedShortName = it.shortName.toUpperCase();
+
+      return normalizedShortName.contains(normalizedQuery);
+    });
+
+    if (emojis.isEmpty) return const SizedBox.shrink();
+
+    return StreamAutocompleteOptions<Emoji>(
+      options: emojis,
+      optionBuilder: (context, emoji) {
+        final themeData = Theme.of(context);
+        return ListTile(
+          dense: true,
+          horizontalTitleGap: 0,
+          leading: Text(
+            emoji.char,
+            style: themeData.textTheme.titleLarge!.copyWith(
+              fontSize: 24,
+            ),
+          ),
+          title: SubstringHighlight(
+            text: emoji.shortName,
+            term: query,
+            textStyleHighlight: themeData.textTheme.titleLarge!.copyWith(
+              color: Colors.yellow,
+              fontSize: 14.5,
+              fontWeight: FontWeight.bold,
+            ),
+            textStyle: themeData.textTheme.titleLarge!.copyWith(
+              fontSize: 14.5,
+            ),
+          ),
+          onTap: onEmojiSelected == null ? null : () => onEmojiSelected!(emoji),
+        );
+      },
+    );
   }
 }

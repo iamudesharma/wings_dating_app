@@ -654,6 +654,7 @@ class NavigationBarWidget extends StatelessWidget {
                     NavigationRailDestination(icon: Icon(Icons.chat_bubble), label: Text("Chat")),
                     NavigationRailDestination(icon: Icon(Icons.album_outlined), label: Text("Album")),
                     NavigationRailDestination(icon: Icon(Icons.add_card), label: Text("Matching")),
+                    NavigationRailDestination(icon: Icon(Icons.psychology), label: Text("AI Wingman")),
                     NavigationRailDestination(icon: Icon(Icons.person), label: Text("Profile"))
                   ],
                 );

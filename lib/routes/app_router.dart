@@ -16,6 +16,7 @@ import 'package:wings_dating_app/src/users/filters/filters_view.dart';
 
 import '../src/auth/sign_options.dart';
 import '../src/ai_wingman/pages/ai_wingman_view.dart';
+import '../src/ai_wingman/pages/ai_analysis_view.dart';
 import '../src/chats/chats_list_view.dart';
 import '../src/chats/pages/chat_view.dart';
 import '../src/dashboard.dart';
@@ -104,6 +105,11 @@ class AppRouter extends RootStackRouter {
     AutoRoute(
       page: ProfileVisitsRoute.page,
       path: "/profile-visits",
+      keepHistory: true,
+    ),
+    AutoRoute(
+      page: AIAnalysisRoute.page,
+      path: "/ai-analysis",
       keepHistory: true,
     ),
   ];

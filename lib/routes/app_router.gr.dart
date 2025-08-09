@@ -11,6 +11,45 @@
 part of 'app_router.dart';
 
 /// generated route for
+/// [AIAnalysisScreen]
+class AIAnalysisRoute extends PageRouteInfo<AIAnalysisRouteArgs> {
+  AIAnalysisRoute({
+    Key? key,
+    Model model = Model.gemma3GpuLocalAsset,
+    List<PageRouteInfo>? children,
+  }) : super(
+         AIAnalysisRoute.name,
+         args: AIAnalysisRouteArgs(key: key, model: model),
+         initialChildren: children,
+       );
+
+  static const String name = 'AIAnalysisRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<AIAnalysisRouteArgs>(
+        orElse: () => const AIAnalysisRouteArgs(),
+      );
+      return AIAnalysisScreen(key: args.key, model: args.model);
+    },
+  );
+}
+
+class AIAnalysisRouteArgs {
+  const AIAnalysisRouteArgs({this.key, this.model = Model.gemma3GpuLocalAsset});
+
+  final Key? key;
+
+  final Model model;
+
+  @override
+  String toString() {
+    return 'AIAnalysisRouteArgs{key: $key, model: $model}';
+  }
+}
+
+/// generated route for
 /// [AIChatScreen]
 class AIChatRoute extends PageRouteInfo<AIChatRouteArgs> {
   AIChatRoute({
@@ -37,7 +76,7 @@ class AIChatRoute extends PageRouteInfo<AIChatRouteArgs> {
 }
 
 class AIChatRouteArgs {
-  const AIChatRouteArgs({this.key, this.model = Model.deepseek});
+  const AIChatRouteArgs({this.key, this.model = Model.gemma3GpuLocalAsset});
 
   final Key? key;
 

@@ -3,133 +3,176 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemma/core/chat.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
-// import 'package:flutter_gemma_example/chat_widget.dart';
-// import 'package:flutter_gemma_example/loading_widget.dart';
-// import 'package:flutter_gemma_example/models/model.dart';
-import 'package:path_provider/path_provider.dart';
-// import 'package:flutter_gemma_example/model_selection_screen.dart';
+import 'package:responsive_builder/responsive_builder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/src/ai_wingman/models/model.dart';
-import 'package:wings_dating_app/src/ai_wingman/pages/loading_widget.dart';
-import 'package:wings_dating_app/src/ai_wingman/widgets/chat_widget.dart';
+import 'package:wings_dating_app/src/ai_wingman/providers/gemma_provider.dart';
 import 'package:wings_dating_app/src/ai_wingman/widgets/model_selection_screen.dart';
+import 'package:wings_dating_app/src/ai_wingman/widgets/enhanced_wingman_header.dart';
+import 'package:wings_dating_app/src/ai_wingman/widgets/enhanced_dating_suggestions.dart';
+import 'package:wings_dating_app/src/ai_wingman/widgets/enhanced_welcome_section.dart';
+import 'package:wings_dating_app/src/ai_wingman/widgets/dating_info_panel.dart';
+import 'package:wings_dating_app/src/ai_wingman/widgets/modern_chat_message.dart';
+import 'package:wings_dating_app/src/ai_wingman/widgets/modern_chat_input.dart';
+import 'package:wings_dating_app/src/users/users_view.dart';
 
 @RoutePage(name: 'AIChatRoute')
-class AIChatScreen extends StatefulWidget {
-  const AIChatScreen({super.key, this.model = Model.gemma3GpuLocalAsset});
+class AIChatScreen extends ConsumerStatefulWidget {
+  const AIChatScreen({
+    super.key,
+    this.model = Model.gemma3GpuLocalAsset,
+  });
 
   final Model model;
-
   @override
-  ChatScreenState createState() => ChatScreenState();
+  ConsumerState<AIChatScreen> createState() => ChatScreenState();
 }
 
-class ChatScreenState extends State<AIChatScreen> {
-  final _gemma = FlutterGemmaPlugin.instance;
-  InferenceChat? chat;
+class ChatScreenState extends ConsumerState<AIChatScreen> {
   final _messages = <Message>[];
-  bool _isModelInitialized = false;
-  bool _isStreaming = false; // Track streaming state
   String? _error;
-  Color _backgroundColor = const Color(0xFF0b2351);
-  String _appTitle = 'Flutter Gemma Example'; // Track the current app title
+  String _appTitle = 'AI Dating Wingman 💕';
 
-  // Define the tools
+  // Define dating-focused tools
   final List<Tool> _tools = [
     const Tool(
-      name: 'change_app_title',
-      description: 'Changes the title of the app in the AppBar. Provide a new title text.',
+      name: 'analyze_dating_profile',
+      description: 'Analyzes a dating profile photo or bio and provides improvement suggestions',
       parameters: {
         'type': 'object',
         'properties': {
-          'title': {
+          'analysis_type': {
             'type': 'string',
-            'description': 'The new title text to display in the AppBar',
+            'description': 'Type of analysis: photo, bio, or overall',
+            'enum': ['photo', 'bio', 'overall'],
+          },
+          'suggestions': {
+            'type': 'string',
+            'description': 'Specific suggestions for improvement',
           },
         },
-        'required': ['title'],
+        'required': ['analysis_type', 'suggestions'],
       },
     ),
     const Tool(
-      name: 'change_background_color',
-      description:
-          "Changes the background color of the app. The color should be a standard web color name like 'red', 'blue', 'green', 'yellow', 'purple', or 'orange'.",
+      name: 'generate_conversation_starter',
+      description: 'Generates personalized conversation starters based on profile information',
       parameters: {
         'type': 'object',
         'properties': {
-          'color': {
+          'context': {
             'type': 'string',
-            'description': 'The color name',
+            'description': 'Context about the person (interests, bio, photos)',
+          },
+          'starter_type': {
+            'type': 'string',
+            'description': 'Type of conversation starter',
+            'enum': ['humorous', 'thoughtful', 'casual', 'creative'],
           },
         },
-        'required': ['color'],
+        'required': ['context', 'starter_type'],
       },
     ),
-    /* const Tool(
-      name: 'show_alert',
-      description: 'Shows an alert dialog with a custom message and title.',
+    const Tool(
+      name: 'suggest_date_ideas',
+      description: 'Suggests date ideas based on preferences, budget, and location',
       parameters: {
         'type': 'object',
         'properties': {
-          'title': {
+          'budget': {
             'type': 'string',
-            'description': 'The title of the alert dialog',
+            'description': 'Budget range for the date',
+            'enum': ['low', 'medium', 'high', 'any'],
           },
-          'message': {
+          'date_type': {
             'type': 'string',
-            'description': 'The message content of the alert dialog',
+            'description': 'Type of date preferred',
+            'enum': ['casual', 'romantic', 'adventurous', 'cultural', 'outdoor'],
           },
-          'button_text': {
+          'location': {
             'type': 'string',
-            'description': 'The text for the OK button (optional, defaults to "OK")',
+            'description': 'General location or setting',
           },
         },
-        'required': ['title', 'message'],
+        'required': ['budget', 'date_type'],
       },
-    ), */
+    ),
+    const Tool(
+      name: 'confidence_boost',
+      description: 'Provides confidence-building advice and positive affirmations for dating',
+      parameters: {
+        'type': 'object',
+        'properties': {
+          'situation': {
+            'type': 'string',
+            'description': 'The dating situation needing confidence boost',
+          },
+          'advice_type': {
+            'type': 'string',
+            'description': 'Type of advice needed',
+            'enum': ['pre_date', 'messaging', 'profile_creation', 'general'],
+          },
+        },
+        'required': ['situation', 'advice_type'],
+      },
+    ),
+    const Tool(
+      name: 'red_flag_detector',
+      description: 'Identifies potential red flags in dating conversations or profiles',
+      parameters: {
+        'type': 'object',
+        'properties': {
+          'content': {
+            'type': 'string',
+            'description': 'The conversation or profile content to analyze',
+          },
+          'flag_level': {
+            'type': 'string',
+            'description': 'Severity level of the red flag',
+            'enum': ['minor', 'moderate', 'major'],
+          },
+          'explanation': {
+            'type': 'string',
+            'description': 'Explanation of why this is a red flag',
+          },
+        },
+        'required': ['content', 'flag_level', 'explanation'],
+      },
+    ),
+    const Tool(
+      name: 'relationship_advice',
+      description: 'Provides advice for different stages of dating and relationships',
+      parameters: {
+        'type': 'object',
+        'properties': {
+          'stage': {
+            'type': 'string',
+            'description': 'Stage of dating/relationship',
+            'enum': ['initial_contact', 'first_dates', 'getting_serious', 'long_term'],
+          },
+          'situation': {
+            'type': 'string',
+            'description': 'Specific situation or challenge',
+          },
+        },
+        'required': ['stage', 'situation'],
+      },
+    ),
   ];
 
   @override
   void initState() {
     super.initState();
-    _initializeModel();
+    _initializeGemmaProvider();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _gemma.modelManager.deleteModel();
+  Future<void> _initializeGemmaProvider() async {
+    await ref.read(gemmaProvider.notifier).initialize(widget.model, _tools);
+    setState(() {});
   }
 
-  Future<void> _initializeModel() async {
-    if (!await _gemma.modelManager.isModelInstalled) {
-      final path =
-          kIsWeb ? widget.model.url : '${(await getApplicationDocumentsDirectory()).path}/${widget.model.filename}';
-      await _gemma.modelManager.setModelPath(path);
-    }
-
-    final model = await _gemma.createModel(
-      modelType: super.widget.model.modelType,
-      preferredBackend: super.widget.model.preferredBackend,
-      maxTokens: 1024,
-      supportImage: widget.model.supportImage, // Pass image support
-      maxNumImages: widget.model.maxNumImages, // Maximum 4 images for multimodal models
-    );
-
-    chat = await model.createChat(
-      temperature: super.widget.model.temperature,
-      randomSeed: 1,
-      topK: super.widget.model.topK,
-      topP: super.widget.model.topP,
-      tokenBuffer: 256,
-      supportImage: widget.model.supportImage, // Image support in chat
-      supportsFunctionCalls: widget.model.supportsFunctionCalls, // Function calls support from model
-      tools: _tools, // Pass the tools to the chat
-    );
-
-    setState(() {
-      _isModelInitialized = true;
-    });
-  }
+  InferenceChat? get chat => ref.watch(gemmaProvider);
+  bool get isModelInitialized => ref.read(gemmaProvider.notifier).isModelInitialized;
 
   // Helper method to handle function calls with system messages (async version)
   Future<void> _handleFunctionCall(FunctionCallResponse functionCall) async {
@@ -204,220 +247,579 @@ class ChatScreenState extends State<AIChatScreen> {
     debugPrint('Final accumulated response: $accumulatedResponse');
   }
 
-  // Main gemma response handler - обрабатывает ответы от GemmaInputField
-  Future<void> _handleGemmaResponse(ModelResponse response) async {
-    debugPrint('ChatScreen: Handling response: $response (${response.runtimeType})');
+  // Function to execute tools
+  Future<Map<String, dynamic>> _executeTool(FunctionCallResponse functionCall) async {
+    switch (functionCall.name) {
+      case 'analyze_dating_profile':
+        final analysisType = functionCall.args['analysis_type'] as String?;
+        final suggestions = functionCall.args['suggestions'] as String?;
 
-    if (response is FunctionCallResponse) {
-      // Обрабатываем вызов функции
-      await _handleFunctionCall(response);
-    } else if (response is TextResponse) {
-      // Обрабатываем накопленный текст - создаем Message и добавляем в UI
-      setState(() {
-        _messages.add(Message.text(text: response.token));
-      });
-    } else {
-      // Неожиданный тип
-      debugPrint('ChatScreen: Unexpected response type: ${response.runtimeType}');
+        return {
+          'status': 'success',
+          'analysis_type': analysisType,
+          'suggestions': suggestions,
+          'message':
+              'Profile analysis completed successfully! Here are personalized suggestions to improve your dating profile.',
+        };
+
+      case 'generate_conversation_starter':
+        final context = functionCall.args['context'] as String?;
+        final starterType = functionCall.args['starter_type'] as String?;
+
+        return {
+          'status': 'success',
+          'context': context,
+          'starter_type': starterType,
+          'message': 'Generated personalized conversation starters based on the profile information.',
+        };
+
+      case 'suggest_date_ideas':
+        final budget = functionCall.args['budget'] as String?;
+        final dateType = functionCall.args['date_type'] as String?;
+        final location = functionCall.args['location'] as String?;
+
+        return {
+          'status': 'success',
+          'budget': budget,
+          'date_type': dateType,
+          'location': location,
+          'message': 'Date ideas generated based on your preferences and budget!',
+        };
+
+      case 'confidence_boost':
+        final situation = functionCall.args['situation'] as String?;
+        final adviceType = functionCall.args['advice_type'] as String?;
+
+        return {
+          'status': 'success',
+          'situation': situation,
+          'advice_type': adviceType,
+          'message': 'Confidence boost advice provided! You\'ve got this! 💪',
+        };
+
+      case 'red_flag_detector':
+        final content = functionCall.args['content'] as String?;
+        final flagLevel = functionCall.args['flag_level'] as String?;
+        final explanation = functionCall.args['explanation'] as String?;
+
+        return {
+          'status': 'success',
+          'content': content,
+          'flag_level': flagLevel,
+          'explanation': explanation,
+          'message': 'Red flag analysis completed. Stay safe out there! 🚩',
+        };
+
+      case 'relationship_advice':
+        final stage = functionCall.args['stage'] as String?;
+        final situation = functionCall.args['situation'] as String?;
+
+        return {
+          'status': 'success',
+          'stage': stage,
+          'situation': situation,
+          'message': 'Relationship advice provided for your current dating stage.',
+        };
+
+      default:
+        return {'error': 'Unknown tool: ${functionCall.name}'};
     }
   }
 
-  // Function to execute tools
-  Future<Map<String, dynamic>> _executeTool(FunctionCallResponse functionCall) async {
-    if (functionCall.name == 'change_app_title') {
-      final newTitle = functionCall.args['title'] as String?;
-      if (newTitle != null && newTitle.isNotEmpty) {
-        setState(() {
-          _appTitle = newTitle;
-        });
-        return {'status': 'success', 'message': 'App title changed to "$newTitle"'};
-      } else {
-        return {'error': 'Title cannot be empty'};
-      }
-    }
-    if (functionCall.name == 'change_background_color') {
-      final colorName = functionCall.args['color']?.toLowerCase();
-      final colorMap = {
-        'red': Colors.red,
-        'blue': Colors.blue,
-        'green': Colors.green,
-        'yellow': Colors.yellow,
-        'purple': Colors.purple,
-        'orange': Colors.orange,
-      };
-      if (colorMap.containsKey(colorName)) {
-        setState(() {
-          _backgroundColor = colorMap[colorName]!;
-        });
-        return {'status': 'success', 'message': 'Background color changed to $colorName'};
-      } else {
-        return {'error': 'Color not supported', 'available_colors': colorMap.keys.toList()};
-      }
-    }
-    if (functionCall.name == 'show_alert') {
-      final title = functionCall.args['title'] as String? ?? 'Alert';
-      final message = functionCall.args['message'] as String? ?? 'No message provided';
-      final buttonText = functionCall.args['button_text'] as String? ?? 'OK';
+  // Process user message and get AI response
+  Future<void> _processMessage(Message message) async {
+    if (chat == null) return;
 
-      // Show the alert dialog
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(title),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(buttonText),
-              ),
-            ],
-          );
-        },
-      );
+    try {
+      await chat!.addQuery(message);
 
-      return {'status': 'success', 'message': 'Alert dialog shown with title "$title"'};
+      String accumulatedResponse = '';
+      bool hasStartedResponse = false;
+
+      await for (final token in chat!.generateChatResponseAsync()) {
+        if (token is TextResponse) {
+          // Handle text response
+          accumulatedResponse += token.token;
+
+          setState(() {
+            if (!hasStartedResponse) {
+              // First token - add new AI message
+              _messages.add(Message.text(text: accumulatedResponse));
+              hasStartedResponse = true;
+            } else {
+              // Update existing AI message
+              final lastIndex = _messages.length - 1;
+              _messages[lastIndex] = Message.text(text: accumulatedResponse);
+            }
+          });
+        } else if (token is FunctionCallResponse) {
+          // Handle function call
+          await _handleFunctionCall(token);
+        }
+      }
+    } catch (e) {
+      setState(() {
+        _error = 'Error processing message: $e';
+      });
     }
-    return {'error': 'Tool not found'};
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _backgroundColor,
-      appBar: AppBar(
-        backgroundColor: _backgroundColor,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute<void>(
-                builder: (context) => const ModelSelectionScreen(),
-              ),
-              (route) => false,
-            );
-          },
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              _appTitle,
-              style: const TextStyle(fontSize: 18),
-              softWrap: true,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-            if (chat?.supportsImages == true)
-              const Text(
-                'Image support enabled',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.green,
-                  fontWeight: FontWeight.normal,
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: ResponsiveBuilder(
+        builder: (context, sizingInformation) {
+          return Row(
+            children: [
+              // Always show navigation bar (previously only showed when isWide was true)
+              NavigationBarWidget(sizingInformation: sizingInformation),
+              Expanded(
+                flex: 4,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Theme.of(context).colorScheme.background,
+                        Theme.of(context).colorScheme.surface.withOpacity(0.2),
+                        Theme.of(context).colorScheme.background,
+                      ],
+                    ),
+                  ),
+                  child: SafeArea(
+                    child: Column(
+                      children: [
+                        // Modern header with enhanced styling
+                        Container(
+                          margin: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: EnhancedWingmanHeader(
+                            chat: chat,
+                            appTitle: _appTitle,
+                            isOnline: isModelInitialized,
+                            onModelSelection: () {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (context) => const ModelSelectionScreen(),
+                                ),
+                                (route) => false,
+                              );
+                            },
+                            onOpenSettings: () => _openSettingsSheet(context),
+                          ),
+                        ),
+
+                        // Error banner
+                        if (_error != null) _buildModernErrorBanner(_error!),
+
+                        // Main content
+                        Expanded(
+                          child: isModelInitialized ? _buildChatInterface() : _buildLoadingState(),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-          ],
-        ),
-        actions: [
-          // Image support indicator
-          if (chat?.supportsImages == true)
-            const Padding(
-              padding: EdgeInsets.only(right: 16.0),
-              child: Icon(
-                Icons.image,
-                color: Colors.green,
-                size: 20,
-              ),
-            ),
-        ],
+            ],
+          );
+        },
       ),
-      body: Stack(children: [
-        // Center(
-        //   child: Image.asset(
-        //     'assets/background.png',
-        //     width: 200,
-        //     height: 200,
-        //   ),
-        // ),
-        _isModelInitialized
-            ? Column(children: [
-                if (_error != null) _buildErrorBanner(_error!),
-                if (chat?.supportsImages == true && _messages.isEmpty) _buildImageSupportInfo(),
-                Expanded(
-                  child: ChatListWidget(
-                    chat: chat,
-                    gemmaHandler: _handleGemmaResponse,
-                    humanHandler: (message) {
-                      // Now accepts Message instead of String
-                      setState(() {
-                        _error = null;
-                        _messages.add(message);
-                        _isStreaming = false; // Reset streaming when user sends message
-                      });
-                    },
-                    errorHandler: (err) {
-                      setState(() {
-                        _error = err;
-                      });
-                    },
-                    messages: _messages,
-                  ),
-                )
-              ])
-            : const LoadingWidget(message: 'Initializing model'),
-      ]),
     );
   }
 
-  Widget _buildErrorBanner(String errorMessage) {
+  void _openSettingsSheet(BuildContext context) {
+    final notifier = ref.read(gemmaProvider.notifier);
+    final currentTemp = notifier.temperature;
+    final currentTopK = notifier.topK;
+    final currentTopP = notifier.topP;
+    final currentFC = notifier.supportsFunctionCallsEnabled;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        double temp = currentTemp;
+        double topP = currentTopP;
+        double topK = currentTopK.toDouble();
+        bool fc = currentFC;
+
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 16,
+            left: 16,
+            right: 16,
+            top: 16,
+          ),
+          child: StatefulBuilder(
+            builder: (context, setStateSB) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.settings, color: Theme.of(context).colorScheme.primary),
+                      const SizedBox(width: 8),
+                      Text(
+                        'AI Wingman Settings',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Temperature
+                  Text('Creativity (temperature): ${temp.toStringAsFixed(2)}'),
+                  Slider(
+                    min: 0.0,
+                    max: 2.0,
+                    divisions: 40,
+                    value: temp,
+                    onChanged: (v) => setStateSB(() => temp = v),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // topK
+                  Text('Top-K: ${topK.round()}'),
+                  Slider(
+                    min: 1,
+                    max: 128,
+                    divisions: 127,
+                    value: topK,
+                    onChanged: (v) => setStateSB(() => topK = v),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // topP
+                  Text('Top-P: ${topP.toStringAsFixed(2)}'),
+                  Slider(
+                    min: 0.1,
+                    max: 1.0,
+                    divisions: 90,
+                    value: topP,
+                    onChanged: (v) => setStateSB(() => topP = v),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // function calls
+                  Row(
+                    children: [
+                      Switch(value: fc, onChanged: (v) => setStateSB(() => fc = v)),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text('Enable function calls (if model supports)')),
+                    ],
+                  ),
+
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          icon: const Icon(Icons.save),
+                          label: const Text('Apply'),
+                          onPressed: () async {
+                            Navigator.of(ctx).pop();
+                            await ref.read(gemmaProvider.notifier).updateSettings(
+                                  temperature: temp,
+                                  topK: topK.round(),
+                                  topP: topP,
+                                  supportsFunctionCalls: fc,
+                                );
+                            setState(() {}); // refresh UI badges
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildChatInterface() {
+    return Column(
+      children: [
+        // Dating suggestions when no messages
+        if (_messages.isEmpty) ...[
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  EnhancedWelcomeSection(),
+                  SizedBox(height: 20),
+                  EnhancedDatingSuggestionsWidget(
+                    onSuggestionTap: (suggestion) {
+                      final message = Message.text(text: suggestion, isUser: true);
+                      setState(() {
+                        _error = null;
+                        _messages.add(message);
+                      });
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  DatingInfoPanel(),
+                  SizedBox(height: 20),
+                  DatingFactsCarousel(),
+                  SizedBox(height: 20),
+                  if (chat?.supportsImages == true) _buildImageSupportInfo(),
+                ],
+              ),
+            ),
+          ),
+        ] else ...[
+          // Chat messages
+          Expanded(
+            child: ListView.builder(
+              reverse: true,
+              padding: EdgeInsets.symmetric(vertical: 16),
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final message = _messages.reversed.toList()[index];
+                return ModernChatMessage(message: message);
+              },
+            ),
+          ),
+        ],
+
+        // Modern input
+        ModernChatInput(
+          onMessageSent: (message) async {
+            setState(() {
+              _error = null;
+              _messages.add(message);
+            });
+
+            // Process the message with AI
+            await _processMessage(message);
+          },
+          supportsImages: chat?.supportsImages ?? false,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).colorScheme.primary,
+                  Theme.of(context).colorScheme.secondary,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Icon(
+              Icons.favorite,
+              color: Theme.of(context).colorScheme.onPrimary,
+              size: 40,
+            ),
+          ),
+          const SizedBox(height: 32),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
+            ),
+          ),
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Initializing your AI Wingman...',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Getting ready to help with your dating journey!',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModernErrorBanner(String errorMessage) {
     return Container(
-      width: double.infinity,
-      color: Colors.red,
-      padding: const EdgeInsets.all(8.0),
-      child: Text(
-        errorMessage,
-        style: const TextStyle(color: Colors.white),
-        textAlign: TextAlign.center,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.errorContainer,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.error.withOpacity(0.3),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.error.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.error.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Icons.error_outline,
+              color: Theme.of(context).colorScheme.error,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              errorMessage,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onErrorContainer,
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildImageSupportInfo() {
     return Container(
-      margin: const EdgeInsets.all(16.0),
-      padding: const EdgeInsets.all(12.0),
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF1a3a5c),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          const Icon(
-            Icons.info_outline,
-            color: Colors.green,
-            size: 20,
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+            ),
+            child: Icon(
+              Icons.photo_camera,
+              color: Theme.of(context).colorScheme.primary,
+              size: 24,
+            ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Model supports images',
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
                 Text(
-                  'Use the 📷 button to add images to your messages',
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.7),
-                    fontSize: 12,
-                  ),
+                  'Photo Analysis Available! 📸',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Upload dating profile photos for personalized feedback and improvement tips',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        height: 1.3,
+                      ),
                 ),
               ],
             ),
