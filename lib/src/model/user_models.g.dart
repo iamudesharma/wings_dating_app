@@ -153,12 +153,15 @@ abstract class UserModelDocumentReference
     FieldValue lookingForFieldValue,
     FieldValue whereToMeetFieldValue,
     FieldValue isOnlineFieldValue,
+    FieldValue lastSeenFieldValue,
+    FieldValue distanceFieldValue,
     FieldValue isVerifiedFieldValue,
     FieldValue isBlockedFieldValue,
     FieldValue blockListFieldValue,
+    FieldValue favoriteListFieldValue,
+    FieldValue interestsFieldValue,
     FieldValue idFieldValue,
     FieldValue fcmTokenFieldValue,
-    FieldValue cubeUserFieldValue,
   });
 
   /// Writes to the document using the transaction API.
@@ -190,12 +193,15 @@ abstract class UserModelDocumentReference
     FieldValue lookingForFieldValue,
     FieldValue whereToMeetFieldValue,
     FieldValue isOnlineFieldValue,
+    FieldValue lastSeenFieldValue,
+    FieldValue distanceFieldValue,
     FieldValue isVerifiedFieldValue,
     FieldValue isBlockedFieldValue,
     FieldValue blockListFieldValue,
+    FieldValue favoriteListFieldValue,
+    FieldValue interestsFieldValue,
     FieldValue idFieldValue,
     FieldValue fcmTokenFieldValue,
-    FieldValue cubeUserFieldValue,
   });
 
   /// Writes to the document using the batch API.
@@ -227,12 +233,15 @@ abstract class UserModelDocumentReference
     FieldValue lookingForFieldValue,
     FieldValue whereToMeetFieldValue,
     FieldValue isOnlineFieldValue,
+    FieldValue lastSeenFieldValue,
+    FieldValue distanceFieldValue,
     FieldValue isVerifiedFieldValue,
     FieldValue isBlockedFieldValue,
     FieldValue blockListFieldValue,
+    FieldValue favoriteListFieldValue,
+    FieldValue interestsFieldValue,
     FieldValue idFieldValue,
     FieldValue fcmTokenFieldValue,
-    FieldValue cubeUserFieldValue,
   });
 
   /// Updates data on the document. Data will be merged with any existing
@@ -276,18 +285,24 @@ abstract class UserModelDocumentReference
     FieldValue whereToMeetFieldValue,
     bool isOnline,
     FieldValue isOnlineFieldValue,
+    DateTime? lastSeen,
+    FieldValue lastSeenFieldValue,
+    double? distance,
+    FieldValue distanceFieldValue,
     bool isVerified,
     FieldValue isVerifiedFieldValue,
     bool isBlocked,
     FieldValue isBlockedFieldValue,
     List<String> blockList,
     FieldValue blockListFieldValue,
+    List<String> favoriteList,
+    FieldValue favoriteListFieldValue,
+    List<String> interests,
+    FieldValue interestsFieldValue,
     String id,
     FieldValue idFieldValue,
     String fcmToken,
     FieldValue fcmTokenFieldValue,
-     cube.CubeUser cubeUser,
-    FieldValue cubeUserFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -331,18 +346,24 @@ abstract class UserModelDocumentReference
     FieldValue whereToMeetFieldValue,
     bool isOnline,
     FieldValue isOnlineFieldValue,
+    DateTime? lastSeen,
+    FieldValue lastSeenFieldValue,
+    double? distance,
+    FieldValue distanceFieldValue,
     bool isVerified,
     FieldValue isVerifiedFieldValue,
     bool isBlocked,
     FieldValue isBlockedFieldValue,
     List<String> blockList,
     FieldValue blockListFieldValue,
+    List<String> favoriteList,
+    FieldValue favoriteListFieldValue,
+    List<String> interests,
+    FieldValue interestsFieldValue,
     String id,
     FieldValue idFieldValue,
     String fcmToken,
     FieldValue fcmTokenFieldValue,
-     cube.CubeUser cubeUser,
-    FieldValue cubeUserFieldValue,
   });
 
   /// Updates fields in the current document using the batch API.
@@ -386,18 +407,24 @@ abstract class UserModelDocumentReference
     FieldValue whereToMeetFieldValue,
     bool isOnline,
     FieldValue isOnlineFieldValue,
+    DateTime? lastSeen,
+    FieldValue lastSeenFieldValue,
+    double? distance,
+    FieldValue distanceFieldValue,
     bool isVerified,
     FieldValue isVerifiedFieldValue,
     bool isBlocked,
     FieldValue isBlockedFieldValue,
     List<String> blockList,
     FieldValue blockListFieldValue,
+    List<String> favoriteList,
+    FieldValue favoriteListFieldValue,
+    List<String> interests,
+    FieldValue interestsFieldValue,
     String id,
     FieldValue idFieldValue,
     String fcmToken,
     FieldValue fcmTokenFieldValue,
-     cube.CubeUser cubeUser,
-    FieldValue cubeUserFieldValue,
   });
 }
 
@@ -450,63 +477,68 @@ class _$UserModelDocumentReference
     FieldValue? lookingForFieldValue,
     FieldValue? whereToMeetFieldValue,
     FieldValue? isOnlineFieldValue,
+    FieldValue? lastSeenFieldValue,
+    FieldValue? distanceFieldValue,
     FieldValue? isVerifiedFieldValue,
     FieldValue? isBlockedFieldValue,
     FieldValue? blockListFieldValue,
+    FieldValue? favoriteListFieldValue,
+    FieldValue? interestsFieldValue,
     FieldValue? idFieldValue,
     FieldValue? fcmTokenFieldValue,
-    FieldValue? cubeUserFieldValue,
   }) async {
     final json = {
       ...model.toJson(),
       if (usernameFieldValue != null)
-        _$$UserModelImplFieldMap['username']!: usernameFieldValue,
-      if (bioFieldValue != null)
-        _$$UserModelImplFieldMap['bio']!: bioFieldValue,
+        _$UserModelFieldMap['username']!: usernameFieldValue,
+      if (bioFieldValue != null) _$UserModelFieldMap['bio']!: bioFieldValue,
       if (albumUrlFieldValue != null)
-        _$$UserModelImplFieldMap['albumUrl']!: albumUrlFieldValue,
+        _$UserModelFieldMap['albumUrl']!: albumUrlFieldValue,
       if (profileUrlFieldValue != null)
-        _$$UserModelImplFieldMap['profileUrl']!: profileUrlFieldValue,
+        _$UserModelFieldMap['profileUrl']!: profileUrlFieldValue,
       if (birthdayFieldValue != null)
-        _$$UserModelImplFieldMap['birthday']!: birthdayFieldValue,
-      if (ageFieldValue != null)
-        _$$UserModelImplFieldMap['age']!: ageFieldValue,
+        _$UserModelFieldMap['birthday']!: birthdayFieldValue,
+      if (ageFieldValue != null) _$UserModelFieldMap['age']!: ageFieldValue,
       if (positionFieldValue != null)
-        _$$UserModelImplFieldMap['position']!: positionFieldValue,
-      if (dobFieldValue != null)
-        _$$UserModelImplFieldMap['dob']!: dobFieldValue,
+        _$UserModelFieldMap['position']!: positionFieldValue,
+      if (dobFieldValue != null) _$UserModelFieldMap['dob']!: dobFieldValue,
       if (heightFieldValue != null)
-        _$$UserModelImplFieldMap['height']!: heightFieldValue,
+        _$UserModelFieldMap['height']!: heightFieldValue,
       if (weightFieldValue != null)
-        _$$UserModelImplFieldMap['weight']!: weightFieldValue,
+        _$UserModelFieldMap['weight']!: weightFieldValue,
       if (livedFieldValue != null)
-        _$$UserModelImplFieldMap['lived']!: livedFieldValue,
-      if (roleFieldValue != null)
-        _$$UserModelImplFieldMap['role']!: roleFieldValue,
+        _$UserModelFieldMap['lived']!: livedFieldValue,
+      if (roleFieldValue != null) _$UserModelFieldMap['role']!: roleFieldValue,
       if (bodyTypeFieldValue != null)
-        _$$UserModelImplFieldMap['bodyType']!: bodyTypeFieldValue,
+        _$UserModelFieldMap['bodyType']!: bodyTypeFieldValue,
       if (relationshipStatusFieldValue != null)
-        _$$UserModelImplFieldMap['relationshipStatus']!:
+        _$UserModelFieldMap['relationshipStatus']!:
             relationshipStatusFieldValue,
       if (ethnicityFieldValue != null)
-        _$$UserModelImplFieldMap['ethnicity']!: ethnicityFieldValue,
+        _$UserModelFieldMap['ethnicity']!: ethnicityFieldValue,
       if (lookingForFieldValue != null)
-        _$$UserModelImplFieldMap['lookingFor']!: lookingForFieldValue,
+        _$UserModelFieldMap['lookingFor']!: lookingForFieldValue,
       if (whereToMeetFieldValue != null)
-        _$$UserModelImplFieldMap['whereToMeet']!: whereToMeetFieldValue,
+        _$UserModelFieldMap['whereToMeet']!: whereToMeetFieldValue,
       if (isOnlineFieldValue != null)
-        _$$UserModelImplFieldMap['isOnline']!: isOnlineFieldValue,
+        _$UserModelFieldMap['isOnline']!: isOnlineFieldValue,
+      if (lastSeenFieldValue != null)
+        _$UserModelFieldMap['lastSeen']!: lastSeenFieldValue,
+      if (distanceFieldValue != null)
+        _$UserModelFieldMap['distance']!: distanceFieldValue,
       if (isVerifiedFieldValue != null)
-        _$$UserModelImplFieldMap['isVerified']!: isVerifiedFieldValue,
+        _$UserModelFieldMap['isVerified']!: isVerifiedFieldValue,
       if (isBlockedFieldValue != null)
-        _$$UserModelImplFieldMap['isBlocked']!: isBlockedFieldValue,
+        _$UserModelFieldMap['isBlocked']!: isBlockedFieldValue,
       if (blockListFieldValue != null)
-        _$$UserModelImplFieldMap['blockList']!: blockListFieldValue,
-      if (idFieldValue != null) _$$UserModelImplFieldMap['id']!: idFieldValue,
+        _$UserModelFieldMap['blockList']!: blockListFieldValue,
+      if (favoriteListFieldValue != null)
+        _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
+      if (interestsFieldValue != null)
+        _$UserModelFieldMap['interests']!: interestsFieldValue,
+      if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
       if (fcmTokenFieldValue != null)
-        _$$UserModelImplFieldMap['fcmToken']!: fcmTokenFieldValue,
-      if (cubeUserFieldValue != null)
-        _$$UserModelImplFieldMap['cubeUser']!: cubeUserFieldValue,
+        _$UserModelFieldMap['fcmToken']!: fcmTokenFieldValue,
     };
 
     final castedReference = reference.withConverter<Map<String, dynamic>>(
@@ -538,63 +570,68 @@ class _$UserModelDocumentReference
     FieldValue? lookingForFieldValue,
     FieldValue? whereToMeetFieldValue,
     FieldValue? isOnlineFieldValue,
+    FieldValue? lastSeenFieldValue,
+    FieldValue? distanceFieldValue,
     FieldValue? isVerifiedFieldValue,
     FieldValue? isBlockedFieldValue,
     FieldValue? blockListFieldValue,
+    FieldValue? favoriteListFieldValue,
+    FieldValue? interestsFieldValue,
     FieldValue? idFieldValue,
     FieldValue? fcmTokenFieldValue,
-    FieldValue? cubeUserFieldValue,
   }) {
     final json = {
       ...model.toJson(),
       if (usernameFieldValue != null)
-        _$$UserModelImplFieldMap['username']!: usernameFieldValue,
-      if (bioFieldValue != null)
-        _$$UserModelImplFieldMap['bio']!: bioFieldValue,
+        _$UserModelFieldMap['username']!: usernameFieldValue,
+      if (bioFieldValue != null) _$UserModelFieldMap['bio']!: bioFieldValue,
       if (albumUrlFieldValue != null)
-        _$$UserModelImplFieldMap['albumUrl']!: albumUrlFieldValue,
+        _$UserModelFieldMap['albumUrl']!: albumUrlFieldValue,
       if (profileUrlFieldValue != null)
-        _$$UserModelImplFieldMap['profileUrl']!: profileUrlFieldValue,
+        _$UserModelFieldMap['profileUrl']!: profileUrlFieldValue,
       if (birthdayFieldValue != null)
-        _$$UserModelImplFieldMap['birthday']!: birthdayFieldValue,
-      if (ageFieldValue != null)
-        _$$UserModelImplFieldMap['age']!: ageFieldValue,
+        _$UserModelFieldMap['birthday']!: birthdayFieldValue,
+      if (ageFieldValue != null) _$UserModelFieldMap['age']!: ageFieldValue,
       if (positionFieldValue != null)
-        _$$UserModelImplFieldMap['position']!: positionFieldValue,
-      if (dobFieldValue != null)
-        _$$UserModelImplFieldMap['dob']!: dobFieldValue,
+        _$UserModelFieldMap['position']!: positionFieldValue,
+      if (dobFieldValue != null) _$UserModelFieldMap['dob']!: dobFieldValue,
       if (heightFieldValue != null)
-        _$$UserModelImplFieldMap['height']!: heightFieldValue,
+        _$UserModelFieldMap['height']!: heightFieldValue,
       if (weightFieldValue != null)
-        _$$UserModelImplFieldMap['weight']!: weightFieldValue,
+        _$UserModelFieldMap['weight']!: weightFieldValue,
       if (livedFieldValue != null)
-        _$$UserModelImplFieldMap['lived']!: livedFieldValue,
-      if (roleFieldValue != null)
-        _$$UserModelImplFieldMap['role']!: roleFieldValue,
+        _$UserModelFieldMap['lived']!: livedFieldValue,
+      if (roleFieldValue != null) _$UserModelFieldMap['role']!: roleFieldValue,
       if (bodyTypeFieldValue != null)
-        _$$UserModelImplFieldMap['bodyType']!: bodyTypeFieldValue,
+        _$UserModelFieldMap['bodyType']!: bodyTypeFieldValue,
       if (relationshipStatusFieldValue != null)
-        _$$UserModelImplFieldMap['relationshipStatus']!:
+        _$UserModelFieldMap['relationshipStatus']!:
             relationshipStatusFieldValue,
       if (ethnicityFieldValue != null)
-        _$$UserModelImplFieldMap['ethnicity']!: ethnicityFieldValue,
+        _$UserModelFieldMap['ethnicity']!: ethnicityFieldValue,
       if (lookingForFieldValue != null)
-        _$$UserModelImplFieldMap['lookingFor']!: lookingForFieldValue,
+        _$UserModelFieldMap['lookingFor']!: lookingForFieldValue,
       if (whereToMeetFieldValue != null)
-        _$$UserModelImplFieldMap['whereToMeet']!: whereToMeetFieldValue,
+        _$UserModelFieldMap['whereToMeet']!: whereToMeetFieldValue,
       if (isOnlineFieldValue != null)
-        _$$UserModelImplFieldMap['isOnline']!: isOnlineFieldValue,
+        _$UserModelFieldMap['isOnline']!: isOnlineFieldValue,
+      if (lastSeenFieldValue != null)
+        _$UserModelFieldMap['lastSeen']!: lastSeenFieldValue,
+      if (distanceFieldValue != null)
+        _$UserModelFieldMap['distance']!: distanceFieldValue,
       if (isVerifiedFieldValue != null)
-        _$$UserModelImplFieldMap['isVerified']!: isVerifiedFieldValue,
+        _$UserModelFieldMap['isVerified']!: isVerifiedFieldValue,
       if (isBlockedFieldValue != null)
-        _$$UserModelImplFieldMap['isBlocked']!: isBlockedFieldValue,
+        _$UserModelFieldMap['isBlocked']!: isBlockedFieldValue,
       if (blockListFieldValue != null)
-        _$$UserModelImplFieldMap['blockList']!: blockListFieldValue,
-      if (idFieldValue != null) _$$UserModelImplFieldMap['id']!: idFieldValue,
+        _$UserModelFieldMap['blockList']!: blockListFieldValue,
+      if (favoriteListFieldValue != null)
+        _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
+      if (interestsFieldValue != null)
+        _$UserModelFieldMap['interests']!: interestsFieldValue,
+      if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
       if (fcmTokenFieldValue != null)
-        _$$UserModelImplFieldMap['fcmToken']!: fcmTokenFieldValue,
-      if (cubeUserFieldValue != null)
-        _$$UserModelImplFieldMap['cubeUser']!: cubeUserFieldValue,
+        _$UserModelFieldMap['fcmToken']!: fcmTokenFieldValue,
     };
 
     transaction.set(reference, json, options);
@@ -622,63 +659,68 @@ class _$UserModelDocumentReference
     FieldValue? lookingForFieldValue,
     FieldValue? whereToMeetFieldValue,
     FieldValue? isOnlineFieldValue,
+    FieldValue? lastSeenFieldValue,
+    FieldValue? distanceFieldValue,
     FieldValue? isVerifiedFieldValue,
     FieldValue? isBlockedFieldValue,
     FieldValue? blockListFieldValue,
+    FieldValue? favoriteListFieldValue,
+    FieldValue? interestsFieldValue,
     FieldValue? idFieldValue,
     FieldValue? fcmTokenFieldValue,
-    FieldValue? cubeUserFieldValue,
   }) {
     final json = {
       ...model.toJson(),
       if (usernameFieldValue != null)
-        _$$UserModelImplFieldMap['username']!: usernameFieldValue,
-      if (bioFieldValue != null)
-        _$$UserModelImplFieldMap['bio']!: bioFieldValue,
+        _$UserModelFieldMap['username']!: usernameFieldValue,
+      if (bioFieldValue != null) _$UserModelFieldMap['bio']!: bioFieldValue,
       if (albumUrlFieldValue != null)
-        _$$UserModelImplFieldMap['albumUrl']!: albumUrlFieldValue,
+        _$UserModelFieldMap['albumUrl']!: albumUrlFieldValue,
       if (profileUrlFieldValue != null)
-        _$$UserModelImplFieldMap['profileUrl']!: profileUrlFieldValue,
+        _$UserModelFieldMap['profileUrl']!: profileUrlFieldValue,
       if (birthdayFieldValue != null)
-        _$$UserModelImplFieldMap['birthday']!: birthdayFieldValue,
-      if (ageFieldValue != null)
-        _$$UserModelImplFieldMap['age']!: ageFieldValue,
+        _$UserModelFieldMap['birthday']!: birthdayFieldValue,
+      if (ageFieldValue != null) _$UserModelFieldMap['age']!: ageFieldValue,
       if (positionFieldValue != null)
-        _$$UserModelImplFieldMap['position']!: positionFieldValue,
-      if (dobFieldValue != null)
-        _$$UserModelImplFieldMap['dob']!: dobFieldValue,
+        _$UserModelFieldMap['position']!: positionFieldValue,
+      if (dobFieldValue != null) _$UserModelFieldMap['dob']!: dobFieldValue,
       if (heightFieldValue != null)
-        _$$UserModelImplFieldMap['height']!: heightFieldValue,
+        _$UserModelFieldMap['height']!: heightFieldValue,
       if (weightFieldValue != null)
-        _$$UserModelImplFieldMap['weight']!: weightFieldValue,
+        _$UserModelFieldMap['weight']!: weightFieldValue,
       if (livedFieldValue != null)
-        _$$UserModelImplFieldMap['lived']!: livedFieldValue,
-      if (roleFieldValue != null)
-        _$$UserModelImplFieldMap['role']!: roleFieldValue,
+        _$UserModelFieldMap['lived']!: livedFieldValue,
+      if (roleFieldValue != null) _$UserModelFieldMap['role']!: roleFieldValue,
       if (bodyTypeFieldValue != null)
-        _$$UserModelImplFieldMap['bodyType']!: bodyTypeFieldValue,
+        _$UserModelFieldMap['bodyType']!: bodyTypeFieldValue,
       if (relationshipStatusFieldValue != null)
-        _$$UserModelImplFieldMap['relationshipStatus']!:
+        _$UserModelFieldMap['relationshipStatus']!:
             relationshipStatusFieldValue,
       if (ethnicityFieldValue != null)
-        _$$UserModelImplFieldMap['ethnicity']!: ethnicityFieldValue,
+        _$UserModelFieldMap['ethnicity']!: ethnicityFieldValue,
       if (lookingForFieldValue != null)
-        _$$UserModelImplFieldMap['lookingFor']!: lookingForFieldValue,
+        _$UserModelFieldMap['lookingFor']!: lookingForFieldValue,
       if (whereToMeetFieldValue != null)
-        _$$UserModelImplFieldMap['whereToMeet']!: whereToMeetFieldValue,
+        _$UserModelFieldMap['whereToMeet']!: whereToMeetFieldValue,
       if (isOnlineFieldValue != null)
-        _$$UserModelImplFieldMap['isOnline']!: isOnlineFieldValue,
+        _$UserModelFieldMap['isOnline']!: isOnlineFieldValue,
+      if (lastSeenFieldValue != null)
+        _$UserModelFieldMap['lastSeen']!: lastSeenFieldValue,
+      if (distanceFieldValue != null)
+        _$UserModelFieldMap['distance']!: distanceFieldValue,
       if (isVerifiedFieldValue != null)
-        _$$UserModelImplFieldMap['isVerified']!: isVerifiedFieldValue,
+        _$UserModelFieldMap['isVerified']!: isVerifiedFieldValue,
       if (isBlockedFieldValue != null)
-        _$$UserModelImplFieldMap['isBlocked']!: isBlockedFieldValue,
+        _$UserModelFieldMap['isBlocked']!: isBlockedFieldValue,
       if (blockListFieldValue != null)
-        _$$UserModelImplFieldMap['blockList']!: blockListFieldValue,
-      if (idFieldValue != null) _$$UserModelImplFieldMap['id']!: idFieldValue,
+        _$UserModelFieldMap['blockList']!: blockListFieldValue,
+      if (favoriteListFieldValue != null)
+        _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
+      if (interestsFieldValue != null)
+        _$UserModelFieldMap['interests']!: interestsFieldValue,
+      if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
       if (fcmTokenFieldValue != null)
-        _$$UserModelImplFieldMap['fcmToken']!: fcmTokenFieldValue,
-      if (cubeUserFieldValue != null)
-        _$$UserModelImplFieldMap['cubeUser']!: cubeUserFieldValue,
+        _$UserModelFieldMap['fcmToken']!: fcmTokenFieldValue,
     };
 
     batch.set(reference, json, options);
@@ -721,18 +763,24 @@ class _$UserModelDocumentReference
     FieldValue? whereToMeetFieldValue,
     Object? isOnline = _sentinel,
     FieldValue? isOnlineFieldValue,
+    Object? lastSeen = _sentinel,
+    FieldValue? lastSeenFieldValue,
+    Object? distance = _sentinel,
+    FieldValue? distanceFieldValue,
     Object? isVerified = _sentinel,
     FieldValue? isVerifiedFieldValue,
     Object? isBlocked = _sentinel,
     FieldValue? isBlockedFieldValue,
     Object? blockList = _sentinel,
     FieldValue? blockListFieldValue,
+    Object? favoriteList = _sentinel,
+    FieldValue? favoriteListFieldValue,
+    Object? interests = _sentinel,
+    FieldValue? interestsFieldValue,
     Object? id = _sentinel,
     FieldValue? idFieldValue,
     Object? fcmToken = _sentinel,
     FieldValue? fcmTokenFieldValue,
-    Object? cubeUser = _sentinel,
-    FieldValue? cubeUserFieldValue,
   }) async {
     assert(
       username == _sentinel || usernameFieldValue == null,
@@ -807,6 +855,14 @@ class _$UserModelDocumentReference
       "Cannot specify both isOnline and isOnlineFieldValue",
     );
     assert(
+      lastSeen == _sentinel || lastSeenFieldValue == null,
+      "Cannot specify both lastSeen and lastSeenFieldValue",
+    );
+    assert(
+      distance == _sentinel || distanceFieldValue == null,
+      "Cannot specify both distance and distanceFieldValue",
+    );
+    assert(
       isVerified == _sentinel || isVerifiedFieldValue == null,
       "Cannot specify both isVerified and isVerifiedFieldValue",
     );
@@ -819,6 +875,14 @@ class _$UserModelDocumentReference
       "Cannot specify both blockList and blockListFieldValue",
     );
     assert(
+      favoriteList == _sentinel || favoriteListFieldValue == null,
+      "Cannot specify both favoriteList and favoriteListFieldValue",
+    );
+    assert(
+      interests == _sentinel || interestsFieldValue == null,
+      "Cannot specify both interests and interestsFieldValue",
+    );
+    assert(
       id == _sentinel || idFieldValue == null,
       "Cannot specify both id and idFieldValue",
     );
@@ -826,132 +890,136 @@ class _$UserModelDocumentReference
       fcmToken == _sentinel || fcmTokenFieldValue == null,
       "Cannot specify both fcmToken and fcmTokenFieldValue",
     );
-    assert(
-      cubeUser == _sentinel || cubeUserFieldValue == null,
-      "Cannot specify both cubeUser and cubeUserFieldValue",
-    );
     final json = {
       if (username != _sentinel)
-        _$$UserModelImplFieldMap['username']!:
-            _$$UserModelImplPerFieldToJson.username(username as String),
+        _$UserModelFieldMap['username']!:
+            _$UserModelPerFieldToJson.username(username as String),
       if (usernameFieldValue != null)
-        _$$UserModelImplFieldMap['username']!: usernameFieldValue,
+        _$UserModelFieldMap['username']!: usernameFieldValue,
       if (bio != _sentinel)
-        _$$UserModelImplFieldMap['bio']!:
-            _$$UserModelImplPerFieldToJson.bio(bio as String?),
-      if (bioFieldValue != null)
-        _$$UserModelImplFieldMap['bio']!: bioFieldValue,
+        _$UserModelFieldMap['bio']!:
+            _$UserModelPerFieldToJson.bio(bio as String?),
+      if (bioFieldValue != null) _$UserModelFieldMap['bio']!: bioFieldValue,
       if (albumUrl != _sentinel)
-        _$$UserModelImplFieldMap['albumUrl']!:
-            _$$UserModelImplPerFieldToJson.albumUrl(albumUrl as List<String>?),
+        _$UserModelFieldMap['albumUrl']!:
+            _$UserModelPerFieldToJson.albumUrl(albumUrl as List<String>?),
       if (albumUrlFieldValue != null)
-        _$$UserModelImplFieldMap['albumUrl']!: albumUrlFieldValue,
+        _$UserModelFieldMap['albumUrl']!: albumUrlFieldValue,
       if (profileUrl != _sentinel)
-        _$$UserModelImplFieldMap['profileUrl']!:
-            _$$UserModelImplPerFieldToJson.profileUrl(profileUrl as String?),
+        _$UserModelFieldMap['profileUrl']!:
+            _$UserModelPerFieldToJson.profileUrl(profileUrl as String?),
       if (profileUrlFieldValue != null)
-        _$$UserModelImplFieldMap['profileUrl']!: profileUrlFieldValue,
+        _$UserModelFieldMap['profileUrl']!: profileUrlFieldValue,
       if (birthday != _sentinel)
-        _$$UserModelImplFieldMap['birthday']!:
-            _$$UserModelImplPerFieldToJson.birthday(birthday as String?),
+        _$UserModelFieldMap['birthday']!:
+            _$UserModelPerFieldToJson.birthday(birthday as String?),
       if (birthdayFieldValue != null)
-        _$$UserModelImplFieldMap['birthday']!: birthdayFieldValue,
+        _$UserModelFieldMap['birthday']!: birthdayFieldValue,
       if (age != _sentinel)
-        _$$UserModelImplFieldMap['age']!:
-            _$$UserModelImplPerFieldToJson.age(age as int?),
-      if (ageFieldValue != null)
-        _$$UserModelImplFieldMap['age']!: ageFieldValue,
+        _$UserModelFieldMap['age']!: _$UserModelPerFieldToJson.age(age as int?),
+      if (ageFieldValue != null) _$UserModelFieldMap['age']!: ageFieldValue,
       if (position != _sentinel)
-        _$$UserModelImplFieldMap['position']!:
-            _$$UserModelImplPerFieldToJson.position(position as GeoPointData?),
+        _$UserModelFieldMap['position']!:
+            _$UserModelPerFieldToJson.position(position as GeoPointData?),
       if (positionFieldValue != null)
-        _$$UserModelImplFieldMap['position']!: positionFieldValue,
+        _$UserModelFieldMap['position']!: positionFieldValue,
       if (dob != _sentinel)
-        _$$UserModelImplFieldMap['dob']!:
-            _$$UserModelImplPerFieldToJson.dob(dob as String?),
-      if (dobFieldValue != null)
-        _$$UserModelImplFieldMap['dob']!: dobFieldValue,
+        _$UserModelFieldMap['dob']!:
+            _$UserModelPerFieldToJson.dob(dob as String?),
+      if (dobFieldValue != null) _$UserModelFieldMap['dob']!: dobFieldValue,
       if (height != _sentinel)
-        _$$UserModelImplFieldMap['height']!:
-            _$$UserModelImplPerFieldToJson.height(height as String?),
+        _$UserModelFieldMap['height']!:
+            _$UserModelPerFieldToJson.height(height as String?),
       if (heightFieldValue != null)
-        _$$UserModelImplFieldMap['height']!: heightFieldValue,
+        _$UserModelFieldMap['height']!: heightFieldValue,
       if (weight != _sentinel)
-        _$$UserModelImplFieldMap['weight']!:
-            _$$UserModelImplPerFieldToJson.weight(weight as String?),
+        _$UserModelFieldMap['weight']!:
+            _$UserModelPerFieldToJson.weight(weight as String?),
       if (weightFieldValue != null)
-        _$$UserModelImplFieldMap['weight']!: weightFieldValue,
+        _$UserModelFieldMap['weight']!: weightFieldValue,
       if (lived != _sentinel)
-        _$$UserModelImplFieldMap['lived']!:
-            _$$UserModelImplPerFieldToJson.lived(lived as String?),
+        _$UserModelFieldMap['lived']!:
+            _$UserModelPerFieldToJson.lived(lived as String?),
       if (livedFieldValue != null)
-        _$$UserModelImplFieldMap['lived']!: livedFieldValue,
+        _$UserModelFieldMap['lived']!: livedFieldValue,
       if (role != _sentinel)
-        _$$UserModelImplFieldMap['role']!:
-            _$$UserModelImplPerFieldToJson.role(role as Role),
-      if (roleFieldValue != null)
-        _$$UserModelImplFieldMap['role']!: roleFieldValue,
+        _$UserModelFieldMap['role']!:
+            _$UserModelPerFieldToJson.role(role as Role),
+      if (roleFieldValue != null) _$UserModelFieldMap['role']!: roleFieldValue,
       if (bodyType != _sentinel)
-        _$$UserModelImplFieldMap['bodyType']!:
-            _$$UserModelImplPerFieldToJson.bodyType(bodyType as BodyType),
+        _$UserModelFieldMap['bodyType']!:
+            _$UserModelPerFieldToJson.bodyType(bodyType as BodyType),
       if (bodyTypeFieldValue != null)
-        _$$UserModelImplFieldMap['bodyType']!: bodyTypeFieldValue,
+        _$UserModelFieldMap['bodyType']!: bodyTypeFieldValue,
       if (relationshipStatus != _sentinel)
-        _$$UserModelImplFieldMap['relationshipStatus']!:
-            _$$UserModelImplPerFieldToJson
-                .relationshipStatus(relationshipStatus as RelationshipStatus),
+        _$UserModelFieldMap['relationshipStatus']!: _$UserModelPerFieldToJson
+            .relationshipStatus(relationshipStatus as RelationshipStatus),
       if (relationshipStatusFieldValue != null)
-        _$$UserModelImplFieldMap['relationshipStatus']!:
+        _$UserModelFieldMap['relationshipStatus']!:
             relationshipStatusFieldValue,
       if (ethnicity != _sentinel)
-        _$$UserModelImplFieldMap['ethnicity']!:
-            _$$UserModelImplPerFieldToJson.ethnicity(ethnicity as Ethnicity),
+        _$UserModelFieldMap['ethnicity']!:
+            _$UserModelPerFieldToJson.ethnicity(ethnicity as Ethnicity),
       if (ethnicityFieldValue != null)
-        _$$UserModelImplFieldMap['ethnicity']!: ethnicityFieldValue,
+        _$UserModelFieldMap['ethnicity']!: ethnicityFieldValue,
       if (lookingFor != _sentinel)
-        _$$UserModelImplFieldMap['lookingFor']!:
-            _$$UserModelImplPerFieldToJson.lookingFor(lookingFor as LookingFor),
+        _$UserModelFieldMap['lookingFor']!:
+            _$UserModelPerFieldToJson.lookingFor(lookingFor as LookingFor),
       if (lookingForFieldValue != null)
-        _$$UserModelImplFieldMap['lookingFor']!: lookingForFieldValue,
+        _$UserModelFieldMap['lookingFor']!: lookingForFieldValue,
       if (whereToMeet != _sentinel)
-        _$$UserModelImplFieldMap['whereToMeet']!: _$$UserModelImplPerFieldToJson
-            .whereToMeet(whereToMeet as WhereToMeet),
+        _$UserModelFieldMap['whereToMeet']!:
+            _$UserModelPerFieldToJson.whereToMeet(whereToMeet as WhereToMeet),
       if (whereToMeetFieldValue != null)
-        _$$UserModelImplFieldMap['whereToMeet']!: whereToMeetFieldValue,
+        _$UserModelFieldMap['whereToMeet']!: whereToMeetFieldValue,
       if (isOnline != _sentinel)
-        _$$UserModelImplFieldMap['isOnline']!:
-            _$$UserModelImplPerFieldToJson.isOnline(isOnline as bool),
+        _$UserModelFieldMap['isOnline']!:
+            _$UserModelPerFieldToJson.isOnline(isOnline as bool),
       if (isOnlineFieldValue != null)
-        _$$UserModelImplFieldMap['isOnline']!: isOnlineFieldValue,
+        _$UserModelFieldMap['isOnline']!: isOnlineFieldValue,
+      if (lastSeen != _sentinel)
+        _$UserModelFieldMap['lastSeen']!:
+            _$UserModelPerFieldToJson.lastSeen(lastSeen as DateTime?),
+      if (lastSeenFieldValue != null)
+        _$UserModelFieldMap['lastSeen']!: lastSeenFieldValue,
+      if (distance != _sentinel)
+        _$UserModelFieldMap['distance']!:
+            _$UserModelPerFieldToJson.distance(distance as double?),
+      if (distanceFieldValue != null)
+        _$UserModelFieldMap['distance']!: distanceFieldValue,
       if (isVerified != _sentinel)
-        _$$UserModelImplFieldMap['isVerified']!:
-            _$$UserModelImplPerFieldToJson.isVerified(isVerified as bool),
+        _$UserModelFieldMap['isVerified']!:
+            _$UserModelPerFieldToJson.isVerified(isVerified as bool),
       if (isVerifiedFieldValue != null)
-        _$$UserModelImplFieldMap['isVerified']!: isVerifiedFieldValue,
+        _$UserModelFieldMap['isVerified']!: isVerifiedFieldValue,
       if (isBlocked != _sentinel)
-        _$$UserModelImplFieldMap['isBlocked']!:
-            _$$UserModelImplPerFieldToJson.isBlocked(isBlocked as bool),
+        _$UserModelFieldMap['isBlocked']!:
+            _$UserModelPerFieldToJson.isBlocked(isBlocked as bool),
       if (isBlockedFieldValue != null)
-        _$$UserModelImplFieldMap['isBlocked']!: isBlockedFieldValue,
+        _$UserModelFieldMap['isBlocked']!: isBlockedFieldValue,
       if (blockList != _sentinel)
-        _$$UserModelImplFieldMap['blockList']!:
-            _$$UserModelImplPerFieldToJson.blockList(blockList as List<String>),
+        _$UserModelFieldMap['blockList']!:
+            _$UserModelPerFieldToJson.blockList(blockList as List<String>),
       if (blockListFieldValue != null)
-        _$$UserModelImplFieldMap['blockList']!: blockListFieldValue,
+        _$UserModelFieldMap['blockList']!: blockListFieldValue,
+      if (favoriteList != _sentinel)
+        _$UserModelFieldMap['favoriteList']!: _$UserModelPerFieldToJson
+            .favoriteList(favoriteList as List<String>),
+      if (favoriteListFieldValue != null)
+        _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
+      if (interests != _sentinel)
+        _$UserModelFieldMap['interests']!:
+            _$UserModelPerFieldToJson.interests(interests as List<String>),
+      if (interestsFieldValue != null)
+        _$UserModelFieldMap['interests']!: interestsFieldValue,
       if (id != _sentinel)
-        _$$UserModelImplFieldMap['id']!:
-            _$$UserModelImplPerFieldToJson.id(id as String),
-      if (idFieldValue != null) _$$UserModelImplFieldMap['id']!: idFieldValue,
+        _$UserModelFieldMap['id']!: _$UserModelPerFieldToJson.id(id as String),
+      if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
       if (fcmToken != _sentinel)
-        _$$UserModelImplFieldMap['fcmToken']!:
-            _$$UserModelImplPerFieldToJson.fcmToken(fcmToken as String),
+        _$UserModelFieldMap['fcmToken']!:
+            _$UserModelPerFieldToJson.fcmToken(fcmToken as String),
       if (fcmTokenFieldValue != null)
-        _$$UserModelImplFieldMap['fcmToken']!: fcmTokenFieldValue,
-      if (cubeUser != _sentinel)
-        _$$UserModelImplFieldMap['cubeUser']!:
-            _$$UserModelImplPerFieldToJson.cubeUser(cubeUser as  cube.CubeUser),
-      if (cubeUserFieldValue != null)
-        _$$UserModelImplFieldMap['cubeUser']!: cubeUserFieldValue,
+        _$UserModelFieldMap['fcmToken']!: fcmTokenFieldValue,
     };
 
     return reference.update(json);
@@ -995,18 +1063,24 @@ class _$UserModelDocumentReference
     FieldValue? whereToMeetFieldValue,
     Object? isOnline = _sentinel,
     FieldValue? isOnlineFieldValue,
+    Object? lastSeen = _sentinel,
+    FieldValue? lastSeenFieldValue,
+    Object? distance = _sentinel,
+    FieldValue? distanceFieldValue,
     Object? isVerified = _sentinel,
     FieldValue? isVerifiedFieldValue,
     Object? isBlocked = _sentinel,
     FieldValue? isBlockedFieldValue,
     Object? blockList = _sentinel,
     FieldValue? blockListFieldValue,
+    Object? favoriteList = _sentinel,
+    FieldValue? favoriteListFieldValue,
+    Object? interests = _sentinel,
+    FieldValue? interestsFieldValue,
     Object? id = _sentinel,
     FieldValue? idFieldValue,
     Object? fcmToken = _sentinel,
     FieldValue? fcmTokenFieldValue,
-    Object? cubeUser = _sentinel,
-    FieldValue? cubeUserFieldValue,
   }) {
     assert(
       username == _sentinel || usernameFieldValue == null,
@@ -1081,6 +1155,14 @@ class _$UserModelDocumentReference
       "Cannot specify both isOnline and isOnlineFieldValue",
     );
     assert(
+      lastSeen == _sentinel || lastSeenFieldValue == null,
+      "Cannot specify both lastSeen and lastSeenFieldValue",
+    );
+    assert(
+      distance == _sentinel || distanceFieldValue == null,
+      "Cannot specify both distance and distanceFieldValue",
+    );
+    assert(
       isVerified == _sentinel || isVerifiedFieldValue == null,
       "Cannot specify both isVerified and isVerifiedFieldValue",
     );
@@ -1093,6 +1175,14 @@ class _$UserModelDocumentReference
       "Cannot specify both blockList and blockListFieldValue",
     );
     assert(
+      favoriteList == _sentinel || favoriteListFieldValue == null,
+      "Cannot specify both favoriteList and favoriteListFieldValue",
+    );
+    assert(
+      interests == _sentinel || interestsFieldValue == null,
+      "Cannot specify both interests and interestsFieldValue",
+    );
+    assert(
       id == _sentinel || idFieldValue == null,
       "Cannot specify both id and idFieldValue",
     );
@@ -1100,132 +1190,136 @@ class _$UserModelDocumentReference
       fcmToken == _sentinel || fcmTokenFieldValue == null,
       "Cannot specify both fcmToken and fcmTokenFieldValue",
     );
-    assert(
-      cubeUser == _sentinel || cubeUserFieldValue == null,
-      "Cannot specify both cubeUser and cubeUserFieldValue",
-    );
     final json = {
       if (username != _sentinel)
-        _$$UserModelImplFieldMap['username']!:
-            _$$UserModelImplPerFieldToJson.username(username as String),
+        _$UserModelFieldMap['username']!:
+            _$UserModelPerFieldToJson.username(username as String),
       if (usernameFieldValue != null)
-        _$$UserModelImplFieldMap['username']!: usernameFieldValue,
+        _$UserModelFieldMap['username']!: usernameFieldValue,
       if (bio != _sentinel)
-        _$$UserModelImplFieldMap['bio']!:
-            _$$UserModelImplPerFieldToJson.bio(bio as String?),
-      if (bioFieldValue != null)
-        _$$UserModelImplFieldMap['bio']!: bioFieldValue,
+        _$UserModelFieldMap['bio']!:
+            _$UserModelPerFieldToJson.bio(bio as String?),
+      if (bioFieldValue != null) _$UserModelFieldMap['bio']!: bioFieldValue,
       if (albumUrl != _sentinel)
-        _$$UserModelImplFieldMap['albumUrl']!:
-            _$$UserModelImplPerFieldToJson.albumUrl(albumUrl as List<String>?),
+        _$UserModelFieldMap['albumUrl']!:
+            _$UserModelPerFieldToJson.albumUrl(albumUrl as List<String>?),
       if (albumUrlFieldValue != null)
-        _$$UserModelImplFieldMap['albumUrl']!: albumUrlFieldValue,
+        _$UserModelFieldMap['albumUrl']!: albumUrlFieldValue,
       if (profileUrl != _sentinel)
-        _$$UserModelImplFieldMap['profileUrl']!:
-            _$$UserModelImplPerFieldToJson.profileUrl(profileUrl as String?),
+        _$UserModelFieldMap['profileUrl']!:
+            _$UserModelPerFieldToJson.profileUrl(profileUrl as String?),
       if (profileUrlFieldValue != null)
-        _$$UserModelImplFieldMap['profileUrl']!: profileUrlFieldValue,
+        _$UserModelFieldMap['profileUrl']!: profileUrlFieldValue,
       if (birthday != _sentinel)
-        _$$UserModelImplFieldMap['birthday']!:
-            _$$UserModelImplPerFieldToJson.birthday(birthday as String?),
+        _$UserModelFieldMap['birthday']!:
+            _$UserModelPerFieldToJson.birthday(birthday as String?),
       if (birthdayFieldValue != null)
-        _$$UserModelImplFieldMap['birthday']!: birthdayFieldValue,
+        _$UserModelFieldMap['birthday']!: birthdayFieldValue,
       if (age != _sentinel)
-        _$$UserModelImplFieldMap['age']!:
-            _$$UserModelImplPerFieldToJson.age(age as int?),
-      if (ageFieldValue != null)
-        _$$UserModelImplFieldMap['age']!: ageFieldValue,
+        _$UserModelFieldMap['age']!: _$UserModelPerFieldToJson.age(age as int?),
+      if (ageFieldValue != null) _$UserModelFieldMap['age']!: ageFieldValue,
       if (position != _sentinel)
-        _$$UserModelImplFieldMap['position']!:
-            _$$UserModelImplPerFieldToJson.position(position as GeoPointData?),
+        _$UserModelFieldMap['position']!:
+            _$UserModelPerFieldToJson.position(position as GeoPointData?),
       if (positionFieldValue != null)
-        _$$UserModelImplFieldMap['position']!: positionFieldValue,
+        _$UserModelFieldMap['position']!: positionFieldValue,
       if (dob != _sentinel)
-        _$$UserModelImplFieldMap['dob']!:
-            _$$UserModelImplPerFieldToJson.dob(dob as String?),
-      if (dobFieldValue != null)
-        _$$UserModelImplFieldMap['dob']!: dobFieldValue,
+        _$UserModelFieldMap['dob']!:
+            _$UserModelPerFieldToJson.dob(dob as String?),
+      if (dobFieldValue != null) _$UserModelFieldMap['dob']!: dobFieldValue,
       if (height != _sentinel)
-        _$$UserModelImplFieldMap['height']!:
-            _$$UserModelImplPerFieldToJson.height(height as String?),
+        _$UserModelFieldMap['height']!:
+            _$UserModelPerFieldToJson.height(height as String?),
       if (heightFieldValue != null)
-        _$$UserModelImplFieldMap['height']!: heightFieldValue,
+        _$UserModelFieldMap['height']!: heightFieldValue,
       if (weight != _sentinel)
-        _$$UserModelImplFieldMap['weight']!:
-            _$$UserModelImplPerFieldToJson.weight(weight as String?),
+        _$UserModelFieldMap['weight']!:
+            _$UserModelPerFieldToJson.weight(weight as String?),
       if (weightFieldValue != null)
-        _$$UserModelImplFieldMap['weight']!: weightFieldValue,
+        _$UserModelFieldMap['weight']!: weightFieldValue,
       if (lived != _sentinel)
-        _$$UserModelImplFieldMap['lived']!:
-            _$$UserModelImplPerFieldToJson.lived(lived as String?),
+        _$UserModelFieldMap['lived']!:
+            _$UserModelPerFieldToJson.lived(lived as String?),
       if (livedFieldValue != null)
-        _$$UserModelImplFieldMap['lived']!: livedFieldValue,
+        _$UserModelFieldMap['lived']!: livedFieldValue,
       if (role != _sentinel)
-        _$$UserModelImplFieldMap['role']!:
-            _$$UserModelImplPerFieldToJson.role(role as Role),
-      if (roleFieldValue != null)
-        _$$UserModelImplFieldMap['role']!: roleFieldValue,
+        _$UserModelFieldMap['role']!:
+            _$UserModelPerFieldToJson.role(role as Role),
+      if (roleFieldValue != null) _$UserModelFieldMap['role']!: roleFieldValue,
       if (bodyType != _sentinel)
-        _$$UserModelImplFieldMap['bodyType']!:
-            _$$UserModelImplPerFieldToJson.bodyType(bodyType as BodyType),
+        _$UserModelFieldMap['bodyType']!:
+            _$UserModelPerFieldToJson.bodyType(bodyType as BodyType),
       if (bodyTypeFieldValue != null)
-        _$$UserModelImplFieldMap['bodyType']!: bodyTypeFieldValue,
+        _$UserModelFieldMap['bodyType']!: bodyTypeFieldValue,
       if (relationshipStatus != _sentinel)
-        _$$UserModelImplFieldMap['relationshipStatus']!:
-            _$$UserModelImplPerFieldToJson
-                .relationshipStatus(relationshipStatus as RelationshipStatus),
+        _$UserModelFieldMap['relationshipStatus']!: _$UserModelPerFieldToJson
+            .relationshipStatus(relationshipStatus as RelationshipStatus),
       if (relationshipStatusFieldValue != null)
-        _$$UserModelImplFieldMap['relationshipStatus']!:
+        _$UserModelFieldMap['relationshipStatus']!:
             relationshipStatusFieldValue,
       if (ethnicity != _sentinel)
-        _$$UserModelImplFieldMap['ethnicity']!:
-            _$$UserModelImplPerFieldToJson.ethnicity(ethnicity as Ethnicity),
+        _$UserModelFieldMap['ethnicity']!:
+            _$UserModelPerFieldToJson.ethnicity(ethnicity as Ethnicity),
       if (ethnicityFieldValue != null)
-        _$$UserModelImplFieldMap['ethnicity']!: ethnicityFieldValue,
+        _$UserModelFieldMap['ethnicity']!: ethnicityFieldValue,
       if (lookingFor != _sentinel)
-        _$$UserModelImplFieldMap['lookingFor']!:
-            _$$UserModelImplPerFieldToJson.lookingFor(lookingFor as LookingFor),
+        _$UserModelFieldMap['lookingFor']!:
+            _$UserModelPerFieldToJson.lookingFor(lookingFor as LookingFor),
       if (lookingForFieldValue != null)
-        _$$UserModelImplFieldMap['lookingFor']!: lookingForFieldValue,
+        _$UserModelFieldMap['lookingFor']!: lookingForFieldValue,
       if (whereToMeet != _sentinel)
-        _$$UserModelImplFieldMap['whereToMeet']!: _$$UserModelImplPerFieldToJson
-            .whereToMeet(whereToMeet as WhereToMeet),
+        _$UserModelFieldMap['whereToMeet']!:
+            _$UserModelPerFieldToJson.whereToMeet(whereToMeet as WhereToMeet),
       if (whereToMeetFieldValue != null)
-        _$$UserModelImplFieldMap['whereToMeet']!: whereToMeetFieldValue,
+        _$UserModelFieldMap['whereToMeet']!: whereToMeetFieldValue,
       if (isOnline != _sentinel)
-        _$$UserModelImplFieldMap['isOnline']!:
-            _$$UserModelImplPerFieldToJson.isOnline(isOnline as bool),
+        _$UserModelFieldMap['isOnline']!:
+            _$UserModelPerFieldToJson.isOnline(isOnline as bool),
       if (isOnlineFieldValue != null)
-        _$$UserModelImplFieldMap['isOnline']!: isOnlineFieldValue,
+        _$UserModelFieldMap['isOnline']!: isOnlineFieldValue,
+      if (lastSeen != _sentinel)
+        _$UserModelFieldMap['lastSeen']!:
+            _$UserModelPerFieldToJson.lastSeen(lastSeen as DateTime?),
+      if (lastSeenFieldValue != null)
+        _$UserModelFieldMap['lastSeen']!: lastSeenFieldValue,
+      if (distance != _sentinel)
+        _$UserModelFieldMap['distance']!:
+            _$UserModelPerFieldToJson.distance(distance as double?),
+      if (distanceFieldValue != null)
+        _$UserModelFieldMap['distance']!: distanceFieldValue,
       if (isVerified != _sentinel)
-        _$$UserModelImplFieldMap['isVerified']!:
-            _$$UserModelImplPerFieldToJson.isVerified(isVerified as bool),
+        _$UserModelFieldMap['isVerified']!:
+            _$UserModelPerFieldToJson.isVerified(isVerified as bool),
       if (isVerifiedFieldValue != null)
-        _$$UserModelImplFieldMap['isVerified']!: isVerifiedFieldValue,
+        _$UserModelFieldMap['isVerified']!: isVerifiedFieldValue,
       if (isBlocked != _sentinel)
-        _$$UserModelImplFieldMap['isBlocked']!:
-            _$$UserModelImplPerFieldToJson.isBlocked(isBlocked as bool),
+        _$UserModelFieldMap['isBlocked']!:
+            _$UserModelPerFieldToJson.isBlocked(isBlocked as bool),
       if (isBlockedFieldValue != null)
-        _$$UserModelImplFieldMap['isBlocked']!: isBlockedFieldValue,
+        _$UserModelFieldMap['isBlocked']!: isBlockedFieldValue,
       if (blockList != _sentinel)
-        _$$UserModelImplFieldMap['blockList']!:
-            _$$UserModelImplPerFieldToJson.blockList(blockList as List<String>),
+        _$UserModelFieldMap['blockList']!:
+            _$UserModelPerFieldToJson.blockList(blockList as List<String>),
       if (blockListFieldValue != null)
-        _$$UserModelImplFieldMap['blockList']!: blockListFieldValue,
+        _$UserModelFieldMap['blockList']!: blockListFieldValue,
+      if (favoriteList != _sentinel)
+        _$UserModelFieldMap['favoriteList']!: _$UserModelPerFieldToJson
+            .favoriteList(favoriteList as List<String>),
+      if (favoriteListFieldValue != null)
+        _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
+      if (interests != _sentinel)
+        _$UserModelFieldMap['interests']!:
+            _$UserModelPerFieldToJson.interests(interests as List<String>),
+      if (interestsFieldValue != null)
+        _$UserModelFieldMap['interests']!: interestsFieldValue,
       if (id != _sentinel)
-        _$$UserModelImplFieldMap['id']!:
-            _$$UserModelImplPerFieldToJson.id(id as String),
-      if (idFieldValue != null) _$$UserModelImplFieldMap['id']!: idFieldValue,
+        _$UserModelFieldMap['id']!: _$UserModelPerFieldToJson.id(id as String),
+      if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
       if (fcmToken != _sentinel)
-        _$$UserModelImplFieldMap['fcmToken']!:
-            _$$UserModelImplPerFieldToJson.fcmToken(fcmToken as String),
+        _$UserModelFieldMap['fcmToken']!:
+            _$UserModelPerFieldToJson.fcmToken(fcmToken as String),
       if (fcmTokenFieldValue != null)
-        _$$UserModelImplFieldMap['fcmToken']!: fcmTokenFieldValue,
-      if (cubeUser != _sentinel)
-        _$$UserModelImplFieldMap['cubeUser']!:
-            _$$UserModelImplPerFieldToJson.cubeUser(cubeUser as  cube.CubeUser),
-      if (cubeUserFieldValue != null)
-        _$$UserModelImplFieldMap['cubeUser']!: cubeUserFieldValue,
+        _$UserModelFieldMap['fcmToken']!: fcmTokenFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1269,18 +1363,24 @@ class _$UserModelDocumentReference
     FieldValue? whereToMeetFieldValue,
     Object? isOnline = _sentinel,
     FieldValue? isOnlineFieldValue,
+    Object? lastSeen = _sentinel,
+    FieldValue? lastSeenFieldValue,
+    Object? distance = _sentinel,
+    FieldValue? distanceFieldValue,
     Object? isVerified = _sentinel,
     FieldValue? isVerifiedFieldValue,
     Object? isBlocked = _sentinel,
     FieldValue? isBlockedFieldValue,
     Object? blockList = _sentinel,
     FieldValue? blockListFieldValue,
+    Object? favoriteList = _sentinel,
+    FieldValue? favoriteListFieldValue,
+    Object? interests = _sentinel,
+    FieldValue? interestsFieldValue,
     Object? id = _sentinel,
     FieldValue? idFieldValue,
     Object? fcmToken = _sentinel,
     FieldValue? fcmTokenFieldValue,
-    Object? cubeUser = _sentinel,
-    FieldValue? cubeUserFieldValue,
   }) {
     assert(
       username == _sentinel || usernameFieldValue == null,
@@ -1355,6 +1455,14 @@ class _$UserModelDocumentReference
       "Cannot specify both isOnline and isOnlineFieldValue",
     );
     assert(
+      lastSeen == _sentinel || lastSeenFieldValue == null,
+      "Cannot specify both lastSeen and lastSeenFieldValue",
+    );
+    assert(
+      distance == _sentinel || distanceFieldValue == null,
+      "Cannot specify both distance and distanceFieldValue",
+    );
+    assert(
       isVerified == _sentinel || isVerifiedFieldValue == null,
       "Cannot specify both isVerified and isVerifiedFieldValue",
     );
@@ -1367,6 +1475,14 @@ class _$UserModelDocumentReference
       "Cannot specify both blockList and blockListFieldValue",
     );
     assert(
+      favoriteList == _sentinel || favoriteListFieldValue == null,
+      "Cannot specify both favoriteList and favoriteListFieldValue",
+    );
+    assert(
+      interests == _sentinel || interestsFieldValue == null,
+      "Cannot specify both interests and interestsFieldValue",
+    );
+    assert(
       id == _sentinel || idFieldValue == null,
       "Cannot specify both id and idFieldValue",
     );
@@ -1374,132 +1490,136 @@ class _$UserModelDocumentReference
       fcmToken == _sentinel || fcmTokenFieldValue == null,
       "Cannot specify both fcmToken and fcmTokenFieldValue",
     );
-    assert(
-      cubeUser == _sentinel || cubeUserFieldValue == null,
-      "Cannot specify both cubeUser and cubeUserFieldValue",
-    );
     final json = {
       if (username != _sentinel)
-        _$$UserModelImplFieldMap['username']!:
-            _$$UserModelImplPerFieldToJson.username(username as String),
+        _$UserModelFieldMap['username']!:
+            _$UserModelPerFieldToJson.username(username as String),
       if (usernameFieldValue != null)
-        _$$UserModelImplFieldMap['username']!: usernameFieldValue,
+        _$UserModelFieldMap['username']!: usernameFieldValue,
       if (bio != _sentinel)
-        _$$UserModelImplFieldMap['bio']!:
-            _$$UserModelImplPerFieldToJson.bio(bio as String?),
-      if (bioFieldValue != null)
-        _$$UserModelImplFieldMap['bio']!: bioFieldValue,
+        _$UserModelFieldMap['bio']!:
+            _$UserModelPerFieldToJson.bio(bio as String?),
+      if (bioFieldValue != null) _$UserModelFieldMap['bio']!: bioFieldValue,
       if (albumUrl != _sentinel)
-        _$$UserModelImplFieldMap['albumUrl']!:
-            _$$UserModelImplPerFieldToJson.albumUrl(albumUrl as List<String>?),
+        _$UserModelFieldMap['albumUrl']!:
+            _$UserModelPerFieldToJson.albumUrl(albumUrl as List<String>?),
       if (albumUrlFieldValue != null)
-        _$$UserModelImplFieldMap['albumUrl']!: albumUrlFieldValue,
+        _$UserModelFieldMap['albumUrl']!: albumUrlFieldValue,
       if (profileUrl != _sentinel)
-        _$$UserModelImplFieldMap['profileUrl']!:
-            _$$UserModelImplPerFieldToJson.profileUrl(profileUrl as String?),
+        _$UserModelFieldMap['profileUrl']!:
+            _$UserModelPerFieldToJson.profileUrl(profileUrl as String?),
       if (profileUrlFieldValue != null)
-        _$$UserModelImplFieldMap['profileUrl']!: profileUrlFieldValue,
+        _$UserModelFieldMap['profileUrl']!: profileUrlFieldValue,
       if (birthday != _sentinel)
-        _$$UserModelImplFieldMap['birthday']!:
-            _$$UserModelImplPerFieldToJson.birthday(birthday as String?),
+        _$UserModelFieldMap['birthday']!:
+            _$UserModelPerFieldToJson.birthday(birthday as String?),
       if (birthdayFieldValue != null)
-        _$$UserModelImplFieldMap['birthday']!: birthdayFieldValue,
+        _$UserModelFieldMap['birthday']!: birthdayFieldValue,
       if (age != _sentinel)
-        _$$UserModelImplFieldMap['age']!:
-            _$$UserModelImplPerFieldToJson.age(age as int?),
-      if (ageFieldValue != null)
-        _$$UserModelImplFieldMap['age']!: ageFieldValue,
+        _$UserModelFieldMap['age']!: _$UserModelPerFieldToJson.age(age as int?),
+      if (ageFieldValue != null) _$UserModelFieldMap['age']!: ageFieldValue,
       if (position != _sentinel)
-        _$$UserModelImplFieldMap['position']!:
-            _$$UserModelImplPerFieldToJson.position(position as GeoPointData?),
+        _$UserModelFieldMap['position']!:
+            _$UserModelPerFieldToJson.position(position as GeoPointData?),
       if (positionFieldValue != null)
-        _$$UserModelImplFieldMap['position']!: positionFieldValue,
+        _$UserModelFieldMap['position']!: positionFieldValue,
       if (dob != _sentinel)
-        _$$UserModelImplFieldMap['dob']!:
-            _$$UserModelImplPerFieldToJson.dob(dob as String?),
-      if (dobFieldValue != null)
-        _$$UserModelImplFieldMap['dob']!: dobFieldValue,
+        _$UserModelFieldMap['dob']!:
+            _$UserModelPerFieldToJson.dob(dob as String?),
+      if (dobFieldValue != null) _$UserModelFieldMap['dob']!: dobFieldValue,
       if (height != _sentinel)
-        _$$UserModelImplFieldMap['height']!:
-            _$$UserModelImplPerFieldToJson.height(height as String?),
+        _$UserModelFieldMap['height']!:
+            _$UserModelPerFieldToJson.height(height as String?),
       if (heightFieldValue != null)
-        _$$UserModelImplFieldMap['height']!: heightFieldValue,
+        _$UserModelFieldMap['height']!: heightFieldValue,
       if (weight != _sentinel)
-        _$$UserModelImplFieldMap['weight']!:
-            _$$UserModelImplPerFieldToJson.weight(weight as String?),
+        _$UserModelFieldMap['weight']!:
+            _$UserModelPerFieldToJson.weight(weight as String?),
       if (weightFieldValue != null)
-        _$$UserModelImplFieldMap['weight']!: weightFieldValue,
+        _$UserModelFieldMap['weight']!: weightFieldValue,
       if (lived != _sentinel)
-        _$$UserModelImplFieldMap['lived']!:
-            _$$UserModelImplPerFieldToJson.lived(lived as String?),
+        _$UserModelFieldMap['lived']!:
+            _$UserModelPerFieldToJson.lived(lived as String?),
       if (livedFieldValue != null)
-        _$$UserModelImplFieldMap['lived']!: livedFieldValue,
+        _$UserModelFieldMap['lived']!: livedFieldValue,
       if (role != _sentinel)
-        _$$UserModelImplFieldMap['role']!:
-            _$$UserModelImplPerFieldToJson.role(role as Role),
-      if (roleFieldValue != null)
-        _$$UserModelImplFieldMap['role']!: roleFieldValue,
+        _$UserModelFieldMap['role']!:
+            _$UserModelPerFieldToJson.role(role as Role),
+      if (roleFieldValue != null) _$UserModelFieldMap['role']!: roleFieldValue,
       if (bodyType != _sentinel)
-        _$$UserModelImplFieldMap['bodyType']!:
-            _$$UserModelImplPerFieldToJson.bodyType(bodyType as BodyType),
+        _$UserModelFieldMap['bodyType']!:
+            _$UserModelPerFieldToJson.bodyType(bodyType as BodyType),
       if (bodyTypeFieldValue != null)
-        _$$UserModelImplFieldMap['bodyType']!: bodyTypeFieldValue,
+        _$UserModelFieldMap['bodyType']!: bodyTypeFieldValue,
       if (relationshipStatus != _sentinel)
-        _$$UserModelImplFieldMap['relationshipStatus']!:
-            _$$UserModelImplPerFieldToJson
-                .relationshipStatus(relationshipStatus as RelationshipStatus),
+        _$UserModelFieldMap['relationshipStatus']!: _$UserModelPerFieldToJson
+            .relationshipStatus(relationshipStatus as RelationshipStatus),
       if (relationshipStatusFieldValue != null)
-        _$$UserModelImplFieldMap['relationshipStatus']!:
+        _$UserModelFieldMap['relationshipStatus']!:
             relationshipStatusFieldValue,
       if (ethnicity != _sentinel)
-        _$$UserModelImplFieldMap['ethnicity']!:
-            _$$UserModelImplPerFieldToJson.ethnicity(ethnicity as Ethnicity),
+        _$UserModelFieldMap['ethnicity']!:
+            _$UserModelPerFieldToJson.ethnicity(ethnicity as Ethnicity),
       if (ethnicityFieldValue != null)
-        _$$UserModelImplFieldMap['ethnicity']!: ethnicityFieldValue,
+        _$UserModelFieldMap['ethnicity']!: ethnicityFieldValue,
       if (lookingFor != _sentinel)
-        _$$UserModelImplFieldMap['lookingFor']!:
-            _$$UserModelImplPerFieldToJson.lookingFor(lookingFor as LookingFor),
+        _$UserModelFieldMap['lookingFor']!:
+            _$UserModelPerFieldToJson.lookingFor(lookingFor as LookingFor),
       if (lookingForFieldValue != null)
-        _$$UserModelImplFieldMap['lookingFor']!: lookingForFieldValue,
+        _$UserModelFieldMap['lookingFor']!: lookingForFieldValue,
       if (whereToMeet != _sentinel)
-        _$$UserModelImplFieldMap['whereToMeet']!: _$$UserModelImplPerFieldToJson
-            .whereToMeet(whereToMeet as WhereToMeet),
+        _$UserModelFieldMap['whereToMeet']!:
+            _$UserModelPerFieldToJson.whereToMeet(whereToMeet as WhereToMeet),
       if (whereToMeetFieldValue != null)
-        _$$UserModelImplFieldMap['whereToMeet']!: whereToMeetFieldValue,
+        _$UserModelFieldMap['whereToMeet']!: whereToMeetFieldValue,
       if (isOnline != _sentinel)
-        _$$UserModelImplFieldMap['isOnline']!:
-            _$$UserModelImplPerFieldToJson.isOnline(isOnline as bool),
+        _$UserModelFieldMap['isOnline']!:
+            _$UserModelPerFieldToJson.isOnline(isOnline as bool),
       if (isOnlineFieldValue != null)
-        _$$UserModelImplFieldMap['isOnline']!: isOnlineFieldValue,
+        _$UserModelFieldMap['isOnline']!: isOnlineFieldValue,
+      if (lastSeen != _sentinel)
+        _$UserModelFieldMap['lastSeen']!:
+            _$UserModelPerFieldToJson.lastSeen(lastSeen as DateTime?),
+      if (lastSeenFieldValue != null)
+        _$UserModelFieldMap['lastSeen']!: lastSeenFieldValue,
+      if (distance != _sentinel)
+        _$UserModelFieldMap['distance']!:
+            _$UserModelPerFieldToJson.distance(distance as double?),
+      if (distanceFieldValue != null)
+        _$UserModelFieldMap['distance']!: distanceFieldValue,
       if (isVerified != _sentinel)
-        _$$UserModelImplFieldMap['isVerified']!:
-            _$$UserModelImplPerFieldToJson.isVerified(isVerified as bool),
+        _$UserModelFieldMap['isVerified']!:
+            _$UserModelPerFieldToJson.isVerified(isVerified as bool),
       if (isVerifiedFieldValue != null)
-        _$$UserModelImplFieldMap['isVerified']!: isVerifiedFieldValue,
+        _$UserModelFieldMap['isVerified']!: isVerifiedFieldValue,
       if (isBlocked != _sentinel)
-        _$$UserModelImplFieldMap['isBlocked']!:
-            _$$UserModelImplPerFieldToJson.isBlocked(isBlocked as bool),
+        _$UserModelFieldMap['isBlocked']!:
+            _$UserModelPerFieldToJson.isBlocked(isBlocked as bool),
       if (isBlockedFieldValue != null)
-        _$$UserModelImplFieldMap['isBlocked']!: isBlockedFieldValue,
+        _$UserModelFieldMap['isBlocked']!: isBlockedFieldValue,
       if (blockList != _sentinel)
-        _$$UserModelImplFieldMap['blockList']!:
-            _$$UserModelImplPerFieldToJson.blockList(blockList as List<String>),
+        _$UserModelFieldMap['blockList']!:
+            _$UserModelPerFieldToJson.blockList(blockList as List<String>),
       if (blockListFieldValue != null)
-        _$$UserModelImplFieldMap['blockList']!: blockListFieldValue,
+        _$UserModelFieldMap['blockList']!: blockListFieldValue,
+      if (favoriteList != _sentinel)
+        _$UserModelFieldMap['favoriteList']!: _$UserModelPerFieldToJson
+            .favoriteList(favoriteList as List<String>),
+      if (favoriteListFieldValue != null)
+        _$UserModelFieldMap['favoriteList']!: favoriteListFieldValue,
+      if (interests != _sentinel)
+        _$UserModelFieldMap['interests']!:
+            _$UserModelPerFieldToJson.interests(interests as List<String>),
+      if (interestsFieldValue != null)
+        _$UserModelFieldMap['interests']!: interestsFieldValue,
       if (id != _sentinel)
-        _$$UserModelImplFieldMap['id']!:
-            _$$UserModelImplPerFieldToJson.id(id as String),
-      if (idFieldValue != null) _$$UserModelImplFieldMap['id']!: idFieldValue,
+        _$UserModelFieldMap['id']!: _$UserModelPerFieldToJson.id(id as String),
+      if (idFieldValue != null) _$UserModelFieldMap['id']!: idFieldValue,
       if (fcmToken != _sentinel)
-        _$$UserModelImplFieldMap['fcmToken']!:
-            _$$UserModelImplPerFieldToJson.fcmToken(fcmToken as String),
+        _$UserModelFieldMap['fcmToken']!:
+            _$UserModelPerFieldToJson.fcmToken(fcmToken as String),
       if (fcmTokenFieldValue != null)
-        _$$UserModelImplFieldMap['fcmToken']!: fcmTokenFieldValue,
-      if (cubeUser != _sentinel)
-        _$$UserModelImplFieldMap['cubeUser']!:
-            _$$UserModelImplPerFieldToJson.cubeUser(cubeUser as  cube.CubeUser),
-      if (cubeUserFieldValue != null)
-        _$$UserModelImplFieldMap['cubeUser']!: cubeUserFieldValue,
+        _$UserModelFieldMap['fcmToken']!: fcmTokenFieldValue,
     };
 
     batch.update(reference, json);
@@ -1785,6 +1905,30 @@ abstract class UserModelQuery
     bool? isNull,
   });
 
+  UserModelQuery whereLastSeen({
+    DateTime? isEqualTo,
+    DateTime? isNotEqualTo,
+    DateTime? isLessThan,
+    DateTime? isLessThanOrEqualTo,
+    DateTime? isGreaterThan,
+    DateTime? isGreaterThanOrEqualTo,
+    List<DateTime?>? whereIn,
+    List<DateTime?>? whereNotIn,
+    bool? isNull,
+  });
+
+  UserModelQuery whereDistance({
+    double? isEqualTo,
+    double? isNotEqualTo,
+    double? isLessThan,
+    double? isLessThanOrEqualTo,
+    double? isGreaterThan,
+    double? isGreaterThanOrEqualTo,
+    List<double?>? whereIn,
+    List<double?>? whereNotIn,
+    bool? isNull,
+  });
+
   UserModelQuery whereIsVerified({
     bool? isEqualTo,
     bool? isNotEqualTo,
@@ -1821,6 +1965,30 @@ abstract class UserModelQuery
     bool? isNull,
   });
 
+  UserModelQuery whereFavoriteList({
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
+    String? arrayContains,
+    List<String>? arrayContainsAny,
+    bool? isNull,
+  });
+
+  UserModelQuery whereInterests({
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
+    String? arrayContains,
+    List<String>? arrayContainsAny,
+    bool? isNull,
+  });
+
   UserModelQuery whereId({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -1842,18 +2010,6 @@ abstract class UserModelQuery
     String? isGreaterThanOrEqualTo,
     List<String>? whereIn,
     List<String>? whereNotIn,
-    bool? isNull,
-  });
-
-  UserModelQuery whereCubeUser({
-     cube.CubeUser? isEqualTo,
-     cube.CubeUser? isNotEqualTo,
-     cube.CubeUser? isLessThan,
-     cube.CubeUser? isLessThanOrEqualTo,
-     cube.CubeUser? isGreaterThan,
-     cube.CubeUser? isGreaterThanOrEqualTo,
-    List< cube.CubeUser>? whereIn,
-    List< cube.CubeUser>? whereNotIn,
     bool? isNull,
   });
 
@@ -2118,6 +2274,30 @@ abstract class UserModelQuery
     UserModelDocumentSnapshot? startAfterDocument,
   });
 
+  UserModelQuery orderByLastSeen({
+    bool descending = false,
+    DateTime? startAt,
+    DateTime? startAfter,
+    DateTime? endAt,
+    DateTime? endBefore,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  });
+
+  UserModelQuery orderByDistance({
+    bool descending = false,
+    double? startAt,
+    double? startAfter,
+    double? endAt,
+    double? endBefore,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  });
+
   UserModelQuery orderByIsVerified({
     bool descending = false,
     bool startAt,
@@ -2154,6 +2334,30 @@ abstract class UserModelQuery
     UserModelDocumentSnapshot? startAfterDocument,
   });
 
+  UserModelQuery orderByFavoriteList({
+    bool descending = false,
+    List<String> startAt,
+    List<String> startAfter,
+    List<String> endAt,
+    List<String> endBefore,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  });
+
+  UserModelQuery orderByInterests({
+    bool descending = false,
+    List<String> startAt,
+    List<String> startAfter,
+    List<String> endAt,
+    List<String> endBefore,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  });
+
   UserModelQuery orderById({
     bool descending = false,
     String startAt,
@@ -2172,18 +2376,6 @@ abstract class UserModelQuery
     String startAfter,
     String endAt,
     String endBefore,
-    UserModelDocumentSnapshot? startAtDocument,
-    UserModelDocumentSnapshot? endAtDocument,
-    UserModelDocumentSnapshot? endBeforeDocument,
-    UserModelDocumentSnapshot? startAfterDocument,
-  });
-
-  UserModelQuery orderByCubeUser({
-    bool descending = false,
-     cube.CubeUser startAt,
-     cube.CubeUser startAfter,
-     cube.CubeUser endAt,
-     cube.CubeUser endBefore,
     UserModelDocumentSnapshot? startAtDocument,
     UserModelDocumentSnapshot? endAtDocument,
     UserModelDocumentSnapshot? endBeforeDocument,
@@ -2318,31 +2510,29 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['username']!,
+        _$UserModelFieldMap['username']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.username(isEqualTo as String)
+            ? _$UserModelPerFieldToJson.username(isEqualTo as String)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.username(isNotEqualTo as String)
+            ? _$UserModelPerFieldToJson.username(isNotEqualTo as String)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.username(isLessThan as String)
+            ? _$UserModelPerFieldToJson.username(isLessThan as String)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .username(isLessThanOrEqualTo as String)
+            ? _$UserModelPerFieldToJson.username(isLessThanOrEqualTo as String)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.username(isGreaterThan as String)
+            ? _$UserModelPerFieldToJson.username(isGreaterThan as String)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .username(isGreaterThanOrEqualTo as String)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.username(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.username(e)),
         whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.username(e)),
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.username(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2366,29 +2556,27 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['bio']!,
+        _$UserModelFieldMap['bio']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.bio(isEqualTo as String?)
+            ? _$UserModelPerFieldToJson.bio(isEqualTo as String?)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.bio(isNotEqualTo as String?)
+            ? _$UserModelPerFieldToJson.bio(isNotEqualTo as String?)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.bio(isLessThan as String?)
+            ? _$UserModelPerFieldToJson.bio(isLessThan as String?)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson.bio(isLessThanOrEqualTo as String?)
+            ? _$UserModelPerFieldToJson.bio(isLessThanOrEqualTo as String?)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.bio(isGreaterThan as String?)
+            ? _$UserModelPerFieldToJson.bio(isGreaterThan as String?)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .bio(isGreaterThanOrEqualTo as String?)
+            ? _$UserModelPerFieldToJson.bio(isGreaterThanOrEqualTo as String?)
             : null,
-        whereIn: whereIn?.map((e) => _$$UserModelImplPerFieldToJson.bio(e)),
-        whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.bio(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.bio(e)),
+        whereNotIn: whereNotIn?.map((e) => _$UserModelPerFieldToJson.bio(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2412,38 +2600,34 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['albumUrl']!,
+        _$UserModelFieldMap['albumUrl']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson
-                .albumUrl(isEqualTo as List<String>?)
+            ? _$UserModelPerFieldToJson.albumUrl(isEqualTo as List<String>?)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson
-                .albumUrl(isNotEqualTo as List<String>?)
+            ? _$UserModelPerFieldToJson.albumUrl(isNotEqualTo as List<String>?)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson
-                .albumUrl(isLessThan as List<String>?)
+            ? _$UserModelPerFieldToJson.albumUrl(isLessThan as List<String>?)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .albumUrl(isLessThanOrEqualTo as List<String>?)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson
-                .albumUrl(isGreaterThan as List<String>?)
+            ? _$UserModelPerFieldToJson.albumUrl(isGreaterThan as List<String>?)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .albumUrl(isGreaterThanOrEqualTo as List<String>?)
             : null,
         arrayContains: arrayContains != null
-            ? (_$$UserModelImplPerFieldToJson
-                    .albumUrl([arrayContains as String]) as List?)!
+            ? (_$UserModelPerFieldToJson.albumUrl([arrayContains as String])
+                    as List?)!
                 .single
             : null,
         arrayContainsAny: arrayContainsAny != null
-            ? _$$UserModelImplPerFieldToJson.albumUrl(arrayContainsAny)
+            ? _$UserModelPerFieldToJson.albumUrl(arrayContainsAny)
                 as Iterable<Object>?
             : null,
         isNull: isNull ??
@@ -2469,32 +2653,30 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['profileUrl']!,
+        _$UserModelFieldMap['profileUrl']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.profileUrl(isEqualTo as String?)
+            ? _$UserModelPerFieldToJson.profileUrl(isEqualTo as String?)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.profileUrl(isNotEqualTo as String?)
+            ? _$UserModelPerFieldToJson.profileUrl(isNotEqualTo as String?)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.profileUrl(isLessThan as String?)
+            ? _$UserModelPerFieldToJson.profileUrl(isLessThan as String?)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .profileUrl(isLessThanOrEqualTo as String?)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson
-                .profileUrl(isGreaterThan as String?)
+            ? _$UserModelPerFieldToJson.profileUrl(isGreaterThan as String?)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .profileUrl(isGreaterThanOrEqualTo as String?)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.profileUrl(e)),
-        whereNotIn: whereNotIn
-            ?.map((e) => _$$UserModelImplPerFieldToJson.profileUrl(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.profileUrl(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.profileUrl(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2518,31 +2700,29 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['birthday']!,
+        _$UserModelFieldMap['birthday']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.birthday(isEqualTo as String?)
+            ? _$UserModelPerFieldToJson.birthday(isEqualTo as String?)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.birthday(isNotEqualTo as String?)
+            ? _$UserModelPerFieldToJson.birthday(isNotEqualTo as String?)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.birthday(isLessThan as String?)
+            ? _$UserModelPerFieldToJson.birthday(isLessThan as String?)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .birthday(isLessThanOrEqualTo as String?)
+            ? _$UserModelPerFieldToJson.birthday(isLessThanOrEqualTo as String?)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.birthday(isGreaterThan as String?)
+            ? _$UserModelPerFieldToJson.birthday(isGreaterThan as String?)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .birthday(isGreaterThanOrEqualTo as String?)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.birthday(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.birthday(e)),
         whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.birthday(e)),
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.birthday(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2566,28 +2746,27 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['age']!,
+        _$UserModelFieldMap['age']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.age(isEqualTo as int?)
+            ? _$UserModelPerFieldToJson.age(isEqualTo as int?)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.age(isNotEqualTo as int?)
+            ? _$UserModelPerFieldToJson.age(isNotEqualTo as int?)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.age(isLessThan as int?)
+            ? _$UserModelPerFieldToJson.age(isLessThan as int?)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson.age(isLessThanOrEqualTo as int?)
+            ? _$UserModelPerFieldToJson.age(isLessThanOrEqualTo as int?)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.age(isGreaterThan as int?)
+            ? _$UserModelPerFieldToJson.age(isGreaterThan as int?)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson.age(isGreaterThanOrEqualTo as int?)
+            ? _$UserModelPerFieldToJson.age(isGreaterThanOrEqualTo as int?)
             : null,
-        whereIn: whereIn?.map((e) => _$$UserModelImplPerFieldToJson.age(e)),
-        whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.age(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.age(e)),
+        whereNotIn: whereNotIn?.map((e) => _$UserModelPerFieldToJson.age(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2611,35 +2790,30 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['position']!,
+        _$UserModelFieldMap['position']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson
-                .position(isEqualTo as GeoPointData?)
+            ? _$UserModelPerFieldToJson.position(isEqualTo as GeoPointData?)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson
-                .position(isNotEqualTo as GeoPointData?)
+            ? _$UserModelPerFieldToJson.position(isNotEqualTo as GeoPointData?)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson
-                .position(isLessThan as GeoPointData?)
+            ? _$UserModelPerFieldToJson.position(isLessThan as GeoPointData?)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .position(isLessThanOrEqualTo as GeoPointData?)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson
-                .position(isGreaterThan as GeoPointData?)
+            ? _$UserModelPerFieldToJson.position(isGreaterThan as GeoPointData?)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .position(isGreaterThanOrEqualTo as GeoPointData?)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.position(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.position(e)),
         whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.position(e)),
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.position(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2663,29 +2837,27 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['dob']!,
+        _$UserModelFieldMap['dob']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.dob(isEqualTo as String?)
+            ? _$UserModelPerFieldToJson.dob(isEqualTo as String?)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.dob(isNotEqualTo as String?)
+            ? _$UserModelPerFieldToJson.dob(isNotEqualTo as String?)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.dob(isLessThan as String?)
+            ? _$UserModelPerFieldToJson.dob(isLessThan as String?)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson.dob(isLessThanOrEqualTo as String?)
+            ? _$UserModelPerFieldToJson.dob(isLessThanOrEqualTo as String?)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.dob(isGreaterThan as String?)
+            ? _$UserModelPerFieldToJson.dob(isGreaterThan as String?)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .dob(isGreaterThanOrEqualTo as String?)
+            ? _$UserModelPerFieldToJson.dob(isGreaterThanOrEqualTo as String?)
             : null,
-        whereIn: whereIn?.map((e) => _$$UserModelImplPerFieldToJson.dob(e)),
-        whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.dob(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.dob(e)),
+        whereNotIn: whereNotIn?.map((e) => _$UserModelPerFieldToJson.dob(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2709,30 +2881,28 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['height']!,
+        _$UserModelFieldMap['height']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.height(isEqualTo as String?)
+            ? _$UserModelPerFieldToJson.height(isEqualTo as String?)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.height(isNotEqualTo as String?)
+            ? _$UserModelPerFieldToJson.height(isNotEqualTo as String?)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.height(isLessThan as String?)
+            ? _$UserModelPerFieldToJson.height(isLessThan as String?)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .height(isLessThanOrEqualTo as String?)
+            ? _$UserModelPerFieldToJson.height(isLessThanOrEqualTo as String?)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.height(isGreaterThan as String?)
+            ? _$UserModelPerFieldToJson.height(isGreaterThan as String?)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .height(isGreaterThanOrEqualTo as String?)
             : null,
-        whereIn: whereIn?.map((e) => _$$UserModelImplPerFieldToJson.height(e)),
-        whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.height(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.height(e)),
+        whereNotIn: whereNotIn?.map((e) => _$UserModelPerFieldToJson.height(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2756,30 +2926,28 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['weight']!,
+        _$UserModelFieldMap['weight']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.weight(isEqualTo as String?)
+            ? _$UserModelPerFieldToJson.weight(isEqualTo as String?)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.weight(isNotEqualTo as String?)
+            ? _$UserModelPerFieldToJson.weight(isNotEqualTo as String?)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.weight(isLessThan as String?)
+            ? _$UserModelPerFieldToJson.weight(isLessThan as String?)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .weight(isLessThanOrEqualTo as String?)
+            ? _$UserModelPerFieldToJson.weight(isLessThanOrEqualTo as String?)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.weight(isGreaterThan as String?)
+            ? _$UserModelPerFieldToJson.weight(isGreaterThan as String?)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .weight(isGreaterThanOrEqualTo as String?)
             : null,
-        whereIn: whereIn?.map((e) => _$$UserModelImplPerFieldToJson.weight(e)),
-        whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.weight(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.weight(e)),
+        whereNotIn: whereNotIn?.map((e) => _$UserModelPerFieldToJson.weight(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2803,30 +2971,27 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['lived']!,
+        _$UserModelFieldMap['lived']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.lived(isEqualTo as String?)
+            ? _$UserModelPerFieldToJson.lived(isEqualTo as String?)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.lived(isNotEqualTo as String?)
+            ? _$UserModelPerFieldToJson.lived(isNotEqualTo as String?)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.lived(isLessThan as String?)
+            ? _$UserModelPerFieldToJson.lived(isLessThan as String?)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .lived(isLessThanOrEqualTo as String?)
+            ? _$UserModelPerFieldToJson.lived(isLessThanOrEqualTo as String?)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.lived(isGreaterThan as String?)
+            ? _$UserModelPerFieldToJson.lived(isGreaterThan as String?)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .lived(isGreaterThanOrEqualTo as String?)
+            ? _$UserModelPerFieldToJson.lived(isGreaterThanOrEqualTo as String?)
             : null,
-        whereIn: whereIn?.map((e) => _$$UserModelImplPerFieldToJson.lived(e)),
-        whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.lived(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.lived(e)),
+        whereNotIn: whereNotIn?.map((e) => _$UserModelPerFieldToJson.lived(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2850,29 +3015,27 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['role']!,
+        _$UserModelFieldMap['role']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.role(isEqualTo as Role)
+            ? _$UserModelPerFieldToJson.role(isEqualTo as Role)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.role(isNotEqualTo as Role)
+            ? _$UserModelPerFieldToJson.role(isNotEqualTo as Role)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.role(isLessThan as Role)
+            ? _$UserModelPerFieldToJson.role(isLessThan as Role)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson.role(isLessThanOrEqualTo as Role)
+            ? _$UserModelPerFieldToJson.role(isLessThanOrEqualTo as Role)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.role(isGreaterThan as Role)
+            ? _$UserModelPerFieldToJson.role(isGreaterThan as Role)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .role(isGreaterThanOrEqualTo as Role)
+            ? _$UserModelPerFieldToJson.role(isGreaterThanOrEqualTo as Role)
             : null,
-        whereIn: whereIn?.map((e) => _$$UserModelImplPerFieldToJson.role(e)),
-        whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.role(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.role(e)),
+        whereNotIn: whereNotIn?.map((e) => _$UserModelPerFieldToJson.role(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2896,31 +3059,30 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['bodyType']!,
+        _$UserModelFieldMap['bodyType']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.bodyType(isEqualTo as BodyType)
+            ? _$UserModelPerFieldToJson.bodyType(isEqualTo as BodyType)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.bodyType(isNotEqualTo as BodyType)
+            ? _$UserModelPerFieldToJson.bodyType(isNotEqualTo as BodyType)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.bodyType(isLessThan as BodyType)
+            ? _$UserModelPerFieldToJson.bodyType(isLessThan as BodyType)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .bodyType(isLessThanOrEqualTo as BodyType)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.bodyType(isGreaterThan as BodyType)
+            ? _$UserModelPerFieldToJson.bodyType(isGreaterThan as BodyType)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .bodyType(isGreaterThanOrEqualTo as BodyType)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.bodyType(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.bodyType(e)),
         whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.bodyType(e)),
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.bodyType(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2944,35 +3106,35 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['relationshipStatus']!,
+        _$UserModelFieldMap['relationshipStatus']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .relationshipStatus(isEqualTo as RelationshipStatus)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .relationshipStatus(isNotEqualTo as RelationshipStatus)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .relationshipStatus(isLessThan as RelationshipStatus)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .relationshipStatus(isLessThanOrEqualTo as RelationshipStatus)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .relationshipStatus(isGreaterThan as RelationshipStatus)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson.relationshipStatus(
+            ? _$UserModelPerFieldToJson.relationshipStatus(
                 isGreaterThanOrEqualTo as RelationshipStatus)
             : null,
         whereIn: whereIn
-            ?.map((e) => _$$UserModelImplPerFieldToJson.relationshipStatus(e)),
+            ?.map((e) => _$UserModelPerFieldToJson.relationshipStatus(e)),
         whereNotIn: whereNotIn
-            ?.map((e) => _$$UserModelImplPerFieldToJson.relationshipStatus(e)),
+            ?.map((e) => _$UserModelPerFieldToJson.relationshipStatus(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -2996,33 +3158,30 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['ethnicity']!,
+        _$UserModelFieldMap['ethnicity']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.ethnicity(isEqualTo as Ethnicity)
+            ? _$UserModelPerFieldToJson.ethnicity(isEqualTo as Ethnicity)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson
-                .ethnicity(isNotEqualTo as Ethnicity)
+            ? _$UserModelPerFieldToJson.ethnicity(isNotEqualTo as Ethnicity)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.ethnicity(isLessThan as Ethnicity)
+            ? _$UserModelPerFieldToJson.ethnicity(isLessThan as Ethnicity)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .ethnicity(isLessThanOrEqualTo as Ethnicity)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson
-                .ethnicity(isGreaterThan as Ethnicity)
+            ? _$UserModelPerFieldToJson.ethnicity(isGreaterThan as Ethnicity)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .ethnicity(isGreaterThanOrEqualTo as Ethnicity)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.ethnicity(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.ethnicity(e)),
         whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.ethnicity(e)),
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.ethnicity(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -3046,34 +3205,30 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['lookingFor']!,
+        _$UserModelFieldMap['lookingFor']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.lookingFor(isEqualTo as LookingFor)
+            ? _$UserModelPerFieldToJson.lookingFor(isEqualTo as LookingFor)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson
-                .lookingFor(isNotEqualTo as LookingFor)
+            ? _$UserModelPerFieldToJson.lookingFor(isNotEqualTo as LookingFor)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson
-                .lookingFor(isLessThan as LookingFor)
+            ? _$UserModelPerFieldToJson.lookingFor(isLessThan as LookingFor)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .lookingFor(isLessThanOrEqualTo as LookingFor)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson
-                .lookingFor(isGreaterThan as LookingFor)
+            ? _$UserModelPerFieldToJson.lookingFor(isGreaterThan as LookingFor)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .lookingFor(isGreaterThanOrEqualTo as LookingFor)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.lookingFor(e)),
-        whereNotIn: whereNotIn
-            ?.map((e) => _$$UserModelImplPerFieldToJson.lookingFor(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.lookingFor(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.lookingFor(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -3097,35 +3252,31 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['whereToMeet']!,
+        _$UserModelFieldMap['whereToMeet']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson
-                .whereToMeet(isEqualTo as WhereToMeet)
+            ? _$UserModelPerFieldToJson.whereToMeet(isEqualTo as WhereToMeet)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson
-                .whereToMeet(isNotEqualTo as WhereToMeet)
+            ? _$UserModelPerFieldToJson.whereToMeet(isNotEqualTo as WhereToMeet)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson
-                .whereToMeet(isLessThan as WhereToMeet)
+            ? _$UserModelPerFieldToJson.whereToMeet(isLessThan as WhereToMeet)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .whereToMeet(isLessThanOrEqualTo as WhereToMeet)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .whereToMeet(isGreaterThan as WhereToMeet)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .whereToMeet(isGreaterThanOrEqualTo as WhereToMeet)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.whereToMeet(e)),
-        whereNotIn: whereNotIn
-            ?.map((e) => _$$UserModelImplPerFieldToJson.whereToMeet(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.whereToMeet(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.whereToMeet(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -3149,31 +3300,121 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['isOnline']!,
+        _$UserModelFieldMap['isOnline']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.isOnline(isEqualTo as bool)
+            ? _$UserModelPerFieldToJson.isOnline(isEqualTo as bool)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.isOnline(isNotEqualTo as bool)
+            ? _$UserModelPerFieldToJson.isOnline(isNotEqualTo as bool)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.isOnline(isLessThan as bool)
+            ? _$UserModelPerFieldToJson.isOnline(isLessThan as bool)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .isOnline(isLessThanOrEqualTo as bool)
+            ? _$UserModelPerFieldToJson.isOnline(isLessThanOrEqualTo as bool)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.isOnline(isGreaterThan as bool)
+            ? _$UserModelPerFieldToJson.isOnline(isGreaterThan as bool)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .isOnline(isGreaterThanOrEqualTo as bool)
+            ? _$UserModelPerFieldToJson.isOnline(isGreaterThanOrEqualTo as bool)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.isOnline(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.isOnline(e)),
         whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.isOnline(e)),
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.isOnline(e)),
+        isNull: isNull ??
+            (isEqualTo == null ? false : null) ??
+            (isNotEqualTo == null ? true : null),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery whereLastSeen({
+    Object? isEqualTo = _sentinel,
+    Object? isNotEqualTo = _sentinel,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    List<DateTime?>? whereIn,
+    List<DateTime?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$UserModelFieldMap['lastSeen']!,
+        isEqualTo: isEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.lastSeen(isEqualTo as DateTime?)
+            : null,
+        isNotEqualTo: isNotEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.lastSeen(isNotEqualTo as DateTime?)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$UserModelPerFieldToJson.lastSeen(isLessThan as DateTime?)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .lastSeen(isLessThanOrEqualTo as DateTime?)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$UserModelPerFieldToJson.lastSeen(isGreaterThan as DateTime?)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .lastSeen(isGreaterThanOrEqualTo as DateTime?)
+            : null,
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.lastSeen(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.lastSeen(e)),
+        isNull: isNull ??
+            (isEqualTo == null ? false : null) ??
+            (isNotEqualTo == null ? true : null),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery whereDistance({
+    Object? isEqualTo = _sentinel,
+    Object? isNotEqualTo = _sentinel,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    List<double?>? whereIn,
+    List<double?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$UserModelFieldMap['distance']!,
+        isEqualTo: isEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.distance(isEqualTo as double?)
+            : null,
+        isNotEqualTo: isNotEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.distance(isNotEqualTo as double?)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$UserModelPerFieldToJson.distance(isLessThan as double?)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson.distance(isLessThanOrEqualTo as double?)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$UserModelPerFieldToJson.distance(isGreaterThan as double?)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .distance(isGreaterThanOrEqualTo as double?)
+            : null,
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.distance(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.distance(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -3197,31 +3438,29 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['isVerified']!,
+        _$UserModelFieldMap['isVerified']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.isVerified(isEqualTo as bool)
+            ? _$UserModelPerFieldToJson.isVerified(isEqualTo as bool)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.isVerified(isNotEqualTo as bool)
+            ? _$UserModelPerFieldToJson.isVerified(isNotEqualTo as bool)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.isVerified(isLessThan as bool)
+            ? _$UserModelPerFieldToJson.isVerified(isLessThan as bool)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .isVerified(isLessThanOrEqualTo as bool)
+            ? _$UserModelPerFieldToJson.isVerified(isLessThanOrEqualTo as bool)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.isVerified(isGreaterThan as bool)
+            ? _$UserModelPerFieldToJson.isVerified(isGreaterThan as bool)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .isVerified(isGreaterThanOrEqualTo as bool)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.isVerified(e)),
-        whereNotIn: whereNotIn
-            ?.map((e) => _$$UserModelImplPerFieldToJson.isVerified(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.isVerified(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.isVerified(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -3245,31 +3484,29 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['isBlocked']!,
+        _$UserModelFieldMap['isBlocked']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.isBlocked(isEqualTo as bool)
+            ? _$UserModelPerFieldToJson.isBlocked(isEqualTo as bool)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.isBlocked(isNotEqualTo as bool)
+            ? _$UserModelPerFieldToJson.isBlocked(isNotEqualTo as bool)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.isBlocked(isLessThan as bool)
+            ? _$UserModelPerFieldToJson.isBlocked(isLessThan as bool)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .isBlocked(isLessThanOrEqualTo as bool)
+            ? _$UserModelPerFieldToJson.isBlocked(isLessThanOrEqualTo as bool)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.isBlocked(isGreaterThan as bool)
+            ? _$UserModelPerFieldToJson.isBlocked(isGreaterThan as bool)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .isBlocked(isGreaterThanOrEqualTo as bool)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.isBlocked(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.isBlocked(e)),
         whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.isBlocked(e)),
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.isBlocked(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -3293,38 +3530,142 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['blockList']!,
+        _$UserModelFieldMap['blockList']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson
-                .blockList(isEqualTo as List<String>)
+            ? _$UserModelPerFieldToJson.blockList(isEqualTo as List<String>)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson
-                .blockList(isNotEqualTo as List<String>)
+            ? _$UserModelPerFieldToJson.blockList(isNotEqualTo as List<String>)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson
-                .blockList(isLessThan as List<String>)
+            ? _$UserModelPerFieldToJson.blockList(isLessThan as List<String>)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .blockList(isLessThanOrEqualTo as List<String>)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson
-                .blockList(isGreaterThan as List<String>)
+            ? _$UserModelPerFieldToJson.blockList(isGreaterThan as List<String>)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .blockList(isGreaterThanOrEqualTo as List<String>)
             : null,
         arrayContains: arrayContains != null
-            ? (_$$UserModelImplPerFieldToJson
-                    .blockList([arrayContains as String]) as List?)!
+            ? (_$UserModelPerFieldToJson.blockList([arrayContains as String])
+                    as List?)!
                 .single
             : null,
         arrayContainsAny: arrayContainsAny != null
-            ? _$$UserModelImplPerFieldToJson.blockList(arrayContainsAny)
+            ? _$UserModelPerFieldToJson.blockList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
+        isNull: isNull ??
+            (isEqualTo == null ? false : null) ??
+            (isNotEqualTo == null ? true : null),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery whereFavoriteList({
+    Object? isEqualTo = _sentinel,
+    Object? isNotEqualTo = _sentinel,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<String>? arrayContainsAny,
+    bool? isNull,
+  }) {
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$UserModelFieldMap['favoriteList']!,
+        isEqualTo: isEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.favoriteList(isEqualTo as List<String>)
+            : null,
+        isNotEqualTo: isNotEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson
+                .favoriteList(isNotEqualTo as List<String>)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$UserModelPerFieldToJson.favoriteList(isLessThan as List<String>)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .favoriteList(isLessThanOrEqualTo as List<String>)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$UserModelPerFieldToJson
+                .favoriteList(isGreaterThan as List<String>)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .favoriteList(isGreaterThanOrEqualTo as List<String>)
+            : null,
+        arrayContains: arrayContains != null
+            ? (_$UserModelPerFieldToJson.favoriteList([arrayContains as String])
+                    as List?)!
+                .single
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$UserModelPerFieldToJson.favoriteList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
+        isNull: isNull ??
+            (isEqualTo == null ? false : null) ??
+            (isNotEqualTo == null ? true : null),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery whereInterests({
+    Object? isEqualTo = _sentinel,
+    Object? isNotEqualTo = _sentinel,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<String>? arrayContainsAny,
+    bool? isNull,
+  }) {
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$UserModelFieldMap['interests']!,
+        isEqualTo: isEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.interests(isEqualTo as List<String>)
+            : null,
+        isNotEqualTo: isNotEqualTo != _sentinel
+            ? _$UserModelPerFieldToJson.interests(isNotEqualTo as List<String>)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$UserModelPerFieldToJson.interests(isLessThan as List<String>)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .interests(isLessThanOrEqualTo as List<String>)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$UserModelPerFieldToJson.interests(isGreaterThan as List<String>)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$UserModelPerFieldToJson
+                .interests(isGreaterThanOrEqualTo as List<String>)
+            : null,
+        arrayContains: arrayContains != null
+            ? (_$UserModelPerFieldToJson.interests([arrayContains as String])
+                    as List?)!
+                .single
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$UserModelPerFieldToJson.interests(arrayContainsAny)
                 as Iterable<Object>?
             : null,
         isNull: isNull ??
@@ -3350,29 +3691,27 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['id']!,
+        _$UserModelFieldMap['id']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.id(isEqualTo as String)
+            ? _$UserModelPerFieldToJson.id(isEqualTo as String)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.id(isNotEqualTo as String)
+            ? _$UserModelPerFieldToJson.id(isNotEqualTo as String)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.id(isLessThan as String)
+            ? _$UserModelPerFieldToJson.id(isLessThan as String)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson.id(isLessThanOrEqualTo as String)
+            ? _$UserModelPerFieldToJson.id(isLessThanOrEqualTo as String)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.id(isGreaterThan as String)
+            ? _$UserModelPerFieldToJson.id(isGreaterThan as String)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .id(isGreaterThanOrEqualTo as String)
+            ? _$UserModelPerFieldToJson.id(isGreaterThanOrEqualTo as String)
             : null,
-        whereIn: whereIn?.map((e) => _$$UserModelImplPerFieldToJson.id(e)),
-        whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.id(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.id(e)),
+        whereNotIn: whereNotIn?.map((e) => _$UserModelPerFieldToJson.id(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -3396,79 +3735,29 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     return _$UserModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['fcmToken']!,
+        _$UserModelFieldMap['fcmToken']!,
         isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.fcmToken(isEqualTo as String)
+            ? _$UserModelPerFieldToJson.fcmToken(isEqualTo as String)
             : null,
         isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.fcmToken(isNotEqualTo as String)
+            ? _$UserModelPerFieldToJson.fcmToken(isNotEqualTo as String)
             : null,
         isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.fcmToken(isLessThan as String)
+            ? _$UserModelPerFieldToJson.fcmToken(isLessThan as String)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .fcmToken(isLessThanOrEqualTo as String)
+            ? _$UserModelPerFieldToJson.fcmToken(isLessThanOrEqualTo as String)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.fcmToken(isGreaterThan as String)
+            ? _$UserModelPerFieldToJson.fcmToken(isGreaterThan as String)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
+            ? _$UserModelPerFieldToJson
                 .fcmToken(isGreaterThanOrEqualTo as String)
             : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.fcmToken(e)),
+        whereIn: whereIn?.map((e) => _$UserModelPerFieldToJson.fcmToken(e)),
         whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.fcmToken(e)),
-        isNull: isNull ??
-            (isEqualTo == null ? false : null) ??
-            (isNotEqualTo == null ? true : null),
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  @override
-  UserModelQuery whereCubeUser({
-    Object? isEqualTo = _sentinel,
-    Object? isNotEqualTo = _sentinel,
-    Object? isLessThan,
-    Object? isLessThanOrEqualTo,
-    Object? isGreaterThan,
-    Object? isGreaterThanOrEqualTo,
-    List< cube.CubeUser>? whereIn,
-    List< cube.CubeUser>? whereNotIn,
-    bool? isNull,
-  }) {
-    return _$UserModelQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$UserModelImplFieldMap['cubeUser']!,
-        isEqualTo: isEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.cubeUser(isEqualTo as  cube.CubeUser)
-            : null,
-        isNotEqualTo: isNotEqualTo != _sentinel
-            ? _$$UserModelImplPerFieldToJson.cubeUser(isNotEqualTo as  cube.CubeUser)
-            : null,
-        isLessThan: isLessThan != null
-            ? _$$UserModelImplPerFieldToJson.cubeUser(isLessThan as  cube.CubeUser)
-            : null,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .cubeUser(isLessThanOrEqualTo as  cube.CubeUser)
-            : null,
-        isGreaterThan: isGreaterThan != null
-            ? _$$UserModelImplPerFieldToJson.cubeUser(isGreaterThan as  cube.CubeUser)
-            : null,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$UserModelImplPerFieldToJson
-                .cubeUser(isGreaterThanOrEqualTo as  cube.CubeUser)
-            : null,
-        whereIn:
-            whereIn?.map((e) => _$$UserModelImplPerFieldToJson.cubeUser(e)),
-        whereNotIn:
-            whereNotIn?.map((e) => _$$UserModelImplPerFieldToJson.cubeUser(e)),
+            whereNotIn?.map((e) => _$UserModelPerFieldToJson.fcmToken(e)),
         isNull: isNull ??
             (isEqualTo == null ? false : null) ??
             (isNotEqualTo == null ? true : null),
@@ -3637,7 +3926,7 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['username']!, descending: descending);
+        .orderBy(_$UserModelFieldMap['username']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -3709,8 +3998,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['bio']!, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$UserModelFieldMap['bio']!,
+        descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -3783,7 +4072,7 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['albumUrl']!, descending: descending);
+        .orderBy(_$UserModelFieldMap['albumUrl']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -3855,9 +4144,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$UserModelImplFieldMap['profileUrl']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['profileUrl']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -3930,7 +4218,7 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['birthday']!, descending: descending);
+        .orderBy(_$UserModelFieldMap['birthday']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4002,8 +4290,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['age']!, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$UserModelFieldMap['age']!,
+        descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4076,7 +4364,7 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['position']!, descending: descending);
+        .orderBy(_$UserModelFieldMap['position']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4148,8 +4436,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['dob']!, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$UserModelFieldMap['dob']!,
+        descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4222,7 +4510,7 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['height']!, descending: descending);
+        .orderBy(_$UserModelFieldMap['height']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4295,7 +4583,7 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['weight']!, descending: descending);
+        .orderBy(_$UserModelFieldMap['weight']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4367,8 +4655,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['lived']!, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$UserModelFieldMap['lived']!,
+        descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4440,8 +4728,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['role']!, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$UserModelFieldMap['role']!,
+        descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4514,7 +4802,7 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['bodyType']!, descending: descending);
+        .orderBy(_$UserModelFieldMap['bodyType']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4587,7 +4875,7 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$$UserModelImplFieldMap['relationshipStatus']!,
+        _$UserModelFieldMap['relationshipStatus']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -4660,9 +4948,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$UserModelImplFieldMap['ethnicity']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['ethnicity']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4734,9 +5021,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$UserModelImplFieldMap['lookingFor']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['lookingFor']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4808,9 +5094,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$UserModelImplFieldMap['whereToMeet']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['whereToMeet']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4883,7 +5168,153 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['isOnline']!, descending: descending);
+        .orderBy(_$UserModelFieldMap['isOnline']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery orderByLastSeen({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['lastSeen']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery orderByDistance({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['distance']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4955,9 +5386,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$UserModelImplFieldMap['isVerified']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['isVerified']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -5029,9 +5459,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$UserModelImplFieldMap['isBlocked']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['isBlocked']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -5103,9 +5532,154 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$$UserModelImplFieldMap['blockList']!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['blockList']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery orderByFavoriteList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['favoriteList']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$UserModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
+  UserModelQuery orderByInterests({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    UserModelDocumentSnapshot? startAtDocument,
+    UserModelDocumentSnapshot? endAtDocument,
+    UserModelDocumentSnapshot? endBeforeDocument,
+    UserModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$UserModelFieldMap['interests']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -5177,8 +5751,8 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? endBeforeDocument,
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['id']!, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$UserModelFieldMap['id']!,
+        descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -5251,80 +5825,7 @@ class _$UserModelQuery extends QueryReference<UserModel, UserModelQuerySnapshot>
     UserModelDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['fcmToken']!, descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-
-    return _$UserModelQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
-  @override
-  UserModelQuery orderByCubeUser({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    UserModelDocumentSnapshot? startAtDocument,
-    UserModelDocumentSnapshot? endAtDocument,
-    UserModelDocumentSnapshot? endBeforeDocument,
-    UserModelDocumentSnapshot? startAfterDocument,
-  }) {
-    final query = $referenceWithoutCursor
-        .orderBy(_$$UserModelImplFieldMap['cubeUser']!, descending: descending);
+        .orderBy(_$UserModelFieldMap['fcmToken']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -5482,8 +5983,7 @@ class UserModelQueryDocumentSnapshot
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
-    _$UserModelImpl(
+_UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
       username: json['username'] as String,
       bio: json['bio'] as String?,
       albumUrl: (json['albumUrl'] as List<dynamic>?)
@@ -5515,18 +6015,29 @@ _$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
           $enumDecodeNullable(_$WhereToMeetEnumMap, json['whereToMeet']) ??
               WhereToMeet.doNotShow,
       isOnline: json['isOnline'] as bool? ?? false,
+      lastSeen: json['lastSeen'] == null
+          ? null
+          : DateTime.parse(json['lastSeen'] as String),
+      distance: (json['distance'] as num?)?.toDouble(),
       isVerified: json['isVerified'] as bool? ?? false,
       isBlocked: json['isBlocked'] as bool? ?? false,
       blockList: (json['blockList'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      favoriteList: (json['favoriteList'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      interests: (json['interests'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       id: json['id'] as String,
       fcmToken: json['fcmToken'] as String,
-      cubeUser:  cube.CubeUser.fromJson(json['cubeUser'] as Map<String, dynamic>),
     );
 
-const _$$UserModelImplFieldMap = <String, String>{
+const _$UserModelFieldMap = <String, String>{
   'username': 'username',
   'bio': 'bio',
   'albumUrl': 'albumUrl',
@@ -5545,16 +6056,19 @@ const _$$UserModelImplFieldMap = <String, String>{
   'lookingFor': 'lookingFor',
   'whereToMeet': 'whereToMeet',
   'isOnline': 'isOnline',
+  'lastSeen': 'lastSeen',
+  'distance': 'distance',
   'isVerified': 'isVerified',
   'isBlocked': 'isBlocked',
   'blockList': 'blockList',
+  'favoriteList': 'favoriteList',
+  'interests': 'interests',
   'id': 'id',
   'fcmToken': 'fcmToken',
-  'cubeUser': 'cubeUser',
 };
 
 // ignore: unused_element
-abstract class _$$UserModelImplPerFieldToJson {
+abstract class _$UserModelPerFieldToJson {
   // ignore: unused_element
   static Object? username(String instance) => instance;
   // ignore: unused_element
@@ -5595,20 +6109,26 @@ abstract class _$$UserModelImplPerFieldToJson {
   // ignore: unused_element
   static Object? isOnline(bool instance) => instance;
   // ignore: unused_element
+  static Object? lastSeen(DateTime? instance) => instance?.toIso8601String();
+  // ignore: unused_element
+  static Object? distance(double? instance) => instance;
+  // ignore: unused_element
   static Object? isVerified(bool instance) => instance;
   // ignore: unused_element
   static Object? isBlocked(bool instance) => instance;
   // ignore: unused_element
   static Object? blockList(List<String> instance) => instance;
   // ignore: unused_element
+  static Object? favoriteList(List<String> instance) => instance;
+  // ignore: unused_element
+  static Object? interests(List<String> instance) => instance;
+  // ignore: unused_element
   static Object? id(String instance) => instance;
   // ignore: unused_element
   static Object? fcmToken(String instance) => instance;
-  // ignore: unused_element
-  static Object? cubeUser( cube.CubeUser instance) => instance.toJson();
 }
 
-Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
+Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
     <String, dynamic>{
       'username': instance.username,
       'bio': instance.bio,
@@ -5629,82 +6149,84 @@ Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
       'lookingFor': _$LookingForEnumMap[instance.lookingFor]!,
       'whereToMeet': _$WhereToMeetEnumMap[instance.whereToMeet]!,
       'isOnline': instance.isOnline,
+      'lastSeen': instance.lastSeen?.toIso8601String(),
+      'distance': instance.distance,
       'isVerified': instance.isVerified,
       'isBlocked': instance.isBlocked,
       'blockList': instance.blockList,
+      'favoriteList': instance.favoriteList,
+      'interests': instance.interests,
       'id': instance.id,
       'fcmToken': instance.fcmToken,
-      'cubeUser': instance.cubeUser.toJson(),
     };
 
 const _$RoleEnumMap = {
-  Role.doNotShow: 'doNotShow',
-  Role.top: 'top',
-  Role.versTop: 'versTop',
-  Role.versatile: 'versatile',
-  Role.versBottom: 'versBottom',
-  Role.bottom: 'bottom',
+  Role.doNotShow: 'Do not show',
+  Role.top: 'Top',
+  Role.versTop: 'Vers Top',
+  Role.versatile: 'Versatile',
+  Role.versBottom: 'Vers Bottom',
+  Role.bottom: 'Bottom',
 };
 
 const _$BodyTypeEnumMap = {
-  BodyType.doNotShow: 'doNotShow',
-  BodyType.slim: 'slim',
-  BodyType.average: 'average',
-  BodyType.athletic: 'athletic',
-  BodyType.muscular: 'muscular',
-  BodyType.large: 'large',
-  BodyType.fit: 'fit',
-  BodyType.stocky: 'stocky',
-  BodyType.heavy: 'heavy',
+  BodyType.doNotShow: 'Do not show',
+  BodyType.slim: 'Slim',
+  BodyType.average: 'Average',
+  BodyType.athletic: 'Athletic',
+  BodyType.muscular: 'Muscular',
+  BodyType.large: 'Large',
+  BodyType.fit: 'Fit',
+  BodyType.stocky: 'Stocky',
+  BodyType.heavy: 'Heavy',
 };
 
 const _$RelationshipStatusEnumMap = {
-  RelationshipStatus.doNotShow: 'doNotShow',
-  RelationshipStatus.single: 'single',
-  RelationshipStatus.dating: 'dating',
-  RelationshipStatus.openRelationship: 'openRelationship',
-  RelationshipStatus.married: 'married',
-  RelationshipStatus.divorced: 'divorced',
-  RelationshipStatus.widowed: 'widowed',
-  RelationshipStatus.complicated: 'complicated',
-  RelationshipStatus.inLove: 'inLove',
-  RelationshipStatus.engaged: 'engaged',
-  RelationshipStatus.partnered: 'partnered',
+  RelationshipStatus.doNotShow: 'Do not show',
+  RelationshipStatus.single: 'Single',
+  RelationshipStatus.dating: 'Dating',
+  RelationshipStatus.openRelationship: 'Open Relationship',
+  RelationshipStatus.married: 'Married',
+  RelationshipStatus.divorced: 'Divorced',
+  RelationshipStatus.widowed: 'Widowed',
+  RelationshipStatus.complicated: 'Complicated',
+  RelationshipStatus.inLove: 'In Love',
+  RelationshipStatus.engaged: 'Engaged',
+  RelationshipStatus.partnered: 'Partnered',
 };
 
 const _$EthnicityEnumMap = {
-  Ethnicity.doNotShow: 'doNotShow',
-  Ethnicity.asian: 'asian',
-  Ethnicity.black: 'black',
-  Ethnicity.caucasian: 'caucasian',
-  Ethnicity.hispanic: 'hispanic',
-  Ethnicity.indian: 'indian',
-  Ethnicity.middleEastern: 'middleEastern',
-  Ethnicity.nativeAmerican: 'nativeAmerican',
-  Ethnicity.pacificIslander: 'pacificIslander',
-  Ethnicity.mixed: 'mixed',
-  Ethnicity.other: 'other',
-  Ethnicity.partnered: 'partnered',
+  Ethnicity.doNotShow: 'Do not show',
+  Ethnicity.asian: 'Asian',
+  Ethnicity.black: 'Black',
+  Ethnicity.caucasian: 'Caucasian',
+  Ethnicity.hispanic: 'Hispanic',
+  Ethnicity.indian: 'Indian',
+  Ethnicity.middleEastern: 'Middle Eastern',
+  Ethnicity.nativeAmerican: 'Native American',
+  Ethnicity.pacificIslander: 'Pacific Islander',
+  Ethnicity.mixed: 'Mixed',
+  Ethnicity.other: 'Other',
 };
 
 const _$LookingForEnumMap = {
-  LookingFor.doNotShow: 'doNotShow',
-  LookingFor.chat: 'chat',
-  LookingFor.dates: 'dates',
-  LookingFor.friends: 'friends',
-  LookingFor.networking: 'networking',
-  LookingFor.longTerm: 'longTerm',
-  LookingFor.shortTerm: 'shortTerm',
-  LookingFor.casual: 'casual',
-  LookingFor.rightNow: 'rightNow',
+  LookingFor.doNotShow: 'Do not show',
+  LookingFor.chat: 'Chat',
+  LookingFor.dates: 'Dates',
+  LookingFor.friends: 'Friends',
+  LookingFor.networking: 'Networking',
+  LookingFor.longTerm: 'Long Term',
+  LookingFor.shortTerm: 'Short Term',
+  LookingFor.casual: 'Casual',
+  LookingFor.rightNow: 'Right Now',
 };
 
 const _$WhereToMeetEnumMap = {
-  WhereToMeet.doNotShow: 'doNotShow',
-  WhereToMeet.myPlace: 'myPlace',
-  WhereToMeet.yourPlace: 'yourPlace',
-  WhereToMeet.hotel: 'hotel',
-  WhereToMeet.bar: 'bar',
-  WhereToMeet.restaurant: 'restaurant',
-  WhereToMeet.coffeeShop: 'coffeeShop',
+  WhereToMeet.doNotShow: 'Do not show',
+  WhereToMeet.myPlace: 'My Place',
+  WhereToMeet.yourPlace: 'Your Place',
+  WhereToMeet.hotel: 'Hotel',
+  WhereToMeet.bar: 'Bar',
+  WhereToMeet.restaurant: 'Restaurant',
+  WhereToMeet.coffeeShop: 'Coffee Shop',
 };

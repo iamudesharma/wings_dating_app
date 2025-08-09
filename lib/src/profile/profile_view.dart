@@ -1,22 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-import 'package:wings_dating_app/src/model/user_models.dart';
-
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
-import '../../repo/profile_repo.dart';
+import 'package:wings_dating_app/src/users/users_view.dart';
 import '../../routes/app_router.dart';
+import 'widgets/profile_input_card.dart';
 
-import 'package:velocity_x/velocity_x.dart';
-
-final getUserByIdProvider =
-    FutureProvider.family<UserModel?, String>((ref, id) {
-  return ref.read(profileRepoProvider).getUserById(id);
-});
+// import 'package:velocity_x/velocity_x.dart';
 
 @RoutePage()
 class ProfileView extends ConsumerStatefulWidget {
@@ -31,8 +26,7 @@ class ProfileView extends ConsumerStatefulWidget {
 class _ProfileViewState extends ConsumerState<ProfileView> {
   @override
   Widget build(BuildContext context) {
-    var userData =
-        ref.watch(ProfileController.userControllerProvider).userModel;
+    var userData = ref.watch(ProfileController.userControllerProvider).userModel;
 
     // logger.i(userData?.profileUrl);
 
@@ -43,28 +37,13 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
           return ListView(
             children: [
               AppBar(
-                // flexibleSpace: FlexibleSpaceBar(
-                //   centerTitle: true,
-                //   title: Text(
-                //     userData?.username ?? "",
-                //     style: const TextStyle(
-                //       color: Colors.white,
-                //       fontSize: 16.0,
-                //     ),
-                //   ),
-                //   background: Image.network(
-                //     userData!.profileUrl ?? "",
-                //     fit: BoxFit.cover,
-                //   ),
-                // ),
-
                 actions: [
                   IconButton(
                     icon: Icon(Icons.app_blocking),
                     onPressed: () {
-                      context.router.push(
-                        const UserBlockListRoute(),
-                      );
+                      FirebaseAuth.instance.signOut().then((value) {
+                        context.router.replaceAll([const SignOptionsRoute()]);
+                      });
                     },
                   ),
                 ],
@@ -73,35 +52,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
               ),
               Row(
                 children: [
-                  if (!sizingInformation.isMobile)
-                    Expanded(
-                      child: SizedBox(
-                          height: sizingInformation.screenSize.height,
-                          child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: NavigationRail(
-                                selectedIndex:
-                                    AutoTabsRouter.of(context).activeIndex,
-                                extended:
-                                    sizingInformation.isTablet ? false : true,
-                                onDestinationSelected: (value) {
-                                  AutoTabsRouter.of(context)
-                                      .setActiveIndex(value);
-                                },
-                                destinations: const [
-                                  NavigationRailDestination(
-                                      icon: Icon(Icons.home),
-                                      label: Text("Users")),
-                                  NavigationRailDestination(
-                                      icon: Icon(Icons.chat_bubble),
-                                      label: Text("Chat")),
-                                  NavigationRailDestination(
-                                    icon: Icon(Icons.person),
-                                    label: Text("Profile"),
-                                  ),
-                                ],
-                              ))),
-                    ),
+                  NavigationBarWidget(
+                    sizingInformation: sizingInformation,
+                  ),
                   Expanded(
                     flex: 4,
                     child: Column(
@@ -110,35 +63,49 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              20.heightBox,
+                              // 20.heightBox,
+                              SizedBox(height: 20),
+
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   CircleAvatar(
                                     radius: 50,
-                                    backgroundImage:
-                                        NetworkImage(userData.profileUrl ?? ""),
+                                    backgroundImage: NetworkImage(userData.profileUrl ?? ""),
                                   ),
-                                  10.widthBox,
+                                  // 10.widthBox,
+                                  SizedBox(width: 10),
+
                                   const Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [],
                                   ),
                                   const Spacer(),
-                                  ElevatedButton.icon(
-                                    onPressed: () async {
-                                      // await ref.read(profileRepoProvider).getUserList();
+                                  Column(
+                                    children: [
+                                      ElevatedButton.icon(
+                                        onPressed: () async {
+                                          context.router.push(const ProfileVisitsRoute());
+                                        },
+                                        icon: const Icon(Icons.visibility, size: 16),
+                                        label: const Text("Profile Visits"),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      ElevatedButton.icon(
+                                        onPressed: () async {
+                                          // await ref.read(profileRepoProvider).getUserList();
 
-                                      context.router.push(
-                                        EditProfileRoute(isEditProfile: true),
-                                      );
-                                    },
-                                    icon: const Icon(Icons.edit, size: 10),
-                                    label: const Text(
-                                      "Edit Profile",
-                                      // style: Theme.of(context).textTheme.bodySmall,
-                                    ),
+                                          context.router.push(
+                                            EditProfileRoute(isEditProfile: true),
+                                          );
+                                        },
+                                        icon: const Icon(Icons.edit, size: 10),
+                                        label: const Text(
+                                          "Edit Profile",
+                                          // style: Theme.of(context).textTheme.bodySmall,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -156,47 +123,28 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                                   fontSize: 25,
                                 ),
                               ),
-                              10.heightBox,
+                              // 10.heightBox,
+                              SizedBox(height: 10),
+
                               Text(
                                 userData.bio ?? "",
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
-                              20.heightBox,
+                              // 20.heightBox,
+                              SizedBox(height: 20),
+
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  ProfileInputCard(title: "Role", value: userData.role.value),
+                                  ProfileInputCard(title: "Body Type", value: userData.bodyType.value),
+                                  ProfileInputCard(title: "Ethnicity", value: userData.ethnicity.value),
                                   ProfileInputCard(
-                                      title: "Role",
-                                      value: userData.role.value),
-                                  Divider(),
-                                  ProfileInputCard(
-                                      title: "Body Type",
-                                      value: userData.bodyType.value),
-                                  Divider(),
-                                  ProfileInputCard(
-                                      title: "Ethnicity",
-                                      value: userData.ethnicity.value),
-                                  Divider(),
-                                  ProfileInputCard(
-                                      title: "Relationship Status",
-                                      value: userData.relationshipStatus.value),
-                                  Divider(),
-                                  ProfileInputCard(
-                                      title: "Looking for",
-                                      value: userData.lookingFor.value),
-                                  Divider(),
-                                  ProfileInputCard(
-                                      title: "Where to meet",
-                                      value: userData.whereToMeet.value),
-                                  Divider(),
-                                  ProfileInputCard(
-                                      title: "Height",
-                                      value: userData.height ?? "Do not Show"),
-                                  Divider(),
-                                  ProfileInputCard(
-                                      title: "Weight",
-                                      value: userData.weight ?? "Do not Show"),
-                                  Divider(),
+                                      title: "Relationship Status", value: userData.relationshipStatus.value),
+                                  ProfileInputCard(title: "Looking for", value: userData.lookingFor.value),
+                                  ProfileInputCard(title: "Where to meet", value: userData.whereToMeet.value),
+                                  ProfileInputCard(title: "Height", value: userData.height ?? "Do not Show"),
+                                  ProfileInputCard(title: "Weight", value: userData.weight ?? "Do not Show"),
                                 ],
                               ),
                             ],
@@ -212,44 +160,5 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
         }),
       ),
     );
-  }
-}
-
-class ProfileInputCard extends StatelessWidget {
-  const ProfileInputCard({
-    Key? key,
-    required this.title,
-    required this.value,
-  }) : super(key: key);
-
-  // final UserModel? userData;
-  final String title;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return value == "Do not Show"
-        ? const SizedBox.shrink()
-        : SizedBox(
-            height: 50,
-            // width: context.screenWidth - 300,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-              // mainAxisSize: MainAxisSize.min,
-              // mainAxisSize,
-              children: [
-                Text(title,
-                    style: const TextStyle(
-                      fontSize: 20,
-                    )),
-                Text(value,
-                    style: const TextStyle(
-                      fontSize: 15,
-                    )),
-              ],
-            ),
-          );
   }
 }

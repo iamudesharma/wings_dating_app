@@ -1,44 +1,47 @@
-import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:meta_seo/meta_seo.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-// import 'package:geoflutterfire2/geoflutterfire2.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:wings_dating_app/helpers/app_notification.dart';
 import 'package:wings_dating_app/helpers/helpers.dart';
-import 'package:wings_dating_app/repo/profile_repo.dart';
-import 'package:wings_dating_app/src/model/geo_point_data.dart';
-import 'package:wings_dating_app/src/users/widget/users_search_elegate.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:wings_dating_app/src/users/widget/tap_list_view.dart';
+import 'package:wings_dating_app/src/users/providers/paginated_users_provider.dart';
 
-import '../../const/app_const.dart';
-import '../../const/pref_util.dart';
-import '../../routes/app_router.dart';
 import '../model/user_models.dart';
 import '../profile/controller/profile_controller.dart';
 import 'widget/user_grid_item.dart';
 
-// final userListProvider = FutureProvider<List<UserModel>?>((ref) async {
-//   return ref.read(profileRepoProvider).getUserList();
-// });
+final user = FirebaseAuth.instance.currentUser;
+final DatabaseReference statusRef = FirebaseDatabase.instance.ref("status/${user!.uid}");
 
-final isUserOnlineProvider = FutureProvider.family<bool, bool>(
-  (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
-);
+final onlineStatus = {
+  "isOnline": true,
+  "lastSeen": ServerValue.timestamp,
+};
 
-final userListProvider = StreamProvider<List<UserModel?>?>((ref) => ref.read(profileRepoProvider).getUserList());
+final offlineStatus = {
+  "isOnline": false,
+  "lastSeen": ServerValue.timestamp,
+};
+
+void setPresence() {
+  statusRef.onDisconnect().set(offlineStatus).then((_) {
+    statusRef.set(onlineStatus);
+  });
+}
+
+// final isUserOnlineProvider = FutureProvider.family<bool, bool>(
+//   (ref, value) async => await ref.read(profileRepoProvider).isUserOnline(value),
+// );
 
 @RoutePage()
 class UsersView extends ConsumerStatefulWidget {
@@ -49,7 +52,7 @@ class UsersView extends ConsumerStatefulWidget {
 }
 
 class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserver {
-  late StreamSubscription<List<ConnectivityResult>> connectivityStateSubscription;
+  // late StreamSubscription<List<ConnectivityResult>> connectivityStateSubscription;
   AppLifecycleState? appState;
 
   Widget? nullWidget;
@@ -62,7 +65,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
         nullWidget = Center(
           child: Column(
             children: [
-              const Text("Plase enable location service"),
+              const Text("Please enable location service"),
               TextButton(
                 child: const Text("Enable"),
                 onPressed: () {
@@ -92,12 +95,6 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
     checkIfService();
 
-    init(AppConst.cubeappId, AppConst.authKey, AppConst.authSecret, onSessionRestore: () async {
-      SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
-      CubeUser? user = sharedPrefs.getUser();
-
-      return createSession(user);
-    });
     if (!kIsWeb) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         print('Got a message whilst in the foreground!');
@@ -111,272 +108,563 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
       });
     }
     WidgetsBinding.instance.addObserver(this);
+    setPresence();
 
     super.initState();
-
-    connectivityStateSubscription = Connectivity().onConnectivityChanged.listen((connectivityType) {
-      if (AppLifecycleState.resumed != appState) return;
-
-      if (connectivityType != ConnectivityResult.none) {
-        log("chatConnectionState = ${CubeChatConnection.instance.chatConnectionState}");
-        bool isChatDisconnected = CubeChatConnection.instance.chatConnectionState == CubeChatConnectionState.Closed ||
-            CubeChatConnection.instance.chatConnectionState == CubeChatConnectionState.ForceClosed;
-
-        if (isChatDisconnected && CubeChatConnection.instance.currentUser != null) {
-          CubeChatConnection.instance.relogin();
-        }
-      }
-    });
-
-    appState = WidgetsBinding.instance.lifecycleState;
-    WidgetsBinding.instance.addObserver(this);
 
     saveCubeUserInFirebase();
   }
 
-  saveCubeUserInFirebase() async {
-    final userModel = ref.read(ProfileController.userControllerProvider).userModel?.cubeUser;
-
-    SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
-    CubeUser? user = sharedPrefs.getUser();
-
-    if (userModel!.id == null) {
-      await ref.read(profileRepoProvider).updateCubeUserDoc(user!);
-    }
-  }
+  saveCubeUserInFirebase() async {}
 
   @override
   void dispose() {
-    connectivityStateSubscription.cancel();
+    // connectivityStateSubscription.cancel();
 
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    log("Current app state: $state");
-    appState = state;
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final statusRef = FirebaseDatabase.instance.ref("status/${FirebaseAuth.instance.currentUser!.uid}");
 
-    if (AppLifecycleState.paused == state) {
-      if (CubeChatConnection.instance.isAuthenticated()) {
-        CubeChatConnection.instance.markInactive();
-
-        await compute(ref.read(profileRepoProvider).isUserOnline, false);
-      }
-    } else if (AppLifecycleState.resumed == state) {
-      // // just for an example user was saved in the local storage
-      SharedPrefs.instance.init().then((sharedPrefs) async {
-        CubeUser? user = sharedPrefs.getUser();
-
-        if (user != null) {
-          if (!CubeChatConnection.instance.isAuthenticated()) {
-            CubeChatConnection.instance.login(user);
-          } else {
-            CubeChatConnection.instance.markActive();
-
-            await compute(ref.read(profileRepoProvider).isUserOnline, true);
-          }
-        }
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      statusRef.set({
+        "isOnline": false,
+        "lastSeen": ServerValue.timestamp,
+      });
+    } else if (state == AppLifecycleState.resumed) {
+      statusRef.set({
+        "isOnline": true,
+        "lastSeen": ServerValue.timestamp,
       });
     }
   }
 
+  Map<String, dynamic>? filters;
+
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-
-    SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
-
-    final _currentUser = ref.read(ProfileController.userControllerProvider).userModel;
-    // _loginToCubeChat(sharedPrefs.getUser()!);
-    if (_currentUser?.cubeUser.id == null) {
-      await ref.read(profileRepoProvider).updateUserDoc(_currentUser!.copyWith(
-            cubeUser: sharedPrefs.getUser()!,
-          ));
-    }
   }
 
   bool? isOnline = false;
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) {
-      // Define MetaSEO object
-      MetaSEO meta = MetaSEO();
-      // add meta seo data for web app as you want
-      meta.author(author: 'Eng Mouaz M AlShahmeh');
-      meta.description(description: 'Meta SEO Web Example');
-      meta.keywords(keywords: 'Flutter, Dart, SEO, Meta, Web');
-    }
-
     final userData = ref.watch(ProfileController.userControllerProvider).userModel;
-    final userList = ref.watch(userListProvider);
+    final usersProvider = paginatedUsersProvider(filters);
+    final usersState = ref.watch(usersProvider);
+    final usersNotifier = ref.watch(usersProvider.notifier);
+
+    // Load initial users
+    ref.listen(usersProvider, (prev, current) {
+      print('UsersView: ref.listen triggered');
+      print('UsersView: prev = $prev');
+      print('UsersView: current.users.length = ${current.users.length}');
+      print('UsersView: current.isLoading = ${current.isLoading}');
+      print('UsersView: current.error = ${current.error}');
+
+      // Check individual conditions
+      final prevIsNull = prev == null;
+      final usersIsEmpty = current.users.isEmpty;
+      final notLoading = !current.isLoading;
+
+      print('UsersView: prevIsNull = $prevIsNull');
+      print('UsersView: usersIsEmpty = $usersIsEmpty');
+      print('UsersView: notLoading = $notLoading');
+
+      if (prevIsNull && usersIsEmpty && notLoading) {
+        print('UsersView: All conditions met, triggering loadUsers');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          print('UsersView: Executing loadUsers(refresh: true) in post frame callback');
+          usersNotifier.loadUsers(refresh: true);
+        });
+      } else {
+        print('UsersView: Conditions not met, not triggering loadUsers');
+      }
+    });
+
+    // Alternative trigger - load users on first build if no users
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('UsersView: Post frame callback - checking if we need to load users');
+      print('UsersView: usersState.users.length = ${usersState.users.length}');
+      print('UsersView: usersState.isLoading = ${usersState.isLoading}');
+      print('UsersView: usersState.error = ${usersState.error}');
+
+      if (usersState.users.isEmpty && !usersState.isLoading && usersState.error == null) {
+        print('UsersView: Alternative trigger - loading users because list is empty and not loading');
+        usersNotifier.loadUsers(refresh: true);
+      } else {
+        print('UsersView: Alternative trigger - not loading users');
+      }
+    });
 
     return Scaffold(
-      body: RefreshIndicator.adaptive(
-        onRefresh: () async {
-          final currentLocation = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-
-          logger.d("currentLocation ${currentLocation.toJson()}");
-          final currentUser = userData?.position?.geopoint;
-
-          if (currentLocation.latitude != currentUser?.latitude &&
-              currentLocation.longitude != currentUser?.longitude) {
-            GeoFirePoint geoFirePoint = GeoFirePoint(GeoPoint(currentLocation.latitude, currentLocation.longitude));
-
-            await ref.read(profileRepoProvider).updateUserDoc(userData!.copyWith(
-                    position: GeoPointData(
-                  geohash: geoFirePoint.geohash,
-                  geopoint: geoFirePoint.geopoint,
-                )));
-
-            return ref.refresh(userListProvider);
-          } else {
-            return ref.refresh(userListProvider);
-          }
-        },
-        child: ResponsiveBuilder(builder: (context, sizingInformation) {
-          return nullWidget ??
-              CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: AppBar(
-                      leadingWidth: 40,
-                      leading: CircleAvatar(
-                        // radius: 25,
-                        // radius: 2,
-                        backgroundImage: CachedNetworkImageProvider(
-                            userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+      body: ResponsiveBuilder(builder: (context, sizingInformation) {
+        return nullWidget ??
+            CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: AppBar(
+                    leadingWidth: 40,
+                    leading: CircleAvatar(
+                      backgroundImage: CachedNetworkImageProvider(
+                          userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+                    ),
+                    title: Text(userData.username),
+                    actions: [
+                      IconButton(
+                        icon: Icon(Icons.whatshot),
+                        tooltip: 'View Taps',
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => TapListView(userId: userData.id),
+                            ),
+                          );
+                        },
                       ),
-                      title: Text(userData.username),
-                      actions: [
-                        SearchAnchor(
-                          viewBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                          viewSurfaceTintColor: Colors.black,
-                          builder: (context, controller) => InkWell(
-                              onTap: () {
-                                controller.openView();
-                              },
-                              child: const Icon(Icons.search)),
-                          suggestionsBuilder: (context, controller) {
-                            final userList = ref.watch(searchUsersProvider(controller.text));
-
-                            return [
-                              Container(
-                                child: userList.when(
-                                  loading: () => const Center(
-                                    child: CircularProgressIndicator.adaptive(),
-                                  ),
-                                  error: (error, stackTrace) => (error is Exception)
-                                      ? Center(
-                                          child: Text(error.toString()),
-                                        )
-                                      : Center(
-                                          child: Text(error.toString()),
-                                        ),
-                                  data: (data) => SizedBox(
-                                    height: MediaQuery.of(context).size.height,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: ListView.builder(
-                                      itemCount: data!.length,
-                                      itemBuilder: (context, index) {
-                                        final users = data[index];
-                                        return ListTile(
-                                          leading: CircleAvatar(
-                                            backgroundImage: CachedNetworkImageProvider(users!.profileUrl!),
-                                          ),
-                                          title: Text(users.username, style: const TextStyle(color: Colors.white)),
-                                          onTap: () {},
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ];
+                      InkWell(
+                          onTap: () {
+                            AutoRouter.of(context).push(const SearchUsersRoute());
                           },
-                          isFullScreen: sizingInformation.isMobile ? true : false,
-                        ),
-                      ],
-                    ),
+                          child: Icon(Icons.search)),
+                      SizedBox(width: 10),
+                      InkWell(
+                          onTap: () {
+                            AutoRouter.of(context).push(const FilterRoute()).then((result) {
+                              if (result != null && result is Map<String, dynamic>) {
+                                setState(() {
+                                  filters = result;
+                                });
+                                // Update filters and refresh
+                                usersNotifier.updateFilters(result);
+                                usersNotifier.loadUsers(refresh: true);
+                              }
+                            });
+                          },
+                          child: Icon(Icons.filter_list_alt)),
+                      SizedBox(width: 10),
+                    ],
                   ),
-                  SliverToBoxAdapter(
-                    child: Row(
-                      children: [
-                        if (!sizingInformation.isMobile)
-                          Expanded(
-                            child: SizedBox(
-                                height: sizingInformation.screenSize.height,
-                                child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: NavigationRail(
-                                      selectedIndex: AutoTabsRouter.of(context).activeIndex,
-                                      extended: sizingInformation.isTablet ? false : true,
-                                      onDestinationSelected: (value) {
-                                        AutoTabsRouter.of(context).setActiveIndex(value);
-                                      },
-                                      destinations: const [
-                                        NavigationRailDestination(icon: Icon(Icons.home), label: Text("Users")),
-                                        NavigationRailDestination(icon: Icon(Icons.chat_bubble), label: Text("Chat")),
-                                        NavigationRailDestination(icon: Icon(Icons.album_outlined), label: Text("Album")),
-
-                                        NavigationRailDestination(
-                                          icon: Icon(Icons.person),
-                                          label: Text("Profile"),
-                                        ),
-                                      ],
-                                    ))),
-                          ),
-                        Expanded(
-                          flex: 5,
-                          child: userList.when(
-                            loading: () => const Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
-                            error: (error, stackTrace) => (error is Exception)
-                                ? Center(
-                                    child: Text(error.toString()),
-                                  )
-                                : Center(
-                                    child: Text(error.toString()),
-                                  ),
-                            data: (data) => SizedBox(
-                              height: sizingInformation.screenSize.height,
-                              width: sizingInformation.screenSize.width,
-                              child: GridView.builder(
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: sizingInformation.isMobile
-                                      ? 3
-                                      : sizingInformation.isTablet
-                                          ? 4
-                                          : 5,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 10,
-                                ),
-                                itemBuilder: (context, index) {
-                                  final users = data[index];
-
-                                  return UserGridItem(
-                                    onTapEditProfile: () async {
-                                      AutoTabsRouter.of(context).setActiveIndex(2);
-                                    },
-                                    isCurrentUser: users?.id == userData.id ? true : false,
-                                    users: users!,
-                                  ).animate().shake();
-                                },
-                                itemCount: data!.length,
+                ),
+                SliverToBoxAdapter(
+                  child: Row(
+                    children: [
+                      NavigationBarWidget(
+                        sizingInformation: sizingInformation,
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: RefreshIndicator.adaptive(
+                          onRefresh: () async {
+                            final currentLocation = await Geolocator.getCurrentPosition(
+                              locationSettings: LocationSettings(
+                                accuracy: LocationAccuracy.high,
                               ),
-                            ),
-                          ),
+                            );
+
+                            logger.d("currentLocation ${currentLocation.toJson()}");
+                            await usersNotifier.refresh();
+                          },
+                          child: _buildUserGrid(sizingInformation, usersState, usersNotifier, userData),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+      }),
+    );
+  }
+
+  Widget _buildUserGrid(
+    SizingInformation sizingInformation,
+    PaginatedUsersState usersState,
+    PaginatedUsers usersNotifier,
+    UserModel userData,
+  ) {
+    if (usersState.isLoading && usersState.users.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator.adaptive(),
+            const SizedBox(height: 16),
+            Text(
+              'Discovering amazing people...',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (usersState.error != null && usersState.users.isEmpty) {
+      return Center(
+        child: Container(
+          margin: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.errorContainer,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 48,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Oops! Something went wrong',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onErrorContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                usersState.error!,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onErrorContainer,
+                    ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                onPressed: () => usersNotifier.loadUsers(refresh: true),
+                icon: const Icon(Icons.refresh),
+                label: const Text('Try Again'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (usersState.users.isEmpty) {
+      return Center(
+        child: Container(
+          margin: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Theme.of(context).colorScheme.primaryContainer,
+                Theme.of(context).colorScheme.secondaryContainer,
+              ],
+            ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.people_outline,
+                  size: 48,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'No users found',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Try adjusting your filters or check back later',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.8),
+                    ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollInfo) {
+        if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent &&
+            usersState.hasNext &&
+            !usersState.isLoadingMore) {
+          usersNotifier.loadMore();
+        }
+        return false;
+      },
+      child: Container(
+        height: sizingInformation.screenSize.height,
+        width: sizingInformation.screenSize.width,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              Theme.of(context).colorScheme.surface.withOpacity(0.8),
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(sizingInformation.isMobile ? 12 : 16),
+          child: Column(
+            children: [
+              // Header section
+              Container(
+                margin: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Discover People',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                              ),
+                        ),
+                        Text(
+                          '${usersState.users.length} people nearby',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+                              ),
                         ),
                       ],
                     ),
+                    if (usersState.hasNext)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          'More available',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+
+              // Users grid
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: sizingInformation.isMobile
+                      ? 2
+                      : sizingInformation.isTablet
+                          ? 3
+                          : 4,
+                  mainAxisSpacing: sizingInformation.isMobile ? 16 : 20,
+                  crossAxisSpacing: sizingInformation.isMobile ? 16 : 20,
+                  childAspectRatio: 0.68, // Adjusted to accommodate more content
+                ),
+                itemBuilder: (context, index) {
+                  final user = usersState.users[index];
+
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 15,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: UserGridItem(
+                      onTapEditProfile: () async {
+                        AutoTabsRouter.of(context).setActiveIndex(4);
+                      },
+                      isCurrentUser: user.id == userData.id,
+                      users: user,
+                      userCoordinates: userData.position != null
+                          ? GeoPoint(userData.position!.geopoint[1], userData.position!.geopoint[0])
+                          : null,
+                    ),
+                  )
+                      .animate()
+                      .fadeIn(duration: const Duration(milliseconds: 300))
+                      .slideY(begin: 0.2, end: 0, duration: const Duration(milliseconds: 400))
+                      .then(delay: const Duration(milliseconds: 100))
+                      .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.0, 1.0));
+                },
+                itemCount: usersState.users.length,
+              ),
+
+              // Loading more indicator
+              if (usersState.isLoadingMore)
+                Container(
+                  margin: const EdgeInsets.only(top: 24),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                ],
-              );
-        }),
+                  child: Column(
+                    children: [
+                      const CircularProgressIndicator.adaptive(),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Loading more amazing people...',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              // End of list message
+              if (!usersState.hasNext && usersState.users.isNotEmpty)
+                Container(
+                  margin: const EdgeInsets.only(top: 24),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                        Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.check_circle_outline,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        "You've seen everyone nearby!",
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
       ),
     );
+  }
+}
+
+class NavigationBarWidget extends StatelessWidget {
+  const NavigationBarWidget({
+    super.key,
+    required this.sizingInformation,
+  });
+  final SizingInformation sizingInformation;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!sizingInformation.isMobile) {
+      return Expanded(
+        child: SizedBox(
+          height: sizingInformation.screenSize.height,
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: ListenableBuilder(
+              listenable: AutoTabsRouter.of(context),
+              builder: (context, child) {
+                return NavigationRail(
+                  selectedIndex: AutoTabsRouter.of(context).activeIndex,
+                  extended: sizingInformation.isTablet ? false : true,
+                  onDestinationSelected: (value) {
+                    FirebaseAnalytics.instance.logEvent(
+                      name: 'navigation_rail_tapped',
+                      parameters: <String, Object>{
+                        'index': value as Object,
+                      },
+                    );
+                    AutoTabsRouter.of(context).setActiveIndex(value);
+                  },
+                  destinations: const [
+                    NavigationRailDestination(icon: Icon(Icons.home), label: Text("Users")),
+                    NavigationRailDestination(icon: Icon(Icons.chat_bubble), label: Text("Chat")),
+                    NavigationRailDestination(icon: Icon(Icons.album_outlined), label: Text("Album")),
+                    NavigationRailDestination(icon: Icon(Icons.add_card), label: Text("Matching")),
+                    NavigationRailDestination(icon: Icon(Icons.psychology), label: Text("AI Wingman")),
+                    NavigationRailDestination(icon: Icon(Icons.person), label: Text("Profile"))
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 }

@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,203 +10,33 @@ part of 'chat_contact.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-ChatContact _$ChatContactFromJson(Map<String, dynamic> json) {
-  return _ChatContact.fromJson(json);
-}
 
 /// @nodoc
 mixin _$ChatContact {
-  String get name => throw _privateConstructorUsedError;
-  String get profilePic => throw _privateConstructorUsedError;
-  String get contactId => throw _privateConstructorUsedError;
-  DateTime get timeSent => throw _privateConstructorUsedError;
-  String get lastMessage => throw _privateConstructorUsedError;
-  String get fcmToken => throw _privateConstructorUsedError;
-
-  /// Serializes this ChatContact to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String get name;
+  String get profilePic;
+  String get contactId;
+  DateTime get timeSent;
+  String get lastMessage;
+  String get fcmToken;
 
   /// Create a copy of ChatContact
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $ChatContactCopyWith<ChatContact> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+      _$ChatContactCopyWithImpl<ChatContact>(this as ChatContact, _$identity);
 
-/// @nodoc
-abstract class $ChatContactCopyWith<$Res> {
-  factory $ChatContactCopyWith(
-          ChatContact value, $Res Function(ChatContact) then) =
-      _$ChatContactCopyWithImpl<$Res, ChatContact>;
-  @useResult
-  $Res call(
-      {String name,
-      String profilePic,
-      String contactId,
-      DateTime timeSent,
-      String lastMessage,
-      String fcmToken});
-}
-
-/// @nodoc
-class _$ChatContactCopyWithImpl<$Res, $Val extends ChatContact>
-    implements $ChatContactCopyWith<$Res> {
-  _$ChatContactCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of ChatContact
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? profilePic = null,
-    Object? contactId = null,
-    Object? timeSent = null,
-    Object? lastMessage = null,
-    Object? fcmToken = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      profilePic: null == profilePic
-          ? _value.profilePic
-          : profilePic // ignore: cast_nullable_to_non_nullable
-              as String,
-      contactId: null == contactId
-          ? _value.contactId
-          : contactId // ignore: cast_nullable_to_non_nullable
-              as String,
-      timeSent: null == timeSent
-          ? _value.timeSent
-          : timeSent // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      lastMessage: null == lastMessage
-          ? _value.lastMessage
-          : lastMessage // ignore: cast_nullable_to_non_nullable
-              as String,
-      fcmToken: null == fcmToken
-          ? _value.fcmToken
-          : fcmToken // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$ChatContactImplCopyWith<$Res>
-    implements $ChatContactCopyWith<$Res> {
-  factory _$$ChatContactImplCopyWith(
-          _$ChatContactImpl value, $Res Function(_$ChatContactImpl) then) =
-      __$$ChatContactImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String name,
-      String profilePic,
-      String contactId,
-      DateTime timeSent,
-      String lastMessage,
-      String fcmToken});
-}
-
-/// @nodoc
-class __$$ChatContactImplCopyWithImpl<$Res>
-    extends _$ChatContactCopyWithImpl<$Res, _$ChatContactImpl>
-    implements _$$ChatContactImplCopyWith<$Res> {
-  __$$ChatContactImplCopyWithImpl(
-      _$ChatContactImpl _value, $Res Function(_$ChatContactImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of ChatContact
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? profilePic = null,
-    Object? contactId = null,
-    Object? timeSent = null,
-    Object? lastMessage = null,
-    Object? fcmToken = null,
-  }) {
-    return _then(_$ChatContactImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      profilePic: null == profilePic
-          ? _value.profilePic
-          : profilePic // ignore: cast_nullable_to_non_nullable
-              as String,
-      contactId: null == contactId
-          ? _value.contactId
-          : contactId // ignore: cast_nullable_to_non_nullable
-              as String,
-      timeSent: null == timeSent
-          ? _value.timeSent
-          : timeSent // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      lastMessage: null == lastMessage
-          ? _value.lastMessage
-          : lastMessage // ignore: cast_nullable_to_non_nullable
-              as String,
-      fcmToken: null == fcmToken
-          ? _value.fcmToken
-          : fcmToken // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$ChatContactImpl implements _ChatContact {
-  const _$ChatContactImpl(
-      {required this.name,
-      required this.profilePic,
-      required this.contactId,
-      required this.timeSent,
-      required this.lastMessage,
-      required this.fcmToken});
-
-  factory _$ChatContactImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ChatContactImplFromJson(json);
-
-  @override
-  final String name;
-  @override
-  final String profilePic;
-  @override
-  final String contactId;
-  @override
-  final DateTime timeSent;
-  @override
-  final String lastMessage;
-  @override
-  final String fcmToken;
-
-  @override
-  String toString() {
-    return 'ChatContact(name: $name, profilePic: $profilePic, contactId: $contactId, timeSent: $timeSent, lastMessage: $lastMessage, fcmToken: $fcmToken)';
-  }
+  /// Serializes this ChatContact to a JSON map.
+  Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ChatContactImpl &&
+            other is ChatContact &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.profilePic, profilePic) ||
                 other.profilePic == profilePic) &&
@@ -224,51 +55,208 @@ class _$ChatContactImpl implements _ChatContact {
   int get hashCode => Object.hash(runtimeType, name, profilePic, contactId,
       timeSent, lastMessage, fcmToken);
 
-  /// Create a copy of ChatContact
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$ChatContactImplCopyWith<_$ChatContactImpl> get copyWith =>
-      __$$ChatContactImplCopyWithImpl<_$ChatContactImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ChatContactImplToJson(
-      this,
-    );
+  String toString() {
+    return 'ChatContact(name: $name, profilePic: $profilePic, contactId: $contactId, timeSent: $timeSent, lastMessage: $lastMessage, fcmToken: $fcmToken)';
   }
 }
 
-abstract class _ChatContact implements ChatContact {
-  const factory _ChatContact(
-      {required final String name,
-      required final String profilePic,
-      required final String contactId,
-      required final DateTime timeSent,
-      required final String lastMessage,
-      required final String fcmToken}) = _$ChatContactImpl;
+/// @nodoc
+abstract mixin class $ChatContactCopyWith<$Res> {
+  factory $ChatContactCopyWith(
+          ChatContact value, $Res Function(ChatContact) _then) =
+      _$ChatContactCopyWithImpl;
+  @useResult
+  $Res call(
+      {String name,
+      String profilePic,
+      String contactId,
+      DateTime timeSent,
+      String lastMessage,
+      String fcmToken});
+}
 
-  factory _ChatContact.fromJson(Map<String, dynamic> json) =
-      _$ChatContactImpl.fromJson;
+/// @nodoc
+class _$ChatContactCopyWithImpl<$Res> implements $ChatContactCopyWith<$Res> {
+  _$ChatContactCopyWithImpl(this._self, this._then);
+
+  final ChatContact _self;
+  final $Res Function(ChatContact) _then;
+
+  /// Create a copy of ChatContact
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? profilePic = null,
+    Object? contactId = null,
+    Object? timeSent = null,
+    Object? lastMessage = null,
+    Object? fcmToken = null,
+  }) {
+    return _then(_self.copyWith(
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      profilePic: null == profilePic
+          ? _self.profilePic
+          : profilePic // ignore: cast_nullable_to_non_nullable
+              as String,
+      contactId: null == contactId
+          ? _self.contactId
+          : contactId // ignore: cast_nullable_to_non_nullable
+              as String,
+      timeSent: null == timeSent
+          ? _self.timeSent
+          : timeSent // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      lastMessage: null == lastMessage
+          ? _self.lastMessage
+          : lastMessage // ignore: cast_nullable_to_non_nullable
+              as String,
+      fcmToken: null == fcmToken
+          ? _self.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _ChatContact implements ChatContact {
+  const _ChatContact(
+      {required this.name,
+      required this.profilePic,
+      required this.contactId,
+      required this.timeSent,
+      required this.lastMessage,
+      required this.fcmToken});
+  factory _ChatContact.fromJson(Map<String, dynamic> json) =>
+      _$ChatContactFromJson(json);
 
   @override
-  String get name;
+  final String name;
   @override
-  String get profilePic;
+  final String profilePic;
   @override
-  String get contactId;
+  final String contactId;
   @override
-  DateTime get timeSent;
+  final DateTime timeSent;
   @override
-  String get lastMessage;
+  final String lastMessage;
   @override
-  String get fcmToken;
+  final String fcmToken;
 
   /// Create a copy of ChatContact
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ChatContactImplCopyWith<_$ChatContactImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  _$ChatContactCopyWith<_ChatContact> get copyWith =>
+      __$ChatContactCopyWithImpl<_ChatContact>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$ChatContactToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _ChatContact &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.profilePic, profilePic) ||
+                other.profilePic == profilePic) &&
+            (identical(other.contactId, contactId) ||
+                other.contactId == contactId) &&
+            (identical(other.timeSent, timeSent) ||
+                other.timeSent == timeSent) &&
+            (identical(other.lastMessage, lastMessage) ||
+                other.lastMessage == lastMessage) &&
+            (identical(other.fcmToken, fcmToken) ||
+                other.fcmToken == fcmToken));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, profilePic, contactId,
+      timeSent, lastMessage, fcmToken);
+
+  @override
+  String toString() {
+    return 'ChatContact(name: $name, profilePic: $profilePic, contactId: $contactId, timeSent: $timeSent, lastMessage: $lastMessage, fcmToken: $fcmToken)';
+  }
 }
+
+/// @nodoc
+abstract mixin class _$ChatContactCopyWith<$Res>
+    implements $ChatContactCopyWith<$Res> {
+  factory _$ChatContactCopyWith(
+          _ChatContact value, $Res Function(_ChatContact) _then) =
+      __$ChatContactCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String name,
+      String profilePic,
+      String contactId,
+      DateTime timeSent,
+      String lastMessage,
+      String fcmToken});
+}
+
+/// @nodoc
+class __$ChatContactCopyWithImpl<$Res> implements _$ChatContactCopyWith<$Res> {
+  __$ChatContactCopyWithImpl(this._self, this._then);
+
+  final _ChatContact _self;
+  final $Res Function(_ChatContact) _then;
+
+  /// Create a copy of ChatContact
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? name = null,
+    Object? profilePic = null,
+    Object? contactId = null,
+    Object? timeSent = null,
+    Object? lastMessage = null,
+    Object? fcmToken = null,
+  }) {
+    return _then(_ChatContact(
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      profilePic: null == profilePic
+          ? _self.profilePic
+          : profilePic // ignore: cast_nullable_to_non_nullable
+              as String,
+      contactId: null == contactId
+          ? _self.contactId
+          : contactId // ignore: cast_nullable_to_non_nullable
+              as String,
+      timeSent: null == timeSent
+          ? _self.timeSent
+          : timeSent // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      lastMessage: null == lastMessage
+          ? _self.lastMessage
+          : lastMessage // ignore: cast_nullable_to_non_nullable
+              as String,
+      fcmToken: null == fcmToken
+          ? _self.fcmToken
+          : fcmToken // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+// dart format on

@@ -1,16 +1,46 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart' as firebase_database;
+// import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta_seo/meta_seo.dart';
-import 'package:velocity_x/velocity_x.dart';
-import 'package:wings_dating_app/helpers/logger.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+// import 'package:velocity_x/velocity_x.dart';
+import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
-import 'package:wings_dating_app/src/profile/profile_view.dart';
+import 'package:wings_dating_app/src/profile/providers/profile_providers.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:responsive_builder/responsive_builder.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:wings_dating_app/src/ai_wingman/providers/profile_analysis_provider.dart';
 
-import '../../routes/app_router.dart';
+import '../../helpers/responsive_layout.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
+part 'other_user_profile_view.g.dart';
+
+@riverpod
+class Fav extends _$Fav {
+  Future<void> addUserToFavorite(String id) async {
+    await ref.read(profileRepoProvider).addUserToFavorite(id);
+    // Refresh state to reflect the addition
+    state = AsyncValue.data(true);
+  }
+
+  Future<void> removeUserFromFavorite(String id) async {
+    await ref.read(profileRepoProvider).removeUserFromFavorite(id);
+    // Refresh state to reflect the removal
+    state = AsyncValue.data(false);
+  }
+
+  @override
+  Future<bool> build(String id) async {
+    return await isUserFavorite(id);
+  }
+}
 
 @RoutePage()
 class OtherUserProfileView extends ConsumerStatefulWidget {
@@ -24,210 +54,772 @@ class OtherUserProfileView extends ConsumerStatefulWidget {
   final bool? isCurrentUser;
 
   @override
-  ConsumerState<OtherUserProfileView> createState() =>
-      _OtherUserProfileViewState();
+  ConsumerState<OtherUserProfileView> createState() => _OtherUserProfileViewState();
+}
+
+class _NoScrollbarBehavior extends ScrollBehavior {
+  @override
+  Widget buildScrollbar(BuildContext context, Widget child, ScrollableDetails details) {
+    // Disable material scrollbars on all platforms
+    return child;
+  }
+
+  @override
+  Widget buildOverscrollIndicator(BuildContext context, Widget child, ScrollableDetails details) {
+    // Disable the glow effect
+    return child;
+  }
 }
 
 class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
+  bool hasTapped = false;
+  String tapError = '';
+
+  @override
+  void initState() {
+    super.initState();
+    print('DEBUG: OtherUserProfileView initState called for user ID: ${widget.id}');
+    Future.delayed(Duration.zero, () async {
+      print('DEBUG: Starting async operations in initState');
+      // Record profile visit first, which might give us the tap status
+      await _recordProfileVisit();
+      // Then check tap status as fallback if not already set
+      await _checkTapStatus();
+    });
+  }
+
+  Future<void> _recordProfileVisit() async {
+    print('DEBUG: _recordProfileVisit called - UPDATED');
+    final currentUser = ref.read(ProfileController.userControllerProvider).userModel;
+    final viewedUserId = widget.id;
+
+    print('DEBUG: Current user: ${currentUser?.id}, Viewed user: $viewedUserId');
+
+    if (currentUser == null) {
+      print('DEBUG: No current user - skipping visit recording');
+      return;
+    }
+
+    if (viewedUserId == null) {
+      print('DEBUG: No viewed user ID - skipping visit recording');
+      return;
+    }
+
+    if (currentUser.id == viewedUserId) {
+      print('DEBUG: Self-visit detected - skipping visit recording');
+      return;
+    }
+
+    try {
+      print('DEBUG: Recording profile visit - Viewer: ${currentUser.id}, Viewed: $viewedUserId');
+      final result = await ref.read(profileRepoProvider).visitProfile(viewedUserId);
+      print('DEBUG: Profile visit recorded successfully: ${result.toString()}');
+
+      // Check if the response includes engagement status
+      if (result.engagementStatus != null) {
+        final engagementStatus = result.engagementStatus!;
+        print('DEBUG: Found engagement status in visit response: ${engagementStatus.toString()}');
+
+        setState(() {
+          hasTapped = engagementStatus.hasTapped;
+        });
+        print('DEBUG: Updated hasTapped from visit response: $hasTapped');
+      }
+    } catch (e) {
+      print('DEBUG: Error recording profile visit: $e');
+    }
+  }
+
+  Future<void> _checkTapStatus() async {
+    print('DEBUG: _checkTapStatus called - UPDATED');
+    final currentUser = ref.read(ProfileController.userControllerProvider).userModel;
+    final viewedUserId = widget.id;
+    if (currentUser == null || viewedUserId == null) return;
+
+    // Only check tap status if we haven't already got it from the profile visit
+    if (hasTapped) {
+      print('DEBUG: Tap status already known from profile visit');
+      return;
+    }
+
+    try {
+      // Fallback: Fetch tap stats for the viewed user
+      final tapStats = await ref.read(profileRepoProvider).getUserTapStats(viewedUserId);
+      print("DEBUG: Fallback tap stats: $tapStats");
+
+      // Check both new format (engagementStatus) and old format (tappedBy array)
+      bool tapStatus = false;
+
+      if (tapStats.engagementStatus != null) {
+        tapStatus = tapStats.engagementStatus!.hasTapped;
+        print('DEBUG: Got tap status from new format: $tapStatus');
+      } else if (tapStats.tappedBy.contains(currentUser.id)) {
+        // Fallback to old format
+        tapStatus = true;
+        print('DEBUG: Got tap status from old format: $tapStatus');
+      }
+
+      setState(() {
+        hasTapped = tapStatus;
+      });
+    } catch (e) {
+      print('DEBUG: Error checking tap status: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // var userData;
-    // if (widget.isCurrentUser!) {
-    var currentUser =
-        ref.watch(ProfileController.userControllerProvider).userModel;
-    // } else {
-    var otherUser = ref.watch(getUserByIdProvider(widget.id!));
-    // }
-
-    return WillPopScope(
-      onWillPop: () {
-        AutoRouter.of(context).back();
-        return Future.value(true);
+    FirebaseAnalytics.instance.logEvent(
+      name: 'user_profile_view',
+      parameters: <String, Object>{
+        'user_id': widget.id as Object,
       },
-      child: Scaffold(
-        body: otherUser.when(
-          loading: () => const Center(
-            child: CircularProgressIndicator.adaptive(),
-          ),
-          error: (error, stackTrace) => (error is Exception)
-              ? const Center(
-                  child: Text("User not found"),
-                )
-              : const Center(
-                  child: Text("Something went wrong"),
-                ),
-          data: (userData) {
-            if (kIsWeb) {
-              MetaSEO meta = MetaSEO();
+    );
+    final currentUser = ref.watch(ProfileController.userControllerProvider).userModel;
+    final otherUser = ref.watch(getUserByIdProvider(widget.id!));
+    final refData = firebase_database.FirebaseDatabase.instance.ref('status/${widget.id}');
 
-              meta.author(author: userData!.username);
-              meta.description(description: userData.bio ?? "No Bio");
-              meta.keywords(
-                keywords: userData.bodyType.value,
-              );
-              meta.ogImage(
-                  ogImage: userData.profileUrl ??
-                      "https://img.icons8.com/ios/500/null.png");
-            }
-            return CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  pinned: true,
-
-                  actions: [
-                    PopupMenuButton<int>(
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          onTap: () async {
-                            // await ref
-                            //     .read(userListProvider.notifier)
-                            //     .addToBlockList(userData!.id);
-
-                            // ignore: use_build_context_synchronously
-                            context.router.maybePop();
-                            // AutoRouter.of(context).replace(const DashboardRoute());
-                          },
-                          value: 1,
-                          // row has two child icon and text.
-                          child: const Row(
-                            children: [
-                              Icon(Icons.block),
-                              SizedBox(
-                                // sized box with width 10
-                                width: 10,
-                              ),
-                              Text("Block")
-                            ],
-                          ),
-                        ),
-                        // popupmenu item 2
-                        const PopupMenuItem(
-                          value: 2,
-                          // row has two child icon and text
-                          child: Row(
-                            children: [
-                              Icon(Icons.chrome_reader_mode),
-                              SizedBox(
-                                // sized box with width 10
-                                width: 10,
-                              ),
-                              Text("About")
-                            ],
-                          ),
-                        ),
-                      ],
-                      offset: const Offset(0, 100),
-                      color: Colors.grey,
-                      elevation: 2,
-                    ),
+    return ResponsiveBuilder(
+      builder: (context, sizingInformation) {
+        final isDesktop = sizingInformation.isDesktop;
+        final isTablet = sizingInformation.isTablet;
+        final bool isWide = isDesktop || isTablet;
+        final double maxWidth = isDesktop
+            ? 980
+            : isTablet
+                ? 720
+                : double.infinity;
+        return Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(56),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(context).colorScheme.primary.withOpacity(0.08),
+                    Theme.of(context).colorScheme.secondary.withOpacity(0.08),
                   ],
-                  // centerTitle: true,
-                  title: Text(userData!.username),
                 ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: 250,
-                      width: MediaQuery.of(context).size.width,
-                      child: CachedNetworkImage(
-                        // color: Colors.white,
-                        imageUrl: (userData.profileUrl ??
-                            "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                        fit: BoxFit.contain,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => context.router.maybePop(),
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  Expanded(
+                    child: otherUser.when(
+                      data: (userData) => Text(
+                        userData?.username ?? "Profile",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      loading: () => const Text("Profile"),
+                      error: (_, __) => const Text("Profile"),
                     ),
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "About",
-                          style: Theme.of(context).textTheme.titleLarge,
+                  // AI Chat Analysis Button
+                  otherUser.when(
+                    data: (userData) => userData != null
+                        ? IconButton(
+                            icon: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Theme.of(context).colorScheme.primary,
+                                    Theme.of(context).colorScheme.secondary,
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.psychology,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                            tooltip: "Get AI Dating Analysis",
+                            onPressed: () async {
+                              // Set the profile data for analysis
+                              triggerProfileAnalysis(ref, userData);
+
+                              // Navigate directly to the standalone AI Analysis screen
+                              context.router.push(AIAnalysisRoute());
+                            },
+                          )
+                        : const SizedBox.shrink(),
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, __) => const SizedBox.shrink(),
+                  ),
+                  otherUser.when(
+                    data: (userData) => PopupMenuButton<int>(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          onTap: () => context.router.maybePop(),
+                          value: 1,
+                          child: const Row(
+                            children: [Icon(Icons.block), SizedBox(width: 10), Text("Block")],
+                          ),
                         ),
-                        10.heightBox,
-                        Text(
-                          userData.bio ?? "",
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        20.heightBox,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ProfileInputCard(
-                                title: "Role", value: userData.role.value),
-                            ProfileInputCard(
-                                title: "Body Type",
-                                value: userData.bodyType.value),
-                            ProfileInputCard(
-                                title: "Ethnicity",
-                                value: userData.ethnicity.value),
-                            ProfileInputCard(
-                                title: "Relationship Status",
-                                value: userData.relationshipStatus.value),
-                            ProfileInputCard(
-                                title: "Looking for",
-                                value: userData.lookingFor.value),
-                            ProfileInputCard(
-                                title: "Where to meet",
-                                value: userData.whereToMeet.value),
-                            ProfileInputCard(
-                                title: "Height",
-                                value: userData.height ?? "Do not Show"),
-                            ProfileInputCard(
-                                title: "Weight",
-                                value: userData.weight ?? "Do not Show"),
-                          ],
+                        const PopupMenuItem(
+                          value: 2,
+                          child: Row(
+                            children: [Icon(Icons.chrome_reader_mode), SizedBox(width: 10), Text("About")],
+                          ),
                         ),
                       ],
+                      color: Theme.of(context).colorScheme.surface,
+                      elevation: 2,
                     ),
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, __) => const SizedBox.shrink(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxWidth),
+              child: otherUser.when(
+                loading: () => const Center(child: CircularProgressIndicator.adaptive()),
+                error: (error, stackTrace) => (error is Exception)
+                    ? const Center(child: Text("User not found"))
+                    : const Center(child: Text("Something went wrong")),
+                data: (userData) {
+                  if (userData == null) {
+                    return const Center(child: Text("User not found"));
+                  }
+                  if (kIsWeb) {
+                    MetaSEO meta = MetaSEO();
+                    meta.author(author: userData.username);
+                    meta.description(description: userData.bio ?? "No Bio");
+                    meta.keywords(keywords: userData.bodyType.value);
+                    meta.ogImage(ogImage: userData.profileUrl ?? "https://img.icons8.com/ios/500/null.png");
+                  }
+
+                  return ScrollConfiguration(
+                    behavior: _NoScrollbarBehavior(),
+                    child: ListView(
+                      padding: EdgeInsets.symmetric(
+                        vertical: isDesktop
+                            ? 32
+                            : isTablet
+                                ? 24
+                                : 16,
+                        horizontal: isDesktop
+                            ? 24
+                            : isTablet
+                                ? 16
+                                : 12,
+                      ),
+                      children: [
+                        // Modern profile header
+                        _buildProfileHeader(context, userData, refData, isWide),
+                        const SizedBox(height: 16),
+
+                        // About section
+                        _buildSectionCard(
+                          context,
+                          title: 'About',
+                          child: Text(
+                            userData.bio?.trim().isNotEmpty == true ? userData.bio!.trim() : 'No bio provided',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Details grid
+                        _buildDetailsGrid(context, userData, isWide),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: otherUser.when(
+              data: (userData) => Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      icon: Icon(
+                        Icons.whatshot,
+                        color: hasTapped ? Colors.red : Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      label: Text(
+                        hasTapped ? "Tapped" : "Tap",
+                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                      ),
+                      onPressed: hasTapped
+                          ? null
+                          : () async {
+                              try {
+                                final tapResponse = await ref.read(profileRepoProvider).sendTap(userData!.id);
+                                setState(() {
+                                  hasTapped = true;
+                                  tapError = '';
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(tapResponse.message)),
+                                );
+                              } catch (e) {
+                                if (e.toString().contains('already tapped')) {
+                                  setState(() {
+                                    hasTapped = true;
+                                    tapError = 'You have already tapped this user today';
+                                  });
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Failed to send tap: ${e.toString()}')),
+                                );
+                              }
+                            },
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      icon: Icon(Icons.chat_bubble, color: Theme.of(context).colorScheme.onPrimary),
+                      label: (currentUser != null && userData != null && currentUser.blockList.contains(userData.id))
+                          ? Text("Unblock", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
+                          : Text("Message", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+                      onPressed: () async {
+                        // Todo: create chat one to one chat
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildProfileHeader(
+      BuildContext context, dynamic userData, firebase_database.DatabaseReference refData, bool isWide) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Theme.of(context).colorScheme.primary.withOpacity(0.12),
+            Theme.of(context).colorScheme.secondary.withOpacity(0.12),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: isWide
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildAvatar(context, userData),
+                const SizedBox(width: 20),
+                Expanded(child: _buildHeaderInfo(context, userData, refData)),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildAvatar(context, userData),
+                const SizedBox(height: 16),
+                _buildHeaderInfo(context, userData, refData),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildAvatar(BuildContext context, dynamic userData) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
+          ),
+        ],
+        border: Border.all(
+          color: Theme.of(context).colorScheme.background,
+          width: 6,
+        ),
+      ),
+      child: ClipOval(
+        child: (userData.profileUrl != null && userData.profileUrl!.isNotEmpty)
+            ? CachedNetworkImage(
+                imageUrl: userData.profileUrl!,
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+              )
+            : Container(
+                width: 120,
+                height: 120,
+                color: Theme.of(context).colorScheme.surfaceVariant,
+                child: Icon(Icons.person, size: 60, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+              ),
+      ),
+    );
+  }
+
+  Widget _buildHeaderInfo(BuildContext context, dynamic userData, firebase_database.DatabaseReference refData) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                userData.username ?? 'Profile',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            _buildFavoriteButton(context, userData),
+          ],
+        ),
+        const SizedBox(height: 6),
+        // Online badge
+        StreamBuilder<firebase_database.DatabaseEvent>(
+          stream: refData.onValue,
+          builder: (context, snapshot) {
+            bool isOnline = false;
+            Timestamp? lastSeen;
+            if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+              final data = snapshot.data!.snapshot.value as Map;
+              isOnline = data['isOnline'] == true;
+              lastSeen = data['lastSeen'] != null ? Timestamp.fromMillisecondsSinceEpoch(data['lastSeen']) : null;
+            }
+            return Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: isOnline ? Colors.green.withOpacity(0.15) : Colors.amber.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isOnline ? Colors.greenAccent : Colors.amberAccent,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.circle,
+                        size: 8,
+                        color: isOnline ? Colors.greenAccent : Colors.amberAccent,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        isOnline
+                            ? 'Online'
+                            : lastSeen != null
+                                ? 'Last seen: '
+                                    '${timeago.format(DateTime.fromMillisecondsSinceEpoch(lastSeen.millisecondsSinceEpoch))}'
+                                : 'Offline',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             );
           },
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton.icon(
-              icon: const Icon(Icons.chat_bubble),
-              label: currentUser!.blockList.contains(otherUser.value?.id)
-                  ? const Text("Unblock")
-                  : const Text("Message"),
-              onPressed: () async {
-                _createDialog(
-                    context,
-                    {
-                      currentUser.cubeUser.id ?? 0,
-                      otherUser.value!.cubeUser.id ?? 0
-                    },
-                    currentUser.cubeUser.id ?? 0);
-              }),
+        const SizedBox(height: 10),
+        // Chips
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            _buildChip(context, Icons.person, userData.role.value),
+            _buildChip(context, Icons.favorite, userData.relationshipStatus.value),
+            _buildChip(context, Icons.search, userData.lookingFor.value),
+            _buildChip(context, Icons.place, userData.whereToMeet.value),
+          ],
         ),
+      ],
+    );
+  }
+
+  Widget _buildFavoriteButton(BuildContext context, dynamic userData) {
+    return Consumer(builder: (context, ref, child) {
+      final isFav = ref.watch(favProvider(widget.id!));
+      return isFav.when(
+        error: (_, __) => const SizedBox(),
+        loading: () => const SizedBox(),
+        data: (value) => Tooltip(
+          message: value ? 'Favorited' : 'Favorite',
+          child: InkWell(
+            borderRadius: BorderRadius.circular(30),
+            onTap: () async {
+              final favNotifier = ref.read(favProvider(widget.id!).notifier);
+              if (value) {
+                await favNotifier.removeUserFromFavorite(widget.id!);
+              } else {
+                await favNotifier.addUserToFavorite(widget.id!);
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: value
+                    ? Theme.of(context).colorScheme.primary.withOpacity(0.12)
+                    : Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: value ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.outlineVariant,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    value ? Icons.favorite : Icons.favorite_border,
+                    color: value
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    size: 18,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    value ? 'Favorited' : 'Favorite',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: value
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildChip(BuildContext context, IconData icon, String value) {
+    if (value.isEmpty || value == 'Do not show' || value == 'Do not Show') return const SizedBox.shrink();
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(width: 6),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  void _createDialog(BuildContext context, Set<int> users, int current) async {
-    log("_createDialog with users= $users");
+  Widget _buildSectionCard(BuildContext context, {required String title, required Widget child}) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.info_outline, color: Theme.of(context).colorScheme.primary, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          child,
+        ],
+      ),
+    );
+  }
 
-    CubeDialog newDialog =
-        CubeDialog(CubeDialogType.PRIVATE, occupantsIds: users.toList());
-    await createDialog(newDialog).then((createdDialog) async {
-      await AutoRouter.of(context).push(
-        ChatRoute(
-          cubeUserId: current,
-          chatUserCubeId: users.where((element) => element != current).first,
-          cubeDialog: createdDialog,
+  Widget _buildDetailsGrid(BuildContext context, dynamic userData, bool isWide) {
+    final details = <(IconData, String, String)>[
+      (Icons.person, 'Role', userData.role.value),
+      (Icons.accessibility_new, 'Body Type', userData.bodyType.value),
+      (Icons.people, 'Ethnicity', userData.ethnicity.value),
+      (Icons.favorite, 'Relationship Status', userData.relationshipStatus.value),
+      (Icons.search, 'Looking for', userData.lookingFor.value),
+      (Icons.place, 'Where to meet', userData.whereToMeet.value),
+      (Icons.height, 'Height', userData.height ?? 'Do not Show'),
+      (Icons.monitor_weight, 'Weight', userData.weight ?? 'Do not Show'),
+    ];
+
+    final filtered = details.where((d) => d.$3.isNotEmpty && d.$3 != 'Do not show' && d.$3 != 'Do not Show').toList();
+
+    return _buildSectionCard(
+      context,
+      title: 'Details',
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final crossAxisCount = isWide ? 3 : 2;
+          return GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 3.2,
+            ),
+            itemCount: filtered.length,
+            itemBuilder: (context, index) {
+              final item = filtered[index];
+              return _detailTile(context, item.$1, item.$2, item.$3);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _detailTile(BuildContext context, IconData icon, String title, String value) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.primary.withOpacity(0.06),
+            Theme.of(context).colorScheme.secondary.withOpacity(0.06),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-      );
-    }).catchError((error) {
-      logger.e(error);
-    });
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
+            ),
+            child: Icon(icon, size: 16, color: Theme.of(context).colorScheme.primary),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center, // Center text vertically within tile
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

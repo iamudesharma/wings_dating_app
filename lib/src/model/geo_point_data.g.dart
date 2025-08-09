@@ -6,15 +6,16 @@ part of 'geo_point_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$GeoPointDataImpl _$$GeoPointDataImplFromJson(Map<String, dynamic> json) =>
-    _$GeoPointDataImpl(
-      geopoint:
-          const GeoPointConverter().fromJson(json['geopoint'] as GeoPoint),
-      geohash: json['geohash'] as String,
+_GeoPointData _$GeoPointDataFromJson(Map<String, dynamic> json) =>
+    _GeoPointData(
+      geopoint: (json['coordinates'] as List<dynamic>)
+          .map((e) => (e as num).toDouble())
+          .toList(),
+      type: json['type'] as String? ?? "Point",
     );
 
-Map<String, dynamic> _$$GeoPointDataImplToJson(_$GeoPointDataImpl instance) =>
+Map<String, dynamic> _$GeoPointDataToJson(_GeoPointData instance) =>
     <String, dynamic>{
-      'geopoint': const GeoPointConverter().toJson(instance.geopoint),
-      'geohash': instance.geohash,
+      'coordinates': instance.geopoint,
+      'type': instance.type,
     };

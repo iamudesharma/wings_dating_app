@@ -1,25 +1,23 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectycube_sdk/connectycube_sdk.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wings_dating_app/repo/profile_repo.dart';
 
 import 'package:wings_dating_app/src/model/user_models.dart';
+import 'package:wings_dating_app/src/model/engagement_models.dart';
 
-import '../../../dependency/dependenies.dart';
+import '../../../dependency/dependencies.dart';
 import '../../../helpers/extra_data.dart';
 import '../../../helpers/helpers.dart';
 
 // part 'profile_controller.g.dart';
-
-
 
 final _userControllerProvider = ChangeNotifierProvider<ProfileController>(
   (ref) {
@@ -28,11 +26,10 @@ final _userControllerProvider = ChangeNotifierProvider<ProfileController>(
 );
 
 class ProfileController extends ChangeNotifier {
-  static ChangeNotifierProvider<ProfileController> userControllerProvider =
-      _userControllerProvider;
+  static ChangeNotifierProvider<ProfileController> userControllerProvider = _userControllerProvider;
   UserModel? userModel;
 
-  String? profileImage;
+  Uint8List? profileImage;
 
   List<String> albumImages = [];
 
@@ -48,10 +45,8 @@ class ProfileController extends ChangeNotifier {
 
   Future updateUserData(UserModel user) async {
     await ref.read(Dependency.profileProvider).updateUserDoc(user);
-  }
-
-  Future updateCubeUserData(CubeUser user) async {
-    await ref.read(Dependency.profileProvider).updateCubeUserDoc(user);
+    userModel = await ref.read(Dependency.profileProvider).getCurrentUser();
+    notifyListeners();
   }
 
   Future<void> pickImage({required ImageSource imageSource}) async {
@@ -67,8 +62,8 @@ class ProfileController extends ChangeNotifier {
           .read(Dependency.firebaseStorageProvider)
           .ref("profileImages")
           .child("${DateTime.now().millisecondsSinceEpoch.toString()}.jpg")
-          .putFile(
-            File(profileImage!),
+          .putData(
+            profileImage!,
             SettableMetadata(contentType: 'image/jpeg'),
           )
           .then((p0) async {
@@ -81,47 +76,51 @@ class ProfileController extends ChangeNotifier {
     }
   }
 
-  Future<String?> pickImageFromAlbum(ImageSource source) async {
+  Future<Uint8List?> pickImageFromAlbum(ImageSource source) async {
     final image = await pickImageForm(source);
     ImagePicker().pickMultiImage();
 
     return image;
   }
 
-  String getDistance(GeoPoint coordinates) {
+  String getDistance(GeoPoint coordinates, {GeoPoint? userCoordinates}) {
     final data = Geolocator.distanceBetween(
-      userModel!.position!.geopoint.latitude,
-      userModel!.position!.geopoint.longitude,
+      userCoordinates?.latitude ?? userModel!.position!.geopoint[1],
+      userCoordinates?.longitude ?? userModel!.position!.geopoint[0],
       coordinates.latitude,
       coordinates.longitude,
     );
-    // final data = GeoFirePoint.distanceBetween(
-    //   from: Coordinates(
-    //     userModel!.position!.geopoint.latitude,
-    //     userModel!.position!.geopoint.longitude,
-    //   ),
-    //   to: coordinates,
-    // );
 
     return meterToKm(data);
   }
 
-  Future<void> removeFromBlockList(
-      {required String id, required int cubeId}) async {
-    await ref
-        .read(Dependency.profileProvider)
-        .removeToBlockList(id: id, cubeId: cubeId);
+  Future<void> removeFromBlockList({required String id, required int cubeId}) async {
+    await ref.read(Dependency.profileProvider).removeToBlockList(id: id, cubeId: cubeId);
   }
 
   Future<void> addToBlockList({required String id, required int cubeId}) async {
-    await ref
-        .read(Dependency.profileProvider)
-        .removeToBlockList(id: id, cubeId: cubeId);
+    await ref.read(Dependency.profileProvider).removeToBlockList(id: id, cubeId: cubeId);
+  }
+
+  /// Call this when a user visits another user's profile
+  Future<void> visitProfile(String targetUserId) async {
+    await ref.read(Dependency.profileProvider).visitProfile(targetUserId);
+  }
+
+  /// Get the list of profiles the current user has visited
+  Future<List<VisitRecord>> getVisitedProfiles() async {
+    final response = await ref.read(Dependency.profileProvider).getVisitedProfiles();
+    return response.visits;
+  }
+
+  /// Get the list of users who have visited the current user's profile
+  Future<List<VisitRecord>> getProfileVisitors() async {
+    final response = await ref.read(Dependency.profileProvider).getProfileVisitors();
+    return response.visits;
   }
 }
 
 String meterToKm(double meter) {
-  // change metre to km if greater than 1000 meters
   if (meter > 1000) {
     return '${(meter / 1000).toStringAsFixed(0)} Kms';
   } else {
@@ -131,29 +130,29 @@ String meterToKm(double meter) {
 
 final roleProvider = StateProvider<Role>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.role;
+  return userdata?.role ?? Role.doNotShow;
 });
 
 final bodyTypeProvider = StateProvider<BodyType>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.bodyType;
+  return userdata?.bodyType ?? BodyType.doNotShow;
 });
 
 final relationshipStatusProvider = StateProvider<RelationshipStatus>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.relationshipStatus;
+  return userdata?.relationshipStatus ?? RelationshipStatus.doNotShow;
 });
 
 final ethnicityProvider = StateProvider<Ethnicity>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.ethnicity;
+  return userdata?.ethnicity ?? Ethnicity.doNotShow;
 });
 final lookingForProvider = StateProvider<LookingFor>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.lookingFor;
+  return userdata?.lookingFor ?? LookingFor.doNotShow;
 });
 
 final whereToMeetProvider = StateProvider<WhereToMeet>((ref) {
   final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata!.whereToMeet;
+  return userdata?.whereToMeet ?? WhereToMeet.doNotShow;
 });

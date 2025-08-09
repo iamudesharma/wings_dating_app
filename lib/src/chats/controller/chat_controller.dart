@@ -9,12 +9,12 @@ final _chatController = ChangeNotifierProvider<ChatController>((ref) {
 });
 
 class ChatController extends ChangeNotifier {
- static ChangeNotifierProvider<ChatController> get provider => _chatController;
+  static ChangeNotifierProvider<ChatController> get provider => _chatController;
   final Ref ref;
 
   ChatController(this.ref);
 
-  Future<String?> pickImage({required ImageSource imageSource}) async {
+  Future<Uint8List?> pickImage({required ImageSource imageSource}) async {
     final image = await pickImageForm(imageSource);
 
     return image;

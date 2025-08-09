@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script defer src="sql-wasm.js"></script>
+    <script defer src="main.dart.js" type="application/javascript"></script>
+</head>
+<body></body>
+</html>

@@ -3,10 +3,12 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  desktop_drop
   desktop_webview_auth
   emoji_picker_flutter
   file_selector_linux
-  flutter_webrtc
+  media_kit_video
+  record_linux
   url_launcher_linux
 )
 

@@ -753,84 +753,85 @@
 //     return _localVideoView!;
 //   }
 
-//   List<Widget> renderStreamsGrid(Orientation orientation) {
-//     List<Widget> streamsExpanded = [];
+//   // List<Widget> renderStreamsGrid(Orientation orientation) {
+//   //   List<Widget> streamsExpanded = [];
 
-//     if (_localMediaStream != null) {
-//       streamsExpanded.add(_localVideoView == null
-//           ? FutureBuilder<Widget>(
-//               future: _needRebuildLocalVideoView
-//                   ? _buildLocalVideoItem()
-//                   : Future.value(_localVideoView),
-//               builder: (context, snapshot) {
-//                 if (snapshot.hasData) {
-//                   return snapshot.data!;
-//                 } else {
-//                   return Expanded(child: Container());
-//                 }
-//               })
-//           : _localVideoView != null
-//               ? _localVideoView!
-//               : Expanded(child: Container()));
-//     }
+//   //   if (_localMediaStream != null) {
+//   //     streamsExpanded.add(_localVideoView == null
+//   //         ? FutureBuilder<Widget>(
+//   //             future: _needRebuildLocalVideoView
+//   //                 ? _buildLocalVideoItem()
+//   //                 : Future.value(_localVideoView),
+//   //             builder: (context, snapshot) {
+//   //               if (snapshot.hasData) {
+//   //                 return snapshot.data!;
+//   //               } else {
+//   //                 return Expanded(child: Container());
+//   //               }
+//   //             })
+//   //         : _localVideoView != null
+//   //             ? _localVideoView!
+//   //             : Expanded(child: Container()));
+//   //   }
 
-//     if (remoteRenderers.isEmpty) {
-//       // streamsExpanded
-//       //     .addAll(CallManager.instance.remoteStreams.entries.map((entry) {
-//         var videoRenderer = RTCVideoRenderer();
-//         var initialisationFuture = videoRenderer.initialize().then((_) {
-//           // videoRenderer.srcObject = entry.value;
-//           return videoRenderer;
-//         });
+//   //   if (remoteRenderers.isEmpty) {
+//   //     // streamsExpanded
+//   //     //     .addAll(CallManager.instance.remoteStreams.entries.map((entry) {
+//   //       var videoRenderer = RTCVideoRenderer();
+//   //       var initialisationFuture = videoRenderer.initialize().then((_) {
+//   //         // videoRenderer.srcObject = entry.value;
+//   //         return videoRenderer;
+//   //       });
 
-//         return FutureBuilder<RTCVideoRenderer>(
-//           future: initialisationFuture,
-//           builder: (context, snapshot) {
-//             if (snapshot.hasData) {
-//               return buildRemoteVideoItem(entry.key, snapshot.data!);
-//             } else {
-//               return Expanded(
-//                   child: Container(
-//                 child: const Text('Waiting...'),
-//               ));
-//             }
-//           },
-//         );
-//       }));
-//     } else {
-//       streamsExpanded.addAll(remoteRenderers.entries
-//           .map(
-//             (entry) => buildRemoteVideoItem(entry.key, entry.value),
-//           )
-//           .toList());
-//     }
+//   //       return FutureBuilder<RTCVideoRenderer>(
 
-//     if (streamsExpanded.length > 2) {
-//       List<Widget> rows = [];
+//   //         future: initialisationFuture,
+//   //         builder: (context, snapshot) {
+//   //           if (snapshot.hasData) {
+//   //             return buildRemoteVideoItem(entry.key, snapshot.data!);
+//   //           } else {
+//   //             return Expanded(
+//   //                 child: Container(
+//   //               child: const Text('Waiting...'),
+//   //             ));
+//   //           }
+//   //         },
+//   //       );
+//   //     }));
+//   //   } else {
+//   //     streamsExpanded.addAll(remoteRenderers.entries
+//   //         .map(
+//   //           (entry) => buildRemoteVideoItem(entry.key, entry.value),
+//   //         )
+//   //         .toList());
+//   //   }
 
-//       for (var i = 0; i < streamsExpanded.length; i += 2) {
-//         var chunkEndIndex = i + 2;
+//   //   if (streamsExpanded.length > 2) {
+//   //     List<Widget> rows = [];
 
-//         if (streamsExpanded.length < chunkEndIndex) {
-//           chunkEndIndex = streamsExpanded.length;
-//         }
+//   //     for (var i = 0; i < streamsExpanded.length; i += 2) {
+//   //       var chunkEndIndex = i + 2;
 
-//         var chunk = streamsExpanded.sublist(i, chunkEndIndex);
+//   //       if (streamsExpanded.length < chunkEndIndex) {
+//   //         chunkEndIndex = streamsExpanded.length;
+//   //       }
 
-//         rows.add(
-//           Expanded(
-//             child: orientation == Orientation.portrait
-//                 ? Row(children: chunk)
-//                 : Column(children: chunk),
-//           ),
-//         );
-//       }
+//   //       var chunk = streamsExpanded.sublist(i, chunkEndIndex);
 
-//       return rows;
-//     }
+//   //       rows.add(
+//   //         Expanded(
+//   //           child: orientation == Orientation.portrait
+//   //               ? Row(children: chunk)
+//   //               : Column(children: chunk),
+//   //         ),
+//   //       );
+//   //     }
 
-//     return streamsExpanded;
-//   }
+//   //     return rows;
+//   //   }
+
+//   //   return streamsExpanded;
+//   // }
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -1018,16 +1019,18 @@
 //     logger.i("onDisconnectedFromUser userId= $userId");
 //     _removeMediaStream(session, userId);
 //   }
-  
+
 //   @override
 //   void onConnectingToUser(P2PSession session, int userId) {
 //     // TODO: implement onConnectingToUser
 //   }
-  
+
 //   @override
 //   void onConnectionFailedWithUser(P2PSession session, int userId) {
 //     // TODO: implement onConnectionFailedWithUser
 //   }
+
+//   renderStreamsGrid(Orientation orientation) {}
 // }
 
 // Future<bool> initForegroundService() async {

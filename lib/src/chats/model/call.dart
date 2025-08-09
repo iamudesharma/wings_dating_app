@@ -22,7 +22,7 @@ part 'call.freezed.dart';
 // }
 
 @freezed
-class Call with _$Call {
+abstract class Call with _$Call {
   const factory Call({
     required String callerId,
     required String callerName,
