@@ -14,6 +14,8 @@ import 'package:wings_dating_app/src/profile/controller/profile_controller.dart'
 import 'package:wings_dating_app/src/profile/providers/profile_providers.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:wings_dating_app/src/ai_wingman/providers/profile_analysis_provider.dart';
 
 import '../../helpers/responsive_layout.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -53,6 +55,20 @@ class OtherUserProfileView extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<OtherUserProfileView> createState() => _OtherUserProfileViewState();
+}
+
+class _NoScrollbarBehavior extends ScrollBehavior {
+  @override
+  Widget buildScrollbar(BuildContext context, Widget child, ScrollableDetails details) {
+    // Disable material scrollbars on all platforms
+    return child;
+  }
+
+  @override
+  Widget buildOverscrollIndicator(BuildContext context, Widget child, ScrollableDetails details) {
+    // Disable the glow effect
+    return child;
+  }
 }
 
 class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
@@ -167,17 +183,34 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
       builder: (context, sizingInformation) {
         final isDesktop = sizingInformation.isDesktop;
         final isTablet = sizingInformation.isTablet;
+        final bool isWide = isDesktop || isTablet;
         final double maxWidth = isDesktop
-            ? 700
+            ? 980
             : isTablet
-                ? 550
+                ? 720
                 : double.infinity;
         return Scaffold(
           backgroundColor: Theme.of(context).colorScheme.background,
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(56),
             child: Container(
-              color: Theme.of(context).colorScheme.background,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(context).colorScheme.primary.withOpacity(0.08),
+                    Theme.of(context).colorScheme.secondary.withOpacity(0.08),
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
               child: Row(
                 children: [
                   IconButton(
@@ -187,11 +220,57 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                   ),
                   Expanded(
                     child: otherUser.when(
-                      data: (userData) =>
-                          Text(userData?.username ?? "Profile", style: Theme.of(context).textTheme.titleLarge),
+                      data: (userData) => Text(
+                        userData?.username ?? "Profile",
+                        style: Theme.of(context).textTheme.titleLarge,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       loading: () => const Text("Profile"),
                       error: (_, __) => const Text("Profile"),
                     ),
+                  ),
+                  // AI Chat Analysis Button
+                  otherUser.when(
+                    data: (userData) => userData != null
+                        ? IconButton(
+                            icon: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Theme.of(context).colorScheme.primary,
+                                    Theme.of(context).colorScheme.secondary,
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.psychology,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                            tooltip: "Get AI Dating Analysis",
+                            onPressed: () async {
+                              // Set the profile data for analysis
+                              triggerProfileAnalysis(ref, userData);
+
+                              // Navigate directly to the standalone AI Analysis screen
+                              context.router.push(AIAnalysisRoute());
+                            },
+                          )
+                        : const SizedBox.shrink(),
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, __) => const SizedBox.shrink(),
                   ),
                   otherUser.when(
                     data: (userData) => PopupMenuButton<int>(
@@ -239,225 +318,46 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                     meta.keywords(keywords: userData.bodyType.value);
                     meta.ogImage(ogImage: userData.profileUrl ?? "https://img.icons8.com/ios/500/null.png");
                   }
-                  return ListView(
-                    padding: EdgeInsets.symmetric(
-                      vertical: isDesktop
-                          ? 32
-                          : isTablet
-                              ? 24
-                              : 16,
-                      horizontal: isDesktop
-                          ? 32
-                          : isTablet
-                              ? 24
-                              : 8,
-                    ),
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 16),
-                          Center(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.25),
-                                    blurRadius: 24,
-                                    offset: const Offset(0, 8),
-                                  ),
-                                ],
-                                border: Border.all(
-                                  color: Theme.of(context).colorScheme.background,
-                                  width: 6,
-                                ),
-                              ),
-                              child: ClipOval(
-                                child: (userData.profileUrl != null && userData.profileUrl!.isNotEmpty)
-                                    ? CachedNetworkImage(
-                                        imageUrl: userData.profileUrl!,
-                                        width: 140,
-                                        height: 140,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) => Container(
-                                          width: 140,
-                                          height: 140,
-                                          color: Theme.of(context).colorScheme.surfaceVariant,
-                                          child: Icon(Icons.person,
-                                              size: 60,
-                                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
-                                        ),
-                                        errorWidget: (context, url, error) => Container(
-                                          width: 140,
-                                          height: 140,
-                                          color: Theme.of(context).colorScheme.surfaceVariant,
-                                          child: Icon(Icons.person,
-                                              size: 60,
-                                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
-                                        ),
-                                      )
-                                    : Container(
-                                        width: 140,
-                                        height: 140,
-                                        color: Theme.of(context).colorScheme.surfaceVariant,
-                                        child: Icon(Icons.person,
-                                            size: 60, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
-                                      ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Consumer(builder: (context, ref, child) {
-                            final isFav = ref.watch(favProvider(widget.id!));
-                            return isFav.when(
-                                error: (_, __) => const SizedBox(),
-                                loading: () => const SizedBox(),
-                                data: (value) => Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        borderRadius: BorderRadius.circular(30),
-                                        onTap: () async {
-                                          final favNotifier = ref.read(favProvider(widget.id!).notifier);
-                                          if (value) {
-                                            await favNotifier.removeUserFromFavorite(widget.id!);
-                                          } else {
-                                            await favNotifier.addUserToFavorite(widget.id!);
-                                          }
-                                        },
-                                        child: AnimatedContainer(
-                                          duration: const Duration(milliseconds: 300),
-                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                          decoration: BoxDecoration(
-                                            color: value
-                                                ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-                                                : Theme.of(context).colorScheme.surfaceVariant,
-                                            borderRadius: BorderRadius.circular(30),
-                                            border: Border.all(
-                                              color: value
-                                                  ? Theme.of(context).colorScheme.primary
-                                                  : Theme.of(context).colorScheme.outline,
-                                              width: 1.5,
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(
-                                                value ? Icons.favorite : Icons.favorite_border,
-                                                color: value
-                                                    ? Theme.of(context).colorScheme.primary
-                                                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              Text(
-                                                value ? 'Favorited' : 'Favorite',
-                                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                                      color: value
-                                                          ? Theme.of(context).colorScheme.primary
-                                                          : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ));
-                          }),
-                          const SizedBox(height: 24),
-                          Card(
-                            elevation: 6,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                            color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  StreamBuilder<firebase_database.DatabaseEvent>(
-                                    stream: refData.onValue,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        bool isOnline = false;
-                                        Timestamp? lastSeen;
-                                        if (snapshot.data!.snapshot.value != null) {
-                                          final data = snapshot.data!.snapshot.value as Map;
-                                          isOnline = data['isOnline'];
-                                          lastSeen = data['lastSeen'] != null
-                                              ? Timestamp.fromMillisecondsSinceEpoch(data['lastSeen'])
-                                              : null;
-                                        } else {
-                                          isOnline = false;
-                                        }
-                                        return Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 7,
-                                              backgroundColor: isOnline ? Colors.green : Colors.amber,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            isOnline == false && lastSeen != null
-                                                ? Text(
-                                                    "Last seen: ${timeago.format(DateTime.fromMillisecondsSinceEpoch(lastSeen.millisecondsSinceEpoch))}",
-                                                    style: const TextStyle(fontSize: 13, color: Colors.black54),
-                                                  )
-                                                : Text(
-                                                    isOnline ? "Online" : "Offline",
-                                                    style: const TextStyle(fontSize: 13, color: Colors.black54),
-                                                  ),
-                                          ],
-                                        );
-                                      }
-                                      return const SizedBox(height: 20);
-                                    },
-                                  ),
-                                  const SizedBox(height: 18),
-                                  Text(
-                                    "About",
-                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                        fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    userData.bio ?? "",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 24),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.primary.withOpacity(0.07),
-                                      borderRadius: BorderRadius.circular(18),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        _profileDetailRow(Icons.person, "Role", userData.role.value),
-                                        _profileDetailRow(
-                                            Icons.accessibility_new, "Body Type", userData.bodyType.value),
-                                        _profileDetailRow(Icons.people, "Ethnicity", userData.ethnicity.value),
-                                        _profileDetailRow(
-                                            Icons.favorite, "Relationship Status", userData.relationshipStatus.value),
-                                        _profileDetailRow(Icons.search, "Looking for", userData.lookingFor.value),
-                                        _profileDetailRow(Icons.place, "Where to meet", userData.whereToMeet.value),
-                                        _profileDetailRow(Icons.height, "Height", userData.height ?? "Do not Show"),
-                                        _profileDetailRow(
-                                            Icons.monitor_weight, "Weight", userData.weight ?? "Do not Show"),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+
+                  return ScrollConfiguration(
+                    behavior: _NoScrollbarBehavior(),
+                    child: ListView(
+                      padding: EdgeInsets.symmetric(
+                        vertical: isDesktop
+                            ? 32
+                            : isTablet
+                                ? 24
+                                : 16,
+                        horizontal: isDesktop
+                            ? 24
+                            : isTablet
+                                ? 16
+                                : 12,
                       ),
-                    ],
+                      children: [
+                        // Modern profile header
+                        _buildProfileHeader(context, userData, refData, isWide),
+                        const SizedBox(height: 16),
+
+                        // About section
+                        _buildSectionCard(
+                          context,
+                          title: 'About',
+                          child: Text(
+                            userData.bio?.trim().isNotEmpty == true ? userData.bio!.trim() : 'No bio provided',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Details grid
+                        _buildDetailsGrid(context, userData, isWide),
+                      ],
+                    ),
                   );
                 },
               ),
@@ -478,9 +378,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                       ),
                       icon: Icon(
                         Icons.whatshot,
-                        color: hasTapped
-                            ? Colors.red // or Colors.yellow for fire effect
-                            : Theme.of(context).colorScheme.onPrimary,
+                        color: hasTapped ? Colors.red : Theme.of(context).colorScheme.onPrimary,
                       ),
                       label: Text(
                         hasTapped ? "Tapped" : "Tap",
@@ -541,24 +439,383 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
     );
   }
 
-  Widget _profileDetailRow(IconData icon, String title, String? value) {
-    if (value == null) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
+  Widget _buildProfileHeader(
+      BuildContext context, dynamic userData, firebase_database.DatabaseReference refData, bool isWide) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Theme.of(context).colorScheme.primary.withOpacity(0.12),
+            Theme.of(context).colorScheme.secondary.withOpacity(0.12),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: isWide
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildAvatar(context, userData),
+                const SizedBox(width: 20),
+                Expanded(child: _buildHeaderInfo(context, userData, refData)),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildAvatar(context, userData),
+                const SizedBox(height: 16),
+                _buildHeaderInfo(context, userData, refData),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildAvatar(BuildContext context, dynamic userData) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
+          ),
+        ],
+        border: Border.all(
+          color: Theme.of(context).colorScheme.background,
+          width: 6,
+        ),
+      ),
+      child: ClipOval(
+        child: (userData.profileUrl != null && userData.profileUrl!.isNotEmpty)
+            ? CachedNetworkImage(
+                imageUrl: userData.profileUrl!,
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+              )
+            : Container(
+                width: 120,
+                height: 120,
+                color: Theme.of(context).colorScheme.surfaceVariant,
+                child: Icon(Icons.person, size: 60, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+              ),
+      ),
+    );
+  }
+
+  Widget _buildHeaderInfo(BuildContext context, dynamic userData, firebase_database.DatabaseReference refData) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                userData.username ?? 'Profile',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            _buildFavoriteButton(context, userData),
+          ],
+        ),
+        const SizedBox(height: 6),
+        // Online badge
+        StreamBuilder<firebase_database.DatabaseEvent>(
+          stream: refData.onValue,
+          builder: (context, snapshot) {
+            bool isOnline = false;
+            Timestamp? lastSeen;
+            if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+              final data = snapshot.data!.snapshot.value as Map;
+              isOnline = data['isOnline'] == true;
+              lastSeen = data['lastSeen'] != null ? Timestamp.fromMillisecondsSinceEpoch(data['lastSeen']) : null;
+            }
+            return Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: isOnline ? Colors.green.withOpacity(0.15) : Colors.amber.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isOnline ? Colors.greenAccent : Colors.amberAccent,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.circle,
+                        size: 8,
+                        color: isOnline ? Colors.greenAccent : Colors.amberAccent,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        isOnline
+                            ? 'Online'
+                            : lastSeen != null
+                                ? 'Last seen: '
+                                    '${timeago.format(DateTime.fromMillisecondsSinceEpoch(lastSeen.millisecondsSinceEpoch))}'
+                                : 'Offline',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        const SizedBox(height: 10),
+        // Chips
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            _buildChip(context, Icons.person, userData.role.value),
+            _buildChip(context, Icons.favorite, userData.relationshipStatus.value),
+            _buildChip(context, Icons.search, userData.lookingFor.value),
+            _buildChip(context, Icons.place, userData.whereToMeet.value),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFavoriteButton(BuildContext context, dynamic userData) {
+    return Consumer(builder: (context, ref, child) {
+      final isFav = ref.watch(favProvider(widget.id!));
+      return isFav.when(
+        error: (_, __) => const SizedBox(),
+        loading: () => const SizedBox(),
+        data: (value) => Tooltip(
+          message: value ? 'Favorited' : 'Favorite',
+          child: InkWell(
+            borderRadius: BorderRadius.circular(30),
+            onTap: () async {
+              final favNotifier = ref.read(favProvider(widget.id!).notifier);
+              if (value) {
+                await favNotifier.removeUserFromFavorite(widget.id!);
+              } else {
+                await favNotifier.addUserToFavorite(widget.id!);
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: value
+                    ? Theme.of(context).colorScheme.primary.withOpacity(0.12)
+                    : Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: value ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.outlineVariant,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    value ? Icons.favorite : Icons.favorite_border,
+                    color: value
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    size: 18,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    value ? 'Favorited' : 'Favorite',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: value
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildChip(BuildContext context, IconData icon, String value) {
+    if (value.isEmpty || value == 'Do not show' || value == 'Do not Show') return const SizedBox.shrink();
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(width: 6),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionCard(BuildContext context, {required String title, required Widget child}) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.info_outline, color: Theme.of(context).colorScheme.primary, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          child,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailsGrid(BuildContext context, dynamic userData, bool isWide) {
+    final details = <(IconData, String, String)>[
+      (Icons.person, 'Role', userData.role.value),
+      (Icons.accessibility_new, 'Body Type', userData.bodyType.value),
+      (Icons.people, 'Ethnicity', userData.ethnicity.value),
+      (Icons.favorite, 'Relationship Status', userData.relationshipStatus.value),
+      (Icons.search, 'Looking for', userData.lookingFor.value),
+      (Icons.place, 'Where to meet', userData.whereToMeet.value),
+      (Icons.height, 'Height', userData.height ?? 'Do not Show'),
+      (Icons.monitor_weight, 'Weight', userData.weight ?? 'Do not Show'),
+    ];
+
+    final filtered = details.where((d) => d.$3.isNotEmpty && d.$3 != 'Do not show' && d.$3 != 'Do not Show').toList();
+
+    return _buildSectionCard(
+      context,
+      title: 'Details',
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final crossAxisCount = isWide ? 3 : 2;
+          return GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 3.2,
+            ),
+            itemCount: filtered.length,
+            itemBuilder: (context, index) {
+              final item = filtered[index];
+              return _detailTile(context, item.$1, item.$2, item.$3);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _detailTile(BuildContext context, IconData icon, String title, String value) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.primary.withOpacity(0.06),
+            Theme.of(context).colorScheme.secondary.withOpacity(0.06),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+      ),
       child: Row(
         children: [
-          Icon(icon, color: Theme.of(context).colorScheme.primary, size: 22),
-          const SizedBox(width: 12),
-          Text(
-            title + ':',
-            style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
+            ),
+            child: Icon(icon, size: 16, color: Theme.of(context).colorScheme.primary),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
           Expanded(
-            child: Text(
-              value,
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 15),
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center, // Center text vertically within tile
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ],
             ),
           ),
         ],

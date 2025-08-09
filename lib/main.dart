@@ -14,6 +14,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 //
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 // ignore: depend_on_referenced_packages
 import 'package:google_mobile_ads/google_mobile_ads.dart' show MobileAds;
@@ -25,11 +26,12 @@ import 'package:wings_dating_app/routes/app_router_provider.dart';
 import 'package:wings_dating_app/services/chat_services.dart';
 // import 'package:wings_dating_app/routes/navigation_observers.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:wings_dating_app/src/ai_wingman/services/gemma_model_manager.dart';
 
 import 'firebase_options.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+// GetIt getIt = GetIt.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,7 +64,6 @@ void main() async {
   // GemmaModelManager.initializeAtAppStartup(); // Proper async initialization
 
   // SharedPrefs no longer needs explicit initialization
-  print("SharedPrefs ready");
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -93,7 +94,6 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     final appRouter = ref.watch(appRouteProvider);
     return MaterialApp.router(
-      
       builder: (context, child) => StreamChat(
         client: ref.read(chatClientProvider),
         child: child,

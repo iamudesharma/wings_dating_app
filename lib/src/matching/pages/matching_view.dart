@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:wings_dating_app/src/users/users_view.dart'; // Import UsersView for NavigationBarWidget
-
-// TODO: Define a provider to fetch potential matches if needed
-// For now, let's reuse the userListProvider for demonstration
-import 'package:wings_dating_app/src/users/users_view.dart' show userListProvider;
+import 'package:wings_dating_app/src/matching/providers/matching_providers.dart';
+import 'package:wings_dating_app/src/users/users_view.dart' show NavigationBarWidget;
+import 'package:wings_dating_app/src/users/widget/user_grid_item.dart';
+import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
 @RoutePage()
 class MatchingView extends ConsumerStatefulWidget {
@@ -17,10 +17,20 @@ class MatchingView extends ConsumerStatefulWidget {
 }
 
 class _MatchingViewState extends ConsumerState<MatchingView> {
+  GeoPoint? _currentUserGeoPoint() {
+    final userData = ref.read(ProfileController.userControllerProvider).userModel;
+    final coords = userData?.position?.geopoint;
+    if (coords != null && coords.length >= 2) {
+      // GeoPoint expects (lat, lon) while stored order is [lon, lat]
+      return GeoPoint(coords[1], coords[0]);
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // For demonstration, reusing the userListProvider. Replace with actual matching logic provider.
-    // final potentialMatches = ref.watch(userListProvider({}));
+    final discovery = ref.watch(discoveryControllerProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
       body: ResponsiveBuilder(
@@ -30,84 +40,198 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
               SliverToBoxAdapter(
                 child: AppBar(
                   title: const Text("Matching"),
-                  // Add actions if needed
+                  actions: [
+                    discovery.when(
+                      data: (data) => Tooltip(
+                        message: data.isCooldown ? _cooldownTooltip(data.nextAvailableAt) : 'Refresh matches',
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.refresh,
+                            color: data.isCooldown
+                                ? theme.colorScheme.onSurface.withOpacity(0.4)
+                                : theme.colorScheme.primary,
+                          ),
+                          onPressed: data.isCooldown
+                              ? null
+                              : () async {
+                                  await ref.read(discoveryControllerProvider.notifier).refreshIfAllowed();
+                                },
+                        ),
+                      ),
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, __) => IconButton(
+                        icon: const Icon(Icons.refresh),
+                        onPressed: () => ref.read(discoveryControllerProvider.notifier).refreshIfAllowed(),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SliverToBoxAdapter(
                 child: Row(
                   children: [
-                    // Include the NavigationRail/Bar from UsersView for consistent navigation
+                    // Include the NavigationRail/Bar for consistent layout
                     NavigationBarWidget(
                       sizingInformation: sizingInformation,
                     ),
                     Expanded(
                       flex: 5,
-                      child: Container(),
-                    )
-                    // Expanded(
-                    //   flex: 5,
-                    //   child: potentialMatches.when(
-                    //     loading: () => const Center(
-                    //       child: CircularProgressIndicator.adaptive(),
-                    //     ),
-                    //     error: (error, stackTrace) => Center(
-                    //       child: Text("Error loading matches: $error"),
-                    //     ),
-                    //     data: (data) {
-                    //       if (data == null || data.isEmpty) {
-                    //         return const Center(
-                    //           child: Text("No potential matches found."),
-                    //         );
-                    //       }
-                    //       // Display the list of potential matches
-                    //       return SizedBox(
-                    //         height: sizingInformation.screenSize.height - kToolbarHeight, // Adjust height as needed
-                    //         width: sizingInformation.screenSize.width,
-                    //         child: ListView.builder(
-                    //           itemCount: data.length,
-                    //           itemBuilder: (context, index) {
-                    //             final user = data[index];
-                    //             if (user == null) return const SizedBox.shrink(); // Handle null users if necessary
-                    //             return ListTile(
-                    //               leading: CircleAvatar(
-                    //                 backgroundImage: NetworkImage(user.profileUrl ??
-                    //                     "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                    //               ),
-                    //               title: Text(user.username),
-                    //               // Add trailing actions like 'like', 'dislike' buttons
-                    //               trailing: Row(
-                    //                 mainAxisSize: MainAxisSize.min,
-                    //                 children: [
-                    //                   IconButton(
-                    //                     icon: const Icon(Icons.favorite_border, color: Colors.red),
-                    //                     onPressed: () {
-                    //                       // Handle like action
-                    //                     },
-                    //                   ),
-                    //                   IconButton(
-                    //                     icon: const Icon(Icons.close, color: Colors.grey),
-                    //                     onPressed: () {
-                    //                       // Handle dislike action
-                    //                     },
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //               onTap: () {
-                    //                 // Optional: Navigate to user profile or details
-                    //               },
-                    //             );
-                    //           },
-                    //         ),
-                    //       );
-                    //     },
-                    //   ),
-                    // ),
+                      child: discovery.when(
+                        loading: () => const Center(
+                            child: Padding(
+                          padding: EdgeInsets.all(24.0),
+                          child: CircularProgressIndicator.adaptive(),
+                        )),
+                        error: (err, st) => _ErrorCard(
+                          message: 'Failed to load matches',
+                          onRetry: () => ref.read(discoveryControllerProvider.notifier).refreshIfAllowed(),
+                        ),
+                        data: (data) {
+                          if (data.users.isEmpty) {
+                            return _EmptyCard(
+                              isCooldown: data.isCooldown,
+                              nextAt: data.nextAvailableAt,
+                              onRefresh: () => ref.read(discoveryControllerProvider.notifier).refreshIfAllowed(),
+                            );
+                          }
+
+                          // Grid of up to 10 users
+                          final currentGeo = _currentUserGeoPoint();
+                          final crossAxisCount = sizingInformation.isDesktop
+                              ? 4
+                              : sizingInformation.isTablet
+                                  ? 3
+                                  : 2;
+                          return Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                                childAspectRatio: 0.75,
+                              ),
+                              itemCount: data.users.length,
+                              itemBuilder: (context, index) {
+                                final user = data.users[index];
+                                return UserGridItem(
+                                  users: user,
+                                  isCurrentUser: false,
+                                  userCoordinates: currentGeo,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
             ],
           );
         },
+      ),
+    );
+  }
+
+  String _cooldownTooltip(DateTime nextAt) {
+    final diff = nextAt.difference(DateTime.now());
+    if (diff.isNegative) return 'Refresh matches';
+    final minutes = diff.inMinutes;
+    final seconds = diff.inSeconds % 60;
+    return 'Try again in ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+}
+
+class _EmptyCard extends StatelessWidget {
+  final bool isCooldown;
+  final DateTime nextAt;
+  final VoidCallback onRefresh;
+  const _EmptyCard({required this.isCooldown, required this.nextAt, required this.onRefresh});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.people, size: 48, color: theme.colorScheme.primary),
+            const SizedBox(height: 12),
+            Text('No matches right now', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 6),
+            Text(
+              isCooldown ? 'Please wait until new matches are available.' : 'Tap refresh to discover new profiles.',
+              style: theme.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.refresh),
+              label: Text(isCooldown ? _cooldownText(nextAt) : 'Refresh'),
+              onPressed: isCooldown ? null : onRefresh,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static String _cooldownText(DateTime nextAt) {
+    final diff = nextAt.difference(DateTime.now());
+    if (diff.isNegative) return 'Refresh';
+    final minutes = diff.inMinutes;
+    final seconds = diff.inSeconds % 60;
+    return 'Try again in ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+}
+
+class _ErrorCard extends StatelessWidget {
+  final String message;
+  final VoidCallback onRetry;
+  const _ErrorCard({required this.message, required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.errorContainer,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
+            const SizedBox(height: 12),
+            Text(message, style: theme.textTheme.titleMedium),
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+              onPressed: onRetry,
+            ),
+          ],
+        ),
       ),
     );
   }
