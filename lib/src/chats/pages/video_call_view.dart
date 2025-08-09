@@ -40,22 +40,22 @@ class _VideoCallViewState extends State<VideoCallView> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      // body: SafeArea(
-      //   child: Stack(
-      //     children: [
-      //       AgoraVideoViewer(
-      //         client: client,
-      //         layoutType: Layout.floating,
-      //       ),
-      //       AgoraVideoButtons(
-      //         client: client,
-      //         onDisconnect: () {
-      //           Navigator.pop(context);
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
-    );
+        // body: SafeArea(
+        //   child: Stack(
+        //     children: [
+        //       AgoraVideoViewer(
+        //         client: client,
+        //         layoutType: Layout.floating,
+        //       ),
+        //       AgoraVideoButtons(
+        //         client: client,
+        //         onDisconnect: () {
+        //           Navigator.pop(context);
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        );
   }
 }

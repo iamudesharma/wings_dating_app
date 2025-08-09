@@ -1,8 +1,3 @@
-
-
-class FirebaseConstants{
-
-
-static const String USERS = "users";
-
+class FirebaseConstants {
+  static const String USERS = "users";
 }

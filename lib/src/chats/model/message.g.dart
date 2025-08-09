@@ -6,8 +6,7 @@ part of 'message.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$MessageImpl _$$MessageImplFromJson(Map<String, dynamic> json) =>
-    _$MessageImpl(
+_Message _$MessageFromJson(Map<String, dynamic> json) => _Message(
       senderId: json['senderId'] as String,
       recieverid: json['recieverid'] as String,
       text: json['text'] as String,
@@ -21,8 +20,7 @@ _$MessageImpl _$$MessageImplFromJson(Map<String, dynamic> json) =>
           $enumDecodeNullable(_$MessageEnumEnumMap, json['repliedMessageType']),
     );
 
-Map<String, dynamic> _$$MessageImplToJson(_$MessageImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$MessageToJson(_Message instance) => <String, dynamic>{
       'senderId': instance.senderId,
       'recieverid': instance.recieverid,
       'text': instance.text,

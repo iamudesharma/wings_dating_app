@@ -1,36 +1,44 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:wings_dating_app/src/model/user_models.dart';
 
 part 'geo_point_data.freezed.dart';
 part 'geo_point_data.g.dart';
 
-@Freezed(map: FreezedMapOptions.all, toStringOverride: true, toJson: true, fromJson: true)
-class GeoPointData with _$GeoPointData {
-  const factory GeoPointData({
-    @JsonSerializable(createToJson: true, createFieldMap: true, createPerFieldToJson: true, explicitToJson: true)
+@freezed
+abstract class GeoPointData with _$GeoPointData {
+  factory GeoPointData({
+    @JsonSerializable(
+      createToJson: true,
+      createFieldMap: true,
+      createPerFieldToJson: true,
+      explicitToJson: true,
+    )
 
     // ignore: invalid_annotation_target
-    @GeoPointConverter()
-    @JsonKey(name: "geopoint")
-    required GeoPoint geopoint,
+    // @GeoPointConverter()
+    @JsonKey(name: "coordinates")
+    required List<double> geopoint,
+    @Default("Point") String type,
     // ignore: invalid_annotation_target
-    @JsonKey(name: "geohash") required String geohash,
+    // @JsonKey(name: "geohash") required String geohash,
   }) = _GeoPointData;
 
   factory GeoPointData.fromJson(Map<String, Object?> json) => _$GeoPointDataFromJson(json);
 }
 
-class GeoPointConverter implements JsonConverter<GeoPoint, GeoPoint> {
+class GeoPointConverter implements JsonConverter<GeoPoint, Map<String, dynamic>> {
   const GeoPointConverter();
 
   @override
-  GeoPoint fromJson(GeoPoint geoPoint) {
-    return geoPoint;
+  GeoPoint fromJson(Map<String, dynamic> json) {
+    return GeoPoint(json['latitude'] as double, json['longitude'] as double);
   }
 
   @override
-  GeoPoint toJson(GeoPoint geoPoint) => geoPoint;
+  Map<String, dynamic> toJson(GeoPoint geoPoint) => {
+        'latitude': geoPoint.latitude,
+        'longitude': geoPoint.longitude,
+      };
 }
 
 // class FirestoreDateTimeConverter extends JsonConverter<DateTime, Timestamp> {

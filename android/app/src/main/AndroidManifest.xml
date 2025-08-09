@@ -43,15 +43,18 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-             <meta-data
-           android:name="com.google.android.gms.ads.APPLICATION_ID"
+        <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
            android:value="ca-app-pub-3940256099942544~3347511713"/>
            <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="high_importance_channel" />
             <meta-data
-  android:name="com.google.firebase.messaging.default_notification_channel_id"
-  android:value="high_importance_channel" />
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="high_importance_channel" />
+        <!-- <meta-data
+android:name="com.connectycube.flutter.connectycube_flutter_call_kit.app_notification_icon"
+android:resource="@drawable/ic_notification" /> -->
 
         <!-- <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -61,6 +64,11 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/notification_accent_color" /> -->
 
+    <uses-native-library
+     android:name="libOpenCL.so"
+     android:required="false"/>
+ <uses-native-library android:name="libOpenCL-car.so" android:required="false"/>
+ <uses-native-library android:name="libOpenCL-pixel.so" android:required="false"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

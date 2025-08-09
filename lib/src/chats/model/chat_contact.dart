@@ -3,7 +3,7 @@ part 'chat_contact.g.dart';
 part 'chat_contact.freezed.dart';
 
 @freezed
-class ChatContact with _$ChatContact {
+abstract class ChatContact with _$ChatContact {
   const factory ChatContact({
     required String name,
     required String profilePic,
@@ -13,6 +13,5 @@ class ChatContact with _$ChatContact {
     required String fcmToken,
   }) = _ChatContact;
 
-  factory ChatContact.fromJson(Map<String, dynamic> json) =>
-      _$ChatContactFromJson(json);
+  factory ChatContact.fromJson(Map<String, dynamic> json) => _$ChatContactFromJson(json);
 }

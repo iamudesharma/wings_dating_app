@@ -6,8 +6,6 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIconFile</key>
-	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -28,24 +26,21 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
-	<dict>
-  	<key>YourPurposeKey</key>
-  	<string>The example App requires temporary access to the device&apos;s precise location.</string>
-	</dict>
+
+	<!-- Location Permission Descriptions -->
+		<!-- ✅ Required for location permission on macOS -->
 	<key>NSLocationUsageDescription</key>
-	<string>This app needs access to location.</string>
+	<string>This app needs your location to find nearby matches.</string>
+	<!-- Camera, Microphone, Photo Library -->
 	<key>NSCameraUsageDescription</key>
-		<string>Used to demonstrate image picker plugin</string>
-		<key>NSMicrophoneUsageDescription</key>
-		<string>Used to capture audio for image picker plugin</string>
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Used to demonstrate image picker plugin</string>
-		<key>UIApplicationSupportsIndirectInputEvents</key>
-		<true/>
-		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>The app needs it</string>
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>The app needs it</string>
+	<string>Used to pick images for profile pictures.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Used to record audio when needed.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to allow the user to pick profile images.</string>
+
+	<!-- Flutter specific keys -->
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>

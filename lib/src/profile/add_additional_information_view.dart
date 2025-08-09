@@ -1,71 +1,88 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:velocity_x/velocity_x.dart';
+// import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/send_notification.dart';
-import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:wings_dating_app/src/model/geo_point_data.dart';
 
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/edit_profile_view.dart';
-import 'package:wings_dating_app/src/users/users_view.dart';
 
-import '../../dependency/dependenies.dart';
+import '../../dependency/dependencies.dart';
 import '../../helpers/extra_data.dart';
 import '../../helpers/logger.dart';
 
-final weightProvider = StateProvider<String>((ref) {
+final weightProvider = StateProvider.autoDispose<String>((ref) {
   return "Do not show";
 });
 
-final heightProvider = StateProvider<String>((ref) {
+final heightProvider = StateProvider.autoDispose<String>((ref) {
   return "Do not show";
 });
 
-final albumListProvider = StateProvider<List<String>?>((ref) {
+final albumListProvider = StateProvider.autoDispose<List<String>?>((ref) {
   return [];
 });
-
 
 @RoutePage()
 class AddAdditionalInformationView extends ConsumerStatefulWidget {
   const AddAdditionalInformationView({super.key});
 
   @override
-  ConsumerState<AddAdditionalInformationView> createState() =>
-      _AddAdditionalInformationViewState();
+  ConsumerState<AddAdditionalInformationView> createState() => _AddAdditionalInformationViewState();
 }
 
-class _AddAdditionalInformationViewState
-    extends ConsumerState<AddAdditionalInformationView> {
+class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInformationView> {
   @override
   Widget build(
     BuildContext context,
   ) {
-    final prfile = ref.watch(Dependency.profileProvider);
-    final profiledata =
-        ref.read(ProfileController.userControllerProvider).userModel;
-    final role = ref.watch(roleProvider);
-    final bodyType = ref.watch(bodyTypeProvider);
+    ref.watch(Dependency.profileProvider);
+    final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
-    final relationshipStatus = ref.watch(relationshipStatusProvider);
-    final ethnicity = ref.watch(ethnicityProvider);
-    final lookingFor = ref.watch(lookingForProvider);
+    // Safely watch providers with null checks
+    Role role;
+    BodyType bodyType;
+    RelationshipStatus relationshipStatus;
+    Ethnicity ethnicity;
+    LookingFor lookingFor;
+    WhereToMeet whereTomeet;
+    String weight;
+    String height;
 
-    final whereTomeet = ref.watch(whereToMeetProvider);
-    final weight = ref.watch(weightProvider);
-    final height = ref.watch(heightProvider);
-    final albumList = ref.watch(albumListProvider);
+    try {
+      role = ref.watch(roleProvider);
+      bodyType = ref.watch(bodyTypeProvider);
+      relationshipStatus = ref.watch(relationshipStatusProvider);
+      ethnicity = ref.watch(ethnicityProvider);
+      lookingFor = ref.watch(lookingForProvider);
+      whereTomeet = ref.watch(whereToMeetProvider);
+      weight = ref.watch(weightProvider);
+      height = ref.watch(heightProvider);
+      ref.watch(albumListProvider);
+    } catch (e) {
+      logger.e("Error accessing providers: $e");
+      // Set default values if providers can't be accessed
+      role = Role.doNotShow;
+      bodyType = BodyType.doNotShow;
+      relationshipStatus = RelationshipStatus.doNotShow;
+      ethnicity = Ethnicity.doNotShow;
+      lookingFor = LookingFor.doNotShow;
+      whereTomeet = WhereToMeet.doNotShow;
+      weight = "Do not show";
+      height = "Do not show";
+    }
 
-    logger.i(profiledata?.role.index);
+    if (profiledata != null) {
+      logger.i(profiledata.role.index);
+    }
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar.medium(
-              title: const Text("Additional Information"), floating: false),
+          SliverAppBar.medium(title: const Text("Additional Information"), floating: false),
           // SliverToBoxAdapter(
           //   child: StaggeredGrid.count(
           //     crossAxisCount: 4,
@@ -215,7 +232,9 @@ class _AddAdditionalInformationViewState
                     trailing: const Icon(Icons.arrow_forward_ios),
                   ),
                   const Divider(),
-                  20.heightBox,
+                  // 20.heightBox,
+                  SizedBox(height: 20),
+
                   ElevatedButton(
                     onPressed: () async {
                       final router = AutoRouter.of(context);
@@ -231,14 +250,12 @@ class _AddAdditionalInformationViewState
                       );
 
                       logger.i(data?.toJson());
-                      await ref
-                          .read(ProfileController.userControllerProvider)
-                          .updateUserData(data!);
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
+                      AutoRouter.of(context).pop();
 
-                      router.replace(const DashboardRoute());
+                      // router.replace(const DashboardRoute());
                     },
-                    style: ElevatedButton.styleFrom(
-                        fixedSize: Size(MediaQuery.of(context).size.width, 35)),
+                    style: ElevatedButton.styleFrom(fixedSize: Size(MediaQuery.of(context).size.width, 35)),
                     child: const Text("Save"),
                   ),
                 ],
@@ -257,15 +274,21 @@ class _AddAdditionalInformationViewState
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+
               final role = ref.watch(roleProvider);
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<Role>(
                     selected: role,
-                    onChanged: <Role>(value) {
+                    onChanged: <Role>(value) async {
                       logger.i(value);
                       ref.read(roleProvider.notifier).update((state) => value);
-                      context.router.back();
+                      // context.router.back();
+                      final data = profiledata?.copyWith(
+                        role: role,
+                      );
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: Role.values,
                   ));
@@ -281,17 +304,25 @@ class _AddAdditionalInformationViewState
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+
               final bodyType = ref.watch(bodyTypeProvider);
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<BodyType>(
                     selected: bodyType,
-                    onChanged: <BodyType>(value) {
+                    onChanged: <BodyType>(value) async {
                       logger.i(value);
-                      ref
-                          .read(bodyTypeProvider.notifier)
-                          .update((sate) => value);
-                      context.router.back();
+                      ref.read(bodyTypeProvider.notifier).update((sate) => value);
+                      // context.router.back();
+                      final data = profiledata?.copyWith(
+                        bodyType: bodyType,
+                        position: GeoPointData(
+                          type: "Point",
+                          geopoint: profiledata.position?.geopoint ?? [0, 0],
+                        ),
+                      );
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: BodyType.values,
                   ));
@@ -306,6 +337,8 @@ class _AddAdditionalInformationViewState
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (context, setState) {
+            final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+
             return Consumer(builder: (context, ref, child) {
               final weight = ref.watch(weightProvider);
               return SizedBox(
@@ -313,10 +346,14 @@ class _AddAdditionalInformationViewState
                   child: AdditionalDataWidget<String>(
                     isString: true,
                     selected: weight,
-                    onChanged: <String>(value) {
+                    onChanged: <String>(value) async {
                       logger.i(value);
                       ref.read(weightProvider.notifier).update((sate) => value);
-                      context.router.back();
+
+                      final data = profiledata?.copyWith(
+                        weight: weight,
+                      );
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: weightList,
                   ));
@@ -332,16 +369,22 @@ class _AddAdditionalInformationViewState
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+
               final height = ref.watch(heightProvider);
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<String>(
                     isString: true,
                     selected: height,
-                    onChanged: <String>(value) {
+                    onChanged: <String>(value) async {
                       logger.i(value);
                       ref.read(heightProvider.notifier).update((sate) => value);
-                      context.router.back();
+                      // context.router.back();
+                      final data = profiledata?.copyWith(
+                        height: height,
+                      );
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: heightList,
                   ));
@@ -357,18 +400,24 @@ class _AddAdditionalInformationViewState
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+
               final relationShip = ref.watch(relationshipStatusProvider);
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<RelationshipStatus>(
                     selected: relationShip,
-                    onChanged: <BodyType>(value) {
+                    onChanged: <BodyType>(value) async {
                       logger.i(value);
-                      ref.read(relationshipStatusProvider.notifier).state =
-                          value;
+                      ref.read(relationshipStatusProvider.notifier).state = value;
 
                       setState(() {});
-                      context.router.back();
+                      final data = profiledata?.copyWith(
+                        relationshipStatus: relationShip,
+                      );
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
+
+                      // context.router.back();
                     },
                     value: RelationshipStatus.values,
                   ));
@@ -384,18 +433,22 @@ class _AddAdditionalInformationViewState
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+
               final ethnicity = ref.watch(ethnicityProvider);
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<Ethnicity>(
                     selected: ethnicity,
-                    onChanged: <BodyType>(value) {
+                    onChanged: <BodyType>(value) async {
                       logger.i(value);
-                      ref
-                          .read(ethnicityProvider.notifier)
-                          .update((state) => value);
+                      ref.read(ethnicityProvider.notifier).update((state) => value);
 
-                      context.router.back();
+                      // context.router.back();
+                      final data = profiledata?.copyWith(
+                        ethnicity: ethnicity,
+                      );
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: Ethnicity.values,
                   ));
@@ -412,16 +465,21 @@ class _AddAdditionalInformationViewState
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
               final lookingFor = ref.watch(lookingForProvider);
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<LookingFor>(
                     selected: lookingFor,
-                    onChanged: <BodyType>(value) {
+                    onChanged: <BodyType>(value) async {
                       logger.i(value);
-                      ref
-                          .read(lookingForProvider.notifier)
-                          .update((sate) => value);
+                      ref.read(lookingForProvider.notifier).update((sate) => value);
                       context.router.back();
+
+                      final data = profiledata?.copyWith(
+                        lookingFor: lookingFor,
+                      );
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: LookingFor.values,
                   ));
@@ -438,16 +496,20 @@ class _AddAdditionalInformationViewState
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
               final whereToMeet = ref.watch(whereToMeetProvider);
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<WhereToMeet>(
                     selected: whereToMeet,
-                    onChanged: <BodyType>(value) {
+                    onChanged: <BodyType>(value) async {
                       logger.i(value);
-                      ref
-                          .read(whereToMeetProvider.notifier)
-                          .update((sate) => value);
-                      context.router.back();
+                      ref.read(whereToMeetProvider.notifier).update((sate) => value);
+                      // context.router.back();
+                      final data = profiledata?.copyWith(
+                        whereToMeet: whereToMeet,
+                      );
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: WhereToMeet.values,
                   ));
@@ -459,12 +521,12 @@ class _AddAdditionalInformationViewState
 
 class AdditionalDataWidget<TValue> extends StatefulWidget {
   const AdditionalDataWidget({
-    Key? key,
+    super.key,
     required this.value,
     required this.onChanged,
     required this.selected,
     this.isString = false,
-  }) : super(key: key);
+  });
 
   final List<TValue> value;
   final Function(TValue?) onChanged;
@@ -486,14 +548,14 @@ class _AdditionalDataWidgetState extends State<AdditionalDataWidget> {
         (index) => ListWheelItemWidget(
           onTap: () async {
             print("tapped");
-            widget.onChanged(widget.value[index]);
+            await widget.onChanged(widget.value[index]);
+            // ignore: use_build_context_synchronously
+            context.router.maybePop();
           },
           color: widget.selected == widget.value[index]
               ? Theme.of(context).primaryColor
               : Theme.of(context).primaryColor.withOpacity(0.2),
-          role: widget.isString!
-              ? widget.value[index]
-              : "${widget.value[index].value}",
+          role: widget.isString! ? widget.value[index] : "${widget.value[index].value}",
         ),
       ),
     );
@@ -502,11 +564,11 @@ class _AdditionalDataWidgetState extends State<AdditionalDataWidget> {
 
 class ListWheelItemWidget extends StatelessWidget {
   const ListWheelItemWidget({
-    Key? key,
+    super.key,
     required this.role,
     this.onTap,
     required this.color,
-  }) : super(key: key);
+  });
 
   final String role;
   final void Function()? onTap;
@@ -529,10 +591,10 @@ class ListWheelItemWidget extends StatelessWidget {
 
 class AlbumWidgetPicker extends ConsumerStatefulWidget {
   const AlbumWidgetPicker({
-    Key? key,
+    super.key,
     this.path,
     required this.index,
-  }) : super(key: key);
+  });
 
   final String? path;
   final int index;
@@ -545,8 +607,8 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
   // final int index;
   @override
   Widget build(BuildContext context) {
-    final userController = ref.watch(ProfileController.userControllerProvider);
-    final albumList = ref.watch(albumListProvider);
+    ref.watch(ProfileController.userControllerProvider);
+    // final albumList = ref.watch(albumListProvider);
 
     return InkWell(
       onTap: () async {
@@ -555,33 +617,29 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
           builder: (context) {
             return BottomSheet(
               onClosing: () {
-                Navigator.pop(context);
+                // Navigator.pop(context);
               },
               builder: (context) {
                 return ImagePickerWidget(
                   camera: () async {
-                    final data = await ref
-                        .read(ProfileController.userControllerProvider)
-                        .pickImageFromAlbum(
+                    final data = await ref.read(ProfileController.userControllerProvider).pickImageFromAlbum(
                           ImageSource.camera,
                         );
 
                     if (data != null) {
 // albumList.update((state) => state[widget.index] = data);
 
-                      albumList[widget.index] = data;
+                      // albumList[widget.index] = data;
                       setState(() {});
                     }
                   },
                   gallery: () async {
-                    final data = await ref
-                        .read(ProfileController.userControllerProvider)
-                        .pickImageFromAlbum(
+                    final data = await ref.read(ProfileController.userControllerProvider).pickImageFromAlbum(
                           ImageSource.gallery,
                         );
 
                     if (data != null) {
-                      albumList[widget.index] = data;
+                      // albumList[widget.index] = data;
                       setState(() {});
                     }
                   },
@@ -600,18 +658,18 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: albumList!.isEmpty
-            ? const Icon(Icons.add)
-            : userController.albumImages.isEmpty
-                ? Image(
-                    image: FileImage(
-                      File(
-                        userController.albumImages[widget.index],
-                      ),
-                    ),
-                    fit: BoxFit.cover,
-                  )
-                : const Icon(Icons.add),
+        // child: albumList!.isEmpty
+        //     ? const Icon(Icons.add)
+        //     : userController.albumImages.isEmpty
+        //         ? Image(
+        //             image: FileImage(
+        //               File(
+        //                 userController.albumImages[widget.index],
+        //               ),
+        //             ),
+        //             fit: BoxFit.cover,
+        //           )
+        //         : const Icon(Icons.add),
       ),
     );
   }
