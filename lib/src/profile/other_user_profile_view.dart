@@ -16,11 +16,26 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/ai_wingman/providers/profile_analysis_provider.dart';
+import 'package:wings_dating_app/repo/albums_repo.dart';
+import 'package:wings_dating_app/src/album/controller/album_controller.dart';
 
 import '../../helpers/responsive_layout.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 part 'other_user_profile_view.g.dart';
+
+typedef AlbumAccessStateRecord = ({String? albumId, bool hasAlbum, bool canView, bool pending});
+
+final albumAccessStateProvider =
+    FutureProvider.autoDispose.family<AlbumAccessStateRecord, String>((ref, otherUserId) async {
+  final viewerId = ref.read(ProfileController.userControllerProvider).userModel?.id;
+  if (viewerId == null) {
+    return (albumId: null, hasAlbum: false, canView: false, pending: false);
+  }
+  final repo = ref.read(albumsRepoProvider);
+  final state = await repo.getAlbumAccessState(ownerId: otherUserId, viewerId: viewerId);
+  return (albumId: state.albumId, hasAlbum: state.hasAlbum, canView: state.canView, pending: state.pending);
+});
 
 @riverpod
 class Fav extends _$Fav {
@@ -74,6 +89,105 @@ class _NoScrollbarBehavior extends ScrollBehavior {
 class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
   bool hasTapped = false;
   String tapError = '';
+
+  Future<void> _openAlbumRequestSelector(BuildContext context, String ownerId) async {
+    final repo = ref.read(albumsRepoProvider);
+    final viewerId = ref.read(ProfileController.userControllerProvider).userModel?.id;
+    if (viewerId == null) return;
+
+    // Fetch owner's albums
+    final albums = await repo.getAllAlbums(id: ownerId);
+    if (albums.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No albums to request')));
+      return;
+    }
+
+    // Precompute per-album pending flags (sequential to keep it simple)
+    final Map<String, bool> pendingMap = {};
+    for (final a in albums) {
+      if (a.id == null) continue;
+      try {
+        final p = await ref.read(albumsRepoProvider).getPendingRequestForAlbum(albumId: a.id!);
+        pendingMap[a.id!] = p != null;
+      } catch (_) {
+        pendingMap[a.id!] = false;
+      }
+    }
+
+    String? selectedAlbumId;
+    final messageController = TextEditingController();
+
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(builder: (ctx, setState) {
+          return AlertDialog(
+            title: const Text('Request album access'),
+            content: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: 320,
+                    child: ListView.separated(
+                      itemCount: albums.length,
+                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      itemBuilder: (_, i) {
+                        final a = albums[i];
+                        final id = a.id ?? '${a.name}-$i';
+                        final canView = a.sharedWith.contains(viewerId);
+                        final isPending = pendingMap[id] == true;
+                        return RadioListTile<String>(
+                          value: id,
+                          groupValue: selectedAlbumId,
+                          onChanged: (canView || isPending) ? null : (v) => setState(() => selectedAlbumId = v),
+                          title: Text(a.name),
+                          subtitle: canView
+                              ? const Text('Shared with you', style: TextStyle(color: Colors.green))
+                              : isPending
+                                  ? const Text('Request pending', style: TextStyle(color: Colors.orange))
+                                  : null,
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: messageController,
+                    decoration: const InputDecoration(hintText: 'Add a message (optional)'),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+              ElevatedButton(
+                onPressed: selectedAlbumId == null
+                    ? null
+                    : () async {
+                        final id = selectedAlbumId!;
+                        final target = albums.firstWhere((a) => (a.id ?? '') == id, orElse: () => albums.first);
+                        final albumId = target.id!; // safe, owner albums should have id
+                        final res = await ref
+                            .read(AlbumControllerProvider(albumId).notifier)
+                            .requestAccess(messageController.text.trim());
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(res != null ? 'Request sent' : 'Failed to send request')),
+                          );
+                        }
+                        if (context.mounted) Navigator.pop(ctx);
+                      },
+                child: const Text('Send Request'),
+              ),
+            ],
+          );
+        });
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -372,6 +486,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -415,6 +530,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -469,6 +585,71 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                 _buildAvatar(context, userData),
                 const SizedBox(width: 20),
                 Expanded(child: _buildHeaderInfo(context, userData, refData)),
+                const SizedBox(width: 12),
+                // Album access actions (wide layout)
+                if (userData != null)
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(minWidth: 200, maxWidth: 260),
+                    child: Consumer(
+                      builder: (context, ref, _) {
+                        final access = ref.watch(albumAccessStateProvider(userData.id));
+                        return access.when(
+                          loading: () => const Center(
+                            child: SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                            ),
+                          ),
+                          error: (_, __) => const SizedBox.shrink(),
+                          data: (state) {
+                            if (!state.hasAlbum || state.albumId == null) {
+                              return const SizedBox.shrink();
+                            }
+                            if (state.canView) {
+                              return ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                ),
+                                icon: const Icon(Icons.photo_album),
+                                label: const Text('View album'),
+                                onPressed: () {
+                                  context.router.push(AlbumDetailsRoute(id: state.albumId!));
+                                },
+                              );
+                            }
+                            if (state.pending) {
+                              return OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                ),
+                                icon: const Icon(Icons.hourglass_top),
+                                label: const Text('Requested'),
+                                onPressed: null,
+                              );
+                            }
+                            return ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).colorScheme.primary,
+                                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                padding: const EdgeInsets.symmetric(vertical: 14),
+                              ),
+                              icon: const Icon(Icons.lock_open),
+                              label: const Text('Request album'),
+                              onPressed: () async {
+                                await _openAlbumRequestSelector(context, userData.id);
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
               ],
             )
           : Column(
@@ -477,6 +658,68 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                 _buildAvatar(context, userData),
                 const SizedBox(height: 16),
                 _buildHeaderInfo(context, userData, refData),
+                const SizedBox(height: 12),
+                if (userData != null)
+                  Consumer(
+                    builder: (context, ref, _) {
+                      final access = ref.watch(albumAccessStateProvider(userData.id));
+                      return access.when(
+                        loading: () => const Center(
+                          child: SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                          ),
+                        ),
+                        error: (_, __) => const SizedBox.shrink(),
+                        data: (state) {
+                          if (!state.hasAlbum || state.albumId == null) {
+                            return const SizedBox.shrink();
+                          }
+                          if (state.canView) {
+                            return ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).colorScheme.secondary,
+                                foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                              ),
+                              icon: const Icon(Icons.photo_album),
+                              label: const Text('View album'),
+                              onPressed: () {
+                                context.router.push(AlbumDetailsRoute(id: state.albumId!));
+                              },
+                            );
+                          }
+                          if (state.pending) {
+                            return OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                              ),
+                              icon: const Icon(Icons.hourglass_top),
+                              label: const Text('Requested'),
+                              onPressed: null,
+                            );
+                          }
+                          // Default: allow user to request access
+                          return ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).colorScheme.primary,
+                              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                            ),
+                            icon: const Icon(Icons.lock_open),
+                            label: const Text('Request album'),
+                            onPressed: () async {
+                              await _openAlbumRequestSelector(context, userData.id);
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
               ],
             ),
     );

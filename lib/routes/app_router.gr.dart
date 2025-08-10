@@ -18,10 +18,10 @@ class AIAnalysisRoute extends PageRouteInfo<AIAnalysisRouteArgs> {
     Model model = Model.gemma3GpuLocalAsset,
     List<PageRouteInfo>? children,
   }) : super(
-         AIAnalysisRoute.name,
-         args: AIAnalysisRouteArgs(key: key, model: model),
-         initialChildren: children,
-       );
+          AIAnalysisRoute.name,
+          args: AIAnalysisRouteArgs(key: key, model: model),
+          initialChildren: children,
+        );
 
   static const String name = 'AIAnalysisRoute';
 
@@ -47,6 +47,16 @@ class AIAnalysisRouteArgs {
   String toString() {
     return 'AIAnalysisRouteArgs{key: $key, model: $model}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! AIAnalysisRouteArgs) return false;
+    return key == other.key && model == other.model;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ model.hashCode;
 }
 
 /// generated route for
@@ -57,10 +67,10 @@ class AIChatRoute extends PageRouteInfo<AIChatRouteArgs> {
     Model model = Model.gemma3GpuLocalAsset,
     List<PageRouteInfo>? children,
   }) : super(
-         AIChatRoute.name,
-         args: AIChatRouteArgs(key: key, model: model),
-         initialChildren: children,
-       );
+          AIChatRoute.name,
+          args: AIChatRouteArgs(key: key, model: model),
+          initialChildren: children,
+        );
 
   static const String name = 'AIChatRoute';
 
@@ -86,13 +96,23 @@ class AIChatRouteArgs {
   String toString() {
     return 'AIChatRouteArgs{key: $key, model: $model}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! AIChatRouteArgs) return false;
+    return key == other.key && model == other.model;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ model.hashCode;
 }
 
 /// generated route for
 /// [AddAdditionalInformationView]
 class AddAdditionalInformationRoute extends PageRouteInfo<void> {
   const AddAdditionalInformationRoute({List<PageRouteInfo>? children})
-    : super(AddAdditionalInformationRoute.name, initialChildren: children);
+      : super(AddAdditionalInformationRoute.name, initialChildren: children);
 
   static const String name = 'AddAdditionalInformationRoute';
 
@@ -114,15 +134,15 @@ class AlbumDetailsRoute extends PageRouteInfo<AlbumDetailsRouteArgs> {
     Channel? channel,
     List<PageRouteInfo>? children,
   }) : super(
-         AlbumDetailsRoute.name,
-         args: AlbumDetailsRouteArgs(
-           key: key,
-           id: id,
-           isPreview: isPreview,
-           channel: channel,
-         ),
-         initialChildren: children,
-       );
+          AlbumDetailsRoute.name,
+          args: AlbumDetailsRouteArgs(
+            key: key,
+            id: id,
+            isPreview: isPreview,
+            channel: channel,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'AlbumDetailsRoute';
 
@@ -160,13 +180,43 @@ class AlbumDetailsRouteArgs {
   String toString() {
     return 'AlbumDetailsRouteArgs{key: $key, id: $id, isPreview: $isPreview, channel: $channel}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! AlbumDetailsRouteArgs) return false;
+    return key == other.key &&
+        id == other.id &&
+        isPreview == other.isPreview &&
+        channel == other.channel;
+  }
+
+  @override
+  int get hashCode =>
+      key.hashCode ^ id.hashCode ^ isPreview.hashCode ^ channel.hashCode;
+}
+
+/// generated route for
+/// [AlbumRequestsView]
+class AlbumRequestsRoute extends PageRouteInfo<void> {
+  const AlbumRequestsRoute({List<PageRouteInfo>? children})
+      : super(AlbumRequestsRoute.name, initialChildren: children);
+
+  static const String name = 'AlbumRequestsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AlbumRequestsView();
+    },
+  );
 }
 
 /// generated route for
 /// [AlbumView]
 class AlbumRoute extends PageRouteInfo<void> {
   const AlbumRoute({List<PageRouteInfo>? children})
-    : super(AlbumRoute.name, initialChildren: children);
+      : super(AlbumRoute.name, initialChildren: children);
 
   static const String name = 'AlbumRoute';
 
@@ -182,7 +232,7 @@ class AlbumRoute extends PageRouteInfo<void> {
 /// [ChatListView]
 class ChatListRoute extends PageRouteInfo<void> {
   const ChatListRoute({List<PageRouteInfo>? children})
-    : super(ChatListRoute.name, initialChildren: children);
+      : super(ChatListRoute.name, initialChildren: children);
 
   static const String name = 'ChatListRoute';
 
@@ -203,11 +253,11 @@ class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
     required String id,
     List<PageRouteInfo>? children,
   }) : super(
-         ChatRoute.name,
-         args: ChatRouteArgs(key: key, channel: channel, id: id),
-         rawPathParams: {'id': id},
-         initialChildren: children,
-       );
+          ChatRoute.name,
+          args: ChatRouteArgs(key: key, channel: channel, id: id),
+          rawPathParams: {'id': id},
+          initialChildren: children,
+        );
 
   static const String name = 'ChatRoute';
 
@@ -233,6 +283,16 @@ class ChatRouteArgs {
   String toString() {
     return 'ChatRouteArgs{key: $key, channel: $channel, id: $id}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! ChatRouteArgs) return false;
+    return key == other.key && channel == other.channel && id == other.id;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ channel.hashCode ^ id.hashCode;
 }
 
 /// generated route for
@@ -243,10 +303,10 @@ class CreateAlbumRoute extends PageRouteInfo<CreateAlbumRouteArgs> {
     required String id,
     List<PageRouteInfo>? children,
   }) : super(
-         CreateAlbumRoute.name,
-         args: CreateAlbumRouteArgs(key: key, id: id),
-         initialChildren: children,
-       );
+          CreateAlbumRoute.name,
+          args: CreateAlbumRouteArgs(key: key, id: id),
+          initialChildren: children,
+        );
 
   static const String name = 'CreateAlbumRoute';
 
@@ -270,13 +330,23 @@ class CreateAlbumRouteArgs {
   String toString() {
     return 'CreateAlbumRouteArgs{key: $key, id: $id}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! CreateAlbumRouteArgs) return false;
+    return key == other.key && id == other.id;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ id.hashCode;
 }
 
 /// generated route for
 /// [DashboardView]
 class DashboardRoute extends PageRouteInfo<void> {
   const DashboardRoute({List<PageRouteInfo>? children})
-    : super(DashboardRoute.name, initialChildren: children);
+      : super(DashboardRoute.name, initialChildren: children);
 
   static const String name = 'DashboardRoute';
 
@@ -296,10 +366,10 @@ class EditProfileRoute extends PageRouteInfo<EditProfileRouteArgs> {
     required bool isEditProfile,
     List<PageRouteInfo>? children,
   }) : super(
-         EditProfileRoute.name,
-         args: EditProfileRouteArgs(key: key, isEditProfile: isEditProfile),
-         initialChildren: children,
-       );
+          EditProfileRoute.name,
+          args: EditProfileRouteArgs(key: key, isEditProfile: isEditProfile),
+          initialChildren: children,
+        );
 
   static const String name = 'EditProfileRoute';
 
@@ -323,13 +393,23 @@ class EditProfileRouteArgs {
   String toString() {
     return 'EditProfileRouteArgs{key: $key, isEditProfile: $isEditProfile}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! EditProfileRouteArgs) return false;
+    return key == other.key && isEditProfile == other.isEditProfile;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ isEditProfile.hashCode;
 }
 
 /// generated route for
 /// [FilterView]
 class FilterRoute extends PageRouteInfo<void> {
   const FilterRoute({List<PageRouteInfo>? children})
-    : super(FilterRoute.name, initialChildren: children);
+      : super(FilterRoute.name, initialChildren: children);
 
   static const String name = 'FilterRoute';
 
@@ -349,11 +429,11 @@ class ImagePreviewRoute extends PageRouteInfo<ImagePreviewRouteArgs> {
     required String path,
     List<PageRouteInfo>? children,
   }) : super(
-         ImagePreviewRoute.name,
-         args: ImagePreviewRouteArgs(key: key, path: path),
-         rawPathParams: {'path': path},
-         initialChildren: children,
-       );
+          ImagePreviewRoute.name,
+          args: ImagePreviewRouteArgs(key: key, path: path),
+          rawPathParams: {'path': path},
+          initialChildren: children,
+        );
 
   static const String name = 'ImagePreviewRoute';
 
@@ -380,13 +460,23 @@ class ImagePreviewRouteArgs {
   String toString() {
     return 'ImagePreviewRouteArgs{key: $key, path: $path}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! ImagePreviewRouteArgs) return false;
+    return key == other.key && path == other.path;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ path.hashCode;
 }
 
 /// generated route for
 /// [LoginView]
 class LoginRoute extends PageRouteInfo<void> {
   const LoginRoute({List<PageRouteInfo>? children})
-    : super(LoginRoute.name, initialChildren: children);
+      : super(LoginRoute.name, initialChildren: children);
 
   static const String name = 'LoginRoute';
 
@@ -402,7 +492,7 @@ class LoginRoute extends PageRouteInfo<void> {
 /// [MatchingView]
 class MatchingRoute extends PageRouteInfo<void> {
   const MatchingRoute({List<PageRouteInfo>? children})
-    : super(MatchingRoute.name, initialChildren: children);
+      : super(MatchingRoute.name, initialChildren: children);
 
   static const String name = 'MatchingRoute';
 
@@ -423,15 +513,15 @@ class OtherUserProfileRoute extends PageRouteInfo<OtherUserProfileRouteArgs> {
     bool? isCurrentUser = true,
     List<PageRouteInfo>? children,
   }) : super(
-         OtherUserProfileRoute.name,
-         args: OtherUserProfileRouteArgs(
-           key: key,
-           id: id,
-           isCurrentUser: isCurrentUser,
-         ),
-         rawPathParams: {'id': id},
-         initialChildren: children,
-       );
+          OtherUserProfileRoute.name,
+          args: OtherUserProfileRouteArgs(
+            key: key,
+            id: id,
+            isCurrentUser: isCurrentUser,
+          ),
+          rawPathParams: {'id': id},
+          initialChildren: children,
+        );
 
   static const String name = 'OtherUserProfileRoute';
 
@@ -468,13 +558,25 @@ class OtherUserProfileRouteArgs {
   String toString() {
     return 'OtherUserProfileRouteArgs{key: $key, id: $id, isCurrentUser: $isCurrentUser}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! OtherUserProfileRouteArgs) return false;
+    return key == other.key &&
+        id == other.id &&
+        isCurrentUser == other.isCurrentUser;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ id.hashCode ^ isCurrentUser.hashCode;
 }
 
 /// generated route for
 /// [ProfileView]
 class ProfileRoute extends PageRouteInfo<void> {
   const ProfileRoute({List<PageRouteInfo>? children})
-    : super(ProfileRoute.name, initialChildren: children);
+      : super(ProfileRoute.name, initialChildren: children);
 
   static const String name = 'ProfileRoute';
 
@@ -490,7 +592,7 @@ class ProfileRoute extends PageRouteInfo<void> {
 /// [ProfileVisitsView]
 class ProfileVisitsRoute extends PageRouteInfo<void> {
   const ProfileVisitsRoute({List<PageRouteInfo>? children})
-    : super(ProfileVisitsRoute.name, initialChildren: children);
+      : super(ProfileVisitsRoute.name, initialChildren: children);
 
   static const String name = 'ProfileVisitsRoute';
 
@@ -506,7 +608,7 @@ class ProfileVisitsRoute extends PageRouteInfo<void> {
 /// [SearchUsersView]
 class SearchUsersRoute extends PageRouteInfo<void> {
   const SearchUsersRoute({List<PageRouteInfo>? children})
-    : super(SearchUsersRoute.name, initialChildren: children);
+      : super(SearchUsersRoute.name, initialChildren: children);
 
   static const String name = 'SearchUsersRoute';
 
@@ -522,7 +624,7 @@ class SearchUsersRoute extends PageRouteInfo<void> {
 /// [SignOptionsView]
 class SignOptionsRoute extends PageRouteInfo<void> {
   const SignOptionsRoute({List<PageRouteInfo>? children})
-    : super(SignOptionsRoute.name, initialChildren: children);
+      : super(SignOptionsRoute.name, initialChildren: children);
 
   static const String name = 'SignOptionsRoute';
 
@@ -538,7 +640,7 @@ class SignOptionsRoute extends PageRouteInfo<void> {
 /// [UserBlockListView]
 class UserBlockListRoute extends PageRouteInfo<void> {
   const UserBlockListRoute({List<PageRouteInfo>? children})
-    : super(UserBlockListRoute.name, initialChildren: children);
+      : super(UserBlockListRoute.name, initialChildren: children);
 
   static const String name = 'UserBlockListRoute';
 
@@ -554,7 +656,7 @@ class UserBlockListRoute extends PageRouteInfo<void> {
 /// [UsersView]
 class UsersRoute extends PageRouteInfo<void> {
   const UsersRoute({List<PageRouteInfo>? children})
-    : super(UsersRoute.name, initialChildren: children);
+      : super(UsersRoute.name, initialChildren: children);
 
   static const String name = 'UsersRoute';
 

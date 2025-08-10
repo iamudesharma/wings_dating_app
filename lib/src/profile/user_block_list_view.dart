@@ -5,11 +5,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
-import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
+// Removed unused imports
 
-import '../users/users_view.dart';
-
-final getUserBlockListProvider = FutureProvider<List<UserModel?>>((ref) async {
+final getUserBlockListProvider = FutureProvider.autoDispose<List<UserModel?>>((ref) async {
   return await ref.read(profileRepoProvider).getBlockList();
 });
 
@@ -35,8 +33,7 @@ class UserBlockListView extends ConsumerWidget {
           padding: const EdgeInsets.all(15.0),
           child: data.isEmpty
               ? Center(
-                  child:
-                      const Text("No Users In Block List").animate().fadeIn(),
+                  child: const Text("No Users In Block List").animate().fadeIn(),
                 )
               : ListView.builder(
                   itemCount: data.length,

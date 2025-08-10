@@ -1,7 +1,12 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_gemma/core/chat.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:wings_dating_app/src/ai_wingman/models/model.dart';
+import 'package:wings_dating_app/src/ai_wingman/services/model_download_service.dart';
 
 /// GemmaProvider manages a single instance of InferenceChat for the selected model.
 final gemmaProvider = StateNotifierProvider<GemmaNotifier, InferenceChat?>((ref) => GemmaNotifier());
@@ -39,11 +44,17 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
     _topP = model.topP;
     _supportsFunctionCalls = model.supportsFunctionCalls;
 
-    // Check if model is installed
-    if (!await gemma.modelManager.isModelInstalled) {
-      final path = model.localModel ? model.url : model.filename;
-      await gemma.modelManager.setModelPath(path);
+    // Resolve model path per platform, and only initialize when available on Android/iOS
+    final resolvedPath = await _resolveModelPath(model);
+    if (resolvedPath == null) {
+      // No local model available on Android/iOS yet — don't initialize chat
+      state = null;
+      _isModelInitialized = false;
+      return;
     }
+
+    // Ensure model path is set for the plugin
+    await gemma.modelManager.setModelPath(resolvedPath);
 
     final gemmaModel = await gemma.createModel(
       modelType: model.modelType,
@@ -68,6 +79,39 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
     _isModelInitialized = true;
   }
 
+  // Compute the correct model path for current platform.
+  // Returns null on Android/iOS if a non-asset model isn't downloaded yet.
+  Future<String?> _resolveModelPath(Model model) async {
+    // Web uses bundled asset url/path
+    if (kIsWeb) return model.url;
+
+    // Desktop platforms (macOS/Windows/Linux): keep using asset-only behavior
+    // If local asset, use asset path; otherwise, return null to prevent init (mobile-only feature)
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      return model.localModel ? model.url : null;
+    }
+
+    // Android/iOS: if local asset model, use asset path; else require downloaded file
+    if (Platform.isAndroid || Platform.isIOS) {
+      if (model.localModel) return model.url;
+
+      // Check if downloaded file exists in app documents dir
+      final downloader = ModelDownloadService(
+        modelUrl: model.url,
+        modelFilename: model.filename,
+        licenseUrl: model.licenseUrl,
+      );
+      final exists = await downloader.existsLocally();
+      if (!exists) return null;
+
+      final docsDir = await getApplicationDocumentsDirectory();
+      return '${docsDir.path}/${model.filename}';
+    }
+
+    // Fallback: do not initialize
+    return null;
+  }
+
   // Update chat settings and rebuild the chat instance
   Future<void> updateSettings({
     double? temperature,
@@ -87,11 +131,13 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
     // Recreate model+chat using current model and tools
     final gemma = FlutterGemmaPlugin.instance;
 
-    // Ensure model path is set (avoid reinstall if already set)
-    if (!await gemma.modelManager.isModelInstalled) {
-      final path = _currentModel.localModel ? _currentModel.url : _currentModel.filename;
-      await gemma.modelManager.setModelPath(path);
+    // Ensure valid model path before recreating chat
+    final resolvedPath = await _resolveModelPath(_currentModel);
+    if (resolvedPath == null) {
+      // No model available (Android/iOS without downloaded file). Keep state as-is.
+      return;
     }
+    await gemma.modelManager.setModelPath(resolvedPath);
 
     final gemmaModel = await gemma.createModel(
       modelType: _currentModel.modelType,

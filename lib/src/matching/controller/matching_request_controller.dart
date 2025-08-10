@@ -10,8 +10,8 @@ class MatchingRequestController extends _$MatchingRequestController {
   }
 
   createRequest(MatchingRequestModel matchingRequest) async {
-    AsyncLoading loading = AsyncLoading();
-    state = loading;
-    state = AsyncData(ref.read(matchingRequestCollectionProvider).add(matchingRequest));
+    // AsyncLoading loading = AsyncLoading();
+    // state = loading;
+    // state = AsyncData(ref.read(matchingRequestCollectionProvider).add(matchingRequest));
   }
 }
