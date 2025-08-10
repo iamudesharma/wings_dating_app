@@ -13,6 +13,22 @@ _AlbumOwnerModel _$AlbumOwnerModelFromJson(Map<String, dynamic> json) =>
       profilePicture: json['profilePicture'] as String,
     );
 
+const _$AlbumOwnerModelFieldMap = <String, String>{
+  'id': 'id',
+  'username': 'username',
+  'profilePicture': 'profilePicture',
+};
+
+// ignore: unused_element
+abstract class _$AlbumOwnerModelPerFieldToJson {
+  // ignore: unused_element
+  static Object? id(String instance) => instance;
+  // ignore: unused_element
+  static Object? username(String instance) => instance;
+  // ignore: unused_element
+  static Object? profilePicture(String instance) => instance;
+}
+
 Map<String, dynamic> _$AlbumOwnerModelToJson(_AlbumOwnerModel instance) =>
     <String, dynamic>{
       'id': instance.id,

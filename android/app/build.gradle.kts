@@ -12,7 +12,10 @@ android {
     namespace = "com.wings.wingsdating"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
-
+    
+    aaptOptions {
+        noCompress("tflite", "safetensors", "bin", "model", "task")
+    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
          sourceCompatibility = JavaVersion.VERSION_11

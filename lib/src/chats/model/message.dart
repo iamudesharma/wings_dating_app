@@ -1,4 +1,4 @@
-import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
+// import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../helpers/message_enum.dart';
@@ -13,7 +13,7 @@ abstract class Message with _$Message {
     required String recieverid,
     required String text,
     required MessageEnum type,
-    @FirestoreTimestampConverter() required DateTime timeSent,
+    required DateTime timeSent,
     required String messageId,
     required bool isSeen,
     String? repliedMessage,

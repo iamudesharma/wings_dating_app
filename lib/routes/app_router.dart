@@ -29,6 +29,7 @@ import '../src/profile/profile_visits_view.dart';
 import '../src/profile/user_block_list_view.dart';
 import '../src/users/search/search_users_view.dart';
 import '../src/users/users_view.dart';
+import '../src/notifications/album_requests_view.dart';
 
 part 'app_router.gr.dart';
 

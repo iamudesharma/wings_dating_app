@@ -9,7 +9,18 @@ class ImagePreviewView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(leading: AutoLeadingButton()),
-        body: Center(child: InteractiveViewer(child: Image.network(path))));
+      backgroundColor: Colors.black,
+      appBar: AppBar(leading: const AutoLeadingButton(), backgroundColor: Colors.black, elevation: 0),
+      body: Center(
+        child: InteractiveViewer(
+          minScale: 0.5,
+          maxScale: 5,
+          child: Hero(
+            tag: path,
+            child: Image.network(path, fit: BoxFit.contain),
+          ),
+        ),
+      ),
+    );
   }
 }

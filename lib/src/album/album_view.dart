@@ -13,11 +13,18 @@ import 'package:wings_dating_app/src/album/controller/album_controller.dart';
 import 'package:wings_dating_app/src/model/album_model.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:wings_dating_app/src/notifications/album_requests_view.dart';
 
 // part 'album_view.g.dart';
 
-final getAllAlbumsProvider = FutureProvider<List<UserAlbumModel>>((ref) async {
+final getAllAlbumsProvider = FutureProvider.autoDispose<List<UserAlbumModel>>((ref) async {
   return ref.read(albumsRepoProvider).getAllAlbums();
+});
+
+// Albums shared with current user (read-only)
+final getSharedAlbumsProvider = FutureProvider.autoDispose<List<UserAlbumModel>>((ref) async {
+  
+  return ref.read(albumsRepoProvider).getSharedAlbums();
 });
 
 @RoutePage()
@@ -63,19 +70,59 @@ class AlbumView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     final albumController = ref.watch(getAllAlbumsProvider);
-    // final sharedAlbums = ref.watch(sharedAlbumProvider);
+    final sharedController = ref.watch(getSharedAlbumsProvider);
     final isWide = MediaQuery.of(context).size.width > 600;
 
     return RefreshIndicator(
       onRefresh: () async {
         if (userId != null) {
-          return await ref.refresh(getAllAlbumsProvider);
+          // ref.refresh returns the provider; re-read to ensure new future
+          ref.invalidate(getAllAlbumsProvider);
+          ref.invalidate(getSharedAlbumsProvider);
         }
       },
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Albums"),
           actions: [
+            // Pending album requests shortcut
+            Consumer(builder: (context, ref, _) {
+              final pending = ref.watch(albumAccessRequestsProvider);
+              final count = pending.maybeWhen(
+                data: (items) => items.length,
+                orElse: () => 0,
+              );
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  IconButton(
+                    tooltip: 'Album Requests',
+                    icon: const Icon(Icons.notifications),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const AlbumRequestsView()),
+                      );
+                    },
+                  ),
+                  if (count > 0)
+                    Positioned(
+                      right: 10,
+                      top: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          count > 9 ? '9+' : '$count',
+                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            }),
             IconButton(
               icon: const Icon(Icons.add_photo_alternate_rounded),
               tooltip: 'Create Album',
@@ -91,32 +138,81 @@ class AlbumView extends ConsumerWidget {
                 Expanded(
                   flex: 4,
                   child: albumController.when(
-                    data: (albums) {
-                      final allAlbums = albums ?? <UserAlbumModel>[];
-                      // final shared = sharedAlbums.value ?? [];
-                      if (allAlbums.isEmpty) {
+                    data: (owned) {
+                      final sharedRaw = sharedController.maybeWhen(
+                        data: (s) => s,
+                        orElse: () => const <UserAlbumModel>[],
+                      );
+                      // Ensure we don't show duplicates across sections
+                      final ownedIds = owned.map((e) => e.id).whereType<String>().toSet();
+                      final shared = sharedRaw
+                          .where((s) => s.id != null && !ownedIds.contains(s.id))
+                          .map((s) => s.copyWith(isShared: true))
+                          .toList(growable: false);
+
+                      final ownedList = owned.map((a) => a.copyWith(isShared: false)).toList(growable: false);
+
+                      if (ownedList.isEmpty && shared.isEmpty) {
                         return const Center(child: Text('No albums found. Create your first album!'));
                       }
-                      return GridView.builder(
-                        padding: const EdgeInsets.all(16),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: isWide ? 4 : 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 0.85,
-                        ),
-                        itemCount: allAlbums.length,
-                        itemBuilder: (context, index) {
-                          final album = allAlbums[index];
-                          return _AlbumCard(
-                            isShared: album.isShared,
-                            name: album.name,
-                            imageUrl: album.photos.isNotEmpty ? album.photos.first : null,
-                            onTap: () {
-                              context.router.push(CreateAlbumRoute(id: album.id ?? album.ownerId));
+
+                      Widget gridFor(List<UserAlbumModel> list) => GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: isWide ? 4 : 2,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                              childAspectRatio: 0.85,
+                            ),
+                            itemCount: list.length,
+                            itemBuilder: (context, index) {
+                              final album = list[index];
+                              final ownerId = album.owner?.id ?? album.ownerId;
+                              final ownerName =
+                                  album.owner != null ? album.owner!.username : (ownerId == userId ? 'You' : 'Owner');
+                              final ownerAvatar = album.owner?.profilePicture;
+                              return _AlbumCard(
+                                isShared: album.isShared,
+                                name: album.name,
+                                imageUrl: album.photos.isNotEmpty ? album.photos.first : null,
+                                ownerId: ownerId,
+                                ownerName: ownerName,
+                                ownerAvatar: ownerAvatar,
+                                onTap: () {
+                                  if (album.id == null) return;
+                                  final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+                                  final isOwner = currentUserId != null && album.ownerId == currentUserId;
+                                  if (isOwner) {
+                                    context.router.push(CreateAlbumRoute(id: album.id!));
+                                  } else {
+                                    context.router.push(AlbumDetailsRoute(id: album.id!));
+                                  }
+                                },
+                              );
                             },
                           );
-                        },
+
+                      return ListView(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        children: [
+                          if (ownedList.isNotEmpty) ...[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                              child: Text('Your albums', style: Theme.of(context).textTheme.titleMedium),
+                            ),
+                            gridFor(ownedList),
+                            const SizedBox(height: 20),
+                          ],
+                          if (shared.isNotEmpty) ...[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                              child: Text('Shared with you', style: Theme.of(context).textTheme.titleMedium),
+                            ),
+                            gridFor(shared),
+                          ],
+                        ],
                       );
                     },
                     loading: () => const Center(child: CircularProgressIndicator.adaptive()),
@@ -137,35 +233,89 @@ class _AlbumCard extends StatelessWidget {
   final String? imageUrl;
   final VoidCallback onTap;
   final bool isShared;
+  final String? ownerId;
+  final String? ownerName;
+  final String? ownerAvatar;
   const _AlbumCard({
     required this.name,
     this.imageUrl,
     required this.onTap,
     this.isShared = false,
+    this.ownerId,
+    this.ownerName,
+    this.ownerAvatar,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    final theme = Theme.of(context);
+    final radius = BorderRadius.circular(20);
+    return InkWell(
       onTap: onTap,
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      borderRadius: radius,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: radius,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.surfaceVariant.withOpacity(0.6),
+              theme.colorScheme.surfaceVariant.withOpacity(0.2),
+            ],
+          ),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 12, offset: const Offset(0, 6)),
+          ],
+          border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.4)),
+        ),
         child: Stack(
           children: [
-            if (imageUrl != null)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  imageUrl!,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                  loadingBuilder: (context, child, progress) =>
-                      progress == null ? child : const Center(child: CircularProgressIndicator()),
-                  errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.broken_image)),
+            ClipRRect(
+              borderRadius: radius,
+              child: imageUrl != null
+                  ? Image.network(
+                      imageUrl!,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                      loadingBuilder: (context, child, progress) =>
+                          progress == null ? child : const Center(child: CircularProgressIndicator()),
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: theme.colorScheme.surface,
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.broken_image),
+                      ),
+                    )
+                  : Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            theme.colorScheme.primary.withOpacity(0.12),
+                            theme.colorScheme.secondary.withOpacity(0.12),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: Icon(Icons.photo_album, size: 48, color: theme.colorScheme.onSurface.withOpacity(0.5)),
+                    ),
+            ),
+            // subtle dark overlay for text legibility
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: radius,
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.transparent, Colors.black.withOpacity(0.65)],
+                  ),
                 ),
               ),
+            ),
             if (isShared)
               Positioned(
                 top: 8,
@@ -173,7 +323,7 @@ class _AlbumCard extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.purple.withOpacity(0.8),
+                    color: theme.colorScheme.secondary.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Text(
@@ -187,20 +337,53 @@ class _AlbumCard extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
-                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+                  color: Colors.black.withOpacity(0.45),
+                  borderRadius: BorderRadius.vertical(bottom: radius.bottomLeft),
                 ),
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      name,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (ownerId != null && ownerName != null) ...[
+                      const SizedBox(height: 4),
+                      InkWell(
+                        onTap: () => context.router.push(OtherUserProfileRoute(id: ownerId!)),
+                        borderRadius: BorderRadius.circular(12),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 9,
+                              backgroundImage:
+                                  (ownerAvatar != null && ownerAvatar!.isNotEmpty) ? NetworkImage(ownerAvatar!) : null,
+                              child: (ownerAvatar == null || ownerAvatar!.isEmpty)
+                                  ? const Icon(Icons.person, size: 12, color: Colors.white)
+                                  : null,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              ownerName!,
+                              style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ),

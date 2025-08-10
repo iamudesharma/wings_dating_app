@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemma/core/chat.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/src/ai_wingman/models/model.dart';
 import 'package:wings_dating_app/src/ai_wingman/providers/gemma_provider.dart';
 import 'package:wings_dating_app/src/ai_wingman/widgets/model_selection_screen.dart';
+import 'package:wings_dating_app/src/ai_wingman/services/model_download_service.dart';
 import 'package:wings_dating_app/src/ai_wingman/widgets/enhanced_wingman_header.dart';
 import 'package:wings_dating_app/src/ai_wingman/widgets/enhanced_dating_suggestions.dart';
 import 'package:wings_dating_app/src/ai_wingman/widgets/enhanced_welcome_section.dart';
@@ -32,6 +34,9 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
   final _messages = <Message>[];
   String? _error;
   String _appTitle = 'AI Dating Wingman 💕';
+
+  // Mobile-only platforms for model download/selection
+  bool get _isAndroidOrIOS => !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 
   // Define dating-focused tools
   final List<Tool> _tools = [
@@ -163,7 +168,33 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
   @override
   void initState() {
     super.initState();
+    // On mobile, if the selected model isn't available locally, redirect to selection/download
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_isAndroidOrIOS) {
+        _maybeRedirectForMobile();
+      }
+    });
     _initializeGemmaProvider();
+  }
+
+  Future<void> _maybeRedirectForMobile() async {
+    if (!_isAndroidOrIOS) return;
+    final model = widget.model;
+    if (model.localModel) return;
+    final downloader = ModelDownloadService(
+      modelUrl: model.url,
+      modelFilename: model.filename,
+      licenseUrl: model.licenseUrl,
+    );
+    final exists = await downloader.existsLocally();
+    if (!exists && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => const ModelSelectionScreen(),
+        ),
+      );
+    }
   }
 
   Future<void> _initializeGemmaProvider() async {
@@ -368,6 +399,23 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
+      // On mobile (non-web), show a clear entry point to select/download models
+      floatingActionButton: _isAndroidOrIOS
+          ? FloatingActionButton.extended(
+              heroTag: 'modelsFab',
+              icon: const Icon(Icons.model_training),
+              label: const Text('Models'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => const ModelSelectionScreen(),
+                  ),
+                );
+              },
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: ResponsiveBuilder(
         builder: (context, sizingInformation) {
           return Row(
@@ -421,13 +469,20 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
                             appTitle: _appTitle,
                             isOnline: isModelInitialized,
                             onModelSelection: () {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute<void>(
-                                  builder: (context) => const ModelSelectionScreen(),
-                                ),
-                                (route) => false,
-                              );
+                              if (_isAndroidOrIOS) {
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (context) => const ModelSelectionScreen(),
+                                  ),
+                                  (route) => false,
+                                );
+                              } else {
+                                // No-op on non-mobile; models are asset-only on web/desktop
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Model selection is available on Android/iOS only.')),
+                                );
+                              }
                             },
                             onOpenSettings: () => _openSettingsSheet(context),
                           ),

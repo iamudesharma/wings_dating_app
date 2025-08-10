@@ -61,6 +61,18 @@ class ModelDownloadService {
     return false;
   }
 
+  /// Checks only local file existence without any network calls.
+  /// Useful for deciding UI flows on mobile when offline or when auth is required.
+  Future<bool> existsLocally() async {
+    try {
+      final filePath = await getFilePath();
+      final file = File(filePath);
+      return file.existsSync();
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// Downloads the model file and tracks progress.
   Future<void> downloadModel({
     required String token,
