@@ -20,6 +20,8 @@ import '../src/ai_wingman/pages/ai_analysis_view.dart';
 import '../src/chats/chats_list_view.dart';
 import '../src/chats/pages/chat_view.dart';
 import '../src/dashboard.dart';
+import '../src/location/location_permission_view.dart';
+import '../src/location/location_guard.dart';
 import '../src/matching/pages/matching_view.dart';
 import '../src/profile/add_additional_information_view.dart';
 import '../src/profile/edit_profile_view.dart';
@@ -59,7 +61,13 @@ class AppRouter extends RootStackRouter {
       ],
       guards: [
         AuthGuard(ref: ref),
+        LocationGuard(ref: ref),
       ],
+    ),
+    AutoRoute(
+      page: LocationPermissionRoute.page,
+      path: "/location-permission",
+      keepHistory: true,
     ),
     AutoRoute(
       page: ChatRoute.page,

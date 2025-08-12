@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:wings_dating_app/repo/chat_repo.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
+import 'package:wings_dating_app/services/location_service.dart';
 
 import '../dependency/dependencies.dart';
 
@@ -26,6 +27,11 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
     });
     // NotificationsController.initializeNotificationsEventListeners(ref);
 
+    // Check location permission periodically
+    Future.microtask(() {
+      ref.read(locationServiceProvider.notifier).checkLocationPermission();
+    });
+
     // // ref.read(appRouteProvider).addListener(() {
 
     // });
@@ -35,6 +41,39 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
   @override
   Widget build(BuildContext context) {
     // CallManager.instance.init(context);
+    
+    // Listen for location state changes and redirect if needed
+    ref.listen(locationServiceProvider, (previous, current) {
+      if (!current.hasValidLocation && mounted) {
+        AutoRouter.of(context).pushAndClearStack(const LocationPermissionRoute());
+      }
+    });
+    
+    final locationState = ref.watch(locationServiceProvider);
+    
+    // Show loading screen while checking location
+    if (locationState.isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    
+    // Redirect to location permission if no valid location
+    if (!locationState.hasValidLocation) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          AutoRouter.of(context).pushAndClearStack(const LocationPermissionRoute());
+        }
+      });
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    
     return Scaffold(
       // bottomNavigationBar: const SizedBox(height: 50, child: BannerExample()),
       body: ResponsiveBuilder(builder: (context, size) {
