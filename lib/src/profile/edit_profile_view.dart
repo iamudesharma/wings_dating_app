@@ -20,6 +20,7 @@ import 'package:wings_dating_app/src/model/geo_point_data.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/add_additional_information_view.dart';
+import 'package:wings_dating_app/services/location_service.dart';
 
 import '../../helpers/responsive_layout.dart';
 
@@ -46,7 +47,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Geolocator location = Geolocator();
   bool isImageUpdate = false;
   // final geo = GeoFlutterFire();
 
@@ -72,17 +72,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
   @override
   void didChangeDependencies() async {
-    if (await Geolocator.isLocationServiceEnabled()) {
-      Geolocator.requestPermission();
-      // if (await Geolocator.checkPermission() == LocationPermission.) {
-      //   logger.i('Permission granted');
-      // } else {
-      //   location.requestPermission();
-      // }
-    } else {
-      Geolocator.requestPermission();
-    }
-
+    // Location handling is now managed by LocationService
     super.didChangeDependencies();
   }
 
@@ -326,22 +316,30 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     _loading = true;
                                   });
 
-                                  if (widget.isEditProfile) {
-                                    final data = await Geolocator.getCurrentPosition();
+                                  // Get location from location service
+                                  final locationState = ref.read(locationServiceProvider);
+                                  if (!locationState.hasValidLocation) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Please set your location first'),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                    setState(() {
+                                      _loading = false;
+                                    });
+                                    return;
+                                  }
 
-                                    GeoFirePoint myLocation = GeoFirePoint(GeoPoint(
-                                      data.latitude,
-                                      data.longitude,
-                                    ));
+                                  final userLocation = locationState.currentLocation!;
+
+                                  if (widget.isEditProfile) {
                                     final userdata = ref.read(ProfileController.userControllerProvider).userModel;
                                     await ref.read(Dependency.profileProvider).updateUserDoc(
                                           userdata!.copyWith(
                                               bio: _bioController.text,
                                               username: _usernameController.text,
-                                              position: GeoPointData(
-                                                // geohash: myLocation.geohash,
-                                                geopoint: [myLocation.geopoint.longitude, myLocation.geopoint.latitude],
-                                              ),
+                                              position: userLocation,
                                               profileUrl: await ref
                                                   .read(ProfileController.userControllerProvider)
                                                   .uploadImage()),
@@ -352,17 +350,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     });
                                     return;
                                   }
-                                  var permission = await Geolocator.checkPermission();
-
-                                  print(permission);
-
-                                  final data = await Geolocator.getCurrentPosition();
-
-                                  GeoFirePoint myLocation = GeoFirePoint(GeoPoint(
-                                    data.latitude,
-                                    data.longitude,
-                                  ));
-
+                                  
                                   int age = calculateAge(_selectedDate!);
 
                                   // Get additional information from providers or use default values if not set
@@ -418,10 +406,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     whereToMeet: whereTomeet,
                                     height: height,
                                     weight: weight,
-                                    position: GeoPointData(
-                                      // geohash: myLocation.geohash,
-                                      geopoint: [myLocation.geopoint.longitude, myLocation.geopoint.latitude],
-                                    ),
+                                    position: userLocation,
                                   );
 
                                   await ref.read(Dependency.profileProvider).createUserDoc(user);
