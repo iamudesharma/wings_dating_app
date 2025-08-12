@@ -136,7 +136,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         useMaterial3ErrorColors: true,
       ),
       themeMode: ThemeMode.dark,
-      title: 'Wings Dating App',
+      title: 'WINGS DATING',
     );
   }
 }

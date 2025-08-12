@@ -13,7 +13,7 @@
         <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
-        android:label="Wings Dating"
+        android:label="WINGS DATING"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
