@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -23,7 +22,6 @@ mixin _$UserAlbumModel {
   DateTime get updatedAt;
   bool get isShared;
   AlbumOwnerModel? get owner;
-  @JsonKey(name: "_id")
   String? get id;
 
   /// Create a copy of UserAlbumModel
@@ -33,9 +31,6 @@ mixin _$UserAlbumModel {
   $UserAlbumModelCopyWith<UserAlbumModel> get copyWith =>
       _$UserAlbumModelCopyWithImpl<UserAlbumModel>(
           this as UserAlbumModel, _$identity);
-
-  /// Serializes this UserAlbumModel to a JSON map.
-  Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
@@ -57,7 +52,6 @@ mixin _$UserAlbumModel {
             (identical(other.id, id) || other.id == id));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -92,7 +86,7 @@ abstract mixin class $UserAlbumModelCopyWith<$Res> {
       DateTime updatedAt,
       bool isShared,
       AlbumOwnerModel? owner,
-      @JsonKey(name: "_id") String? id});
+      String? id});
 
   $AlbumOwnerModelCopyWith<$Res>? get owner;
 }
@@ -175,28 +169,236 @@ class _$UserAlbumModelCopyWithImpl<$Res>
   }
 }
 
+/// Adds pattern-matching-related methods to [UserAlbumModel].
+extension UserAlbumModelPatterns on UserAlbumModel {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_UserAlbumModel value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _UserAlbumModel() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_UserAlbumModel value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _UserAlbumModel():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_UserAlbumModel value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _UserAlbumModel() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            String ownerId,
+            String name,
+            List<String> photos,
+            List<String> sharedWith,
+            DateTime createdAt,
+            DateTime updatedAt,
+            bool isShared,
+            AlbumOwnerModel? owner,
+            String? id)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _UserAlbumModel() when $default != null:
+        return $default(
+            _that.ownerId,
+            _that.name,
+            _that.photos,
+            _that.sharedWith,
+            _that.createdAt,
+            _that.updatedAt,
+            _that.isShared,
+            _that.owner,
+            _that.id);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            String ownerId,
+            String name,
+            List<String> photos,
+            List<String> sharedWith,
+            DateTime createdAt,
+            DateTime updatedAt,
+            bool isShared,
+            AlbumOwnerModel? owner,
+            String? id)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _UserAlbumModel():
+        return $default(
+            _that.ownerId,
+            _that.name,
+            _that.photos,
+            _that.sharedWith,
+            _that.createdAt,
+            _that.updatedAt,
+            _that.isShared,
+            _that.owner,
+            _that.id);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            String ownerId,
+            String name,
+            List<String> photos,
+            List<String> sharedWith,
+            DateTime createdAt,
+            DateTime updatedAt,
+            bool isShared,
+            AlbumOwnerModel? owner,
+            String? id)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _UserAlbumModel() when $default != null:
+        return $default(
+            _that.ownerId,
+            _that.name,
+            _that.photos,
+            _that.sharedWith,
+            _that.createdAt,
+            _that.updatedAt,
+            _that.isShared,
+            _that.owner,
+            _that.id);
+      case _:
+        return null;
+    }
+  }
+}
+
 /// @nodoc
 
-@JsonSerializable(
-    explicitToJson: true,
-    createToJson: true,
-    createFieldMap: true,
-    createPerFieldToJson: true)
+@JsonSerializable(explicitToJson: true, createToJson: true)
 class _UserAlbumModel implements UserAlbumModel {
-  const _UserAlbumModel(
+  _UserAlbumModel(
       {required this.ownerId,
       required this.name,
-      final List<String> photos = const [],
-      final List<String> sharedWith = const [],
+      final List<String> photos = const <String>[],
+      final List<String> sharedWith = const <String>[],
       required this.createdAt,
       required this.updatedAt,
       this.isShared = false,
       this.owner,
-      @JsonKey(name: "_id") this.id})
+      this.id})
       : _photos = photos,
         _sharedWith = sharedWith;
-  factory _UserAlbumModel.fromJson(Map<String, dynamic> json) =>
-      _$UserAlbumModelFromJson(json);
 
   @override
   final String ownerId;
@@ -230,7 +432,6 @@ class _UserAlbumModel implements UserAlbumModel {
   @override
   final AlbumOwnerModel? owner;
   @override
-  @JsonKey(name: "_id")
   final String? id;
 
   /// Create a copy of UserAlbumModel
@@ -240,13 +441,6 @@ class _UserAlbumModel implements UserAlbumModel {
   @pragma('vm:prefer-inline')
   _$UserAlbumModelCopyWith<_UserAlbumModel> get copyWith =>
       __$UserAlbumModelCopyWithImpl<_UserAlbumModel>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$UserAlbumModelToJson(
-      this,
-    );
-  }
 
   @override
   bool operator ==(Object other) {
@@ -268,7 +462,6 @@ class _UserAlbumModel implements UserAlbumModel {
             (identical(other.id, id) || other.id == id));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -285,6 +478,12 @@ class _UserAlbumModel implements UserAlbumModel {
   @override
   String toString() {
     return 'UserAlbumModel(ownerId: $ownerId, name: $name, photos: $photos, sharedWith: $sharedWith, createdAt: $createdAt, updatedAt: $updatedAt, isShared: $isShared, owner: $owner, id: $id)';
+  }
+  
+  @override
+  Map<String, dynamic> toJson() {
+    // TODO: implement toJson
+    throw UnimplementedError();
   }
 }
 
@@ -305,7 +504,7 @@ abstract mixin class _$UserAlbumModelCopyWith<$Res>
       DateTime updatedAt,
       bool isShared,
       AlbumOwnerModel? owner,
-      @JsonKey(name: "_id") String? id});
+      String? id});
 
   @override
   $AlbumOwnerModelCopyWith<$Res>? get owner;

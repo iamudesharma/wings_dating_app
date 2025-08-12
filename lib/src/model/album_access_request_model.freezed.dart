@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -255,13 +254,253 @@ class _$AlbumAccessRequestModelCopyWithImpl<$Res>
   }
 }
 
+/// Adds pattern-matching-related methods to [AlbumAccessRequestModel].
+extension AlbumAccessRequestModelPatterns on AlbumAccessRequestModel {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_AlbumAccessRequestModel value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _AlbumAccessRequestModel() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_AlbumAccessRequestModel value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _AlbumAccessRequestModel():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_AlbumAccessRequestModel value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _AlbumAccessRequestModel() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: '_id') String? id,
+            String albumId,
+            String requesterId,
+            String message,
+            AccessRequestStatus status,
+            DateTime createdAt,
+            DateTime updatedAt,
+            String? albumOwnerId,
+            String? moderatorId,
+            DateTime? respondedAt,
+            String? rejectionReason,
+            UserModel? requester,
+            UserModel? albumOwner,
+            UserAlbumModel? album)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _AlbumAccessRequestModel() when $default != null:
+        return $default(
+            _that.id,
+            _that.albumId,
+            _that.requesterId,
+            _that.message,
+            _that.status,
+            _that.createdAt,
+            _that.updatedAt,
+            _that.albumOwnerId,
+            _that.moderatorId,
+            _that.respondedAt,
+            _that.rejectionReason,
+            _that.requester,
+            _that.albumOwner,
+            _that.album);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            @JsonKey(name: '_id') String? id,
+            String albumId,
+            String requesterId,
+            String message,
+            AccessRequestStatus status,
+            DateTime createdAt,
+            DateTime updatedAt,
+            String? albumOwnerId,
+            String? moderatorId,
+            DateTime? respondedAt,
+            String? rejectionReason,
+            UserModel? requester,
+            UserModel? albumOwner,
+            UserAlbumModel? album)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _AlbumAccessRequestModel():
+        return $default(
+            _that.id,
+            _that.albumId,
+            _that.requesterId,
+            _that.message,
+            _that.status,
+            _that.createdAt,
+            _that.updatedAt,
+            _that.albumOwnerId,
+            _that.moderatorId,
+            _that.respondedAt,
+            _that.rejectionReason,
+            _that.requester,
+            _that.albumOwner,
+            _that.album);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            @JsonKey(name: '_id') String? id,
+            String albumId,
+            String requesterId,
+            String message,
+            AccessRequestStatus status,
+            DateTime createdAt,
+            DateTime updatedAt,
+            String? albumOwnerId,
+            String? moderatorId,
+            DateTime? respondedAt,
+            String? rejectionReason,
+            UserModel? requester,
+            UserModel? albumOwner,
+            UserAlbumModel? album)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _AlbumAccessRequestModel() when $default != null:
+        return $default(
+            _that.id,
+            _that.albumId,
+            _that.requesterId,
+            _that.message,
+            _that.status,
+            _that.createdAt,
+            _that.updatedAt,
+            _that.albumOwnerId,
+            _that.moderatorId,
+            _that.respondedAt,
+            _that.rejectionReason,
+            _that.requester,
+            _that.albumOwner,
+            _that.album);
+      case _:
+        return null;
+    }
+  }
+}
+
 /// @nodoc
 
-@JsonSerializable(
-    explicitToJson: true,
-    createToJson: true,
-    createFieldMap: true,
-    createPerFieldToJson: true)
+@JsonSerializable(explicitToJson: true)
 class _AlbumAccessRequestModel implements AlbumAccessRequestModel {
   const _AlbumAccessRequestModel(
       {@JsonKey(name: '_id') this.id,
@@ -686,8 +925,221 @@ class _$AlbumRequestStatsCopyWithImpl<$Res>
   }
 }
 
+/// Adds pattern-matching-related methods to [AlbumRequestStats].
+extension AlbumRequestStatsPatterns on AlbumRequestStats {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_AlbumRequestStats value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _AlbumRequestStats() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_AlbumRequestStats value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _AlbumRequestStats():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_AlbumRequestStats value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _AlbumRequestStats() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            int totalRequests,
+            int pendingRequests,
+            int approvedRequests,
+            int rejectedRequests,
+            int requestsToday,
+            int requestsThisWeek,
+            int requestsThisMonth,
+            double averageResponseTime)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _AlbumRequestStats() when $default != null:
+        return $default(
+            _that.totalRequests,
+            _that.pendingRequests,
+            _that.approvedRequests,
+            _that.rejectedRequests,
+            _that.requestsToday,
+            _that.requestsThisWeek,
+            _that.requestsThisMonth,
+            _that.averageResponseTime);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            int totalRequests,
+            int pendingRequests,
+            int approvedRequests,
+            int rejectedRequests,
+            int requestsToday,
+            int requestsThisWeek,
+            int requestsThisMonth,
+            double averageResponseTime)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _AlbumRequestStats():
+        return $default(
+            _that.totalRequests,
+            _that.pendingRequests,
+            _that.approvedRequests,
+            _that.rejectedRequests,
+            _that.requestsToday,
+            _that.requestsThisWeek,
+            _that.requestsThisMonth,
+            _that.averageResponseTime);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            int totalRequests,
+            int pendingRequests,
+            int approvedRequests,
+            int rejectedRequests,
+            int requestsToday,
+            int requestsThisWeek,
+            int requestsThisMonth,
+            double averageResponseTime)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _AlbumRequestStats() when $default != null:
+        return $default(
+            _that.totalRequests,
+            _that.pendingRequests,
+            _that.approvedRequests,
+            _that.rejectedRequests,
+            _that.requestsToday,
+            _that.requestsThisWeek,
+            _that.requestsThisMonth,
+            _that.averageResponseTime);
+      case _:
+        return null;
+    }
+  }
+}
+
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(
+    explicitToJson: true,
+    createToJson: true,
+    createFieldMap: true,
+    createPerFieldToJson: true)
 class _AlbumRequestStats implements AlbumRequestStats {
   const _AlbumRequestStats(
       {required this.totalRequests,

@@ -5,6 +5,12 @@ part 'album_owner_model.g.dart';
 
 @freezed
 abstract class AlbumOwnerModel with _$AlbumOwnerModel {
+  @JsonSerializable(
+    createToJson: true,
+    createFieldMap: true,
+    createPerFieldToJson: true,
+    explicitToJson: true,
+  )
   const factory AlbumOwnerModel({
     required String id,
     required String username,

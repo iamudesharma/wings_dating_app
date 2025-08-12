@@ -37,8 +37,6 @@ class AlbumsRepo {
   AlbumsRepo({required this.ref});
 
   Future<UserAlbumModel?> addAlbum(UserAlbumModel albumList) async {
-    final currentUserId = ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
-
     try {
       final response = await httpTemplate.post("/albums", body: albumList.toJson());
 
@@ -58,9 +56,92 @@ class AlbumsRepo {
     // return data;
   }
 
-  Future<UserAlbumModel?> updateAlbum(UserAlbumModel albumList) async {
-    final currentUserId = ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+  // Get albums shared with a user (viewer)
+  Future<List<UserAlbumModel>> getSharedAlbums({String? userId}) async {
+    final viewerId = userId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final response = await httpTemplate.get("/albums/shared/$viewerId");
 
+    if (response["code"] == 200) {
+      final albumList = response["data"] as List<dynamic>;
+      return albumList.map((e) => UserAlbumModel.fromJson(e)).toList();
+    } else {
+      throw Exception("Failed to fetch shared albums: ${response["message"]}");
+    }
+  }
+
+  /// List album access requests for the current owner (filtered client-side)
+  /// Uses the admin listing endpoint which returns enriched request objects:
+  /// { data: [ { albumId, requesterId, status, album: {...}, albumOwner: {...} } ], ... }
+  Future<List<Map<String, dynamic>>> listAlbumAccessRequestsForOwner({
+    String status = 'pending',
+    String? ownerId,
+  }) async {
+    final currentOwnerId = ownerId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final response = await httpTemplate.get("/api/admin/album-requests?status=$status");
+
+    if (response["code"] == 200) {
+      // The admin endpoint wraps the array under data.data
+      final payload = Map<String, dynamic>.from(response["data"]);
+      final List<dynamic> items = List<dynamic>.from(payload["data"] ?? const []);
+      // Filter only requests where current user is the album owner
+      final filtered = items
+          .where((raw) {
+            final m = Map<String, dynamic>.from(raw as Map);
+            final albumOwner = m["albumOwner"] as Map<String, dynamic>?;
+            final ownerIdFromItem = albumOwner != null ? albumOwner["id"] as String? : null;
+            return ownerIdFromItem == currentOwnerId;
+          })
+          .map((e) => Map<String, dynamic>.from(e as Map))
+          .toList();
+      return filtered;
+    } else {
+      throw Exception("Failed to fetch album access requests: ${response["message"]}");
+    }
+  }
+
+  /// Approve or reject an album access request
+  Future<Map<String, dynamic>?> moderateAlbumAccessRequest({
+    required String requestId,
+    required String action, // 'approve' | 'reject'
+    String? moderatorId,
+  }) async {
+    final modId = moderatorId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final response = await httpTemplate.post(
+      "/api/admin/album-requests/$requestId/moderate",
+      body: {"action": action, "moderatorId": modId},
+    );
+    if (response["code"] == 200) {
+      return Map<String, dynamic>.from(response["data"]);
+    }
+    return null;
+  }
+
+  /// Get a pending access request for a particular album by the given requester
+  /// Returns the enriched request map or null if none exists
+  Future<Map<String, dynamic>?> getPendingRequestForAlbum({
+    required String albumId,
+    String? requesterId,
+  }) async {
+    final reqId = requesterId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final response = await httpTemplate.get("/api/admin/album-requests?status=pending");
+    if (response["code"] == 200) {
+      final payload = Map<String, dynamic>.from(response["data"]);
+      final List<dynamic> items = List<dynamic>.from(payload["data"] ?? const []);
+      for (final raw in items) {
+        final m = Map<String, dynamic>.from(raw as Map);
+        final aId = (m["albumId"] ?? m["album"]?['_id'])?.toString();
+        final rId = m["requesterId"]?.toString();
+        if (aId == albumId && rId == reqId) {
+          return m;
+        }
+      }
+      return null;
+    } else {
+      throw Exception("Failed to fetch album access requests: ${response["message"]}");
+    }
+  }
+
+  Future<UserAlbumModel?> updateAlbum(UserAlbumModel albumList) async {
     try {
       final response = await httpTemplate.put("/albums/${albumList.id}", body: albumList.toJson());
 
@@ -82,9 +163,104 @@ class AlbumsRepo {
     // return data;
   }
 
+  // Rename album (owner only)
+  Future<UserAlbumModel?> renameAlbum({
+    required String albumId,
+    required String ownerId,
+    required String name,
+  }) async {
+    try {
+      final body = {
+        "ownerId": ownerId,
+        "updates": {"name": name},
+      };
+      final response = await httpTemplate.put("/albums/$albumId", body: body);
+      if (response["code"] == 200) {
+        return UserAlbumModel.fromJson(response["data"]);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Update full photos array (owner only)
+  Future<UserAlbumModel?> updatePhotos({
+    required String albumId,
+    required String ownerId,
+    required List<String> photos,
+  }) async {
+    try {
+      final body = {
+        "ownerId": ownerId,
+        "updates": {"photos": photos},
+      };
+      final response = await httpTemplate.put("/albums/$albumId", body: body);
+      if (response["code"] == 200) {
+        return UserAlbumModel.fromJson(response["data"]);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Share album with a user (owner only)
+  Future<UserAlbumModel?> shareAlbum({
+    required String albumId,
+    required String userId,
+  }) async {
+    try {
+      final response = await httpTemplate.post("/albums/$albumId/share", body: {"userId": userId});
+      if (response["code"] == 200) {
+        // Fetch enriched album shape (with owner/isShared flags)
+        return await getAlbumsById(albumId);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Stop sharing album with a user (owner only)
+  Future<UserAlbumModel?> stopSharing({
+    required String albumId,
+    required String userId,
+  }) async {
+    try {
+      final response = await httpTemplate.delete("/albums/$albumId/share/$userId");
+      if (response["code"] == 200) {
+        // Fetch enriched album after mutation
+        return await getAlbumsById(albumId);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Request access to someone else's album (non-owner)
+  Future<Map<String, dynamic>?> requestAccess({
+    required String albumId,
+    required String requesterId,
+    required String message,
+  }) async {
+    try {
+      final response = await httpTemplate.post(
+        "/albums/$albumId/request-access",
+        body: {"requesterId": requesterId, "message": message},
+      );
+      if (response["code"] == 200) {
+        return Map<String, dynamic>.from(response["data"]);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<List<UserAlbumModel>> getAllAlbums({String? id}) async {
     final currentUserId = ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
-
     final response = await httpTemplate.get("/albums/user/${id ?? currentUserId}");
 
     if (response["code"] == 200) {
@@ -108,6 +284,26 @@ class AlbumsRepo {
       return UserAlbumModel.fromJson(response["data"]);
     } else {
       throw Exception("Failed to fetch albums: ${response["message"]}");
+    }
+  }
+
+  // Consolidated access state call to avoid multiple requests
+  Future<({String? albumId, bool hasAlbum, bool canView, bool pending})> getAlbumAccessState({
+    required String ownerId,
+    String? viewerId,
+  }) async {
+    final vid = viewerId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final response = await httpTemplate.get("/albums/access-state?ownerId=$ownerId&viewerId=$vid");
+    if (response["code"] == 200) {
+      final data = Map<String, dynamic>.from(response["data"]);
+      return (
+        albumId: data['albumId']?.toString(),
+        hasAlbum: data['hasAlbum'] == true,
+        canView: data['canView'] == true,
+        pending: data['pending'] == true,
+      );
+    } else {
+      throw Exception("Failed to fetch album access state: ${response["message"]}");
     }
   }
 }
