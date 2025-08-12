@@ -13,14 +13,12 @@ enum LocationPermissionStatus {
 class LocationState {
   final LocationPermissionStatus status;
   final Position? position;
-  final GeoPointData? manualLocation;
   final bool isLoading;
   final String? error;
 
   const LocationState({
     required this.status,
     this.position,
-    this.manualLocation,
     this.isLoading = false,
     this.error,
   });
@@ -28,20 +26,18 @@ class LocationState {
   LocationState copyWith({
     LocationPermissionStatus? status,
     Position? position,
-    GeoPointData? manualLocation,
     bool? isLoading,
     String? error,
   }) {
     return LocationState(
       status: status ?? this.status,
       position: position ?? this.position,
-      manualLocation: manualLocation ?? this.manualLocation,
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
     );
   }
 
-  bool get hasValidLocation => position != null || manualLocation != null;
+  bool get hasValidLocation => position != null;
   
   GeoPointData? get currentLocation {
     if (position != null) {
@@ -50,7 +46,7 @@ class LocationState {
         geohash: '', // You can implement geohash generation if needed
       );
     }
-    return manualLocation;
+    return null;
   }
 }
 
@@ -141,13 +137,6 @@ class LocationService extends StateNotifier<LocationState> {
         isLoading: false,
       );
     }
-  }
-
-  void setManualLocation(GeoPointData location) {
-    state = state.copyWith(
-      manualLocation: location,
-      error: null,
-    );
   }
 
   void openLocationSettings() {

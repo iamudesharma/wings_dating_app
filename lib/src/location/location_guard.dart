@@ -17,7 +17,7 @@ class LocationGuard extends AutoRouteGuard {
     await locationService.checkLocationPermission();
     final updatedState = ref.read(locationServiceProvider);
     
-    // Allow navigation if location is available (either GPS or manual)
+    // Allow navigation if GPS location is available
     if (updatedState.hasValidLocation) {
       resolver.next(true);
     } else {

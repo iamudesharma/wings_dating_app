@@ -1,9 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
 import 'package:wings_dating_app/services/location_service.dart';
-import 'package:wings_dating_app/src/model/geo_point_data.dart';
+import 'package:wings_dating_app/routes/app_router.dart';
 
 @RoutePage()
 class LocationPermissionView extends ConsumerStatefulWidget {
@@ -70,13 +69,56 @@ class _LocationPermissionViewState extends ConsumerState<LocationPermissionView>
               
               // Description
               Text(
-                'To use Wings Dating App, please enable your location or select a location manually. This helps us show you nearby people.',
+                'Location access is required to use Wings Dating App. This helps us show you nearby people and enhance your dating experience.',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Colors.grey[600],
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: 16),
+              
+              // Why location is required
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.3)),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: Theme.of(context).primaryColor,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Why we need location:',
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildFeatureItem(context, Icons.people, 'Find people near you'),
+                        const SizedBox(height: 8),
+                        _buildFeatureItem(context, Icons.location_on, 'Calculate distances accurately'),
+                        const SizedBox(height: 8),
+                        _buildFeatureItem(context, Icons.favorite, 'Improve match suggestions'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
               
               // Loading indicator
               if (locationState.isLoading)
@@ -124,7 +166,7 @@ class _LocationPermissionViewState extends ConsumerState<LocationPermissionView>
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Please open app settings and enable location permission, or select your location manually.',
+                          'Please open app settings and enable location permission to continue using the app.',
                           style: TextStyle(color: Colors.orange[600]),
                           textAlign: TextAlign.center,
                         ),
@@ -133,44 +175,22 @@ class _LocationPermissionViewState extends ConsumerState<LocationPermissionView>
                   ),
                 ),
               
-              // Buttons
-              Column(
-                children: [
-                  // Enable Location Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: locationState.isLoading 
-                          ? null 
-                          : () => _handleEnableLocation(locationState, locationService),
-                      icon: const Icon(Icons.location_on),
-                      label: Text(_getLocationButtonText(locationState)),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
+              // Enable Location Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: locationState.isLoading 
+                      ? null 
+                      : () => _handleEnableLocation(locationState, locationService),
+                  icon: const Icon(Icons.location_on),
+                  label: Text(_getLocationButtonText(locationState)),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  
-                  // Manual Location Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: locationState.isLoading ? null : _showLocationPicker,
-                      icon: const Icon(Icons.map),
-                      label: const Text('Select Location Manually'),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
               
               const SizedBox(height: 24),
@@ -223,39 +243,24 @@ class _LocationPermissionViewState extends ConsumerState<LocationPermissionView>
     }
   }
 
-  void _showLocationPicker() async {
-    try {
-      final result = await Navigator.of(context).push<PickedData>(
-        MaterialPageRoute(
-          builder: (context) => LocationPickerPage(
-            apiKey: '', // Using empty API key - app should handle without it
-            currentLatLng: const LatLng(37.7749, -122.4194), // Default to San Francisco
-            searchTextFieldHint: 'Search for a location',
-            bottomCardPadding: const EdgeInsets.all(16),
-            bottomCardHeight: 200,
+  Widget _buildFeatureItem(BuildContext context, IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 16,
+          color: Theme.of(context).primaryColor,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[700],
+            ),
           ),
         ),
-      );
-
-      if (result != null && mounted) {
-        final geoPointData = GeoPointData(
-          geopoint: [result.latLng.longitude, result.latLng.latitude],
-          geohash: '', // You can implement geohash generation if needed
-        );
-        
-        ref.read(locationServiceProvider.notifier).setManualLocation(geoPointData);
-        
-        // Navigation will be handled by the listener in build method
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error selecting location: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
+      ],
+    );
   }
 }
