@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -196,6 +195,238 @@ class _$UserSubscriptionCopyWithImpl<$Res>
     return $SubscriptionFeaturesCopyWith<$Res>(_self.features, (value) {
       return _then(_self.copyWith(features: value));
     });
+  }
+}
+
+/// Adds pattern-matching-related methods to [UserSubscription].
+extension UserSubscriptionPatterns on UserSubscription {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_UserSubscription value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _UserSubscription() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_UserSubscription value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _UserSubscription():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_UserSubscription value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _UserSubscription() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            String id,
+            String userId,
+            SubscriptionPlan plan,
+            SubscriptionStatus status,
+            DateTime startDate,
+            DateTime endDate,
+            SubscriptionFeatures features,
+            DateTime createdAt,
+            DateTime updatedAt,
+            String? transactionId,
+            double? amount,
+            String? currency)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _UserSubscription() when $default != null:
+        return $default(
+            _that.id,
+            _that.userId,
+            _that.plan,
+            _that.status,
+            _that.startDate,
+            _that.endDate,
+            _that.features,
+            _that.createdAt,
+            _that.updatedAt,
+            _that.transactionId,
+            _that.amount,
+            _that.currency);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            String id,
+            String userId,
+            SubscriptionPlan plan,
+            SubscriptionStatus status,
+            DateTime startDate,
+            DateTime endDate,
+            SubscriptionFeatures features,
+            DateTime createdAt,
+            DateTime updatedAt,
+            String? transactionId,
+            double? amount,
+            String? currency)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _UserSubscription():
+        return $default(
+            _that.id,
+            _that.userId,
+            _that.plan,
+            _that.status,
+            _that.startDate,
+            _that.endDate,
+            _that.features,
+            _that.createdAt,
+            _that.updatedAt,
+            _that.transactionId,
+            _that.amount,
+            _that.currency);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            String id,
+            String userId,
+            SubscriptionPlan plan,
+            SubscriptionStatus status,
+            DateTime startDate,
+            DateTime endDate,
+            SubscriptionFeatures features,
+            DateTime createdAt,
+            DateTime updatedAt,
+            String? transactionId,
+            double? amount,
+            String? currency)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _UserSubscription() when $default != null:
+        return $default(
+            _that.id,
+            _that.userId,
+            _that.plan,
+            _that.status,
+            _that.startDate,
+            _that.endDate,
+            _that.features,
+            _that.createdAt,
+            _that.updatedAt,
+            _that.transactionId,
+            _that.amount,
+            _that.currency);
+      case _:
+        return null;
+    }
   }
 }
 
@@ -589,6 +820,232 @@ class _$SubscriptionFeaturesCopyWithImpl<$Res>
   }
 }
 
+/// Adds pattern-matching-related methods to [SubscriptionFeatures].
+extension SubscriptionFeaturesPatterns on SubscriptionFeatures {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_SubscriptionFeatures value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _SubscriptionFeatures() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_SubscriptionFeatures value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _SubscriptionFeatures():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_SubscriptionFeatures value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _SubscriptionFeatures() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            bool unlimitedLikes,
+            bool rewindSwipe,
+            bool whoLikedYou,
+            bool analytics,
+            bool prioritySupport,
+            bool adFree,
+            bool superLikes,
+            int dailySuperLikes,
+            bool boosts,
+            int monthlyBoosts,
+            bool readReceipts)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _SubscriptionFeatures() when $default != null:
+        return $default(
+            _that.unlimitedLikes,
+            _that.rewindSwipe,
+            _that.whoLikedYou,
+            _that.analytics,
+            _that.prioritySupport,
+            _that.adFree,
+            _that.superLikes,
+            _that.dailySuperLikes,
+            _that.boosts,
+            _that.monthlyBoosts,
+            _that.readReceipts);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            bool unlimitedLikes,
+            bool rewindSwipe,
+            bool whoLikedYou,
+            bool analytics,
+            bool prioritySupport,
+            bool adFree,
+            bool superLikes,
+            int dailySuperLikes,
+            bool boosts,
+            int monthlyBoosts,
+            bool readReceipts)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _SubscriptionFeatures():
+        return $default(
+            _that.unlimitedLikes,
+            _that.rewindSwipe,
+            _that.whoLikedYou,
+            _that.analytics,
+            _that.prioritySupport,
+            _that.adFree,
+            _that.superLikes,
+            _that.dailySuperLikes,
+            _that.boosts,
+            _that.monthlyBoosts,
+            _that.readReceipts);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            bool unlimitedLikes,
+            bool rewindSwipe,
+            bool whoLikedYou,
+            bool analytics,
+            bool prioritySupport,
+            bool adFree,
+            bool superLikes,
+            int dailySuperLikes,
+            bool boosts,
+            int monthlyBoosts,
+            bool readReceipts)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _SubscriptionFeatures() when $default != null:
+        return $default(
+            _that.unlimitedLikes,
+            _that.rewindSwipe,
+            _that.whoLikedYou,
+            _that.analytics,
+            _that.prioritySupport,
+            _that.adFree,
+            _that.superLikes,
+            _that.dailySuperLikes,
+            _that.boosts,
+            _that.monthlyBoosts,
+            _that.readReceipts);
+      case _:
+        return null;
+    }
+  }
+}
+
 /// @nodoc
 @JsonSerializable()
 class _SubscriptionFeatures implements SubscriptionFeatures {
@@ -898,6 +1355,196 @@ class _$SubscriptionStatsCopyWithImpl<$Res>
           : averageLifetimeValue // ignore: cast_nullable_to_non_nullable
               as double,
     ));
+  }
+}
+
+/// Adds pattern-matching-related methods to [SubscriptionStats].
+extension SubscriptionStatsPatterns on SubscriptionStats {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_SubscriptionStats value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _SubscriptionStats() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_SubscriptionStats value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _SubscriptionStats():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_SubscriptionStats value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _SubscriptionStats() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            int totalSubscriptions,
+            int activeSubscriptions,
+            Map<String, int> planDistribution,
+            double monthlyRevenue,
+            double averageLifetimeValue)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _SubscriptionStats() when $default != null:
+        return $default(
+            _that.totalSubscriptions,
+            _that.activeSubscriptions,
+            _that.planDistribution,
+            _that.monthlyRevenue,
+            _that.averageLifetimeValue);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            int totalSubscriptions,
+            int activeSubscriptions,
+            Map<String, int> planDistribution,
+            double monthlyRevenue,
+            double averageLifetimeValue)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _SubscriptionStats():
+        return $default(
+            _that.totalSubscriptions,
+            _that.activeSubscriptions,
+            _that.planDistribution,
+            _that.monthlyRevenue,
+            _that.averageLifetimeValue);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            int totalSubscriptions,
+            int activeSubscriptions,
+            Map<String, int> planDistribution,
+            double monthlyRevenue,
+            double averageLifetimeValue)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _SubscriptionStats() when $default != null:
+        return $default(
+            _that.totalSubscriptions,
+            _that.activeSubscriptions,
+            _that.planDistribution,
+            _that.monthlyRevenue,
+            _that.averageLifetimeValue);
+      case _:
+        return null;
+    }
   }
 }
 

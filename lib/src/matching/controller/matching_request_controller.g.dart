@@ -7,7 +7,7 @@ part of 'matching_request_controller.dart';
 // **************************************************************************
 
 String _$matchingRequestControllerHash() =>
-    r'c486ce9a25b565a33bc36fc255b47c5889ad4fb8';
+    r'50c93070cb0f9a561ecdc7134506f56d0488dc93';
 
 /// See also [MatchingRequestController].
 @ProviderFor(MatchingRequestController)

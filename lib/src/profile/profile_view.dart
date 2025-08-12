@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -9,6 +8,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
 import '../../routes/app_router.dart';
+import '../notifications/album_requests_view.dart';
 import 'widgets/profile_input_card.dart';
 
 // import 'package:velocity_x/velocity_x.dart';
@@ -38,6 +38,15 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
             children: [
               AppBar(
                 actions: [
+                  IconButton(
+                    tooltip: 'Album Requests',
+                    icon: const Icon(Icons.notifications),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const AlbumRequestsView()),
+                      );
+                    },
+                  ),
                   IconButton(
                     icon: Icon(Icons.app_blocking),
                     onPressed: () {

@@ -44,13 +44,7 @@ dependencies:
   cloud_firestore: ^5.6.6
   firebase_storage: ^12.4.5
   # c: ^1.0.0-dev.45
-  cloud_firestore_odm:
-    git:
-      url: https://github.com/dorklein/firestoreodm-flutter.git
-      ref: "main"
-      path: "packages/cloud_firestore_odm"
-
-
+  
   # json_annotation: ^4.7.0
   auto_route: ^10.0.1
   # flutterfire_ui: ^0.4.3+20
@@ -166,12 +160,7 @@ dev_dependencies:
   custom_lint:
   riverpod_lint:
   google_mobile_ads: ^6.0.0
-  cloud_firestore_odm_generator:
-    git:
-      url: https://github.com/dorklein/firestoreodm-flutter.git
-      ref: "main"
-      path: "packages/cloud_firestore_odm_generator"
-  
+ 
 
 dependency_overrides:
 
@@ -182,12 +171,6 @@ dependency_overrides:
       path: "cached_network_image"
 
   intl: ^0.20.2
-  cloud_firestore_odm:
-    git:
-      url: https://github.com/dorklein/firestoreodm-flutter.git
-      ref: "main"
-      path: "packages/cloud_firestore_odm"
-
 
 
 

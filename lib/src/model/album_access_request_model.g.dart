@@ -35,56 +35,6 @@ _AlbumAccessRequestModel _$AlbumAccessRequestModelFromJson(
           : UserAlbumModel.fromJson(json['album'] as Map<String, dynamic>),
     );
 
-const _$AlbumAccessRequestModelFieldMap = <String, String>{
-  'id': '_id',
-  'albumId': 'albumId',
-  'requesterId': 'requesterId',
-  'message': 'message',
-  'status': 'status',
-  'createdAt': 'createdAt',
-  'updatedAt': 'updatedAt',
-  'albumOwnerId': 'albumOwnerId',
-  'moderatorId': 'moderatorId',
-  'respondedAt': 'respondedAt',
-  'rejectionReason': 'rejectionReason',
-  'requester': 'requester',
-  'albumOwner': 'albumOwner',
-  'album': 'album',
-};
-
-// ignore: unused_element
-abstract class _$AlbumAccessRequestModelPerFieldToJson {
-  // ignore: unused_element
-  static Object? id(String? instance) => instance;
-  // ignore: unused_element
-  static Object? albumId(String instance) => instance;
-  // ignore: unused_element
-  static Object? requesterId(String instance) => instance;
-  // ignore: unused_element
-  static Object? message(String instance) => instance;
-  // ignore: unused_element
-  static Object? status(AccessRequestStatus instance) =>
-      _$AccessRequestStatusEnumMap[instance]!;
-  // ignore: unused_element
-  static Object? createdAt(DateTime instance) => instance.toIso8601String();
-  // ignore: unused_element
-  static Object? updatedAt(DateTime instance) => instance.toIso8601String();
-  // ignore: unused_element
-  static Object? albumOwnerId(String? instance) => instance;
-  // ignore: unused_element
-  static Object? moderatorId(String? instance) => instance;
-  // ignore: unused_element
-  static Object? respondedAt(DateTime? instance) => instance?.toIso8601String();
-  // ignore: unused_element
-  static Object? rejectionReason(String? instance) => instance;
-  // ignore: unused_element
-  static Object? requester(UserModel? instance) => instance?.toJson();
-  // ignore: unused_element
-  static Object? albumOwner(UserModel? instance) => instance?.toJson();
-  // ignore: unused_element
-  static Object? album(UserAlbumModel? instance) => instance?.toJson();
-}
-
 Map<String, dynamic> _$AlbumAccessRequestModelToJson(
         _AlbumAccessRequestModel instance) =>
     <String, dynamic>{
@@ -121,6 +71,37 @@ _AlbumRequestStats _$AlbumRequestStatsFromJson(Map<String, dynamic> json) =>
       requestsThisMonth: (json['requestsThisMonth'] as num).toInt(),
       averageResponseTime: (json['averageResponseTime'] as num).toDouble(),
     );
+
+const _$AlbumRequestStatsFieldMap = <String, String>{
+  'totalRequests': 'totalRequests',
+  'pendingRequests': 'pendingRequests',
+  'approvedRequests': 'approvedRequests',
+  'rejectedRequests': 'rejectedRequests',
+  'requestsToday': 'requestsToday',
+  'requestsThisWeek': 'requestsThisWeek',
+  'requestsThisMonth': 'requestsThisMonth',
+  'averageResponseTime': 'averageResponseTime',
+};
+
+// ignore: unused_element
+abstract class _$AlbumRequestStatsPerFieldToJson {
+  // ignore: unused_element
+  static Object? totalRequests(int instance) => instance;
+  // ignore: unused_element
+  static Object? pendingRequests(int instance) => instance;
+  // ignore: unused_element
+  static Object? approvedRequests(int instance) => instance;
+  // ignore: unused_element
+  static Object? rejectedRequests(int instance) => instance;
+  // ignore: unused_element
+  static Object? requestsToday(int instance) => instance;
+  // ignore: unused_element
+  static Object? requestsThisWeek(int instance) => instance;
+  // ignore: unused_element
+  static Object? requestsThisMonth(int instance) => instance;
+  // ignore: unused_element
+  static Object? averageResponseTime(double instance) => instance;
+}
 
 Map<String, dynamic> _$AlbumRequestStatsToJson(_AlbumRequestStats instance) =>
     <String, dynamic>{
