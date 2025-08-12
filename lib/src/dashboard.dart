@@ -45,7 +45,12 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
     // Listen for location state changes and redirect if needed
     ref.listen(locationServiceProvider, (previous, current) {
       if (!current.hasValidLocation && mounted) {
-        AutoRouter.of(context).pushAndClearStack(const LocationPermissionRoute());
+        // Use a delayed navigation to avoid conflicts with other navigations
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (mounted) {
+            AutoRouter.of(context).pushAndClearStack(const LocationPermissionRoute());
+          }
+        });
       }
     });
     
@@ -55,7 +60,14 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
     if (locationState.isLoading) {
       return const Scaffold(
         body: Center(
-          child: CircularProgressIndicator(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Checking location permission...'),
+            ],
+          ),
         ),
       );
     }
@@ -69,7 +81,14 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
       });
       return const Scaffold(
         body: Center(
-          child: CircularProgressIndicator(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Setting up location...'),
+            ],
+          ),
         ),
       );
     }

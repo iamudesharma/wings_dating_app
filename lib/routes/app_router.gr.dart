@@ -383,6 +383,22 @@ class ImagePreviewRouteArgs {
 }
 
 /// generated route for
+/// [LocationPermissionView]
+class LocationPermissionRoute extends PageRouteInfo<void> {
+  const LocationPermissionRoute({List<PageRouteInfo>? children})
+    : super(LocationPermissionRoute.name, initialChildren: children);
+
+  static const String name = 'LocationPermissionRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const LocationPermissionView();
+    },
+  );
+}
+
+/// generated route for
 /// [LoginView]
 class LoginRoute extends PageRouteInfo<void> {
   const LoginRoute({List<PageRouteInfo>? children})

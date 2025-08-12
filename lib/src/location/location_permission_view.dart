@@ -103,6 +103,35 @@ class _LocationPermissionViewState extends ConsumerState<LocationPermissionView>
                     ),
                   ),
                 ),
+
+              // Status message for permanently denied permissions
+              if (locationState.status == LocationPermissionStatus.deniedForever)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Location permission was permanently denied.',
+                          style: TextStyle(color: Colors.orange[700], fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Please open app settings and enable location permission, or select your location manually.',
+                          style: TextStyle(color: Colors.orange[600]),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               
               // Buttons
               Column(
@@ -199,7 +228,7 @@ class _LocationPermissionViewState extends ConsumerState<LocationPermissionView>
       final result = await Navigator.of(context).push<PickedData>(
         MaterialPageRoute(
           builder: (context) => LocationPickerPage(
-            apiKey: 'YOUR_API_KEY', // You might need to add an API key for map tiles
+            apiKey: '', // Using empty API key - app should handle without it
             currentLatLng: const LatLng(37.7749, -122.4194), // Default to San Francisco
             searchTextFieldHint: 'Search for a location',
             bottomCardPadding: const EdgeInsets.all(16),
@@ -208,7 +237,7 @@ class _LocationPermissionViewState extends ConsumerState<LocationPermissionView>
         ),
       );
 
-      if (result != null) {
+      if (result != null && mounted) {
         final geoPointData = GeoPointData(
           geopoint: [result.latLng.longitude, result.latLng.latitude],
           geohash: '', // You can implement geohash generation if needed

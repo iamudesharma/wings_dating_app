@@ -55,45 +55,11 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
   // late StreamSubscription<List<ConnectivityResult>> connectivityStateSubscription;
   AppLifecycleState? appState;
 
-  Widget? nullWidget;
-
-  checkIfService() async {
-    Geolocator.isLocationServiceEnabled().then((value) async {
-      if (value) {
-        checkISLocationEnabled(await Geolocator.checkPermission());
-      } else {
-        nullWidget = Center(
-          child: Column(
-            children: [
-              const Text("Please enable location service"),
-              TextButton(
-                child: const Text("Enable"),
-                onPressed: () {
-                  Geolocator.openLocationSettings();
-                },
-              )
-            ],
-          ),
-        );
-      }
-    });
-  }
-
-  checkISLocationEnabled(LocationPermission locationPermission) async {
-    return switch (locationPermission) {
-      LocationPermission.denied => await Geolocator.requestPermission(),
-      LocationPermission.deniedForever => "deniedForever",
-      LocationPermission.whileInUse => true,
-      LocationPermission.always => true,
-      LocationPermission.unableToDetermine => "unableToDetermine",
-    };
-  }
-
   @override
   void initState() {
     // _loginToCubeChat(); s
 
-    checkIfService();
+    // Location checking is now handled by LocationService and LocationGuard
 
     if (!kIsWeb) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -203,8 +169,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
     return Scaffold(
       body: ResponsiveBuilder(builder: (context, sizingInformation) {
-        return nullWidget ??
-            CustomScrollView(
+        return CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
                   child: AppBar(
