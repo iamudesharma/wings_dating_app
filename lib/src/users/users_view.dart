@@ -57,26 +57,100 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
   Widget? nullWidget;
 
-  checkIfService() async {
-    Geolocator.isLocationServiceEnabled().then((value) async {
-      if (value) {
-        checkISLocationEnabled(await Geolocator.checkPermission());
-      } else {
-        nullWidget = Center(
-          child: Column(
-            children: [
-              const Text("Please enable location service"),
-              TextButton(
-                child: const Text("Enable"),
-                onPressed: () {
-                  Geolocator.openLocationSettings();
-                },
-              )
-            ],
-          ),
+  Future<void> checkIfService() async {
+    // Check if device location services are enabled
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      if (!mounted) return;
+      setState(() {
+        nullWidget = _buildGate(
+          icon: Icons.location_disabled,
+          title: 'Enable Location Services',
+          message: 'Location services are turned off. Please enable them to continue.',
+          actionText: 'Open Location Settings',
+          onAction: () {
+            Geolocator.openLocationSettings();
+          },
         );
-      }
+      });
+      return;
+    }
+
+    // Check and request permission if needed
+    var permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      if (!mounted) return;
+      setState(() {
+        nullWidget = _buildGate(
+          icon: Icons.location_off_outlined,
+          title: 'Location Permission Required',
+          message: 'We need your location to show nearby users. Enable it in Settings.',
+          actionText: 'Open App Settings',
+          onAction: () {
+            Geolocator.openAppSettings();
+          },
+        );
+      });
+      return;
+    }
+
+    // All good – clear any gating widget
+    if (!mounted) return;
+    setState(() {
+      nullWidget = null;
     });
+  }
+
+  Widget _buildGate({
+    required IconData icon,
+    required String title,
+    required String message,
+    required String actionText,
+    required VoidCallback onAction,
+  }) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 56, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  ),
+            ),
+            const SizedBox(height: 20),
+            FilledButton.icon(
+              onPressed: onAction,
+              icon: const Icon(Icons.settings_outlined),
+              label: Text(actionText),
+            ),
+            const SizedBox(height: 8),
+            TextButton(
+              onPressed: () {
+                // Allow user to re-check after enabling without leaving the app
+                checkIfService();
+              },
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   checkISLocationEnabled(LocationPermission locationPermission) async {
@@ -139,6 +213,8 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
         "isOnline": true,
         "lastSeen": ServerValue.timestamp,
       });
+  // Re-check permissions/services when returning from Settings
+  checkIfService();
     }
   }
 

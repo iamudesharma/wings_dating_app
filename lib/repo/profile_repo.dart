@@ -214,8 +214,9 @@ class ProfileRepo with RepositoryExceptionMixin {
   }) async {
     print("getFilterList filters: $filters");
     try {
-      final currentUser = ref.read(ProfileController.userControllerProvider).userModel;
-      if (currentUser == null) throw Exception('No current user logged in');
+  // Prefer using a preloaded user from the controller, but fall back to fetching
+  var currentUser = ref.read(ProfileController.userControllerProvider).userModel;
+  currentUser ??= await getCurrentUser();
       final geopoint = currentUser.position?.geopoint;
       if (geopoint == null || geopoint.length < 2) {
         logger.e("User position or geopoint is null or incomplete");

@@ -36,12 +36,17 @@ class DiscoveryState {
 }
 
 class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
-  static const int limit = 10;
-  static const Duration cooldown = Duration(hours: 1);
+  // We only show a few profiles per cycle.
+  static const int limit = 3;
+  // Profiles reset every 24 hours.
+  static const Duration cooldown = Duration(hours: 24);
 
   static const _kUsers = 'discovery_users_json';
   static const _kFetchedAt = 'discovery_fetched_at';
   static const _kNextAt = 'discovery_next_at';
+  // Persisted schema/version to support migrations (e.g., 1h -> 24h window)
+  static const _kVersion = 'discovery_version';
+  static const int _version = 2; // bump when changing persistence semantics
 
   Timer? _cooldownTimer;
 
@@ -50,6 +55,20 @@ class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
     // Try restore persisted state first
     final restored = await _restore();
     if (restored != null) {
+      // If we restored but have no users cached, fetch immediately regardless of cooldown
+      if (restored.users.isEmpty) {
+        final fresh = await _fetchDiscovery();
+        _scheduleCooldownCheck(fresh.nextAvailableAt);
+        ref.onDispose(() => _cooldownTimer?.cancel());
+        return fresh;
+      }
+      // If cooldown already expired while we were disposed, fetch a fresh batch immediately
+      if (DateTime.now().isAfter(restored.nextAvailableAt)) {
+        final fresh = await _fetchDiscovery();
+        _scheduleCooldownCheck(fresh.nextAvailableAt);
+        ref.onDispose(() => _cooldownTimer?.cancel());
+        return fresh;
+      }
       _scheduleCooldownCheck(restored.nextAvailableAt);
       ref.onDispose(() => _cooldownTimer?.cancel());
       return restored;
@@ -66,11 +85,19 @@ class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
     _cooldownTimer?.cancel();
     final now = DateTime.now();
     final remaining = nextAvailableAt.difference(now);
-    if (remaining.isNegative) return; // cooldown already expired
-    _cooldownTimer = Timer(remaining, () {
-      final current = state.valueOrNull;
-      if (current != null) {
-        state = AsyncData(current.copyWith(isCooldown: false));
+  if (remaining.isNegative || remaining == Duration.zero) return; // cooldown already expired or zero-delay
+    _cooldownTimer = Timer(remaining, () async {
+      // When the countdown ends, automatically refresh the batch and start a new cycle.
+      try {
+        final newState = await _fetchDiscovery();
+        _scheduleCooldownCheck(newState.nextAvailableAt);
+        state = AsyncData(newState);
+      } catch (_) {
+        // If fetch fails, at least mark cooldown as over to enable manual retry
+        final current = state.valueOrNull;
+        if (current != null) {
+          state = AsyncData(current.copyWith(isCooldown: false));
+        }
       }
     });
   }
@@ -85,7 +112,7 @@ class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
 
   Future<DiscoveryState> _fetchDiscovery() async {
     final repo = ref.read(profileRepoProvider);
-    // Reuse getFilterList hitting /users/discover with limit=10 as server source of truth
+  // Reuse getFilterList hitting /users/discover with limit as server source of truth
     final PaginatedUserResponse resp = await repo.getFilterList(filters: {}, page: 1, limit: limit);
 
     final users = <UserModel>[];
@@ -143,12 +170,14 @@ class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
     }
 
     final fetchedAt = DateTime.now();
-    final nextAvailableAt = fetchedAt.add(cooldown);
+    // If we received no users, don't lock the user in a long cooldown.
+    // Let them retry immediately.
+    final nextAvailableAt = users.isEmpty ? fetchedAt : fetchedAt.add(cooldown);
     final newState = DiscoveryState(
       users: users,
       fetchedAt: fetchedAt,
       nextAvailableAt: nextAvailableAt,
-      isCooldown: true, // start cooldown immediately after fetch
+  isCooldown: users.isNotEmpty, // start cooldown only when we actually have results
     );
     await _persist(newState);
     return newState;
@@ -160,6 +189,7 @@ class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
     await prefs.setString(_kUsers, usersJson);
     await prefs.setString(_kFetchedAt, s.fetchedAt.toIso8601String());
     await prefs.setString(_kNextAt, s.nextAvailableAt.toIso8601String());
+    await prefs.setInt(_kVersion, _version);
   }
 
   Future<DiscoveryState?> _restore() async {
@@ -167,6 +197,7 @@ class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
     final usersStr = prefs.getString(_kUsers);
     final fetchedStr = prefs.getString(_kFetchedAt);
     final nextStr = prefs.getString(_kNextAt);
+    final savedVersion = prefs.getInt(_kVersion) ?? 0; // 0 means legacy (pre-versioned)
 
     if (usersStr == null || fetchedStr == null || nextStr == null) return null;
 
@@ -174,8 +205,18 @@ class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
       final List<dynamic> decoded = jsonDecode(usersStr) as List<dynamic>;
       final users = decoded.map((e) => UserModel.fromJson(e as Map<String, dynamic>)).toList();
       final fetchedAt = DateTime.parse(fetchedStr);
-      final nextAvailableAt = DateTime.parse(nextStr);
+      DateTime nextAvailableAt = DateTime.parse(nextStr);
       final now = DateTime.now();
+
+      // Migration: if legacy state (e.g., 1-hour cooldown) exists, re-anchor to 24h policy
+      final desiredNext = fetchedAt.add(cooldown);
+      final legacyWindow = nextAvailableAt.isBefore(desiredNext);
+      if (savedVersion < _version || legacyWindow) {
+        nextAvailableAt = desiredNext;
+        // Persist upgraded version and nextAt so subsequent restores are consistent
+        await prefs.setInt(_kVersion, _version);
+        await prefs.setString(_kNextAt, nextAvailableAt.toIso8601String());
+      }
       final isCooldown = now.isBefore(nextAvailableAt);
 
       return DiscoveryState(
@@ -193,3 +234,32 @@ class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
 final discoveryControllerProvider = AutoDisposeAsyncNotifierProvider<DiscoveryController, DiscoveryState>(
   DiscoveryController.new,
 );
+
+/// Emits the remaining time until the next discovery refresh.
+/// If the countdown is negative or reaches zero, it emits Duration.zero.
+final discoveryCountdownProvider = StreamProvider.autoDispose<Duration>((ref) async* {
+  // Recompute when discovery state changes (e.g., after auto-refresh)
+  final asyncState = ref.watch(discoveryControllerProvider);
+  final state = asyncState.valueOrNull;
+  if (state == null) {
+    yield Duration.zero;
+    return;
+  }
+  // Tick every second until nextAvailableAt
+  while (true) {
+    final remaining = state.nextAvailableAt.difference(DateTime.now());
+    if (remaining.isNegative) {
+      yield Duration.zero;
+      break;
+    }
+    yield remaining;
+    // Small delay; autoDispose ensures cancellation on widget dispose
+    await Future<void>.delayed(const Duration(seconds: 1));
+    // If discovery state changed (e.g., auto-refresh), restart loop to use new target time
+    final latest = ref.read(discoveryControllerProvider).valueOrNull;
+    if (latest == null || latest.nextAvailableAt != state.nextAvailableAt) {
+      // Exit so the outer watch triggers a new stream with updated target
+      break;
+    }
+  }
+});

@@ -29,7 +29,8 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
 
   @override
   Widget build(BuildContext context) {
-    final discovery = ref.watch(discoveryControllerProvider);
+  final discovery = ref.watch(discoveryControllerProvider);
+  final countdown = ref.watch(discoveryCountdownProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -43,7 +44,9 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
                   actions: [
                     discovery.when(
                       data: (data) => Tooltip(
-                        message: data.isCooldown ? _cooldownTooltip(data.nextAvailableAt) : 'Refresh matches',
+                        message: data.isCooldown
+                            ? _cooldownTooltip(countdown.value ?? data.nextAvailableAt.difference(DateTime.now()))
+                            : 'Refresh matches',
                         child: IconButton(
                           icon: Icon(
                             Icons.refresh,
@@ -87,15 +90,16 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
                           onRetry: () => ref.read(discoveryControllerProvider.notifier).refreshIfAllowed(),
                         ),
                         data: (data) {
-                          if (data.users.isEmpty) {
+              if (data.users.isEmpty) {
                             return _EmptyCard(
                               isCooldown: data.isCooldown,
                               nextAt: data.nextAvailableAt,
-                              onRefresh: () => ref.read(discoveryControllerProvider.notifier).refreshIfAllowed(),
+                onRefresh: () => ref.read(discoveryControllerProvider.notifier).refreshIfAllowed(),
+                remaining: countdown.value,
                             );
                           }
 
-                          // Grid of up to 10 users
+                          // Grid of up to 3 users
                           final currentGeo = _currentUserGeoPoint();
                           final crossAxisCount = sizingInformation.isDesktop
                               ? 4
@@ -104,7 +108,33 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
                                   : 2;
                           return Padding(
                             padding: const EdgeInsets.all(12.0),
-                            child: GridView.builder(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                if (data.isCooldown)
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      margin: const EdgeInsets.only(bottom: 8),
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.surface,
+                                        borderRadius: BorderRadius.circular(8),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.05),
+                                            blurRadius: 6,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        _cooldownTooltip(countdown.value ?? data.nextAvailableAt.difference(DateTime.now())),
+                                        style: theme.textTheme.bodyMedium,
+                                      ),
+                                    ),
+                                  ),
+                                GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -113,15 +143,17 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
                                 mainAxisSpacing: 12,
                                 childAspectRatio: 0.75,
                               ),
-                              itemCount: data.users.length,
-                              itemBuilder: (context, index) {
-                                final user = data.users[index];
-                                return UserGridItem(
-                                  users: user,
-                                  isCurrentUser: false,
-                                  userCoordinates: currentGeo,
-                                );
-                              },
+                                  itemCount: data.users.length > 3 ? 3 : data.users.length,
+                                  itemBuilder: (context, index) {
+                                    final user = data.users[index];
+                                    return UserGridItem(
+                                      users: user,
+                                      isCurrentUser: false,
+                                      userCoordinates: currentGeo,
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           );
                         },
@@ -137,12 +169,15 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
     );
   }
 
-  String _cooldownTooltip(DateTime nextAt) {
-    final diff = nextAt.difference(DateTime.now());
-    if (diff.isNegative) return 'Refresh matches';
-    final minutes = diff.inMinutes;
-    final seconds = diff.inSeconds % 60;
-    return 'Try again in ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  String _cooldownTooltip(Duration remaining) {
+    if (remaining.isNegative || remaining == Duration.zero) return 'Refresh matches';
+    final hours = remaining.inHours;
+    final minutes = remaining.inMinutes.remainder(60);
+    final seconds = remaining.inSeconds.remainder(60);
+    if (hours > 0) {
+      return 'Profiles refresh in ${hours}h ${minutes}m ${seconds}s';
+    }
+    return 'Profiles refresh in ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 }
 
@@ -150,7 +185,8 @@ class _EmptyCard extends StatelessWidget {
   final bool isCooldown;
   final DateTime nextAt;
   final VoidCallback onRefresh;
-  const _EmptyCard({required this.isCooldown, required this.nextAt, required this.onRefresh});
+  final Duration? remaining;
+  const _EmptyCard({required this.isCooldown, required this.nextAt, required this.onRefresh, this.remaining});
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +220,9 @@ class _EmptyCard extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton.icon(
               icon: const Icon(Icons.refresh),
-              label: Text(isCooldown ? _cooldownText(nextAt) : 'Refresh'),
+              label: Text(isCooldown
+                  ? _cooldownDurationText(remaining ?? nextAt.difference(DateTime.now()))
+                  : 'Refresh'),
               onPressed: isCooldown ? null : onRefresh,
             ),
           ],
@@ -193,11 +231,12 @@ class _EmptyCard extends StatelessWidget {
     );
   }
 
-  static String _cooldownText(DateTime nextAt) {
-    final diff = nextAt.difference(DateTime.now());
-    if (diff.isNegative) return 'Refresh';
-    final minutes = diff.inMinutes;
-    final seconds = diff.inSeconds % 60;
+  static String _cooldownDurationText(Duration remaining) {
+    if (remaining.isNegative || remaining == Duration.zero) return 'Refresh';
+    final hours = remaining.inHours;
+    final minutes = remaining.inMinutes % 60;
+    final seconds = remaining.inSeconds % 60;
+    if (hours > 0) return 'Try again in ${hours}h ${minutes}m';
     return 'Try again in ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 }

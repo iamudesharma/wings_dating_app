@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -20,8 +19,6 @@ import 'package:wings_dating_app/src/model/geo_point_data.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/add_additional_information_view.dart';
-
-import '../../helpers/responsive_layout.dart';
 
 @RoutePage()
 class EditProfileView extends ConsumerStatefulWidget {
@@ -61,7 +58,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
       if (userdata != null) {
         logger.i(userdata);
 
-        _usernameController.text = userdata.username ?? "";
+        _usernameController.text = userdata.username;
         _dobController.text = userdata.birthday ?? "";
         _bioController.text = userdata.bio ?? "";
       }
@@ -121,6 +118,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
             : 90;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+        title: Text(widget.isEditProfile ? 'Edit Profile' : 'Create Profile'),
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: maxWidth),
@@ -137,7 +137,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
               Card(
                 elevation: 8,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-                color: Theme.of(context).colorScheme.surface.withOpacity(isDark ? 0.98 : 0.95),
+                color: Theme.of(context).colorScheme.surface.withValues(alpha: isDark ? 0.98 : 0.95),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: cardPadding, vertical: cardPadding),
                   child: Form(
@@ -154,7 +154,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.18),
+                                    color: Colors.black.withValues(alpha: 0.18),
                                     blurRadius: 24,
                                     offset: const Offset(0, 8),
                                   ),
@@ -176,7 +176,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                         (!widget.isEditProfile || (profile.userModel?.profileUrl?.isEmpty ?? true)))
                                     ? Icon(Icons.person,
                                         size: imageSize / 2,
-                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))
+                                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))
                                     : null,
                               ),
                             ),
@@ -217,17 +217,18 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   child: Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.primary,
+                                      color: Theme.of(context).colorScheme.secondaryContainer,
                                       shape: BoxShape.circle,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(0.12),
+                                          color: Colors.black.withValues(alpha: 0.12),
                                           blurRadius: 8,
                                           offset: const Offset(0, 2),
                                         ),
                                       ],
                                     ),
-                                    child: Icon(Icons.edit, color: Theme.of(context).colorScheme.onPrimary, size: 22),
+                                    child: Icon(Icons.edit,
+                                        color: Theme.of(context).colorScheme.onSecondaryContainer, size: 22),
                                   ),
                                 ),
                               ),
@@ -244,7 +245,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                           validator: (value) => value!.isEmpty ? "Please enter a Username" : null,
                           decoration: InputDecoration(
                             isDense: true,
-                            hintText: "Username",
+                            labelText: "Username",
                             prefixIcon: Icon(Icons.person, color: Theme.of(context).colorScheme.primary),
                           ),
                           controller: _usernameController,
@@ -254,7 +255,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                           validator: (value) => value!.isEmpty ? "Please enter your Date of Birth" : null,
                           decoration: InputDecoration(
                             isDense: true,
-                            hintText: "Date of Birth",
+                            labelText: "Date of Birth",
                             prefixIcon: Icon(Icons.cake, color: Theme.of(context).colorScheme.primary),
                           ),
                           controller: _dobController,
@@ -289,14 +290,14 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                           controller: _bioController,
                           decoration: InputDecoration(
                             isDense: true,
-                            hintText: "Bio",
+                            labelText: "Bio",
                             prefixIcon: Icon(Icons.info_outline, color: Theme.of(context).colorScheme.primary),
                           ),
                         ),
                         const SizedBox(height: 20),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: TextButton.icon(
+                          child: FilledButton.tonalIcon(
                             icon: const Icon(Icons.add),
                             onPressed: () async {
                               context.router.push(const AddAdditionalInformationRoute());
@@ -312,9 +313,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                             visible: _loading,
                             replacement: SizedBox(
                               width: double.infinity,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).colorScheme.primary,
+                              child: FilledButton(
+                                style: FilledButton.styleFrom(
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                                   padding: const EdgeInsets.symmetric(vertical: 16),
                                   textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
