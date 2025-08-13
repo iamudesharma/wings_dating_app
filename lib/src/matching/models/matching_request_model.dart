@@ -1,20 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'matching_request_model.freezed.dart';
 part 'matching_request_model.g.dart';
 
 @freezed
+@JsonSerializable(
+  createToJson: true,
+  createFieldMap: true,
+  createPerFieldToJson: true,
+  explicitToJson: true,
+)
 abstract class MatchingRequestModel with _$MatchingRequestModel {
-  @JsonSerializable(
-    createToJson: true,
-    createFieldMap: true,
-    createPerFieldToJson: true,
-    explicitToJson: true,
-  )
   factory MatchingRequestModel({
     required String userId,
     required RangeValue ageRange,
@@ -41,13 +37,13 @@ abstract class MatchingRequestModel with _$MatchingRequestModel {
 // part 'matching_request_model.freezed.dart';
 
 @freezed
+@JsonSerializable(
+  createToJson: true,
+  createFieldMap: true,
+  createPerFieldToJson: true,
+  explicitToJson: true,
+)
 abstract class RangeValue with _$RangeValue {
-  @JsonSerializable(
-    createToJson: true,
-    createFieldMap: true,
-    createPerFieldToJson: true,
-    explicitToJson: true,
-  )
   factory RangeValue({
     required double start,
     required double end,

@@ -6,7 +6,6 @@ part 'album_model.g.dart';
 
 @freezed
 abstract class UserAlbumModel with _$UserAlbumModel {
-  @JsonSerializable(explicitToJson: true, createToJson: true) // keep only valid options
   factory UserAlbumModel({
     required String ownerId,
     required String name,

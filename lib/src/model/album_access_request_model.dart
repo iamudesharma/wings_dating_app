@@ -5,23 +5,7 @@ import 'user_models.dart';
 part 'album_access_request_model.freezed.dart';
 part 'album_access_request_model.g.dart';
 
-// Helpers to (de)serialize the embedded UserAlbumModel inside requests
-UserAlbumModel? _albumFromJson(Map<String, dynamic>? json) => json == null ? null : UserAlbumModel.fromJson(json);
-
-Map<String, dynamic>? _albumToJson(UserAlbumModel? album) {
-  if (album == null) return null;
-  return {
-    'ownerId': album.ownerId,
-    'name': album.name,
-    'photos': album.photos,
-    'sharedWith': album.sharedWith,
-    'createdAt': album.createdAt.toIso8601String(),
-    'updatedAt': album.updatedAt.toIso8601String(),
-    'isShared': album.isShared,
-    'owner': album.owner?.toJson(),
-    'id': album.id,
-  };
-}
+// Note: Any nested model serialization is handled by their own fromJson/toJson.
 
 enum AccessRequestStatus {
   @JsonValue('pending')
@@ -33,15 +17,12 @@ enum AccessRequestStatus {
 }
 
 @freezed
+@JsonSerializable(
+  explicitToJson: true,
+)
 abstract class AlbumAccessRequestModel with _$AlbumAccessRequestModel {
-  @JsonSerializable(
-    explicitToJson: true,
-    // createToJson: true,
-    // createFieldMap: true,
-    // createPerFieldToJson: true,
-  )
   const factory AlbumAccessRequestModel({
-    @JsonKey(name: '_id') String? id,
+    String? id,
     required String albumId,
     required String requesterId,
     required String message,
@@ -61,13 +42,13 @@ abstract class AlbumAccessRequestModel with _$AlbumAccessRequestModel {
 }
 
 @freezed
+@JsonSerializable(
+  explicitToJson: true,
+  createToJson: true,
+  createFieldMap: true,
+  createPerFieldToJson: true,
+)
 abstract class AlbumRequestStats with _$AlbumRequestStats {
-  @JsonSerializable(
-    explicitToJson: true,
-    createToJson: true,
-    createFieldMap: true,
-    createPerFieldToJson: true,
-  )
   const factory AlbumRequestStats({
     required int totalRequests,
     required int pendingRequests,

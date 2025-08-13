@@ -2,11 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:wings_dating_app/helpers/extra_data.dart';
 import 'geo_point_data.dart';
 
@@ -14,13 +10,13 @@ part 'user_models.freezed.dart';
 part 'user_models.g.dart';
 
 @freezed
+@JsonSerializable(
+  createToJson: true,
+  createFieldMap: true,
+  createPerFieldToJson: true,
+  explicitToJson: true,
+)
 abstract class UserModel with _$UserModel {
-  @JsonSerializable(
-    createToJson: true,
-    createFieldMap: true,
-    createPerFieldToJson: true,
-    explicitToJson: true,
-  )
   factory UserModel({
     required String username,
     String? bio,
