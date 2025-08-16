@@ -6,7 +6,7 @@ part of 'user_privacy.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_UserPrivacy _$UserPrivacyFromJson(Map<String, dynamic> json) => _UserPrivacy(
+UserPrivacy _$UserPrivacyFromJson(Map<String, dynamic> json) => UserPrivacy(
       id: json['id'] as String,
       userId: json['userId'] as String,
       profileVisibility:
@@ -27,7 +27,7 @@ _UserPrivacy _$UserPrivacyFromJson(Map<String, dynamic> json) => _UserPrivacy(
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
-Map<String, dynamic> _$UserPrivacyToJson(_UserPrivacy instance) =>
+Map<String, dynamic> _$UserPrivacyToJson(UserPrivacy instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,
@@ -59,9 +59,9 @@ const _$LocationPrivacyEnumMap = {
   LocationPrivacy.hidden: 'hidden',
 };
 
-_PrivacyUpdateRequest _$PrivacyUpdateRequestFromJson(
+PrivacyUpdateRequest _$PrivacyUpdateRequestFromJson(
         Map<String, dynamic> json) =>
-    _PrivacyUpdateRequest(
+    PrivacyUpdateRequest(
       profileVisibility: $enumDecodeNullable(
           _$ProfileVisibilityEnumMap, json['profileVisibility']),
       locationPrivacy: $enumDecodeNullable(
@@ -79,18 +79,24 @@ _PrivacyUpdateRequest _$PrivacyUpdateRequestFromJson(
     );
 
 Map<String, dynamic> _$PrivacyUpdateRequestToJson(
-        _PrivacyUpdateRequest instance) =>
+        PrivacyUpdateRequest instance) =>
     <String, dynamic>{
-      'profileVisibility':
-          _$ProfileVisibilityEnumMap[instance.profileVisibility],
-      'locationPrivacy': _$LocationPrivacyEnumMap[instance.locationPrivacy],
-      'showOnlineStatus': instance.showOnlineStatus,
-      'showLastSeen': instance.showLastSeen,
-      'showProfileViews': instance.showProfileViews,
-      'showDistance': instance.showDistance,
-      'showAge': instance.showAge,
-      'showInterests': instance.showInterests,
-      'allowMessagesFrom':
-          _$ProfileVisibilityEnumMap[instance.allowMessagesFrom],
-      'allowLikesFrom': _$ProfileVisibilityEnumMap[instance.allowLikesFrom],
+      if (_$ProfileVisibilityEnumMap[instance.profileVisibility]
+          case final value?)
+        'profileVisibility': value,
+      if (_$LocationPrivacyEnumMap[instance.locationPrivacy] case final value?)
+        'locationPrivacy': value,
+      if (instance.showOnlineStatus case final value?)
+        'showOnlineStatus': value,
+      if (instance.showLastSeen case final value?) 'showLastSeen': value,
+      if (instance.showProfileViews case final value?)
+        'showProfileViews': value,
+      if (instance.showDistance case final value?) 'showDistance': value,
+      if (instance.showAge case final value?) 'showAge': value,
+      if (instance.showInterests case final value?) 'showInterests': value,
+      if (_$ProfileVisibilityEnumMap[instance.allowMessagesFrom]
+          case final value?)
+        'allowMessagesFrom': value,
+      if (_$ProfileVisibilityEnumMap[instance.allowLikesFrom] case final value?)
+        'allowLikesFrom': value,
     };

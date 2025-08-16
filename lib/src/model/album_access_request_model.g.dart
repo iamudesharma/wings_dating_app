@@ -6,10 +6,10 @@ part of 'album_access_request_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_AlbumAccessRequestModel _$AlbumAccessRequestModelFromJson(
+AlbumAccessRequestModel _$AlbumAccessRequestModelFromJson(
         Map<String, dynamic> json) =>
-    _AlbumAccessRequestModel(
-      id: json['_id'] as String?,
+    AlbumAccessRequestModel(
+      id: json['id'] as String?,
       albumId: json['albumId'] as String,
       requesterId: json['requesterId'] as String,
       message: json['message'] as String,
@@ -36,9 +36,9 @@ _AlbumAccessRequestModel _$AlbumAccessRequestModelFromJson(
     );
 
 Map<String, dynamic> _$AlbumAccessRequestModelToJson(
-        _AlbumAccessRequestModel instance) =>
+        AlbumAccessRequestModel instance) =>
     <String, dynamic>{
-      '_id': instance.id,
+      'id': instance.id,
       'albumId': instance.albumId,
       'requesterId': instance.requesterId,
       'message': instance.message,
@@ -60,8 +60,8 @@ const _$AccessRequestStatusEnumMap = {
   AccessRequestStatus.rejected: 'rejected',
 };
 
-_AlbumRequestStats _$AlbumRequestStatsFromJson(Map<String, dynamic> json) =>
-    _AlbumRequestStats(
+AlbumRequestStats _$AlbumRequestStatsFromJson(Map<String, dynamic> json) =>
+    AlbumRequestStats(
       totalRequests: (json['totalRequests'] as num).toInt(),
       pendingRequests: (json['pendingRequests'] as num).toInt(),
       approvedRequests: (json['approvedRequests'] as num).toInt(),
@@ -72,38 +72,7 @@ _AlbumRequestStats _$AlbumRequestStatsFromJson(Map<String, dynamic> json) =>
       averageResponseTime: (json['averageResponseTime'] as num).toDouble(),
     );
 
-const _$AlbumRequestStatsFieldMap = <String, String>{
-  'totalRequests': 'totalRequests',
-  'pendingRequests': 'pendingRequests',
-  'approvedRequests': 'approvedRequests',
-  'rejectedRequests': 'rejectedRequests',
-  'requestsToday': 'requestsToday',
-  'requestsThisWeek': 'requestsThisWeek',
-  'requestsThisMonth': 'requestsThisMonth',
-  'averageResponseTime': 'averageResponseTime',
-};
-
-// ignore: unused_element
-abstract class _$AlbumRequestStatsPerFieldToJson {
-  // ignore: unused_element
-  static Object? totalRequests(int instance) => instance;
-  // ignore: unused_element
-  static Object? pendingRequests(int instance) => instance;
-  // ignore: unused_element
-  static Object? approvedRequests(int instance) => instance;
-  // ignore: unused_element
-  static Object? rejectedRequests(int instance) => instance;
-  // ignore: unused_element
-  static Object? requestsToday(int instance) => instance;
-  // ignore: unused_element
-  static Object? requestsThisWeek(int instance) => instance;
-  // ignore: unused_element
-  static Object? requestsThisMonth(int instance) => instance;
-  // ignore: unused_element
-  static Object? averageResponseTime(double instance) => instance;
-}
-
-Map<String, dynamic> _$AlbumRequestStatsToJson(_AlbumRequestStats instance) =>
+Map<String, dynamic> _$AlbumRequestStatsToJson(AlbumRequestStats instance) =>
     <String, dynamic>{
       'totalRequests': instance.totalRequests,
       'pendingRequests': instance.pendingRequests,

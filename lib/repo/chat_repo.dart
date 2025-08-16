@@ -14,7 +14,8 @@ class ChatRepo extends _$ChatRepo {
     return null;
   }
 
-  Future<ChannelState?> createChat(String currentUserId, String otherUserId) async {
+  Future<ChannelState?> createChat(
+      String currentUserId, String otherUserId) async {
     var createChannel = await ref.read(chatClientProvider).createChannel(
       "messaging",
       channelData: {

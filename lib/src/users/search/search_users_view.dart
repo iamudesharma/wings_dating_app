@@ -256,7 +256,9 @@ class SearchUser extends _$SearchUser {
       _pickedData!.latLong.longitude,
     );
 
-    return ref.read(profileRepoProvider).getUserListBySearch(geoPoint: geoPoint);
+    return ref
+        .read(profileRepoProvider)
+        .getUserListBySearch(geoPoint: geoPoint);
   }
 
   // Expose a getter to allow widgets to watch the picked data state
@@ -334,8 +336,16 @@ class SearchUserListWidget extends ConsumerWidget {
                   final user = users[index];
                   return UserGridItem(
                     userCoordinates: GeoPoint(
-                      ref.read(searchUserProvider.notifier).pickedData!.latLong.latitude,
-                      ref.read(searchUserProvider.notifier).pickedData!.latLong.longitude,
+                      ref
+                          .read(searchUserProvider.notifier)
+                          .pickedData!
+                          .latLong
+                          .latitude,
+                      ref
+                          .read(searchUserProvider.notifier)
+                          .pickedData!
+                          .latLong
+                          .longitude,
                     ),
                     onTapEditProfile: () {
                       AutoTabsRouter.of(context).setActiveIndex(4);

@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -12,7 +11,6 @@ part 'matching_model.g.dart';
   // explicitToJson: true,
 )
 class MatchingModel {
- 
   final int minAge;
   final int maxAge;
   final List<String> skills;
@@ -25,7 +23,8 @@ class MatchingModel {
     required this.freeTimeActivities,
   });
 
-  factory MatchingModel.fromJson(Map<String, dynamic> json) => _$MatchingModelFromJson(json);
+  factory MatchingModel.fromJson(Map<String, dynamic> json) =>
+      _$MatchingModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$MatchingModelToJson(this);
 }

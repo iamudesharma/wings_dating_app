@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 
-final tapListProvider = FutureProvider.family.autoDispose<List<UserModel?>, String>((ref, userId) async {
+final tapListProvider = FutureProvider.family
+    .autoDispose<List<UserModel?>, String>((ref, userId) async {
   final response = await ref.read(profileRepoProvider).getUserTapStats(userId);
   print('DEBUG: TapListView got response: $response');
 

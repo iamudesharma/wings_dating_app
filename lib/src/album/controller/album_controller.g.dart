@@ -6,7 +6,7 @@ part of 'album_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$albumControllerHash() => r'730c79842a9e26fe1ba9e36922bbfca00828bf1b';
+String _$albumControllerHash() => r'0fd0dc38216f698c7239a4f3baac41b1764afa81';
 
 /// Copied from Dart SDK
 class _SystemHash {

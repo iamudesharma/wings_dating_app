@@ -26,9 +26,6 @@ mixin _$AlbumOwnerModel {
       _$AlbumOwnerModelCopyWithImpl<AlbumOwnerModel>(
           this as AlbumOwnerModel, _$identity);
 
-  /// Serializes this AlbumOwnerModel to a JSON map.
-  Map<String, dynamic> toJson();
-
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
@@ -41,7 +38,6 @@ mixin _$AlbumOwnerModel {
                 other.profilePicture == profilePicture));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, username, profilePicture);
 
@@ -77,7 +73,7 @@ class _$AlbumOwnerModelCopyWithImpl<$Res>
     Object? username = null,
     Object? profilePicture = null,
   }) {
-    return _then(_self.copyWith(
+    return _then(AlbumOwnerModel(
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -109,14 +105,11 @@ extension AlbumOwnerModelPatterns on AlbumOwnerModel {
   /// ```
 
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_AlbumOwnerModel value)? $default, {
+  TResult maybeMap<TResult extends Object?>({
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _AlbumOwnerModel() when $default != null:
-        return $default(_that);
       case _:
         return orElse();
     }
@@ -136,13 +129,9 @@ extension AlbumOwnerModelPatterns on AlbumOwnerModel {
   /// ```
 
   @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_AlbumOwnerModel value) $default,
-  ) {
+  TResult map<TResult extends Object?>() {
     final _that = this;
     switch (_that) {
-      case _AlbumOwnerModel():
-        return $default(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -161,13 +150,9 @@ extension AlbumOwnerModelPatterns on AlbumOwnerModel {
   /// ```
 
   @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_AlbumOwnerModel value)? $default,
-  ) {
+  TResult? mapOrNull<TResult extends Object?>() {
     final _that = this;
     switch (_that) {
-      case _AlbumOwnerModel() when $default != null:
-        return $default(_that);
       case _:
         return null;
     }
@@ -186,15 +171,11 @@ extension AlbumOwnerModelPatterns on AlbumOwnerModel {
   /// ```
 
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String id, String username, String profilePicture)?
-        $default, {
+  TResult maybeWhen<TResult extends Object?>({
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _AlbumOwnerModel() when $default != null:
-        return $default(_that.id, _that.username, _that.profilePicture);
       case _:
         return orElse();
     }
@@ -214,14 +195,9 @@ extension AlbumOwnerModelPatterns on AlbumOwnerModel {
   /// ```
 
   @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(String id, String username, String profilePicture)
-        $default,
-  ) {
+  TResult when<TResult extends Object?>() {
     final _that = this;
     switch (_that) {
-      case _AlbumOwnerModel():
-        return $default(_that.id, _that.username, _that.profilePicture);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -240,119 +216,12 @@ extension AlbumOwnerModelPatterns on AlbumOwnerModel {
   /// ```
 
   @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String id, String username, String profilePicture)?
-        $default,
-  ) {
+  TResult? whenOrNull<TResult extends Object?>() {
     final _that = this;
     switch (_that) {
-      case _AlbumOwnerModel() when $default != null:
-        return $default(_that.id, _that.username, _that.profilePicture);
       case _:
         return null;
     }
-  }
-}
-
-/// @nodoc
-
-@JsonSerializable(
-    createToJson: true,
-    createFieldMap: true,
-    createPerFieldToJson: true,
-    explicitToJson: true)
-class _AlbumOwnerModel implements AlbumOwnerModel {
-  const _AlbumOwnerModel(
-      {required this.id, required this.username, required this.profilePicture});
-  factory _AlbumOwnerModel.fromJson(Map<String, dynamic> json) =>
-      _$AlbumOwnerModelFromJson(json);
-
-  @override
-  final String id;
-  @override
-  final String username;
-  @override
-  final String profilePicture;
-
-  /// Create a copy of AlbumOwnerModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$AlbumOwnerModelCopyWith<_AlbumOwnerModel> get copyWith =>
-      __$AlbumOwnerModelCopyWithImpl<_AlbumOwnerModel>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$AlbumOwnerModelToJson(
-      this,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _AlbumOwnerModel &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.username, username) ||
-                other.username == username) &&
-            (identical(other.profilePicture, profilePicture) ||
-                other.profilePicture == profilePicture));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, id, username, profilePicture);
-
-  @override
-  String toString() {
-    return 'AlbumOwnerModel(id: $id, username: $username, profilePicture: $profilePicture)';
-  }
-}
-
-/// @nodoc
-abstract mixin class _$AlbumOwnerModelCopyWith<$Res>
-    implements $AlbumOwnerModelCopyWith<$Res> {
-  factory _$AlbumOwnerModelCopyWith(
-          _AlbumOwnerModel value, $Res Function(_AlbumOwnerModel) _then) =
-      __$AlbumOwnerModelCopyWithImpl;
-  @override
-  @useResult
-  $Res call({String id, String username, String profilePicture});
-}
-
-/// @nodoc
-class __$AlbumOwnerModelCopyWithImpl<$Res>
-    implements _$AlbumOwnerModelCopyWith<$Res> {
-  __$AlbumOwnerModelCopyWithImpl(this._self, this._then);
-
-  final _AlbumOwnerModel _self;
-  final $Res Function(_AlbumOwnerModel) _then;
-
-  /// Create a copy of AlbumOwnerModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? id = null,
-    Object? username = null,
-    Object? profilePicture = null,
-  }) {
-    return _then(_AlbumOwnerModel(
-      id: null == id
-          ? _self.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      username: null == username
-          ? _self.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
-      profilePicture: null == profilePicture
-          ? _self.profilePicture
-          : profilePicture // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
   }
 }
 

@@ -17,7 +17,8 @@ class ChatMessageWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
-        mainAxisAlignment: message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: <Widget>[
           message.isUser ? const SizedBox() : _buildAvatar(),
           const SizedBox(width: 10),
@@ -50,11 +51,15 @@ class ChatMessageWidget extends StatelessWidget {
                           fontSize: 14,
                         ),
                         code: TextStyle(
-                          backgroundColor: message.isUser ? const Color(0xFF2a5a8c) : const Color(0xFF404040),
+                          backgroundColor: message.isUser
+                              ? const Color(0xFF2a5a8c)
+                              : const Color(0xFF404040),
                           color: Colors.white,
                         ),
                         codeblockDecoration: BoxDecoration(
-                          color: message.isUser ? const Color(0xFF2a5a8c) : const Color(0xFF404040),
+                          color: message.isUser
+                              ? const Color(0xFF2a5a8c)
+                              : const Color(0xFF404040),
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),

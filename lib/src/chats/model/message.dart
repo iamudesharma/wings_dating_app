@@ -21,5 +21,6 @@ abstract class Message with _$Message {
     MessageEnum? repliedMessageType,
   }) = _Message;
 
-  factory Message.fromJson(Map<String, dynamic> json) => _$MessageFromJson(json);
+  factory Message.fromJson(Map<String, dynamic> json) =>
+      _$MessageFromJson(json);
 }

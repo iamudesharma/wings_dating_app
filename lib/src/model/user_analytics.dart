@@ -18,7 +18,8 @@ abstract class UserAnalytics with _$UserAnalytics {
     double? matchRate,
   }) = _UserAnalytics;
 
-  factory UserAnalytics.fromJson(Map<String, dynamic> json) => _$UserAnalyticsFromJson(json);
+  factory UserAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$UserAnalyticsFromJson(json);
 }
 
 @freezed
@@ -32,7 +33,8 @@ abstract class ProfileViewsAnalytics with _$ProfileViewsAnalytics {
     required Map<String, int> byDay,
   }) = _ProfileViewsAnalytics;
 
-  factory ProfileViewsAnalytics.fromJson(Map<String, dynamic> json) => _$ProfileViewsAnalyticsFromJson(json);
+  factory ProfileViewsAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$ProfileViewsAnalyticsFromJson(json);
 }
 
 @freezed
@@ -45,7 +47,8 @@ abstract class MatchesAnalytics with _$MatchesAnalytics {
     required int monthly,
   }) = _MatchesAnalytics;
 
-  factory MatchesAnalytics.fromJson(Map<String, dynamic> json) => _$MatchesAnalyticsFromJson(json);
+  factory MatchesAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$MatchesAnalyticsFromJson(json);
 }
 
 @freezed
@@ -57,7 +60,8 @@ abstract class MessagesAnalytics with _$MessagesAnalytics {
     required double averageResponseTime,
   }) = _MessagesAnalytics;
 
-  factory MessagesAnalytics.fromJson(Map<String, dynamic> json) => _$MessagesAnalyticsFromJson(json);
+  factory MessagesAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$MessagesAnalyticsFromJson(json);
 }
 
 @freezed
@@ -70,7 +74,8 @@ abstract class DiscoveryAnalytics with _$DiscoveryAnalytics {
     required int rewindCount,
   }) = _DiscoveryAnalytics;
 
-  factory DiscoveryAnalytics.fromJson(Map<String, dynamic> json) => _$DiscoveryAnalyticsFromJson(json);
+  factory DiscoveryAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$DiscoveryAnalyticsFromJson(json);
 }
 
 @freezed
@@ -80,7 +85,8 @@ abstract class LocationAnalytics with _$LocationAnalytics {
     required List<PopularLocation> popularLocations,
   }) = _LocationAnalytics;
 
-  factory LocationAnalytics.fromJson(Map<String, dynamic> json) => _$LocationAnalyticsFromJson(json);
+  factory LocationAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$LocationAnalyticsFromJson(json);
 }
 
 @freezed
@@ -90,5 +96,6 @@ abstract class PopularLocation with _$PopularLocation {
     required int count,
   }) = _PopularLocation;
 
-  factory PopularLocation.fromJson(Map<String, dynamic> json) => _$PopularLocationFromJson(json);
+  factory PopularLocation.fromJson(Map<String, dynamic> json) =>
+      _$PopularLocationFromJson(json);
 }

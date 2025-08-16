@@ -14,12 +14,6 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$GeoPointData {
-  @JsonSerializable(
-      createToJson: true,
-      createFieldMap: true,
-      createPerFieldToJson: true,
-      explicitToJson: true)
-  @JsonKey(name: "coordinates")
   List<double> get geopoint;
   String get type;
 
@@ -31,9 +25,6 @@ mixin _$GeoPointData {
       _$GeoPointDataCopyWithImpl<GeoPointData>(
           this as GeoPointData, _$identity);
 
-  /// Serializes this GeoPointData to a JSON map.
-  Map<String, dynamic> toJson();
-
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
@@ -43,7 +34,6 @@ mixin _$GeoPointData {
             (identical(other.type, type) || other.type == type));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, const DeepCollectionEquality().hash(geopoint), type);
@@ -60,15 +50,7 @@ abstract mixin class $GeoPointDataCopyWith<$Res> {
           GeoPointData value, $Res Function(GeoPointData) _then) =
       _$GeoPointDataCopyWithImpl;
   @useResult
-  $Res call(
-      {@JsonSerializable(
-          createToJson: true,
-          createFieldMap: true,
-          createPerFieldToJson: true,
-          explicitToJson: true)
-      @JsonKey(name: "coordinates")
-      List<double> geopoint,
-      String type});
+  $Res call({List<double> geopoint, String type});
 }
 
 /// @nodoc
@@ -86,7 +68,7 @@ class _$GeoPointDataCopyWithImpl<$Res> implements $GeoPointDataCopyWith<$Res> {
     Object? geopoint = null,
     Object? type = null,
   }) {
-    return _then(_self.copyWith(
+    return _then(GeoPointData(
       geopoint: null == geopoint
           ? _self.geopoint
           : geopoint // ignore: cast_nullable_to_non_nullable
@@ -114,14 +96,11 @@ extension GeoPointDataPatterns on GeoPointData {
   /// ```
 
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_GeoPointData value)? $default, {
+  TResult maybeMap<TResult extends Object?>({
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _GeoPointData() when $default != null:
-        return $default(_that);
       case _:
         return orElse();
     }
@@ -141,13 +120,9 @@ extension GeoPointDataPatterns on GeoPointData {
   /// ```
 
   @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_GeoPointData value) $default,
-  ) {
+  TResult map<TResult extends Object?>() {
     final _that = this;
     switch (_that) {
-      case _GeoPointData():
-        return $default(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -166,13 +141,9 @@ extension GeoPointDataPatterns on GeoPointData {
   /// ```
 
   @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_GeoPointData value)? $default,
-  ) {
+  TResult? mapOrNull<TResult extends Object?>() {
     final _that = this;
     switch (_that) {
-      case _GeoPointData() when $default != null:
-        return $default(_that);
       case _:
         return null;
     }
@@ -191,23 +162,11 @@ extension GeoPointDataPatterns on GeoPointData {
   /// ```
 
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            @JsonSerializable(
-                createToJson: true,
-                createFieldMap: true,
-                createPerFieldToJson: true,
-                explicitToJson: true)
-            @JsonKey(name: "coordinates")
-            List<double> geopoint,
-            String type)?
-        $default, {
+  TResult maybeWhen<TResult extends Object?>({
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _GeoPointData() when $default != null:
-        return $default(_that.geopoint, _that.type);
       case _:
         return orElse();
     }
@@ -227,22 +186,9 @@ extension GeoPointDataPatterns on GeoPointData {
   /// ```
 
   @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(
-            @JsonSerializable(
-                createToJson: true,
-                createFieldMap: true,
-                createPerFieldToJson: true,
-                explicitToJson: true)
-            @JsonKey(name: "coordinates")
-            List<double> geopoint,
-            String type)
-        $default,
-  ) {
+  TResult when<TResult extends Object?>() {
     final _that = this;
     switch (_that) {
-      case _GeoPointData():
-        return $default(_that.geopoint, _that.type);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -261,142 +207,12 @@ extension GeoPointDataPatterns on GeoPointData {
   /// ```
 
   @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            @JsonSerializable(
-                createToJson: true,
-                createFieldMap: true,
-                createPerFieldToJson: true,
-                explicitToJson: true)
-            @JsonKey(name: "coordinates")
-            List<double> geopoint,
-            String type)?
-        $default,
-  ) {
+  TResult? whenOrNull<TResult extends Object?>() {
     final _that = this;
     switch (_that) {
-      case _GeoPointData() when $default != null:
-        return $default(_that.geopoint, _that.type);
       case _:
         return null;
     }
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _GeoPointData implements GeoPointData {
-  _GeoPointData(
-      {@JsonSerializable(
-          createToJson: true,
-          createFieldMap: true,
-          createPerFieldToJson: true,
-          explicitToJson: true)
-      @JsonKey(name: "coordinates")
-      required final List<double> geopoint,
-      this.type = "Point"})
-      : _geopoint = geopoint;
-  factory _GeoPointData.fromJson(Map<String, dynamic> json) =>
-      _$GeoPointDataFromJson(json);
-
-  final List<double> _geopoint;
-  @override
-  @JsonSerializable(
-      createToJson: true,
-      createFieldMap: true,
-      createPerFieldToJson: true,
-      explicitToJson: true)
-  @JsonKey(name: "coordinates")
-  List<double> get geopoint {
-    if (_geopoint is EqualUnmodifiableListView) return _geopoint;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_geopoint);
-  }
-
-  @override
-  @JsonKey()
-  final String type;
-
-  /// Create a copy of GeoPointData
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$GeoPointDataCopyWith<_GeoPointData> get copyWith =>
-      __$GeoPointDataCopyWithImpl<_GeoPointData>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$GeoPointDataToJson(
-      this,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _GeoPointData &&
-            const DeepCollectionEquality().equals(other._geopoint, _geopoint) &&
-            (identical(other.type, type) || other.type == type));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_geopoint), type);
-
-  @override
-  String toString() {
-    return 'GeoPointData(geopoint: $geopoint, type: $type)';
-  }
-}
-
-/// @nodoc
-abstract mixin class _$GeoPointDataCopyWith<$Res>
-    implements $GeoPointDataCopyWith<$Res> {
-  factory _$GeoPointDataCopyWith(
-          _GeoPointData value, $Res Function(_GeoPointData) _then) =
-      __$GeoPointDataCopyWithImpl;
-  @override
-  @useResult
-  $Res call(
-      {@JsonSerializable(
-          createToJson: true,
-          createFieldMap: true,
-          createPerFieldToJson: true,
-          explicitToJson: true)
-      @JsonKey(name: "coordinates")
-      List<double> geopoint,
-      String type});
-}
-
-/// @nodoc
-class __$GeoPointDataCopyWithImpl<$Res>
-    implements _$GeoPointDataCopyWith<$Res> {
-  __$GeoPointDataCopyWithImpl(this._self, this._then);
-
-  final _GeoPointData _self;
-  final $Res Function(_GeoPointData) _then;
-
-  /// Create a copy of GeoPointData
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? geopoint = null,
-    Object? type = null,
-  }) {
-    return _then(_GeoPointData(
-      geopoint: null == geopoint
-          ? _self._geopoint
-          : geopoint // ignore: cast_nullable_to_non_nullable
-              as List<double>,
-      type: null == type
-          ? _self.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
   }
 }
 

@@ -13,5 +13,6 @@ abstract class ChatContact with _$ChatContact {
     required String fcmToken,
   }) = _ChatContact;
 
-  factory ChatContact.fromJson(Map<String, dynamic> json) => _$ChatContactFromJson(json);
+  factory ChatContact.fromJson(Map<String, dynamic> json) =>
+      _$ChatContactFromJson(json);
 }

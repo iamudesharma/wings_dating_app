@@ -42,7 +42,8 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
   final List<Tool> _tools = [
     const Tool(
       name: 'analyze_dating_profile',
-      description: 'Analyzes a dating profile photo or bio and provides improvement suggestions',
+      description:
+          'Analyzes a dating profile photo or bio and provides improvement suggestions',
       parameters: {
         'type': 'object',
         'properties': {
@@ -61,7 +62,8 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
     ),
     const Tool(
       name: 'generate_conversation_starter',
-      description: 'Generates personalized conversation starters based on profile information',
+      description:
+          'Generates personalized conversation starters based on profile information',
       parameters: {
         'type': 'object',
         'properties': {
@@ -80,7 +82,8 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
     ),
     const Tool(
       name: 'suggest_date_ideas',
-      description: 'Suggests date ideas based on preferences, budget, and location',
+      description:
+          'Suggests date ideas based on preferences, budget, and location',
       parameters: {
         'type': 'object',
         'properties': {
@@ -92,7 +95,13 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
           'date_type': {
             'type': 'string',
             'description': 'Type of date preferred',
-            'enum': ['casual', 'romantic', 'adventurous', 'cultural', 'outdoor'],
+            'enum': [
+              'casual',
+              'romantic',
+              'adventurous',
+              'cultural',
+              'outdoor'
+            ],
           },
           'location': {
             'type': 'string',
@@ -104,7 +113,8 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
     ),
     const Tool(
       name: 'confidence_boost',
-      description: 'Provides confidence-building advice and positive affirmations for dating',
+      description:
+          'Provides confidence-building advice and positive affirmations for dating',
       parameters: {
         'type': 'object',
         'properties': {
@@ -123,7 +133,8 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
     ),
     const Tool(
       name: 'red_flag_detector',
-      description: 'Identifies potential red flags in dating conversations or profiles',
+      description:
+          'Identifies potential red flags in dating conversations or profiles',
       parameters: {
         'type': 'object',
         'properties': {
@@ -146,14 +157,20 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
     ),
     const Tool(
       name: 'relationship_advice',
-      description: 'Provides advice for different stages of dating and relationships',
+      description:
+          'Provides advice for different stages of dating and relationships',
       parameters: {
         'type': 'object',
         'properties': {
           'stage': {
             'type': 'string',
             'description': 'Stage of dating/relationship',
-            'enum': ['initial_contact', 'first_dates', 'getting_serious', 'long_term'],
+            'enum': [
+              'initial_contact',
+              'first_dates',
+              'getting_serious',
+              'long_term'
+            ],
           },
           'situation': {
             'type': 'string',
@@ -203,11 +220,13 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
   }
 
   InferenceChat? get chat => ref.watch(gemmaProvider);
-  bool get isModelInitialized => ref.read(gemmaProvider.notifier).isModelInitialized;
+  bool get isModelInitialized =>
+      ref.read(gemmaProvider.notifier).isModelInitialized;
 
   // Helper method to handle function calls with system messages (async version)
   Future<void> _handleFunctionCall(FunctionCallResponse functionCall) async {
-    debugPrint('Function call received: ${functionCall.name}(${functionCall.args})');
+    debugPrint(
+        'Function call received: ${functionCall.name}(${functionCall.args})');
 
     // 1. Show "Calling function..."
     setState(() {
@@ -271,7 +290,8 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
         });
       } else if (token is FunctionCallResponse) {
         // Не должно случаться после tool response
-        debugPrint('Unexpected FunctionCall after tool response: ${token.name}');
+        debugPrint(
+            'Unexpected FunctionCall after tool response: ${token.name}');
       }
     }
 
@@ -279,7 +299,8 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
   }
 
   // Function to execute tools
-  Future<Map<String, dynamic>> _executeTool(FunctionCallResponse functionCall) async {
+  Future<Map<String, dynamic>> _executeTool(
+      FunctionCallResponse functionCall) async {
     switch (functionCall.name) {
       case 'analyze_dating_profile':
         final analysisType = functionCall.args['analysis_type'] as String?;
@@ -301,7 +322,8 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
           'status': 'success',
           'context': context,
           'starter_type': starterType,
-          'message': 'Generated personalized conversation starters based on the profile information.',
+          'message':
+              'Generated personalized conversation starters based on the profile information.',
         };
 
       case 'suggest_date_ideas':
@@ -314,7 +336,8 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
           'budget': budget,
           'date_type': dateType,
           'location': location,
-          'message': 'Date ideas generated based on your preferences and budget!',
+          'message':
+              'Date ideas generated based on your preferences and budget!',
         };
 
       case 'confidence_boost':
@@ -349,7 +372,8 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
           'status': 'success',
           'stage': stage,
           'situation': situation,
-          'message': 'Relationship advice provided for your current dating stage.',
+          'message':
+              'Relationship advice provided for your current dating stage.',
         };
 
       default:
@@ -448,13 +472,22 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                                Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.1),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .secondary
+                                    .withOpacity(0.1),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.2),
                             ),
                             boxShadow: [
                               BoxShadow(
@@ -473,14 +506,17 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute<void>(
-                                    builder: (context) => const ModelSelectionScreen(),
+                                    builder: (context) =>
+                                        const ModelSelectionScreen(),
                                   ),
                                   (route) => false,
                                 );
                               } else {
                                 // No-op on non-mobile; models are asset-only on web/desktop
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Model selection is available on Android/iOS only.')),
+                                  const SnackBar(
+                                      content: Text(
+                                          'Model selection is available on Android/iOS only.')),
                                 );
                               }
                             },
@@ -493,7 +529,9 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
 
                         // Main content
                         Expanded(
-                          child: isModelInitialized ? _buildChatInterface() : _buildLoadingState(),
+                          child: isModelInitialized
+                              ? _buildChatInterface()
+                              : _buildLoadingState(),
                         ),
                       ],
                     ),
@@ -542,11 +580,15 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.settings, color: Theme.of(context).colorScheme.primary),
+                      Icon(Icons.settings,
+                          color: Theme.of(context).colorScheme.primary),
                       const SizedBox(width: 8),
                       Text(
                         'AI Wingman Settings',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -588,9 +630,13 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
                   // function calls
                   Row(
                     children: [
-                      Switch(value: fc, onChanged: (v) => setStateSB(() => fc = v)),
+                      Switch(
+                          value: fc,
+                          onChanged: (v) => setStateSB(() => fc = v)),
                       const SizedBox(width: 8),
-                      Expanded(child: Text('Enable function calls (if model supports)')),
+                      Expanded(
+                          child: Text(
+                              'Enable function calls (if model supports)')),
                     ],
                   ),
 
@@ -603,7 +649,9 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
                           label: const Text('Apply'),
                           onPressed: () async {
                             Navigator.of(ctx).pop();
-                            await ref.read(gemmaProvider.notifier).updateSettings(
+                            await ref
+                                .read(gemmaProvider.notifier)
+                                .updateSettings(
                                   temperature: temp,
                                   topK: topK.round(),
                                   topP: topP,
@@ -639,7 +687,8 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
                   SizedBox(height: 20),
                   EnhancedDatingSuggestionsWidget(
                     onSuggestionTap: (suggestion) {
-                      final message = Message.text(text: suggestion, isUser: true);
+                      final message =
+                          Message.text(text: suggestion, isUser: true);
                       setState(() {
                         _error = null;
                         _messages.add(message);
@@ -728,7 +777,8 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
             ),
             child: CircularProgressIndicator(
               strokeWidth: 3,
-              valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).colorScheme.primary),
             ),
           ),
           const SizedBox(height: 24),
@@ -758,7 +808,10 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
                 Text(
                   'Getting ready to help with your dating journey!',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
                       ),
                 ),
               ],
@@ -872,7 +925,10 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
                 Text(
                   'Upload dating profile photos for personalized feedback and improvement tips',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
                         height: 1.3,
                       ),
                 ),

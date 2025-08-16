@@ -16,4 +16,3 @@ class PaginatedUserResponseHelper {
     return response.toJson((value) => value);
   }
 }
-

@@ -146,30 +146,32 @@ class DatingSuggestionsWidget extends StatelessWidget {
                   description: 'Creative first message ideas',
                   icon: Icons.chat_bubble_outline,
                   color: Colors.blue,
-                  onTap: () =>
-                      onSuggestionTap('Give me some creative conversation starters for dating apps that work well'),
+                  onTap: () => onSuggestionTap(
+                      'Give me some creative conversation starters for dating apps that work well'),
                 ),
                 DatingSuggestionCard(
                   title: 'Date Ideas',
                   description: 'Fun and unique date suggestions',
                   icon: Icons.favorite_outline,
                   color: Colors.pink,
-                  onTap: () =>
-                      onSuggestionTap('Suggest some creative and fun date ideas for different budgets and interests'),
+                  onTap: () => onSuggestionTap(
+                      'Suggest some creative and fun date ideas for different budgets and interests'),
                 ),
                 DatingSuggestionCard(
                   title: 'Red Flags',
                   description: 'Warning signs to watch for',
                   icon: Icons.warning_outlined,
                   color: Colors.red,
-                  onTap: () => onSuggestionTap('What are some common red flags to watch out for when dating?'),
+                  onTap: () => onSuggestionTap(
+                      'What are some common red flags to watch out for when dating?'),
                 ),
                 DatingSuggestionCard(
                   title: 'Confidence Boost',
                   description: 'Tips to feel more confident',
                   icon: Icons.psychology_outlined,
                   color: Colors.orange,
-                  onTap: () => onSuggestionTap('How can I build confidence when dating and meeting new people?'),
+                  onTap: () => onSuggestionTap(
+                      'How can I build confidence when dating and meeting new people?'),
                 ),
               ],
             ),

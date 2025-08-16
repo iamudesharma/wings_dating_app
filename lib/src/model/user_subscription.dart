@@ -44,7 +44,8 @@ abstract class UserSubscription with _$UserSubscription {
     String? currency,
   }) = _UserSubscription;
 
-  factory UserSubscription.fromJson(Map<String, dynamic> json) => _$UserSubscriptionFromJson(json);
+  factory UserSubscription.fromJson(Map<String, dynamic> json) =>
+      _$UserSubscriptionFromJson(json);
 }
 
 @freezed
@@ -63,7 +64,8 @@ abstract class SubscriptionFeatures with _$SubscriptionFeatures {
     required bool readReceipts,
   }) = _SubscriptionFeatures;
 
-  factory SubscriptionFeatures.fromJson(Map<String, dynamic> json) => _$SubscriptionFeaturesFromJson(json);
+  factory SubscriptionFeatures.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionFeaturesFromJson(json);
 }
 
 @freezed
@@ -76,5 +78,6 @@ abstract class SubscriptionStats with _$SubscriptionStats {
     required double averageLifetimeValue,
   }) = _SubscriptionStats;
 
-  factory SubscriptionStats.fromJson(Map<String, dynamic> json) => _$SubscriptionStatsFromJson(json);
+  factory SubscriptionStats.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionStatsFromJson(json);
 }
