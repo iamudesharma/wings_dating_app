@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:wings_dating_app/src/matching/providers/matching_providers.dart';
-import 'package:wings_dating_app/src/users/users_view.dart' show NavigationBarWidget;
+import 'package:wings_dating_app/src/users/users_view.dart'
+    show NavigationBarWidget;
 import 'package:wings_dating_app/src/users/widget/user_grid_item.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 
@@ -18,7 +19,8 @@ class MatchingView extends ConsumerStatefulWidget {
 
 class _MatchingViewState extends ConsumerState<MatchingView> {
   GeoPoint? _currentUserGeoPoint() {
-    final userData = ref.read(ProfileController.userControllerProvider).userModel;
+    final userData =
+        ref.read(ProfileController.userControllerProvider).userModel;
     final coords = userData?.position?.geopoint;
     if (coords != null && coords.length >= 2) {
       // GeoPoint expects (lat, lon) while stored order is [lon, lat]
@@ -29,8 +31,8 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
 
   @override
   Widget build(BuildContext context) {
-  final discovery = ref.watch(discoveryControllerProvider);
-  final countdown = ref.watch(discoveryCountdownProvider);
+    final discovery = ref.watch(discoveryControllerProvider);
+    final countdown = ref.watch(discoveryCountdownProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -45,7 +47,8 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
                     discovery.when(
                       data: (data) => Tooltip(
                         message: data.isCooldown
-                            ? _cooldownTooltip(countdown.value ?? data.nextAvailableAt.difference(DateTime.now()))
+                            ? _cooldownTooltip(countdown.value ??
+                                data.nextAvailableAt.difference(DateTime.now()))
                             : 'Refresh matches',
                         child: IconButton(
                           icon: Icon(
@@ -57,14 +60,19 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
                           onPressed: data.isCooldown
                               ? null
                               : () async {
-                                  await ref.read(discoveryControllerProvider.notifier).refreshIfAllowed();
+                                  await ref
+                                      .read(
+                                          discoveryControllerProvider.notifier)
+                                      .refreshIfAllowed();
                                 },
                         ),
                       ),
                       loading: () => const SizedBox.shrink(),
                       error: (_, __) => IconButton(
                         icon: const Icon(Icons.refresh),
-                        onPressed: () => ref.read(discoveryControllerProvider.notifier).refreshIfAllowed(),
+                        onPressed: () => ref
+                            .read(discoveryControllerProvider.notifier)
+                            .refreshIfAllowed(),
                       ),
                     ),
                   ],
@@ -87,15 +95,19 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
                         )),
                         error: (err, st) => _ErrorCard(
                           message: 'Failed to load matches',
-                          onRetry: () => ref.read(discoveryControllerProvider.notifier).refreshIfAllowed(),
+                          onRetry: () => ref
+                              .read(discoveryControllerProvider.notifier)
+                              .refreshIfAllowed(),
                         ),
                         data: (data) {
-              if (data.users.isEmpty) {
+                          if (data.users.isEmpty) {
                             return _EmptyCard(
                               isCooldown: data.isCooldown,
                               nextAt: data.nextAvailableAt,
-                onRefresh: () => ref.read(discoveryControllerProvider.notifier).refreshIfAllowed(),
-                remaining: countdown.value,
+                              onRefresh: () => ref
+                                  .read(discoveryControllerProvider.notifier)
+                                  .refreshIfAllowed(),
+                              remaining: countdown.value,
                             );
                           }
 
@@ -115,35 +127,42 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
                                   Align(
                                     alignment: Alignment.centerRight,
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 8),
                                       margin: const EdgeInsets.only(bottom: 8),
                                       decoration: BoxDecoration(
                                         color: theme.colorScheme.surface,
                                         borderRadius: BorderRadius.circular(8),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.black.withOpacity(0.05),
+                                            color:
+                                                Colors.black.withOpacity(0.05),
                                             blurRadius: 6,
                                             offset: const Offset(0, 2),
                                           ),
                                         ],
                                       ),
                                       child: Text(
-                                        _cooldownTooltip(countdown.value ?? data.nextAvailableAt.difference(DateTime.now())),
+                                        _cooldownTooltip(countdown.value ??
+                                            data.nextAvailableAt
+                                                .difference(DateTime.now())),
                                         style: theme.textTheme.bodyMedium,
                                       ),
                                     ),
                                   ),
                                 GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: crossAxisCount,
-                                crossAxisSpacing: 12,
-                                mainAxisSpacing: 12,
-                                childAspectRatio: 0.75,
-                              ),
-                                  itemCount: data.users.length > 3 ? 3 : data.users.length,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: crossAxisCount,
+                                    crossAxisSpacing: 12,
+                                    mainAxisSpacing: 12,
+                                    childAspectRatio: 0.75,
+                                  ),
+                                  itemCount: data.users.length > 3
+                                      ? 3
+                                      : data.users.length,
                                   itemBuilder: (context, index) {
                                     final user = data.users[index];
                                     return UserGridItem(
@@ -170,7 +189,8 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
   }
 
   String _cooldownTooltip(Duration remaining) {
-    if (remaining.isNegative || remaining == Duration.zero) return 'Refresh matches';
+    if (remaining.isNegative || remaining == Duration.zero)
+      return 'Refresh matches';
     final hours = remaining.inHours;
     final minutes = remaining.inMinutes.remainder(60);
     final seconds = remaining.inSeconds.remainder(60);
@@ -186,7 +206,11 @@ class _EmptyCard extends StatelessWidget {
   final DateTime nextAt;
   final VoidCallback onRefresh;
   final Duration? remaining;
-  const _EmptyCard({required this.isCooldown, required this.nextAt, required this.onRefresh, this.remaining});
+  const _EmptyCard(
+      {required this.isCooldown,
+      required this.nextAt,
+      required this.onRefresh,
+      this.remaining});
 
   @override
   Widget build(BuildContext context) {
@@ -211,17 +235,22 @@ class _EmptyCard extends StatelessWidget {
           children: [
             Icon(Icons.people, size: 48, color: theme.colorScheme.primary),
             const SizedBox(height: 12),
-            Text('No matches right now', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+            Text('No matches right now',
+                style: theme.textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
             Text(
-              isCooldown ? 'Please wait until new matches are available.' : 'Tap refresh to discover new profiles.',
+              isCooldown
+                  ? 'Please wait until new matches are available.'
+                  : 'Tap refresh to discover new profiles.',
               style: theme.textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
               icon: const Icon(Icons.refresh),
               label: Text(isCooldown
-                  ? _cooldownDurationText(remaining ?? nextAt.difference(DateTime.now()))
+                  ? _cooldownDurationText(
+                      remaining ?? nextAt.difference(DateTime.now()))
                   : 'Refresh'),
               onPressed: isCooldown ? null : onRefresh,
             ),

@@ -17,7 +17,8 @@ class GemmaInputField extends StatefulWidget {
 
   final InferenceChat? chat;
   final List<Message> messages;
-  final ValueChanged<ModelResponse> streamHandler; // Отдает ModelResponse (токены или функции)
+  final ValueChanged<ModelResponse>
+      streamHandler; // Отдает ModelResponse (токены или функции)
   final ValueChanged<String> errorHandler;
 
   @override
@@ -29,7 +30,8 @@ class GemmaInputFieldState extends State<GemmaInputField> {
   var _message = const Message(text: '', isUser: false);
   bool _processing = false;
   StreamSubscription<ModelResponse>? _streamSubscription;
-  FunctionCallResponse? _pendingFunctionCall; // Храним функцию для отправки в onDone
+  FunctionCallResponse?
+      _pendingFunctionCall; // Храним функцию для отправки в onDone
 
   @override
   void initState() {
@@ -57,7 +59,8 @@ class GemmaInputFieldState extends State<GemmaInputField> {
     });
 
     try {
-      debugPrint('GemmaInputField: Processing message: "${widget.messages.last.text}"');
+      debugPrint(
+          'GemmaInputField: Processing message: "${widget.messages.last.text}"');
       final responseStream = await _gemma?.processMessage(widget.messages.last);
       debugPrint('GemmaInputField: Got response stream from GemmaLocalService');
 
@@ -71,15 +74,20 @@ class GemmaInputFieldState extends State<GemmaInputField> {
               setState(() {
                 if (response is String) {
                   // Обратная совместимость: строки из старого стрима
-                  _message = Message(text: '${_message.text}$response', isUser: false);
-                  debugPrint('GemmaInputField: Updated local message from String: "${_message.text}"');
+                  _message =
+                      Message(text: '${_message.text}$response', isUser: false);
+                  debugPrint(
+                      'GemmaInputField: Updated local message from String: "${_message.text}"');
                 } else if (response is TextResponse) {
                   // Основной способ: получаем TextToken
-                  _message = Message(text: '${_message.text}${response.token}', isUser: false);
-                  debugPrint('GemmaInputField: Updated local message from TextToken: "${_message.text}"');
+                  _message = Message(
+                      text: '${_message.text}${response.token}', isUser: false);
+                  debugPrint(
+                      'GemmaInputField: Updated local message from TextToken: "${_message.text}"');
                 } else if (response is FunctionCallResponse) {
                   // Сохраняем функцию для отправки в onDone
-                  debugPrint('GemmaInputField: Function call received: ${response.name}');
+                  debugPrint(
+                      'GemmaInputField: Function call received: ${response.name}');
                   _pendingFunctionCall = response;
                   // Не обновляем _message, тк функция - не текст
                 }
@@ -106,16 +114,19 @@ class GemmaInputFieldState extends State<GemmaInputField> {
             }
           },
           onDone: () {
-            debugPrint('GemmaInputField: Stream completed, sending final response');
+            debugPrint(
+                'GemmaInputField: Stream completed, sending final response');
             if (mounted) {
               if (_pendingFunctionCall != null) {
                 // Отправляем функцию
-                debugPrint('GemmaInputField: Sending function call: ${_pendingFunctionCall!.name}');
+                debugPrint(
+                    'GemmaInputField: Sending function call: ${_pendingFunctionCall!.name}');
                 widget.streamHandler(_pendingFunctionCall!);
               } else {
                 // Отправляем накопленный текст как TextToken
                 final text = _message.text.isNotEmpty ? _message.text : '...';
-                debugPrint('GemmaInputField: Sending accumulated text as TextToken: "$text"');
+                debugPrint(
+                    'GemmaInputField: Sending accumulated text as TextToken: "$text"');
                 widget.streamHandler(TextResponse(text));
               }
               setState(() {

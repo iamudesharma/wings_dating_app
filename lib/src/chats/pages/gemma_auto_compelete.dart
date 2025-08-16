@@ -4,7 +4,8 @@ import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart' show StreamAutocompleteOptions;
+import 'package:stream_chat_flutter/stream_chat_flutter.dart'
+    show StreamAutocompleteOptions;
 import 'package:wings_dating_app/src/ai_wingman/providers/gemma_provider.dart';
 
 import '../../ai_wingman/models/model.dart';
@@ -22,10 +23,12 @@ class StreamGemmaAutocompleteOptions extends ConsumerStatefulWidget {
   final ValueSetter<String>? onOptionSelected;
 
   @override
-  ConsumerState<StreamGemmaAutocompleteOptions> createState() => _StreamGemmaAutocompleteOptionsState();
+  ConsumerState<StreamGemmaAutocompleteOptions> createState() =>
+      _StreamGemmaAutocompleteOptionsState();
 }
 
-class _StreamGemmaAutocompleteOptionsState extends ConsumerState<StreamGemmaAutocompleteOptions> {
+class _StreamGemmaAutocompleteOptionsState
+    extends ConsumerState<StreamGemmaAutocompleteOptions> {
   List<String> _suggestions = [];
   Stream<dynamic>? _stream;
 
@@ -51,7 +54,8 @@ class _StreamGemmaAutocompleteOptionsState extends ConsumerState<StreamGemmaAuto
 
   void _fetchSuggestions(String input) async {
     final chat = ref.read(gemmaProvider);
-    final isModelInitialized = ref.read(gemmaProvider.notifier).isModelInitialized;
+    final isModelInitialized =
+        ref.read(gemmaProvider.notifier).isModelInitialized;
 
     if (!isModelInitialized || chat == null) {
       setState(() {
@@ -86,7 +90,9 @@ Completions:
       _stream = chat.generateChatResponseAsync();
       final StringBuffer fullResponseBuffer = StringBuffer();
       await for (final token in _stream!) {
-        if (token.runtimeType.toString() == 'TextResponse' && token.token != null && token.token.isNotEmpty) {
+        if (token.runtimeType.toString() == 'TextResponse' &&
+            token.token != null &&
+            token.token.isNotEmpty) {
           fullResponseBuffer.write(token.token);
           setState(() {
             _suggestions[0] = input + fullResponseBuffer.toString().trim();
@@ -105,14 +111,16 @@ Completions:
           .where((suggestion) => suggestion.isNotEmpty)
           .toList();
 
-      final filteredSuggestions =
-          parsedSuggestions.where((s) => s.toLowerCase().startsWith(input.toLowerCase())).toList();
+      final filteredSuggestions = parsedSuggestions
+          .where((s) => s.toLowerCase().startsWith(input.toLowerCase()))
+          .toList();
 
       setState(() {
         if (filteredSuggestions.isNotEmpty) {
           _suggestions = filteredSuggestions.take(3).toList();
         } else {
-          _suggestions = rawGemmaOutput.isNotEmpty ? [input + rawGemmaOutput.trim()] : [];
+          _suggestions =
+              rawGemmaOutput.isNotEmpty ? [input + rawGemmaOutput.trim()] : [];
           if (_suggestions.isNotEmpty && _suggestions[0] == input) {
             _suggestions = [];
           }
@@ -159,7 +167,9 @@ Completions:
             ),
             textStyle: theme.textTheme.bodyLarge!,
           ),
-          onTap: widget.onOptionSelected == null ? null : () => widget.onOptionSelected!(suggestion),
+          onTap: widget.onOptionSelected == null
+              ? null
+              : () => widget.onOptionSelected!(suggestion),
         );
       },
     );

@@ -5,6 +5,7 @@ import 'package:wings_dating_app/const/http_templete.dart';
 import 'package:wings_dating_app/dependency/dependencies.dart';
 import 'package:wings_dating_app/services/chat_services.dart';
 import 'package:wings_dating_app/src/model/album_model.dart';
+import 'package:wings_dating_app/helpers/helpers.dart';
 part 'albums_repo.g.dart';
 
 @Riverpod(keepAlive: true)
@@ -14,11 +15,13 @@ class SharedAlbum extends _$SharedAlbum {
     final searchMap = await ref.read(chatClientProvider).search(
         Filter.and([
           Filter.equal("type", "messaging"),
-          Filter.in_('members', [ref.read(chatClientProvider).state.currentUser!.id]),
+          Filter.in_(
+              'members', [ref.read(chatClientProvider).state.currentUser!.id]),
         ]),
         messageFilters: Filter.and([
           Filter.equal("attachments.type", "album"),
-          Filter.notEqual("user.id", ref.read(chatClientProvider).state.currentUser!.id)
+          Filter.notEqual(
+              "user.id", ref.read(chatClientProvider).state.currentUser!.id)
         ]));
 
     return searchMap.results;
@@ -38,16 +41,19 @@ class AlbumsRepo {
 
   Future<UserAlbumModel?> addAlbum(UserAlbumModel albumList) async {
     try {
-      final response = await httpTemplate.post("/albums", body: albumList.toJson());
-
-      if (response["code"] == 200) {
-        // final albumList = response["data"] as List<dynamic>;
-
-        // final data = albumList.map((e) => UserAlbumModel.fromJson(e)).toList();
+      // Send only required fields to backend to avoid jsonEncode(DateTime) issues
+      final payload = {
+        "ownerId": albumList.ownerId,
+        "name": albumList.name,
+        "photos": albumList.photos,
+      };
+      final response = await httpTemplate.post("/albums", body: payload);
+      final code = response["code"];
+      final isSuccess = code is int && code >= 200 && code < 300;
+      if (isSuccess) {
         return UserAlbumModel.fromJson(response["data"]);
-      } else {
-        return null;
       }
+      return null;
     } catch (e) {
       return null;
     }
@@ -58,7 +64,8 @@ class AlbumsRepo {
 
   // Get albums shared with a user (viewer)
   Future<List<UserAlbumModel>> getSharedAlbums({String? userId}) async {
-    final viewerId = userId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final viewerId =
+        userId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
     final response = await httpTemplate.get("/albums/shared/$viewerId");
 
     if (response["code"] == 200) {
@@ -76,26 +83,31 @@ class AlbumsRepo {
     String status = 'pending',
     String? ownerId,
   }) async {
-    final currentOwnerId = ownerId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
-    final response = await httpTemplate.get("/api/admin/album-requests?status=$status");
+    final currentOwnerId =
+        ownerId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final response =
+        await httpTemplate.get("/api/admin/album-requests?status=$status");
 
     if (response["code"] == 200) {
       // The admin endpoint wraps the array under data.data
       final payload = Map<String, dynamic>.from(response["data"]);
-      final List<dynamic> items = List<dynamic>.from(payload["data"] ?? const []);
+      final List<dynamic> items =
+          List<dynamic>.from(payload["data"] ?? const []);
       // Filter only requests where current user is the album owner
       final filtered = items
           .where((raw) {
             final m = Map<String, dynamic>.from(raw as Map);
             final albumOwner = m["albumOwner"] as Map<String, dynamic>?;
-            final ownerIdFromItem = albumOwner != null ? albumOwner["id"] as String? : null;
+            final ownerIdFromItem =
+                albumOwner != null ? albumOwner["id"] as String? : null;
             return ownerIdFromItem == currentOwnerId;
           })
           .map((e) => Map<String, dynamic>.from(e as Map))
           .toList();
       return filtered;
     } else {
-      throw Exception("Failed to fetch album access requests: ${response["message"]}");
+      throw Exception(
+          "Failed to fetch album access requests: ${response["message"]}");
     }
   }
 
@@ -105,7 +117,8 @@ class AlbumsRepo {
     required String action, // 'approve' | 'reject'
     String? moderatorId,
   }) async {
-    final modId = moderatorId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final modId = moderatorId ??
+        ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
     final response = await httpTemplate.post(
       "/api/admin/album-requests/$requestId/moderate",
       body: {"action": action, "moderatorId": modId},
@@ -122,11 +135,14 @@ class AlbumsRepo {
     required String albumId,
     String? requesterId,
   }) async {
-    final reqId = requesterId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
-    final response = await httpTemplate.get("/api/admin/album-requests?status=pending");
+    final reqId = requesterId ??
+        ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final response =
+        await httpTemplate.get("/api/admin/album-requests?status=pending");
     if (response["code"] == 200) {
       final payload = Map<String, dynamic>.from(response["data"]);
-      final List<dynamic> items = List<dynamic>.from(payload["data"] ?? const []);
+      final List<dynamic> items =
+          List<dynamic>.from(payload["data"] ?? const []);
       for (final raw in items) {
         final m = Map<String, dynamic>.from(raw as Map);
         final aId = (m["albumId"] ?? m["album"]?['_id'])?.toString();
@@ -135,15 +151,32 @@ class AlbumsRepo {
           return m;
         }
       }
+      // Fallback: consult consolidated access-state, which prefers the album with a pending request
+      try {
+        // We need the ownerId to call the endpoint; fetch album details
+        final album = await getAlbumsById(albumId);
+        final ownerId = album.owner?.id ?? album.ownerId;
+        final state =
+            await getAlbumAccessState(ownerId: ownerId, viewerId: reqId);
+        if (state.pending && state.albumId == albumId) {
+          return {
+            "albumId": albumId,
+            "requesterId": reqId,
+            "status": "pending"
+          };
+        }
+      } catch (_) {}
       return null;
     } else {
-      throw Exception("Failed to fetch album access requests: ${response["message"]}");
+      throw Exception(
+          "Failed to fetch album access requests: ${response["message"]}");
     }
   }
 
   Future<UserAlbumModel?> updateAlbum(UserAlbumModel albumList) async {
     try {
-      final response = await httpTemplate.put("/albums/${albumList.id}", body: albumList.toJson());
+      final response = await httpTemplate.put("/albums/${albumList.id}",
+          body: albumList.toJson());
 
       if (response["code"] == 200) {
         // final albumList = response["data"] as List<dynamic>;
@@ -170,16 +203,37 @@ class AlbumsRepo {
     required String name,
   }) async {
     try {
+      logger.i(
+          '[AlbumsRepo] renameAlbum: albumId=$albumId ownerId=$ownerId name="$name"');
       final body = {
         "ownerId": ownerId,
         "updates": {"name": name},
       };
       final response = await httpTemplate.put("/albums/$albumId", body: body);
-      if (response["code"] == 200) {
-        return UserAlbumModel.fromJson(response["data"]);
+      final code = response["code"];
+      final isSuccess = response["status"] == 'success' ||
+          (code is int && code >= 200 && code < 300);
+      if (isSuccess) {
+        final data = response["data"];
+        if (data == null) {
+          // Some endpoints might return 204/empty body. Fetch album.
+          logger.i(
+              '[AlbumsRepo] updatePhotos: success with empty body. Fetching album...');
+          try {
+            return await getAlbumsById(albumId, bypassCache: true);
+          } catch (e) {
+            logger.w(
+                '[AlbumsRepo] updatePhotos: fetch after empty body failed: $e');
+            return null;
+          }
+        }
+        return UserAlbumModel.fromJson(data);
       }
+      logger.w(
+          '[AlbumsRepo] renameAlbum failed: code=$code message=${response["message"]} details=${response["details"]}');
       return null;
     } catch (e) {
+      logger.e('[AlbumsRepo] renameAlbum exception: $e');
       return null;
     }
   }
@@ -191,16 +245,37 @@ class AlbumsRepo {
     required List<String> photos,
   }) async {
     try {
+      logger.i(
+          '[AlbumsRepo] updatePhotos: albumId=$albumId ownerId=$ownerId count=${photos.length}');
       final body = {
         "ownerId": ownerId,
         "updates": {"photos": photos},
       };
       final response = await httpTemplate.put("/albums/$albumId", body: body);
-      if (response["code"] == 200) {
-        return UserAlbumModel.fromJson(response["data"]);
+      final code = response["code"];
+      final isSuccess = response["status"] == 'success' ||
+          (code is int && code >= 200 && code < 300);
+      if (isSuccess) {
+        final data = response["data"];
+        if (data == null) {
+          // Some endpoints might return 204/empty body. Fetch album with cache-bypass.
+          logger.i(
+              '[AlbumsRepo] updatePhotos: success with empty body. Fetching album (bypassCache=true)...');
+          try {
+            return await getAlbumsById(albumId, bypassCache: true);
+          } catch (e) {
+            logger.w(
+                '[AlbumsRepo] updatePhotos: fetch after empty body failed: $e');
+            return null;
+          }
+        }
+        return UserAlbumModel.fromJson(data);
       }
+      logger.w(
+          '[AlbumsRepo] updatePhotos failed: code=$code message=${response["message"]} details=${response["details"]}');
       return null;
     } catch (e) {
+      logger.e('[AlbumsRepo] updatePhotos exception: $e');
       return null;
     }
   }
@@ -211,7 +286,8 @@ class AlbumsRepo {
     required String userId,
   }) async {
     try {
-      final response = await httpTemplate.post("/albums/$albumId/share", body: {"userId": userId});
+      final response = await httpTemplate
+          .post("/albums/$albumId/share", body: {"userId": userId});
       if (response["code"] == 200) {
         // Fetch enriched album shape (with owner/isShared flags)
         return await getAlbumsById(albumId);
@@ -228,7 +304,8 @@ class AlbumsRepo {
     required String userId,
   }) async {
     try {
-      final response = await httpTemplate.delete("/albums/$albumId/share/$userId");
+      final response =
+          await httpTemplate.delete("/albums/$albumId/share/$userId");
       if (response["code"] == 200) {
         // Fetch enriched album after mutation
         return await getAlbumsById(albumId);
@@ -248,9 +325,16 @@ class AlbumsRepo {
     try {
       final response = await httpTemplate.post(
         "/albums/$albumId/request-access",
-        body: {"requesterId": requesterId, "message": message},
+        body: {
+          "requesterId": requesterId,
+          if (message.trim().isNotEmpty) "message": message.trim(),
+        },
       );
-      if (response["code"] == 200) {
+      // Treat any 2xx as success (server may return 200, 201, etc.)
+      final code = response["code"];
+      final isSuccess = response["status"] == 'success' ||
+          (code is int && code >= 200 && code < 300);
+      if (isSuccess) {
         return Map<String, dynamic>.from(response["data"]);
       }
       return null;
@@ -260,8 +344,10 @@ class AlbumsRepo {
   }
 
   Future<List<UserAlbumModel>> getAllAlbums({String? id}) async {
-    final currentUserId = ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
-    final response = await httpTemplate.get("/albums/user/${id ?? currentUserId}");
+    final currentUserId =
+        ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final response =
+        await httpTemplate.get("/albums/user/${id ?? currentUserId}");
 
     if (response["code"] == 200) {
       final albumList = response["data"] as List<dynamic>;
@@ -273,9 +359,15 @@ class AlbumsRepo {
     }
   }
 
-  Future<UserAlbumModel> getAlbumsById(String id) async {
-    final response = await httpTemplate.get("/albums/$id?userId="
-        "${ref.read(Dependency.firebaseAuthProvider).currentUser!.uid}");
+  Future<UserAlbumModel> getAlbumsById(String id,
+      {bool bypassCache = false}) async {
+    final uid = ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final ts =
+        bypassCache ? '&_ts=${DateTime.now().millisecondsSinceEpoch}' : '';
+    final endpoint = "/albums/$id?userId=$uid$ts";
+    logger.i(
+        '[AlbumsRepo] getAlbumsById: id=$id bypassCache=$bypassCache endpoint=$endpoint');
+    final response = await httpTemplate.get(endpoint);
 
     if (response["code"] == 200) {
       // final albumList = response["data"] as List<dynamic>;
@@ -288,12 +380,21 @@ class AlbumsRepo {
   }
 
   // Consolidated access state call to avoid multiple requests
-  Future<({String? albumId, bool hasAlbum, bool canView, bool pending})> getAlbumAccessState({
+  Future<
+      ({
+        String? albumId,
+        bool hasAlbum,
+        bool canView,
+        bool pending,
+        bool isOwner
+      })> getAlbumAccessState({
     required String ownerId,
     String? viewerId,
   }) async {
-    final vid = viewerId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
-    final response = await httpTemplate.get("/albums/access-state?ownerId=$ownerId&viewerId=$vid");
+    final vid =
+        viewerId ?? ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final response = await httpTemplate
+        .get("/albums/access-state?ownerId=$ownerId&viewerId=$vid");
     if (response["code"] == 200) {
       final data = Map<String, dynamic>.from(response["data"]);
       return (
@@ -301,9 +402,11 @@ class AlbumsRepo {
         hasAlbum: data['hasAlbum'] == true,
         canView: data['canView'] == true,
         pending: data['pending'] == true,
+        isOwner: data['isOwner'] == true,
       );
     } else {
-      throw Exception("Failed to fetch album access state: ${response["message"]}");
+      throw Exception(
+          "Failed to fetch album access state: ${response["message"]}");
     }
   }
 }

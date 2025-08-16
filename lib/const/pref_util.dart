@@ -42,7 +42,9 @@ class SharedPrefs {
   }
 
   UserModel? getUsers() {
-    return prefs.containsKey(prefUserId) ? UserModel.fromJson(jsonDecode(prefs.getString(prefUserId)!)) : null;
+    return prefs.containsKey(prefUserId)
+        ? UserModel.fromJson(jsonDecode(prefs.getString(prefUserId)!))
+        : null;
   }
 
   updateUser(UserModel userModel) async {

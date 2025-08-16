@@ -6,8 +6,8 @@ part of 'album_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_UserAlbumModel _$UserAlbumModelFromJson(Map<String, dynamic> json) =>
-    _UserAlbumModel(
+UserAlbumModel _$UserAlbumModelFromJson(Map<String, dynamic> json) =>
+    UserAlbumModel(
       ownerId: json['ownerId'] as String,
       name: json['name'] as String,
       photos: (json['photos'] as List<dynamic>?)
@@ -27,7 +27,7 @@ _UserAlbumModel _$UserAlbumModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String?,
     );
 
-Map<String, dynamic> _$UserAlbumModelToJson(_UserAlbumModel instance) =>
+Map<String, dynamic> _$UserAlbumModelToJson(UserAlbumModel instance) =>
     <String, dynamic>{
       'ownerId': instance.ownerId,
       'name': instance.name,

@@ -6,9 +6,9 @@ part of 'matching_request_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_MatchingRequestModel _$MatchingRequestModelFromJson(
+MatchingRequestModel _$MatchingRequestModelFromJson(
         Map<String, dynamic> json) =>
-    _MatchingRequestModel(
+    MatchingRequestModel(
       userId: json['userId'] as String,
       ageRange: RangeValue.fromJson(json['ageRange'] as Map<String, dynamic>),
       bodyTypes:
@@ -25,39 +25,8 @@ _MatchingRequestModel _$MatchingRequestModelFromJson(
       id: json['id'] as String,
     );
 
-const _$MatchingRequestModelFieldMap = <String, String>{
-  'userId': 'userId',
-  'ageRange': 'ageRange',
-  'bodyTypes': 'bodyTypes',
-  'positionPreferences': 'positionPreferences',
-  'skills': 'skills',
-  'activities': 'activities',
-  'createdAt': 'createdAt',
-  'id': 'id',
-};
-
-// ignore: unused_element
-abstract class _$MatchingRequestModelPerFieldToJson {
-  // ignore: unused_element
-  static Object? userId(String instance) => instance;
-  // ignore: unused_element
-  static Object? ageRange(RangeValue instance) => instance.toJson();
-  // ignore: unused_element
-  static Object? bodyTypes(List<String> instance) => instance;
-  // ignore: unused_element
-  static Object? positionPreferences(List<String> instance) => instance;
-  // ignore: unused_element
-  static Object? skills(List<String> instance) => instance;
-  // ignore: unused_element
-  static Object? activities(List<String> instance) => instance;
-  // ignore: unused_element
-  static Object? createdAt(DateTime instance) => instance.toIso8601String();
-  // ignore: unused_element
-  static Object? id(String instance) => instance;
-}
-
 Map<String, dynamic> _$MatchingRequestModelToJson(
-        _MatchingRequestModel instance) =>
+        MatchingRequestModel instance) =>
     <String, dynamic>{
       'userId': instance.userId,
       'ageRange': instance.ageRange.toJson(),
@@ -69,25 +38,12 @@ Map<String, dynamic> _$MatchingRequestModelToJson(
       'id': instance.id,
     };
 
-_RangeValue _$RangeValueFromJson(Map<String, dynamic> json) => _RangeValue(
+RangeValue _$RangeValueFromJson(Map<String, dynamic> json) => RangeValue(
       start: (json['start'] as num).toDouble(),
       end: (json['end'] as num).toDouble(),
     );
 
-const _$RangeValueFieldMap = <String, String>{
-  'start': 'start',
-  'end': 'end',
-};
-
-// ignore: unused_element
-abstract class _$RangeValuePerFieldToJson {
-  // ignore: unused_element
-  static Object? start(double instance) => instance;
-  // ignore: unused_element
-  static Object? end(double instance) => instance;
-}
-
-Map<String, dynamic> _$RangeValueToJson(_RangeValue instance) =>
+Map<String, dynamic> _$RangeValueToJson(RangeValue instance) =>
     <String, dynamic>{
       'start': instance.start,
       'end': instance.end,

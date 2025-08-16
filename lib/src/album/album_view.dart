@@ -14,6 +14,7 @@ import 'package:wings_dating_app/src/model/album_model.dart';
 import 'package:wings_dating_app/src/users/users_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:wings_dating_app/src/notifications/album_requests_view.dart';
+import 'package:wings_dating_app/helpers/helpers.dart';
 
 // part 'album_view.g.dart';
 
@@ -23,7 +24,6 @@ final getAllAlbumsProvider = FutureProvider.autoDispose<List<UserAlbumModel>>((r
 
 // Albums shared with current user (read-only)
 final getSharedAlbumsProvider = FutureProvider.autoDispose<List<UserAlbumModel>>((ref) async {
-  
   return ref.read(albumsRepoProvider).getSharedAlbums();
 });
 
@@ -56,8 +56,21 @@ class AlbumView extends ConsumerWidget {
                 createdAt: DateTime.now(),
                 updatedAt: DateTime.now(),
               );
-              await ref.read(AlbumControllerProvider(userId).notifier).createAlbum(album);
-              Navigator.of(context).pop();
+              final created = await ref.read(albumsRepoProvider).addAlbum(album);
+              if (created != null) {
+                // Refresh album lists
+                ref.invalidate(getAllAlbumsProvider);
+                ref.invalidate(getSharedAlbumsProvider);
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                  // Optionally navigate to edit the new album
+                  context.router.push(CreateAlbumRoute(id: created.id!));
+                }
+              } else {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to create album')));
+                }
+              }
             },
             child: const Text('Create'),
           ),
@@ -143,14 +156,39 @@ class AlbumView extends ConsumerWidget {
                         data: (s) => s,
                         orElse: () => const <UserAlbumModel>[],
                       );
-                      // Ensure we don't show duplicates across sections
-                      final ownedIds = owned.map((e) => e.id).whereType<String>().toSet();
-                      final shared = sharedRaw
-                          .where((s) => s.id != null && !ownedIds.contains(s.id))
-                          .map((s) => s.copyWith(isShared: true))
+
+                      // Split the combined API response into owned vs shared by owner
+                      final currentUserId = userId;
+                      final allFromUserEndpoint = owned;
+
+                      // Owned = albums where ownerId == current user
+                      final ownedList = allFromUserEndpoint
+                          .where((a) => currentUserId != null && a.ownerId == currentUserId)
+                          // Do not show the "Shared" ribbon on your own albums section
+                          .map((a) => a.copyWith(isShared: false))
                           .toList(growable: false);
 
-                      final ownedList = owned.map((a) => a.copyWith(isShared: false)).toList(growable: false);
+                      // Shared candidates from the user endpoint = albums owned by others
+                      final sharedFromUserEndpoint = allFromUserEndpoint
+                          .where((a) => currentUserId != null && a.ownerId != currentUserId)
+                          .map((a) => a.copyWith(isShared: true))
+                          .toList(growable: false);
+
+                      // Merge with dedicated shared endpoint results
+                      final Map<String, UserAlbumModel> sharedMap = {
+                        for (final a in sharedFromUserEndpoint)
+                          if (a.id != null) a.id!: a,
+                      };
+                      for (final a in sharedRaw) {
+                        if (a.id != null && !sharedMap.containsKey(a.id)) {
+                          sharedMap[a.id!] = a.copyWith(isShared: true);
+                        }
+                      }
+                      // Remove any duplicates that overlap with owned ids
+                      final ownedIds = ownedList.map((e) => e.id).whereType<String>().toSet();
+                      final shared = sharedMap.values
+                          .where((a) => a.id != null && !ownedIds.contains(a.id))
+                          .toList(growable: false);
 
                       if (ownedList.isEmpty && shared.isEmpty) {
                         return const Center(child: Text('No albums found. Create your first album!'));
@@ -395,6 +433,7 @@ class _AlbumCard extends StatelessWidget {
 }
 
 Future<void> openEditor(BuildContext context, WidgetRef ref, {required Uint8List path, required String id}) async {
+  logger.i('[AlbumEditor] Opening editor for albumId=$id bytes=${path.lengthInBytes}');
   await Navigator.push(
     context,
     MaterialPageRoute(
@@ -403,10 +442,14 @@ Future<void> openEditor(BuildContext context, WidgetRef ref, {required Uint8List
               path,
               callbacks: ProImageEditorCallbacks(
                 onImageEditingComplete: (bytes) async {
+                  logger.i('[AlbumEditor] Edit complete. Uploading bytes=${bytes.lengthInBytes}');
                   final uploadedPath = await uploadFileToFirebaseAlbum(bytes);
+                  logger.i('[AlbumEditor] Upload success. url=$uploadedPath');
                   // Add image to album after upload
-                  await ref.read(AlbumControllerProvider(id).notifier).addImageToAlbum(uploadedPath);
+                  final controller = ref.read(AlbumControllerProvider(id).notifier);
+                  await controller.addImageToAlbum(uploadedPath);
                   if (context.mounted) {
+                    logger.i('[AlbumEditor] Closing editor after successful save.');
                     Navigator.pop(context);
                   }
                 },
@@ -416,12 +459,14 @@ Future<void> openEditor(BuildContext context, WidgetRef ref, {required Uint8List
               path,
               callbacks: ProImageEditorCallbacks(
                 onImageEditingComplete: (bytes) async {
+                  logger.i('[AlbumEditor] Edit complete. Uploading bytes=${bytes.lengthInBytes}');
                   final uploadedPath = await uploadFileToFirebaseAlbum(bytes);
+                  logger.i('[AlbumEditor] Upload success. url=$uploadedPath');
                   // Add image to album after upload
-                  await ref.read(AlbumControllerProvider(id).notifier).addImageToAlbum(
-                        uploadedPath,
-                      );
+                  final controller = ref.read(AlbumControllerProvider(id).notifier);
+                  await controller.addImageToAlbum(uploadedPath);
                   if (context.mounted) {
+                    logger.i('[AlbumEditor] Closing editor after successful save.');
                     Navigator.pop(context);
                   }
                 },

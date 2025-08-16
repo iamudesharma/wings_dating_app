@@ -27,7 +27,8 @@ class ProfileView extends ConsumerStatefulWidget {
 class _ProfileViewState extends ConsumerState<ProfileView> {
   @override
   Widget build(BuildContext context) {
-    final userData = ref.watch(ProfileController.userControllerProvider).userModel;
+    final userData =
+        ref.watch(ProfileController.userControllerProvider).userModel;
 
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -60,8 +61,11 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
         radius: size / 2,
         backgroundColor: colorScheme.primaryContainer,
         child: Text(
-          userData.username.isNotEmpty ? userData.username.characters.first.toUpperCase() : '?',
-          style: theme.textTheme.titleLarge?.copyWith(color: colorScheme.onPrimaryContainer),
+          userData.username.isNotEmpty
+              ? userData.username.characters.first.toUpperCase()
+              : '?',
+          style: theme.textTheme.titleLarge
+              ?.copyWith(color: colorScheme.onPrimaryContainer),
         ),
       );
     }
@@ -81,21 +85,26 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                     icon: const Icon(Icons.notifications_outlined),
                     onPressed: () {
                       Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const AlbumRequestsView()),
+                        MaterialPageRoute(
+                            builder: (_) => const AlbumRequestsView()),
                       );
                     },
                   ),
                   PopupMenuButton<String>(
                     tooltip: 'More',
                     itemBuilder: (context) => [
-                      const PopupMenuItem(value: 'edit', child: Text('Edit Profile')),
-                      const PopupMenuItem(value: 'visits', child: Text('Profile Visits')),
-                      const PopupMenuItem(value: 'signout', child: Text('Sign out')),
+                      const PopupMenuItem(
+                          value: 'edit', child: Text('Edit Profile')),
+                      const PopupMenuItem(
+                          value: 'visits', child: Text('Profile Visits')),
+                      const PopupMenuItem(
+                          value: 'signout', child: Text('Sign out')),
                     ],
                     onSelected: (value) async {
                       switch (value) {
                         case 'edit':
-                          context.router.push(EditProfileRoute(isEditProfile: true));
+                          context.router
+                              .push(EditProfileRoute(isEditProfile: true));
                           break;
                         case 'visits':
                           context.router.push(const ProfileVisitsRoute());
@@ -139,7 +148,8 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                                 children: [
                                   Text(
                                     userData.username,
-                                    style: theme.textTheme.headlineSmall?.copyWith(
+                                    style:
+                                        theme.textTheme.headlineSmall?.copyWith(
                                       color: colorScheme.onSecondaryContainer,
                                       fontWeight: FontWeight.w700,
                                     ),
@@ -150,8 +160,10 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                                   if ((userData.bio ?? '').isNotEmpty)
                                     Text(
                                       userData.bio!,
-                                      style: theme.textTheme.bodyMedium?.copyWith(
-                                        color: colorScheme.onSecondaryContainer.withValues(alpha: 0.85),
+                                      style:
+                                          theme.textTheme.bodyMedium?.copyWith(
+                                        color: colorScheme.onSecondaryContainer
+                                            .withValues(alpha: 0.85),
                                       ),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
@@ -161,9 +173,12 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                                     spacing: 8,
                                     runSpacing: 8,
                                     children: [
-                                      _pill(context, Icons.work_outline, userData.role.value),
-                                      _pill(context, Icons.favorite_outline, userData.relationshipStatus.value),
-                                      _pill(context, Icons.search, userData.lookingFor.value),
+                                      _pill(context, Icons.work_outline,
+                                          userData.role.value),
+                                      _pill(context, Icons.favorite_outline,
+                                          userData.relationshipStatus.value),
+                                      _pill(context, Icons.search,
+                                          userData.lookingFor.value),
                                     ],
                                   ),
                                 ],
@@ -185,13 +200,15 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                       Row(
                         children: [
                           FilledButton.icon(
-                            onPressed: () => context.router.push(EditProfileRoute(isEditProfile: true)),
+                            onPressed: () => context.router
+                                .push(EditProfileRoute(isEditProfile: true)),
                             icon: const Icon(Icons.edit_outlined),
                             label: const Text('Edit Profile'),
                           ),
                           const SizedBox(width: 12),
                           OutlinedButton.icon(
-                            onPressed: () => context.router.push(const ProfileVisitsRoute()),
+                            onPressed: () =>
+                                context.router.push(const ProfileVisitsRoute()),
                             icon: const Icon(Icons.visibility_outlined),
                             label: const Text('Profile Visits'),
                           ),
@@ -200,7 +217,8 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                             tooltip: 'Album Requests',
                             onPressed: () {
                               Navigator.of(context).push(
-                                MaterialPageRoute(builder: (_) => const AlbumRequestsView()),
+                                MaterialPageRoute(
+                                    builder: (_) => const AlbumRequestsView()),
                               );
                             },
                             icon: const Icon(Icons.notifications_outlined),
@@ -210,18 +228,24 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                       const SizedBox(height: 16),
 
                       // About Section
-                      Text('About', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
+                      Text('About',
+                          style: theme.textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w600)),
                       const SizedBox(height: 8),
                       Card(
                         elevation: 0,
                         color: colorScheme.surface,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            (userData.bio ?? '').isEmpty ? 'No bio added yet.' : userData.bio!,
+                            (userData.bio ?? '').isEmpty
+                                ? 'No bio added yet.'
+                                : userData.bio!,
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.9),
+                              color: theme.textTheme.bodyMedium?.color
+                                  ?.withValues(alpha: 0.9),
                             ),
                           ),
                         ),
@@ -229,24 +253,43 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                       const SizedBox(height: 16),
 
                       // Details grid
-                      Text('Details', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
+                      Text('Details',
+                          style: theme.textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w600)),
                       const SizedBox(height: 8),
                       Card(
                         elevation: 0,
                         color: colorScheme.surface,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 8),
                           child: Column(
                             children: [
-                              ProfileInputCard(title: 'Role', value: userData.role.value),
-                              ProfileInputCard(title: 'Body Type', value: userData.bodyType.value),
-                              ProfileInputCard(title: 'Ethnicity', value: userData.ethnicity.value),
-                              ProfileInputCard(title: 'Relationship Status', value: userData.relationshipStatus.value),
-                              ProfileInputCard(title: 'Looking for', value: userData.lookingFor.value),
-                              ProfileInputCard(title: 'Where to meet', value: userData.whereToMeet.value),
-                              ProfileInputCard(title: 'Height', value: userData.height ?? 'Do not Show'),
-                              ProfileInputCard(title: 'Weight', value: userData.weight ?? 'Do not Show'),
+                              ProfileInputCard(
+                                  title: 'Role', value: userData.role.value),
+                              ProfileInputCard(
+                                  title: 'Body Type',
+                                  value: userData.bodyType.value),
+                              ProfileInputCard(
+                                  title: 'Ethnicity',
+                                  value: userData.ethnicity.value),
+                              ProfileInputCard(
+                                  title: 'Relationship Status',
+                                  value: userData.relationshipStatus.value),
+                              ProfileInputCard(
+                                  title: 'Looking for',
+                                  value: userData.lookingFor.value),
+                              ProfileInputCard(
+                                  title: 'Where to meet',
+                                  value: userData.whereToMeet.value),
+                              ProfileInputCard(
+                                  title: 'Height',
+                                  value: userData.height ?? 'Do not Show'),
+                              ProfileInputCard(
+                                  title: 'Weight',
+                                  value: userData.weight ?? 'Do not Show'),
                             ],
                           ),
                         ),
@@ -278,7 +321,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
       decoration: BoxDecoration(
         color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.12)),
+        border: Border.all(
+            color:
+                theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.12)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -287,7 +332,8 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
           const SizedBox(width: 6),
           Text(
             label,
-            style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.onSecondaryContainer),
+            style: theme.textTheme.labelMedium
+                ?.copyWith(color: theme.colorScheme.onSecondaryContainer),
           ),
         ],
       ),

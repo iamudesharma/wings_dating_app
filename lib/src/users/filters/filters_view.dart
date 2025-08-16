@@ -65,7 +65,8 @@ class FilterView extends ConsumerWidget {
             (val) => filtersNotifier.updateLastSeen(val),
           ),
           _buildSectionTitle('Interests'),
-          _buildMultiSelectChips(interestOptions, filters.interests, filtersNotifier),
+          _buildMultiSelectChips(
+              interestOptions, filters.interests, filtersNotifier),
           _buildSectionTitle('Height Range'),
           _buildDropdown(
             heightRanges,
@@ -90,7 +91,8 @@ class FilterView extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: const StadiumBorder(),
             ),
-            onPressed: filters.enabled ? () => _applyFilters(context, ref) : null,
+            onPressed:
+                filters.enabled ? () => _applyFilters(context, ref) : null,
             child: const Text('Apply', style: TextStyle(fontSize: 16)),
           ),
         ],
@@ -101,24 +103,31 @@ class FilterView extends ConsumerWidget {
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      child: Text(title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
     );
   }
 
-  Widget _buildDropdown(List<String> items, String currentValue, Function(String) onChanged) {
+  Widget _buildDropdown(
+      List<String> items, String currentValue, Function(String) onChanged) {
     return DropdownButtonFormField<String>(
       value: currentValue.isEmpty ? null : currentValue,
-      items: items.map((item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
+      items: items
+          .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+          .toList(),
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.grey[800],
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none),
       ),
       onChanged: (val) => onChanged(val!),
     );
   }
 
-  Widget _buildChips(List<String> options, String selected, Function(String) onSelected) {
+  Widget _buildChips(
+      List<String> options, String selected, Function(String) onSelected) {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -130,13 +139,15 @@ class FilterView extends ConsumerWidget {
           onSelected: (_) => onSelected(opt),
           selectedColor: Colors.yellow,
           backgroundColor: Colors.grey[800],
-          labelStyle: TextStyle(color: isSelected ? Colors.black : Colors.white),
+          labelStyle:
+              TextStyle(color: isSelected ? Colors.black : Colors.white),
         );
       }).toList(),
     );
   }
 
-  Widget _buildMultiSelectChips(List<String> options, List<String> selectedInterests, UserFilters filtersNotifier) {
+  Widget _buildMultiSelectChips(List<String> options,
+      List<String> selectedInterests, UserFilters filtersNotifier) {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -154,13 +165,15 @@ class FilterView extends ConsumerWidget {
           },
           selectedColor: Colors.yellow,
           backgroundColor: Colors.grey[800],
-          labelStyle: TextStyle(color: isSelected ? Colors.black : Colors.white),
+          labelStyle:
+              TextStyle(color: isSelected ? Colors.black : Colors.white),
         );
       }).toList(),
     );
   }
 
-  Widget _buildPositionGrid(List<String> positions, String selectedPosition, UserFilters filtersNotifier) {
+  Widget _buildPositionGrid(List<String> positions, String selectedPosition,
+      UserFilters filtersNotifier) {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -178,7 +191,8 @@ class FilterView extends ConsumerWidget {
     );
   }
 
-  Widget _buildPhotosOptions(FiltersModel filters, UserFilters filtersNotifier) {
+  Widget _buildPhotosOptions(
+      FiltersModel filters, UserFilters filtersNotifier) {
     return Column(
       children: [
         CheckboxListTile(

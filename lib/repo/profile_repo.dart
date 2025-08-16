@@ -47,18 +47,22 @@ class ProfileRepo with RepositoryExceptionMixin {
   // }
 
   Future<UserModel> getCurrentUser() async {
-    final currentUserId = ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
+    final currentUserId =
+        ref.read(Dependency.firebaseAuthProvider).currentUser!.uid;
     try {
-      final Map<String, dynamic> response = await httpTemplate.get("/users/$currentUserId");
+      final Map<String, dynamic> response =
+          await httpTemplate.get("/users/$currentUserId");
       print("getCurrentUser response: $response");
-      if (response.containsKey('data') && response['data'] is Map<String, dynamic>) {
+      if (response.containsKey('data') &&
+          response['data'] is Map<String, dynamic>) {
         final Map<String, dynamic> userMap = response['data'];
         print("getCurrentUser userMap: $userMap");
         print("userMap runtimeType: ${userMap.runtimeType}");
         final user = UserModel.fromJson(userMap);
         return user;
       } else {
-        throw Exception('Failed to fetch user: ${response['message'] ?? response}');
+        throw Exception(
+            'Failed to fetch user: ${response['message'] ?? response}');
       }
     } catch (e) {
       print("Error in getCurrentUser: $e");
@@ -93,9 +97,11 @@ class ProfileRepo with RepositoryExceptionMixin {
   //   );
   // }
 
-  Future<List<UserModel?>?> getUserListBySearch({int limit = 10, required GeoPoint geoPoint}) async {
+  Future<List<UserModel?>?> getUserListBySearch(
+      {int limit = 10, required GeoPoint geoPoint}) async {
     try {
-      final userModel = ref.read(ProfileController.userControllerProvider).userModel!;
+      final userModel =
+          ref.read(ProfileController.userControllerProvider).userModel!;
 
       String query =
           "lng=${userModel.position!.geopoint[0]}&lat=${userModel.position!.geopoint[1]}&distance=5000000&userId=${userModel.id}";
@@ -115,14 +121,16 @@ class ProfileRepo with RepositoryExceptionMixin {
 
         return (users).map((e) => UserModel.fromJson(e)).toList();
       } else {
-        throw Exception('Failed to fetch user: ${response['message'] ?? response}');
+        throw Exception(
+            'Failed to fetch user: ${response['message'] ?? response}');
       }
     } catch (e) {
       return [];
     }
   }
 
-  Future<PaginatedUserResponse> getUserList({int page = 1, int limit = 20}) async {
+  Future<PaginatedUserResponse> getUserList(
+      {int page = 1, int limit = 20}) async {
     try {
       final userModel = await getCurrentUser();
       // Defensive null check for position and geopoint list
@@ -192,7 +200,8 @@ class ProfileRepo with RepositoryExceptionMixin {
         }
       } else {
         print("Response doesn't contain 'data' key");
-        throw Exception('Failed to fetch user: ${response['message'] ?? response}');
+        throw Exception(
+            'Failed to fetch user: ${response['message'] ?? response}');
       }
     } catch (e, st) {
       logger.e("Error fetching user list: $e $st");
@@ -214,9 +223,10 @@ class ProfileRepo with RepositoryExceptionMixin {
   }) async {
     print("getFilterList filters: $filters");
     try {
-  // Prefer using a preloaded user from the controller, but fall back to fetching
-  var currentUser = ref.read(ProfileController.userControllerProvider).userModel;
-  currentUser ??= await getCurrentUser();
+      // Prefer using a preloaded user from the controller, but fall back to fetching
+      var currentUser =
+          ref.read(ProfileController.userControllerProvider).userModel;
+      currentUser ??= await getCurrentUser();
       final geopoint = currentUser.position?.geopoint;
       if (geopoint == null || geopoint.length < 2) {
         logger.e("User position or geopoint is null or incomplete");
@@ -232,7 +242,8 @@ class ProfileRepo with RepositoryExceptionMixin {
       // Parse age range
       int? minAge;
       int? maxAge;
-      if (filters['ageRange'] != null && filters['ageRange'].toString().contains('-')) {
+      if (filters['ageRange'] != null &&
+          filters['ageRange'].toString().contains('-')) {
         final parts = filters['ageRange'].toString().split('-');
         minAge = int.tryParse(parts[0].trim());
         maxAge = int.tryParse(parts[1].replaceAll(RegExp(r'[^\d]'), '').trim());
@@ -247,20 +258,31 @@ class ProfileRepo with RepositoryExceptionMixin {
         'limit': limit,
         if (minAge != null) 'ageMin': minAge,
         if (maxAge != null) 'ageMax': maxAge,
-        if (filters['position'] != null && filters['position'].toString().isNotEmpty) 'position': filters['position'],
+        if (filters['position'] != null &&
+            filters['position'].toString().isNotEmpty)
+          'position': filters['position'],
         if (filters['hasPhotos'] == true) 'hasPhotos': true,
         if (filters['hasFacePics'] == true) 'hasFacePics': true,
         if (filters['hasAlbums'] == true) 'hasAlbums': true,
-        if (filters['lastSeen'] != null && filters['lastSeen'].toString().isNotEmpty) 'lastSeen': filters['lastSeen'],
-        if (filters['interests'] != null && (filters['interests'] as List).isNotEmpty)
+        if (filters['lastSeen'] != null &&
+            filters['lastSeen'].toString().isNotEmpty)
+          'lastSeen': filters['lastSeen'],
+        if (filters['interests'] != null &&
+            (filters['interests'] as List).isNotEmpty)
           'interests': (filters['interests'] as List).join(','),
-        if (filters['heightRange'] != null && filters['heightRange'].toString().isNotEmpty)
+        if (filters['heightRange'] != null &&
+            filters['heightRange'].toString().isNotEmpty)
           'heightRange': filters['heightRange'],
-        if (filters['weightRange'] != null && filters['weightRange'].toString().isNotEmpty)
+        if (filters['weightRange'] != null &&
+            filters['weightRange'].toString().isNotEmpty)
           'weightRange': filters['weightRange'],
-        if (filters['language'] != null && filters['language'].toString().isNotEmpty) 'language': filters['language'],
+        if (filters['language'] != null &&
+            filters['language'].toString().isNotEmpty)
+          'language': filters['language'],
       };
-      final uriParams = params.entries.map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}").join('&');
+      final uriParams = params.entries
+          .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
+          .join('&');
       final response = await httpTemplate.get("/users/discover?$uriParams");
 
       print("Filter API response: $response");
@@ -313,7 +335,8 @@ class ProfileRepo with RepositoryExceptionMixin {
         }
       } else {
         print("Filter response doesn't contain 'data' key");
-        throw Exception('Failed to fetch user: ${response['message'] ?? response}');
+        throw Exception(
+            'Failed to fetch user: ${response['message'] ?? response}');
       }
     } catch (e, st) {
       logger.e("Error fetching user list: $e $st");
@@ -334,7 +357,8 @@ class ProfileRepo with RepositoryExceptionMixin {
     // return users;
   }
 
-  Future<void> addToBlockList({required String id, required int cubeId}) async {}
+  Future<void> addToBlockList(
+      {required String id, required int cubeId}) async {}
 
   Future removeToBlockList({required String id, required int cubeId}) async {}
 
@@ -407,8 +431,8 @@ class ProfileRepo with RepositoryExceptionMixin {
     try {
       logger.i("Removing user $id from favorites for user $currentUserId");
 
-      final response =
-          await httpTemplate.delete("/users/$currentUserId/favourite/$id"); // Changed from 'favorite' to 'favourite'
+      final response = await httpTemplate.delete(
+          "/users/$currentUserId/favourite/$id"); // Changed from 'favorite' to 'favourite'
 
       logger.i("Remove from favorite response: $response");
 
@@ -429,7 +453,8 @@ class ProfileRepo with RepositoryExceptionMixin {
     if (currentUserId == null) {
       throw Exception('No current user logged in');
     }
-    final response = await httpTemplate.post("/users/$currentUserId/tap/$targetUserId");
+    final response =
+        await httpTemplate.post("/users/$currentUserId/tap/$targetUserId");
     return TapResponse.fromJson(response);
   }
 
@@ -453,27 +478,32 @@ class ProfileRepo with RepositoryExceptionMixin {
     if (currentUserId == null) {
       throw Exception('No current user logged in');
     }
-    final response = await httpTemplate.post("/users/$targetUserId/view/$currentUserId");
+    final response =
+        await httpTemplate.post("/users/$targetUserId/view/$currentUserId");
     return ProfileVisitResponse.fromJson(response["data"]);
   }
 
   /// Get the list of profiles the current user has visited
-  Future<PaginatedVisitsResponse> getVisitedProfiles({int page = 1, int limit = 20}) async {
+  Future<PaginatedVisitsResponse> getVisitedProfiles(
+      {int page = 1, int limit = 20}) async {
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
     if (currentUserId == null) {
       throw Exception('No current user logged in');
     }
-    final response = await httpTemplate.get("/users/$currentUserId/visited?page=$page&limit=$limit");
+    final response = await httpTemplate
+        .get("/users/$currentUserId/visited?page=$page&limit=$limit");
     return PaginatedVisitsResponse.fromJson(response["data"]);
   }
 
   /// Get the list of users who have visited the current user's profile
-  Future<PaginatedVisitsResponse> getProfileVisitors({int page = 1, int limit = 20}) async {
+  Future<PaginatedVisitsResponse> getProfileVisitors(
+      {int page = 1, int limit = 20}) async {
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
     if (currentUserId == null) {
       throw Exception('No current user logged in');
     }
-    final response = await httpTemplate.get("/users/$currentUserId/visitors?page=$page&limit=$limit");
+    final response = await httpTemplate
+        .get("/users/$currentUserId/visitors?page=$page&limit=$limit");
     return PaginatedVisitsResponse.fromJson(response["data"]);
   }
 }

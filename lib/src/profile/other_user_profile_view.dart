@@ -24,17 +24,23 @@ import 'package:timeago/timeago.dart' as timeago;
 
 part 'other_user_profile_view.g.dart';
 
-typedef AlbumAccessStateRecord = ({String? albumId, bool hasAlbum, bool canView, bool pending});
+typedef AlbumAccessStateRecord = ({String? albumId, bool hasAlbum, bool canView, bool pending, bool isOwner});
 
 final albumAccessStateProvider =
     FutureProvider.autoDispose.family<AlbumAccessStateRecord, String>((ref, otherUserId) async {
   final viewerId = ref.read(ProfileController.userControllerProvider).userModel?.id;
   if (viewerId == null) {
-    return (albumId: null, hasAlbum: false, canView: false, pending: false);
+    return (albumId: null, hasAlbum: false, canView: false, pending: false, isOwner: false);
   }
   final repo = ref.read(albumsRepoProvider);
   final state = await repo.getAlbumAccessState(ownerId: otherUserId, viewerId: viewerId);
-  return (albumId: state.albumId, hasAlbum: state.hasAlbum, canView: state.canView, pending: state.pending);
+  return (
+    albumId: state.albumId,
+    hasAlbum: state.hasAlbum,
+    canView: state.canView,
+    pending: state.pending,
+    isOwner: state.isOwner,
+  );
 });
 
 @riverpod
@@ -124,14 +130,16 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
         return StatefulBuilder(builder: (ctx, setState) {
           return AlertDialog(
             title: const Text('Request album access'),
-            content: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
+            content: SizedBox(
+              width: 420,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
                     height: 320,
                     child: ListView.separated(
+                      shrinkWrap: false,
+                      primary: false,
                       itemCount: albums.length,
                       separatorBuilder: (_, __) => const Divider(height: 1),
                       itemBuilder: (_, i) {
@@ -143,7 +151,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                           value: id,
                           groupValue: selectedAlbumId,
                           onChanged: (canView || isPending) ? null : (v) => setState(() => selectedAlbumId = v),
-                          title: Text(a.name),
+                          title: Text(a.name, overflow: TextOverflow.ellipsis),
                           subtitle: canView
                               ? const Text('Shared with you', style: TextStyle(color: Colors.green))
                               : isPending
@@ -170,13 +178,18 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                         final id = selectedAlbumId!;
                         final target = albums.firstWhere((a) => (a.id ?? '') == id, orElse: () => albums.first);
                         final albumId = target.id!; // safe, owner albums should have id
-                        final res = await ref
-                            .read(AlbumControllerProvider(albumId).notifier)
-                            .requestAccess(messageController.text.trim());
+                        final res = await ref.read(AlbumControllerProvider(albumId).notifier).requestAccess(
+                              messageController.text.trim(),
+                              albumId: albumId,
+                            );
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(res != null ? 'Request sent' : 'Failed to send request')),
                           );
+                          if (res != null) {
+                            // Refresh access state so the CTA reflects 'Requested'
+                            ref.invalidate(albumAccessStateProvider(ownerId));
+                          }
                         }
                         if (context.mounted) Navigator.pop(ctx);
                       },
@@ -603,6 +616,10 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                           ),
                           error: (_, __) => const SizedBox.shrink(),
                           data: (state) {
+                            // If current viewer is the owner, do not show request/view CTA here
+                            if (state.isOwner) {
+                              return const SizedBox.shrink();
+                            }
                             if (!state.hasAlbum || state.albumId == null) {
                               return const SizedBox.shrink();
                             }
@@ -673,6 +690,9 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                         ),
                         error: (_, __) => const SizedBox.shrink(),
                         data: (state) {
+                          if (state.isOwner) {
+                            return const SizedBox.shrink();
+                          }
                           if (!state.hasAlbum || state.albumId == null) {
                             return const SizedBox.shrink();
                           }

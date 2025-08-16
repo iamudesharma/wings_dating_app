@@ -23,7 +23,9 @@ class VisitModel {
       userId: json['userId'] ?? '',
       targetUserId: json['targetUserId'] ?? '',
       user: json['user'] != null ? UserModel.fromJson(json['user']) : null,
-      visitedAt: DateTime.parse(json['visitedAt'] ?? json['createdAt'] ?? DateTime.now().toIso8601String()),
+      visitedAt: DateTime.parse(json['visitedAt'] ??
+          json['createdAt'] ??
+          DateTime.now().toIso8601String()),
       visitCount: json['visitCount'] ?? 1,
     );
   }

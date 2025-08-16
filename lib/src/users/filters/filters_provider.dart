@@ -132,7 +132,7 @@ class UserFilters extends _$UserFilters {
       // Could save filters to persistence here if needed
       print('UserFilters disposed - cleanup logic here');
     });
-    
+
     return const FiltersModel();
   }
 
@@ -183,14 +183,16 @@ class UserFilters extends _$UserFilters {
   void addInterest(String interest) {
     if (interest.isNotEmpty && !state.interests.contains(interest)) {
       final newInterests = [...state.interests, interest];
-      state = state.copyWith(interests: List<String>.unmodifiable(newInterests));
+      state =
+          state.copyWith(interests: List<String>.unmodifiable(newInterests));
     }
   }
 
   void removeInterest(String interest) {
     if (state.interests.contains(interest)) {
       final newInterests = state.interests.where((i) => i != interest).toList();
-      state = state.copyWith(interests: List<String>.unmodifiable(newInterests));
+      state =
+          state.copyWith(interests: List<String>.unmodifiable(newInterests));
     }
   }
 
@@ -229,7 +231,8 @@ class UserFilters extends _$UserFilters {
         distance: (filterMap['distance'] as num?)?.toDouble() ?? 10.0,
         lastSeen: filterMap['lastSeen'] as String? ?? '',
         interests: List<String>.unmodifiable(
-          (filterMap['interests'] as List<dynamic>?)?.cast<String>() ?? <String>[],
+          (filterMap['interests'] as List<dynamic>?)?.cast<String>() ??
+              <String>[],
         ),
         heightRange: filterMap['heightRange'] as String? ?? '',
         weightRange: filterMap['weightRange'] as String? ?? '',
@@ -251,21 +254,31 @@ class UserFilters extends _$UserFilters {
   // Get a summary of active filters for display
   String get activeFiltersSummary {
     final activeFilters = <String>[];
-    
+
     if (state.enabled) activeFilters.add('Enabled');
-    if (state.ageRange != '18 - 22 yrs') activeFilters.add('Age: ${state.ageRange}');
-    if (state.position.isNotEmpty) activeFilters.add('Position: ${state.position}');
+    if (state.ageRange != '18 - 22 yrs')
+      activeFilters.add('Age: ${state.ageRange}');
+    if (state.position.isNotEmpty)
+      activeFilters.add('Position: ${state.position}');
     if (state.hasPhotos) activeFilters.add('Has Photos');
     if (state.hasFacePics) activeFilters.add('Has Face Pics');
     if (state.hasAlbums) activeFilters.add('Has Albums');
-    if (state.distance != 10.0) activeFilters.add('Distance: ${state.distance.toInt()}km');
-    if (state.lastSeen.isNotEmpty) activeFilters.add('Last Seen: ${state.lastSeen}');
-    if (state.interests.isNotEmpty) activeFilters.add('Interests: ${state.interests.length}');
-    if (state.heightRange.isNotEmpty) activeFilters.add('Height: ${state.heightRange}');
-    if (state.weightRange.isNotEmpty) activeFilters.add('Weight: ${state.weightRange}');
-    if (state.language.isNotEmpty) activeFilters.add('Language: ${state.language}');
-    
-    return activeFilters.isEmpty ? 'No filters active' : activeFilters.join(', ');
+    if (state.distance != 10.0)
+      activeFilters.add('Distance: ${state.distance.toInt()}km');
+    if (state.lastSeen.isNotEmpty)
+      activeFilters.add('Last Seen: ${state.lastSeen}');
+    if (state.interests.isNotEmpty)
+      activeFilters.add('Interests: ${state.interests.length}');
+    if (state.heightRange.isNotEmpty)
+      activeFilters.add('Height: ${state.heightRange}');
+    if (state.weightRange.isNotEmpty)
+      activeFilters.add('Weight: ${state.weightRange}');
+    if (state.language.isNotEmpty)
+      activeFilters.add('Language: ${state.language}');
+
+    return activeFilters.isEmpty
+        ? 'No filters active'
+        : activeFilters.join(', ');
   }
 }
 
@@ -273,44 +286,34 @@ class UserFilters extends _$UserFilters {
 @Riverpod(keepAlive: true)
 List<String> positions(Ref ref) {
   return const [
-    'Top', 
-    'Vers Top', 
-    'Versatile', 
-    'Vers Bottom', 
-    'Bottom', 
-    'Side', 
+    'Top',
+    'Vers Top',
+    'Versatile',
+    'Vers Bottom',
+    'Bottom',
+    'Side',
     'Not Specified'
   ];
 }
 
 @Riverpod(keepAlive: true)
 List<String> ageRanges(Ref ref) {
-  return const [
-    '18 - 22 yrs', 
-    '23 - 30 yrs', 
-    '31 - 40 yrs', 
-    '41+ yrs'
-  ];
+  return const ['18 - 22 yrs', '23 - 30 yrs', '31 - 40 yrs', '41+ yrs'];
 }
 
 @Riverpod(keepAlive: true)
 List<String> lastSeenOptions(Ref ref) {
-  return const [
-    'Online now', 
-    'Last 24 hours', 
-    'Last 7 days', 
-    'Last 30 days'
-  ];
+  return const ['Online now', 'Last 24 hours', 'Last 7 days', 'Last 30 days'];
 }
 
 @Riverpod(keepAlive: true)
 List<String> interestOptions(Ref ref) {
   return const [
-    'Travel', 
-    'Music', 
-    'Fitness', 
-    'Reading', 
-    'Gaming', 
+    'Travel',
+    'Music',
+    'Fitness',
+    'Reading',
+    'Gaming',
     'Cooking',
     'Art',
     'Sports',
@@ -322,31 +325,26 @@ List<String> interestOptions(Ref ref) {
 @Riverpod(keepAlive: true)
 List<String> heightRanges(Ref ref) {
   return const [
-    '< 5\'5"', 
-    '5\'5" - 5\'10"', 
-    '5\'11" - 6\'2"', 
+    '< 5\'5"',
+    '5\'5" - 5\'10"',
+    '5\'11" - 6\'2"',
     '6\'3" and above'
   ];
 }
 
 @Riverpod(keepAlive: true)
 List<String> weightRanges(Ref ref) {
-  return const [
-    '< 60kg', 
-    '60 - 75kg', 
-    '76 - 90kg', 
-    '90kg+'
-  ];
+  return const ['< 60kg', '60 - 75kg', '76 - 90kg', '90kg+'];
 }
 
 @Riverpod(keepAlive: true)
 List<String> languageOptions(Ref ref) {
   return const [
-    'English', 
-    'Spanish', 
-    'French', 
-    'German', 
-    'Chinese', 
+    'English',
+    'Spanish',
+    'French',
+    'German',
+    'Chinese',
     'Japanese',
     'Portuguese',
     'Italian'
@@ -365,7 +363,7 @@ bool hasActiveFilters(Ref ref) {
 int activeFiltersCount(Ref ref) {
   final filters = ref.watch(userFiltersProvider);
   final defaultFilters = const FiltersModel();
-  
+
   int count = 0;
   if (filters.enabled != defaultFilters.enabled) count++;
   if (filters.ageRange != defaultFilters.ageRange) count++;
@@ -379,7 +377,7 @@ int activeFiltersCount(Ref ref) {
   if (filters.heightRange != defaultFilters.heightRange) count++;
   if (filters.weightRange != defaultFilters.weightRange) count++;
   if (filters.language != defaultFilters.language) count++;
-  
+
   return count;
 }
 
@@ -395,11 +393,11 @@ String filtersDisplayText(Ref ref) {
 @riverpod
 bool isValidFilterConfiguration(Ref ref) {
   final filters = ref.watch(userFiltersProvider);
-  
+
   // Basic validation rules
   if (filters.distance < 0 || filters.distance > 500) return false;
   if (filters.ageRange.isEmpty) return false;
-  
+
   return true;
 }
 
@@ -408,21 +406,23 @@ bool isValidFilterConfiguration(Ref ref) {
 Map<String, String> formattedFiltersSummary(Ref ref) {
   final filters = ref.watch(userFiltersProvider);
   final summary = <String, String>{};
-  
+
   if (filters.enabled) summary['Status'] = 'Enabled';
-  if (filters.ageRange != '18 - 22 yrs') summary['Age Range'] = filters.ageRange;
+  if (filters.ageRange != '18 - 22 yrs')
+    summary['Age Range'] = filters.ageRange;
   if (filters.position.isNotEmpty) summary['Position'] = filters.position;
-  if (filters.distance != 10.0) summary['Distance'] = '${filters.distance.toInt()}km';
+  if (filters.distance != 10.0)
+    summary['Distance'] = '${filters.distance.toInt()}km';
   if (filters.interests.isNotEmpty) {
-    summary['Interests'] = filters.interests.length > 3 
-        ? '${filters.interests.take(3).join(', ')}...' 
+    summary['Interests'] = filters.interests.length > 3
+        ? '${filters.interests.take(3).join(', ')}...'
         : filters.interests.join(', ');
   }
   if (filters.heightRange.isNotEmpty) summary['Height'] = filters.heightRange;
   if (filters.weightRange.isNotEmpty) summary['Weight'] = filters.weightRange;
   if (filters.language.isNotEmpty) summary['Language'] = filters.language;
   if (filters.lastSeen.isNotEmpty) summary['Last Seen'] = filters.lastSeen;
-  
+
   return summary;
 }
 
@@ -442,10 +442,10 @@ bool hasPhysicalFilters(Ref ref) {
 @riverpod
 bool hasPreferenceFilters(Ref ref) {
   final filters = ref.watch(userFiltersProvider);
-  return filters.position.isNotEmpty || 
-         filters.hasPhotos || 
-         filters.hasFacePics || 
-         filters.hasAlbums;
+  return filters.position.isNotEmpty ||
+      filters.hasPhotos ||
+      filters.hasFacePics ||
+      filters.hasAlbums;
 }
 
 // Provider for filter persistence (following Riverpod best practices)
@@ -457,15 +457,15 @@ class FiltersPersistence extends _$FiltersPersistence {
     ref.listen(userFiltersProvider, (previous, next) {
       _saveFilters(next);
     });
-    
+
     return true; // Indicates persistence is ready
   }
-  
+
   void _saveFilters(FiltersModel filters) {
     // In a real app, this would save to SharedPreferences, Hive, etc.
     print('Saving filters: ${filters.toMap()}');
   }
-  
+
   Future<FiltersModel?> loadSavedFilters() async {
     try {
       // In a real app, this would load from SharedPreferences, Hive, etc.
@@ -476,7 +476,7 @@ class FiltersPersistence extends _$FiltersPersistence {
       return null;
     }
   }
-  
+
   Future<void> clearSavedFilters() async {
     try {
       // In a real app, this would clear from SharedPreferences, Hive, etc.
@@ -501,40 +501,45 @@ class FiltersAnalytics extends _$FiltersAnalytics {
       'distanceChanges': 0,
       'interestChanges': 0,
     };
-    
+
     // Listen to filter changes for analytics
     ref.listen(userFiltersProvider, (previous, next) {
       if (previous != null) {
         _trackFilterChange(previous, next);
       }
     });
-    
+
     return initialMetrics;
   }
-  
+
   void _trackFilterChange(FiltersModel previous, FiltersModel current) {
     final currentMetrics = Map<String, int>.from(state);
     currentMetrics['totalChanges'] = (currentMetrics['totalChanges'] ?? 0) + 1;
-    
+
     if (previous.enabled != current.enabled) {
-      currentMetrics['enabledToggle'] = (currentMetrics['enabledToggle'] ?? 0) + 1;
+      currentMetrics['enabledToggle'] =
+          (currentMetrics['enabledToggle'] ?? 0) + 1;
     }
     if (previous.ageRange != current.ageRange) {
-      currentMetrics['ageRangeChanges'] = (currentMetrics['ageRangeChanges'] ?? 0) + 1;
+      currentMetrics['ageRangeChanges'] =
+          (currentMetrics['ageRangeChanges'] ?? 0) + 1;
     }
     if (previous.position != current.position) {
-      currentMetrics['positionChanges'] = (currentMetrics['positionChanges'] ?? 0) + 1;
+      currentMetrics['positionChanges'] =
+          (currentMetrics['positionChanges'] ?? 0) + 1;
     }
     if (previous.distance != current.distance) {
-      currentMetrics['distanceChanges'] = (currentMetrics['distanceChanges'] ?? 0) + 1;
+      currentMetrics['distanceChanges'] =
+          (currentMetrics['distanceChanges'] ?? 0) + 1;
     }
     if (!const ListEquality().equals(previous.interests, current.interests)) {
-      currentMetrics['interestChanges'] = (currentMetrics['interestChanges'] ?? 0) + 1;
+      currentMetrics['interestChanges'] =
+          (currentMetrics['interestChanges'] ?? 0) + 1;
     }
-    
+
     state = currentMetrics;
   }
-  
+
   void resetMetrics() {
     state = {
       'totalChanges': 0,
@@ -553,28 +558,30 @@ List<String> filterRecommendations(Ref ref) {
   final filters = ref.watch(userFiltersProvider);
   final analytics = ref.watch(filtersAnalyticsProvider);
   final recommendations = <String>[];
-  
+
   // Provide smart recommendations based on current state
   if (!filters.enabled) {
     recommendations.add('Enable filters to find better matches');
   }
-  
+
   if (filters.interests.isEmpty) {
     recommendations.add('Add interests to find people with similar hobbies');
   }
-  
+
   if (filters.distance == 10.0 && (analytics['distanceChanges'] ?? 0) == 0) {
     recommendations.add('Adjust distance to see more or fewer matches');
   }
-  
-  if (filters.ageRange == '18 - 22 yrs' && (analytics['ageRangeChanges'] ?? 0) == 0) {
+
+  if (filters.ageRange == '18 - 22 yrs' &&
+      (analytics['ageRangeChanges'] ?? 0) == 0) {
     recommendations.add('Consider expanding your age range');
   }
-  
+
   if (filters.position.isEmpty) {
-    recommendations.add('Specify position preferences for better compatibility');
+    recommendations
+        .add('Specify position preferences for better compatibility');
   }
-  
+
   return recommendations;
 }
 
@@ -583,7 +590,7 @@ List<String> filterRecommendations(Ref ref) {
 double filterComplexityScore(Ref ref) {
   final filters = ref.watch(userFiltersProvider);
   double score = 0.0;
-  
+
   // Calculate complexity based on active filters
   if (filters.enabled) score += 1.0;
   if (filters.ageRange != '18 - 22 yrs') score += 0.5;
@@ -597,7 +604,7 @@ double filterComplexityScore(Ref ref) {
   if (filters.heightRange.isNotEmpty) score += 0.4;
   if (filters.weightRange.isNotEmpty) score += 0.4;
   if (filters.language.isNotEmpty) score += 0.5;
-  
+
   return score;
 }
 
@@ -605,7 +612,7 @@ double filterComplexityScore(Ref ref) {
 @riverpod
 String estimatedMatchCount(Ref ref) {
   final complexity = ref.watch(filterComplexityScoreProvider);
-  
+
   // Simulate match count estimation based on filter complexity
   if (complexity == 0) return '1000+ matches';
   if (complexity <= 1.0) return '500-1000 matches';

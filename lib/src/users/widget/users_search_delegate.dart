@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 
-final searchUsersProvider = FutureProvider.autoDispose.family<List<UserModel?>?, String>((ref, query) async {
+final searchUsersProvider = FutureProvider.autoDispose
+    .family<List<UserModel?>?, String>((ref, query) async {
   return await ref.read(profileRepoProvider).searchUser(query);
 });
 

@@ -54,7 +54,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     _bioController = TextEditingController();
 
     if (widget.isEditProfile) {
-      final userdata = ref.read(ProfileController.userControllerProvider).userModel;
+      final userdata =
+          ref.read(ProfileController.userControllerProvider).userModel;
       if (userdata != null) {
         logger.i(userdata);
 
@@ -100,7 +101,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     final profile = ref.watch(ProfileController.userControllerProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isDesktop = MediaQuery.of(context).size.width >= 900;
-    final isTablet = MediaQuery.of(context).size.width >= 600 && MediaQuery.of(context).size.width < 900;
+    final isTablet = MediaQuery.of(context).size.width >= 600 &&
+        MediaQuery.of(context).size.width < 900;
     final double maxWidth = isDesktop
         ? 600
         : isTablet
@@ -136,10 +138,15 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
             children: [
               Card(
                 elevation: 8,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-                color: Theme.of(context).colorScheme.surface.withValues(alpha: isDark ? 0.98 : 0.95),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32)),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surface
+                    .withValues(alpha: isDark ? 0.98 : 0.95),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: cardPadding, vertical: cardPadding),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: cardPadding, vertical: cardPadding),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -160,23 +167,38 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   ),
                                 ],
                                 border: Border.all(
-                                  color: Theme.of(context).colorScheme.background,
+                                  color:
+                                      Theme.of(context).colorScheme.background,
                                   width: 6,
                                 ),
                               ),
                               child: CircleAvatar(
                                 radius: imageSize / 2,
-                                backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceVariant,
                                 backgroundImage: profile.profileImage != null
-                                    ? MemoryImage(profile.profileImage!) as ImageProvider<Object>
-                                    : (widget.isEditProfile && (profile.userModel?.profileUrl?.isNotEmpty ?? false))
-                                        ? NetworkImage(profile.userModel!.profileUrl!) as ImageProvider<Object>
+                                    ? MemoryImage(profile.profileImage!)
+                                        as ImageProvider<Object>
+                                    : (widget.isEditProfile &&
+                                            (profile.userModel?.profileUrl
+                                                    ?.isNotEmpty ??
+                                                false))
+                                        ? NetworkImage(
+                                                profile.userModel!.profileUrl!)
+                                            as ImageProvider<Object>
                                         : null,
                                 child: (profile.profileImage == null &&
-                                        (!widget.isEditProfile || (profile.userModel?.profileUrl?.isEmpty ?? true)))
+                                        (!widget.isEditProfile ||
+                                            (profile.userModel?.profileUrl
+                                                    ?.isEmpty ??
+                                                true)))
                                     ? Icon(Icons.person,
                                         size: imageSize / 2,
-                                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: 0.5))
                                     : null,
                               ),
                             ),
@@ -197,8 +219,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                               isImageUpdate = true;
                                             });
                                             await ref
-                                                .read(ProfileController.userControllerProvider)
-                                                .pickImage(imageSource: ImageSource.camera);
+                                                .read(ProfileController
+                                                    .userControllerProvider)
+                                                .pickImage(
+                                                    imageSource:
+                                                        ImageSource.camera);
                                             Navigator.pop(context);
                                           },
                                           gallery: () async {
@@ -206,8 +231,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                               isImageUpdate = true;
                                             });
                                             await ref
-                                                .read(ProfileController.userControllerProvider)
-                                                .pickImage(imageSource: ImageSource.gallery);
+                                                .read(ProfileController
+                                                    .userControllerProvider)
+                                                .pickImage(
+                                                    imageSource:
+                                                        ImageSource.gallery);
                                             Navigator.pop(context);
                                           },
                                         );
@@ -217,18 +245,24 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   child: Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.secondaryContainer,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondaryContainer,
                                       shape: BoxShape.circle,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withValues(alpha: 0.12),
+                                          color: Colors.black
+                                              .withValues(alpha: 0.12),
                                           blurRadius: 8,
                                           offset: const Offset(0, 2),
                                         ),
                                       ],
                                     ),
                                     child: Icon(Icons.edit,
-                                        color: Theme.of(context).colorScheme.onSecondaryContainer, size: 22),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSecondaryContainer,
+                                        size: 22),
                                   ),
                                 ),
                               ),
@@ -237,26 +271,36 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         ),
                         const SizedBox(height: 24),
                         Text(
-                          widget.isEditProfile ? "Edit Profile" : "Create Profile",
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                          widget.isEditProfile
+                              ? "Edit Profile"
+                              : "Create Profile",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 24),
                         TextFormField(
-                          validator: (value) => value!.isEmpty ? "Please enter a Username" : null,
+                          validator: (value) =>
+                              value!.isEmpty ? "Please enter a Username" : null,
                           decoration: InputDecoration(
                             isDense: true,
                             labelText: "Username",
-                            prefixIcon: Icon(Icons.person, color: Theme.of(context).colorScheme.primary),
+                            prefixIcon: Icon(Icons.person,
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                           controller: _usernameController,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
-                          validator: (value) => value!.isEmpty ? "Please enter your Date of Birth" : null,
+                          validator: (value) => value!.isEmpty
+                              ? "Please enter your Date of Birth"
+                              : null,
                           decoration: InputDecoration(
                             isDense: true,
                             labelText: "Date of Birth",
-                            prefixIcon: Icon(Icons.cake, color: Theme.of(context).colorScheme.primary),
+                            prefixIcon: Icon(Icons.cake,
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                           controller: _dobController,
                           readOnly: true,
@@ -269,14 +313,17 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               errorInvalidText: "Enter date in valid range",
                               fieldHintText: "MM/DD/YYYY",
                               fieldLabelText: "Date of Birth",
-                              lastDate: DateTime.now().subtract(const Duration(days: 6570)),
+                              lastDate: DateTime.now()
+                                  .subtract(const Duration(days: 6570)),
                               context: context,
-                              initialDate: DateTime.now().subtract(const Duration(days: 6570)),
+                              initialDate: DateTime.now()
+                                  .subtract(const Duration(days: 6570)),
                               firstDate: DateTime(1960),
                             ).then((value) {
                               if (value != null) {
                                 setState(() {
-                                  _dobController.text = DateFormat.yMd().format(value);
+                                  _dobController.text =
+                                      DateFormat.yMd().format(value);
                                   _selectedDate = value;
                                 });
                               }
@@ -285,13 +332,15 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
-                          validator: (value) => value!.isEmpty ? "Please enter a bio" : null,
+                          validator: (value) =>
+                              value!.isEmpty ? "Please enter a bio" : null,
                           maxLines: 2,
                           controller: _bioController,
                           decoration: InputDecoration(
                             isDense: true,
                             labelText: "Bio",
-                            prefixIcon: Icon(Icons.info_outline, color: Theme.of(context).colorScheme.primary),
+                            prefixIcon: Icon(Icons.info_outline,
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -300,7 +349,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                           child: FilledButton.tonalIcon(
                             icon: const Icon(Icons.add),
                             onPressed: () async {
-                              context.router.push(const AddAdditionalInformationRoute());
+                              context.router
+                                  .push(const AddAdditionalInformationRoute());
                             },
                             label: const Text("Add Additional Information"),
                           ),
@@ -315,9 +365,13 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                               width: double.infinity,
                               child: FilledButton(
                                 style: FilledButton.styleFrom(
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16)),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  textStyle: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 onPressed: () async {
                                   final route = AutoRouter.of(context);
@@ -327,23 +381,35 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   });
 
                                   if (widget.isEditProfile) {
-                                    final data = await Geolocator.getCurrentPosition();
+                                    final data =
+                                        await Geolocator.getCurrentPosition();
 
-                                    GeoFirePoint myLocation = GeoFirePoint(GeoPoint(
+                                    GeoFirePoint myLocation =
+                                        GeoFirePoint(GeoPoint(
                                       data.latitude,
                                       data.longitude,
                                     ));
-                                    final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-                                    await ref.read(Dependency.profileProvider).updateUserDoc(
+                                    final userdata = ref
+                                        .read(ProfileController
+                                            .userControllerProvider)
+                                        .userModel;
+                                    await ref
+                                        .read(Dependency.profileProvider)
+                                        .updateUserDoc(
                                           userdata!.copyWith(
                                               bio: _bioController.text,
-                                              username: _usernameController.text,
+                                              username:
+                                                  _usernameController.text,
                                               position: GeoPointData(
                                                 // geohash: myLocation.geohash,
-                                                geopoint: [myLocation.geopoint.longitude, myLocation.geopoint.latitude],
+                                                geopoint: [
+                                                  myLocation.geopoint.longitude,
+                                                  myLocation.geopoint.latitude
+                                                ],
                                               ),
                                               profileUrl: await ref
-                                                  .read(ProfileController.userControllerProvider)
+                                                  .read(ProfileController
+                                                      .userControllerProvider)
                                                   .uploadImage()),
                                         );
 
@@ -352,13 +418,16 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     });
                                     return;
                                   }
-                                  var permission = await Geolocator.checkPermission();
+                                  var permission =
+                                      await Geolocator.checkPermission();
 
                                   print(permission);
 
-                                  final data = await Geolocator.getCurrentPosition();
+                                  final data =
+                                      await Geolocator.getCurrentPosition();
 
-                                  GeoFirePoint myLocation = GeoFirePoint(GeoPoint(
+                                  GeoFirePoint myLocation =
+                                      GeoFirePoint(GeoPoint(
                                     data.latitude,
                                     data.longitude,
                                   ));
@@ -378,7 +447,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   try {
                                     role = ref.read(roleProvider);
                                     bodyType = ref.read(bodyTypeProvider);
-                                    relationshipStatus = ref.read(relationshipStatusProvider);
+                                    relationshipStatus =
+                                        ref.read(relationshipStatusProvider);
                                     ethnicity = ref.read(ethnicityProvider);
                                     lookingFor = ref.read(lookingForProvider);
                                     whereTomeet = ref.read(whereToMeetProvider);
@@ -389,7 +459,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     logger.e("Error reading providers: $e");
                                     role = Role.doNotShow;
                                     bodyType = BodyType.doNotShow;
-                                    relationshipStatus = RelationshipStatus.doNotShow;
+                                    relationshipStatus =
+                                        RelationshipStatus.doNotShow;
                                     ethnicity = Ethnicity.doNotShow;
                                     lookingFor = LookingFor.doNotShow;
                                     whereTomeet = WhereToMeet.doNotShow;
@@ -420,14 +491,20 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     weight: weight,
                                     position: GeoPointData(
                                       // geohash: myLocation.geohash,
-                                      geopoint: [myLocation.geopoint.longitude, myLocation.geopoint.latitude],
+                                      geopoint: [
+                                        myLocation.geopoint.longitude,
+                                        myLocation.geopoint.latitude
+                                      ],
                                     ),
                                   );
 
-                                  await ref.read(Dependency.profileProvider).createUserDoc(user);
+                                  await ref
+                                      .read(Dependency.profileProvider)
+                                      .createUserDoc(user);
 
                                   try {
-                                    await route.popAndPush(const DashboardRoute());
+                                    await route
+                                        .popAndPush(const DashboardRoute());
                                   } catch (e) {
                                     logger.e(e);
                                     _bioController.clear();
@@ -440,10 +517,12 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     });
                                   }
                                 },
-                                child: Text(widget.isEditProfile ? "Update" : "Save"),
+                                child: Text(
+                                    widget.isEditProfile ? "Update" : "Save"),
                               ),
                             ),
-                            child: const Center(child: CircularProgressIndicator.adaptive()),
+                            child: const Center(
+                                child: CircularProgressIndicator.adaptive()),
                           ),
                         ),
                       ],

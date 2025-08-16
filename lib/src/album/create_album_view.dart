@@ -38,10 +38,12 @@ class CreateAlbumView extends ConsumerWidget {
                 onPressed: data.isShared
                     ? null
                     : () async {
+                        logger.i('[CreateAlbum] Add photos tapped for albumId=$id');
                         final file = await pickImageForm(ImageSource.gallery);
                         if (file != null) {
+                          logger.i('[CreateAlbum] Image picked. Opening editor...');
                           await openEditor(context, ref, id: id, path: file);
-                          await albumNotifier.refreshAlbum(id);
+                          logger.i('[CreateAlbum] Editor closed. Relying on controller to reconcile.');
                         }
                       },
               );
@@ -163,59 +165,66 @@ class CreateAlbumView extends ConsumerWidget {
                                         builder: (ctx, setState) {
                                           return AlertDialog(
                                             title: const Text('Share with people'),
-                                            content: ConstrainedBox(
-                                              constraints: const BoxConstraints(minWidth: 320, maxWidth: 560),
-                                              child: data.sharedWith.isEmpty
-                                                  ? const Text('Not shared with anyone yet.')
-                                                  : SizedBox(
-                                                      height: 360,
-                                                      child: ListView.separated(
-                                                        itemCount: data.sharedWith.length,
-                                                        separatorBuilder: (_, __) => const Divider(height: 1),
-                                                        itemBuilder: (context, i) {
-                                                          final uid = data.sharedWith[i];
-                                                          final profile = ref.watch(userProfileProvider(uid));
-                                                          return profile.when(
-                                                            data: (user) {
-                                                              final display = user?.username ?? uid;
-                                                              return RadioListTile<String>(
-                                                                value: uid,
-                                                                groupValue: selectedUserId,
-                                                                onChanged: (v) => setState(() => selectedUserId = v),
-                                                                title: Text(display),
-                                                                subtitle: (user?.bio != null && user!.bio!.isNotEmpty)
-                                                                    ? Text(user.bio!)
-                                                                    : null,
-                                                                secondary: CircleAvatar(
-                                                                  backgroundImage: (user?.profileUrl != null &&
-                                                                          (user!.profileUrl ?? '').isNotEmpty)
-                                                                      ? NetworkImage(user.profileUrl!)
-                                                                      : null,
-                                                                  child: (user?.profileUrl == null ||
-                                                                          (user!.profileUrl ?? '').isEmpty)
-                                                                      ? const Icon(Icons.person)
-                                                                      : null,
-                                                                ),
-                                                              );
-                                                            },
-                                                            loading: () => const ListTile(
-                                                              leading: SizedBox(
-                                                                  width: 24,
-                                                                  height: 24,
-                                                                  child: CircularProgressIndicator(strokeWidth: 2)),
-                                                              title: Text('Loading...'),
-                                                            ),
-                                                            error: (e, st) => RadioListTile<String>(
+                                            content: SizedBox(
+                                              width: 420, // fixed width avoids IntrinsicWidth querying viewport
+                                              child: Consumer(
+                                                builder: (ctx, ref2, _) {
+                                                  if (data.sharedWith.isEmpty) {
+                                                    return const Text('Not shared with anyone yet.');
+                                                  }
+                                                  return ConstrainedBox(
+                                                    constraints: const BoxConstraints(maxHeight: 360),
+                                                    child: ListView.separated(
+                                                      shrinkWrap: true,
+                                                      primary: false,
+                                                      itemCount: data.sharedWith.length,
+                                                      separatorBuilder: (_, __) => const Divider(height: 1),
+                                                      itemBuilder: (context, i) {
+                                                        final uid = data.sharedWith[i];
+                                                        final profile = ref2.watch(userProfileProvider(uid));
+                                                        return profile.when(
+                                                          data: (user) {
+                                                            final display = user?.username ?? uid;
+                                                            return RadioListTile<String>(
                                                               value: uid,
                                                               groupValue: selectedUserId,
                                                               onChanged: (v) => setState(() => selectedUserId = v),
-                                                              title: Text(uid),
-                                                              subtitle: const Text('Failed to load username'),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
+                                                              title: Text(display),
+                                                              subtitle: (user?.bio != null && user!.bio!.isNotEmpty)
+                                                                  ? Text(user.bio!)
+                                                                  : null,
+                                                              secondary: CircleAvatar(
+                                                                backgroundImage: (user?.profileUrl != null &&
+                                                                        (user!.profileUrl ?? '').isNotEmpty)
+                                                                    ? NetworkImage(user.profileUrl!)
+                                                                    : null,
+                                                                child: (user?.profileUrl == null ||
+                                                                        (user!.profileUrl ?? '').isEmpty)
+                                                                    ? const Icon(Icons.person)
+                                                                    : null,
+                                                              ),
+                                                            );
+                                                          },
+                                                          loading: () => const ListTile(
+                                                            leading: SizedBox(
+                                                                width: 24,
+                                                                height: 24,
+                                                                child: CircularProgressIndicator(strokeWidth: 2)),
+                                                            title: Text('Loading...'),
+                                                          ),
+                                                          error: (e, st) => RadioListTile<String>(
+                                                            value: uid,
+                                                            groupValue: selectedUserId,
+                                                            onChanged: (v) => setState(() => selectedUserId = v),
+                                                            title: Text(uid),
+                                                            subtitle: const Text('Failed to load username'),
+                                                          ),
+                                                        );
+                                                      },
                                                     ),
+                                                  );
+                                                },
+                                              ),
                                             ),
                                             actions: [
                                               TextButton(
@@ -291,8 +300,9 @@ class CreateAlbumView extends ConsumerWidget {
                                 onTap: () async {
                                   final file = await pickImageForm(ImageSource.gallery);
                                   if (file != null) {
+                                    logger.i('[CreateAlbum] Grid add tapped. Opening editor...');
                                     await openEditor(context, ref, id: id, path: file);
-                                    await albumNotifier.refreshAlbum(id);
+                                    logger.i('[CreateAlbum] Editor closed. Relying on controller to reconcile.');
                                   }
                                 },
                                 child: Container(
@@ -336,6 +346,48 @@ class CreateAlbumView extends ConsumerWidget {
                                 height: double.infinity,
                               ),
                             ),
+                            // Remove icon for owners
+                            if (FirebaseAuth.instance.currentUser?.uid == data.ownerId)
+                              Positioned(
+                                top: 6,
+                                right: 6,
+                                child: Material(
+                                  color: Theme.of(context).colorScheme.surface.withOpacity(0.75),
+                                  shape: const CircleBorder(),
+                                  child: IconButton(
+                                    visualDensity: VisualDensity.compact,
+                                    iconSize: 20,
+                                    tooltip: 'Remove photo',
+                                    icon: Icon(
+                                      Icons.delete_outline,
+                                      color: Theme.of(context).colorScheme.error,
+                                    ),
+                                    onPressed: () async {
+                                      final confirm = await showDialog<bool>(
+                                        context: context,
+                                        builder: (ctx) => AlertDialog(
+                                          title: const Text('Remove photo?'),
+                                          content: const Text('This will remove the photo from the album.'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(ctx, false),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () => Navigator.pop(ctx, true),
+                                              child: const Text('Remove'),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                      if (confirm == true) {
+                                        await albumNotifier.removePhotos({photoUrl});
+                                        await albumNotifier.refreshAlbum(id);
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
                             if (FirebaseAuth.instance.currentUser?.uid == data.ownerId)
                               Positioned(
                                 left: 4,

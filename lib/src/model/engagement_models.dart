@@ -14,7 +14,8 @@ abstract class EngagementStatus with _$EngagementStatus {
     @Default(false) bool isMatch,
   }) = _EngagementStatus;
 
-  factory EngagementStatus.fromJson(Map<String, dynamic> json) => _$EngagementStatusFromJson(json);
+  factory EngagementStatus.fromJson(Map<String, dynamic> json) =>
+      _$EngagementStatusFromJson(json);
 }
 
 /// Profile visit response model
@@ -27,7 +28,8 @@ abstract class ProfileVisitResponse with _$ProfileVisitResponse {
     EngagementStatus? engagementStatus,
   }) = _ProfileVisitResponse;
 
-  factory ProfileVisitResponse.fromJson(Map<String, dynamic> json) => _$ProfileVisitResponseFromJson(json);
+  factory ProfileVisitResponse.fromJson(Map<String, dynamic> json) =>
+      _$ProfileVisitResponseFromJson(json);
 }
 
 /// Tap operation response model
@@ -40,7 +42,8 @@ abstract class TapResponse with _$TapResponse {
     @Default([]) List<String> tappedBy,
   }) = _TapResponse;
 
-  factory TapResponse.fromJson(Map<String, dynamic> json) => _$TapResponseFromJson(json);
+  factory TapResponse.fromJson(Map<String, dynamic> json) =>
+      _$TapResponseFromJson(json);
 }
 
 /// User tap statistics model
@@ -54,7 +57,8 @@ abstract class UserTapStats with _$UserTapStats {
     EngagementStatus? engagementStatus,
   }) = _UserTapStats;
 
-  factory UserTapStats.fromJson(Map<String, dynamic> json) => _$UserTapStatsFromJson(json);
+  factory UserTapStats.fromJson(Map<String, dynamic> json) =>
+      _$UserTapStatsFromJson(json);
 }
 
 /// Tap details model for individual tap records
@@ -68,7 +72,8 @@ abstract class TapDetails with _$TapDetails {
     UserModel? user,
   }) = _TapDetails;
 
-  factory TapDetails.fromJson(Map<String, dynamic> json) => _$TapDetailsFromJson(json);
+  factory TapDetails.fromJson(Map<String, dynamic> json) =>
+      _$TapDetailsFromJson(json);
 }
 
 /// Paginated tap response model
@@ -81,7 +86,8 @@ abstract class PaginatedTapResponse with _$PaginatedTapResponse {
     @Default(1) int totalPages,
   }) = _PaginatedTapResponse;
 
-  factory PaginatedTapResponse.fromJson(Map<String, dynamic> json) => _$PaginatedTapResponseFromJson(json);
+  factory PaginatedTapResponse.fromJson(Map<String, dynamic> json) =>
+      _$PaginatedTapResponseFromJson(json);
 }
 
 /// Profile view details model
@@ -99,12 +105,14 @@ abstract class ProfileViewDetails with _$ProfileViewDetails {
     String? viewSource,
   }) = _ProfileViewDetails;
 
-  factory ProfileViewDetails.fromJson(Map<String, dynamic> json) => _$ProfileViewDetailsFromJson(json);
+  factory ProfileViewDetails.fromJson(Map<String, dynamic> json) =>
+      _$ProfileViewDetailsFromJson(json);
 }
 
 /// Paginated profile views response model
 @freezed
-abstract class PaginatedProfileViewsResponse with _$PaginatedProfileViewsResponse {
+abstract class PaginatedProfileViewsResponse
+    with _$PaginatedProfileViewsResponse {
   const factory PaginatedProfileViewsResponse({
     @Default([]) List<ProfileViewDetails> views,
     @Default(0) int total,
@@ -130,7 +138,8 @@ abstract class VisitRecord with _$VisitRecord {
     UserModel? user,
   }) = _VisitRecord;
 
-  factory VisitRecord.fromJson(Map<String, dynamic> json) => _$VisitRecordFromJson(json);
+  factory VisitRecord.fromJson(Map<String, dynamic> json) =>
+      _$VisitRecordFromJson(json);
 
   /// Format visit count for display
   /// Shows exact count for 1-10, then "10+" for more than 10
@@ -164,7 +173,8 @@ abstract class PaginatedVisitsResponse with _$PaginatedVisitsResponse {
     @Default(1) int totalPages,
   }) = _PaginatedVisitsResponse;
 
-  factory PaginatedVisitsResponse.fromJson(Map<String, dynamic> json) => _$PaginatedVisitsResponseFromJson(json);
+  factory PaginatedVisitsResponse.fromJson(Map<String, dynamic> json) =>
+      _$PaginatedVisitsResponseFromJson(json);
 }
 
 /// Favorite operation response model
@@ -175,7 +185,8 @@ abstract class FavoriteResponse with _$FavoriteResponse {
     @Default('') String message,
   }) = _FavoriteResponse;
 
-  factory FavoriteResponse.fromJson(Map<String, dynamic> json) => _$FavoriteResponseFromJson(json);
+  factory FavoriteResponse.fromJson(Map<String, dynamic> json) =>
+      _$FavoriteResponseFromJson(json);
 }
 
 /// User analytics response model
@@ -192,7 +203,8 @@ abstract class UserAnalyticsResponse with _$UserAnalyticsResponse {
     double? matchRate,
   }) = _UserAnalyticsResponse;
 
-  factory UserAnalyticsResponse.fromJson(Map<String, dynamic> json) => _$UserAnalyticsResponseFromJson(json);
+  factory UserAnalyticsResponse.fromJson(Map<String, dynamic> json) =>
+      _$UserAnalyticsResponseFromJson(json);
 }
 
 @freezed
@@ -206,7 +218,8 @@ abstract class ProfileViewAnalytics with _$ProfileViewAnalytics {
     @Default({}) Map<String, int> byDay,
   }) = _ProfileViewAnalytics;
 
-  factory ProfileViewAnalytics.fromJson(Map<String, dynamic> json) => _$ProfileViewAnalyticsFromJson(json);
+  factory ProfileViewAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$ProfileViewAnalyticsFromJson(json);
 }
 
 @freezed
@@ -219,7 +232,8 @@ abstract class MatchAnalytics with _$MatchAnalytics {
     @Default(0) int monthly,
   }) = _MatchAnalytics;
 
-  factory MatchAnalytics.fromJson(Map<String, dynamic> json) => _$MatchAnalyticsFromJson(json);
+  factory MatchAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$MatchAnalyticsFromJson(json);
 }
 
 @freezed
@@ -231,7 +245,8 @@ abstract class MessageAnalytics with _$MessageAnalytics {
     @Default(0.0) double averageResponseTime,
   }) = _MessageAnalytics;
 
-  factory MessageAnalytics.fromJson(Map<String, dynamic> json) => _$MessageAnalyticsFromJson(json);
+  factory MessageAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$MessageAnalyticsFromJson(json);
 }
 
 @freezed
@@ -244,7 +259,8 @@ abstract class DiscoveryAnalytics with _$DiscoveryAnalytics {
     @Default(0) int rewindCount,
   }) = _DiscoveryAnalytics;
 
-  factory DiscoveryAnalytics.fromJson(Map<String, dynamic> json) => _$DiscoveryAnalyticsFromJson(json);
+  factory DiscoveryAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$DiscoveryAnalyticsFromJson(json);
 }
 
 @freezed
@@ -254,7 +270,8 @@ abstract class LocationAnalytics with _$LocationAnalytics {
     @Default([]) List<PopularLocation> popularLocations,
   }) = _LocationAnalytics;
 
-  factory LocationAnalytics.fromJson(Map<String, dynamic> json) => _$LocationAnalyticsFromJson(json);
+  factory LocationAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$LocationAnalyticsFromJson(json);
 }
 
 @freezed
@@ -264,5 +281,6 @@ abstract class PopularLocation with _$PopularLocation {
     @Default(0) int count,
   }) = _PopularLocation;
 
-  factory PopularLocation.fromJson(Map<String, dynamic> json) => _$PopularLocationFromJson(json);
+  factory PopularLocation.fromJson(Map<String, dynamic> json) =>
+      _$PopularLocationFromJson(json);
 }

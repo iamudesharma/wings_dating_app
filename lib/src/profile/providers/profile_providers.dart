@@ -128,7 +128,8 @@ class UserTapList extends _$UserTapList {
   @override
   Future<List<UserModel?>> build(String userId) async {
     try {
-      final response = await ref.read(profileRepoProvider).getUserTapStats(userId);
+      final response =
+          await ref.read(profileRepoProvider).getUserTapStats(userId);
 
       List<String> tappedByIds = response.tappedBy;
       List<UserModel?> users = [];
@@ -159,7 +160,8 @@ class UserEngagementStatus extends _$UserEngagementStatus {
   @override
   Future<EngagementStatus?> build(String userId) async {
     try {
-      final response = await ref.read(profileRepoProvider).getUserTapStats(userId);
+      final response =
+          await ref.read(profileRepoProvider).getUserTapStats(userId);
       return response.engagementStatus;
     } catch (e) {
       throw Exception('Failed to load engagement status: $e');

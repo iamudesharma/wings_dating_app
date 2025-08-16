@@ -127,7 +127,8 @@ class EnhancedDatingSuggestionCard extends StatelessWidget {
                       children: tags
                           .take(3)
                           .map((tag) => Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(12),
@@ -273,7 +274,10 @@ class EnhancedDatingSuggestionsWidget extends StatelessWidget {
                   onTap: () => onSuggestionTap(
                     'I need comprehensive help optimizing my dating profile. Please analyze what makes profiles successful and give me specific tips for photos, bio writing, and overall presentation that will increase my match rate.',
                   ),
-                ).animate().fadeIn(delay: 200.ms, duration: 600.ms).slideX(begin: -0.3),
+                )
+                    .animate()
+                    .fadeIn(delay: 200.ms, duration: 600.ms)
+                    .slideX(begin: -0.3),
                 EnhancedDatingSuggestionCard(
                   title: 'Conversation Mastery',
                   subtitle: 'Message Like a Pro',
@@ -287,7 +291,10 @@ class EnhancedDatingSuggestionsWidget extends StatelessWidget {
                   onTap: () => onSuggestionTap(
                     'Teach me how to master dating conversations. I want to learn creative opening messages, how to keep conversations interesting, ask engaging questions, and transition from chat to dates smoothly.',
                   ),
-                ).animate().fadeIn(delay: 400.ms, duration: 600.ms).slideX(begin: -0.3),
+                )
+                    .animate()
+                    .fadeIn(delay: 400.ms, duration: 600.ms)
+                    .slideX(begin: -0.3),
                 EnhancedDatingSuggestionCard(
                   title: 'Date Planning Expert',
                   subtitle: 'Memorable Experiences',
@@ -301,7 +308,10 @@ class EnhancedDatingSuggestionsWidget extends StatelessWidget {
                   onTap: () => onSuggestionTap(
                     'Help me plan amazing dates! I want creative, unique date ideas for different budgets, seasons, and relationship stages. Include first date suggestions, romantic ideas, and fun activities that build connection.',
                   ),
-                ).animate().fadeIn(delay: 600.ms, duration: 600.ms).slideX(begin: -0.3),
+                )
+                    .animate()
+                    .fadeIn(delay: 600.ms, duration: 600.ms)
+                    .slideX(begin: -0.3),
                 EnhancedDatingSuggestionCard(
                   title: 'Red Flag Detection',
                   subtitle: 'Stay Safe & Smart',
@@ -315,7 +325,10 @@ class EnhancedDatingSuggestionsWidget extends StatelessWidget {
                   onTap: () => onSuggestionTap(
                     'Teach me about red flags in dating. I want to learn how to identify manipulative behavior, toxic patterns, love bombing, and other warning signs. Help me understand healthy vs unhealthy relationship dynamics.',
                   ),
-                ).animate().fadeIn(delay: 800.ms, duration: 600.ms).slideX(begin: -0.3),
+                )
+                    .animate()
+                    .fadeIn(delay: 800.ms, duration: 600.ms)
+                    .slideX(begin: -0.3),
                 EnhancedDatingSuggestionCard(
                   title: 'Confidence Building',
                   subtitle: 'Inner Strength',
@@ -329,7 +342,10 @@ class EnhancedDatingSuggestionsWidget extends StatelessWidget {
                   onTap: () => onSuggestionTap(
                     'Help me build genuine confidence for dating. I want to overcome anxiety, develop self-worth, improve body language, and learn how to be authentically attractive while staying true to myself.',
                   ),
-                ).animate().fadeIn(delay: 1000.ms, duration: 600.ms).slideX(begin: -0.3),
+                )
+                    .animate()
+                    .fadeIn(delay: 1000.ms, duration: 600.ms)
+                    .slideX(begin: -0.3),
                 EnhancedDatingSuggestionCard(
                   title: 'Relationship Stages',
                   subtitle: 'Navigate Every Phase',
@@ -343,7 +359,10 @@ class EnhancedDatingSuggestionsWidget extends StatelessWidget {
                   onTap: () => onSuggestionTap(
                     'Guide me through different relationship stages. Help me understand how to progress from matching to first date, casual dating to exclusive, and building toward a committed relationship. What are the key milestones and how to navigate them?',
                   ),
-                ).animate().fadeIn(delay: 1200.ms, duration: 600.ms).slideX(begin: -0.3),
+                )
+                    .animate()
+                    .fadeIn(delay: 1200.ms, duration: 600.ms)
+                    .slideX(begin: -0.3),
               ],
             ),
           ),

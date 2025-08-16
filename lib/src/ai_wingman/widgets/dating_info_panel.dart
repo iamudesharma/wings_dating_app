@@ -30,25 +30,29 @@ class DatingInfoPanel extends StatelessWidget {
               children: [
                 _buildQuickTipCard(
                   title: 'Profile Photos',
-                  tip: 'Use recent photos that show your personality. Smile genuinely and include variety.',
+                  tip:
+                      'Use recent photos that show your personality. Smile genuinely and include variety.',
                   icon: Icons.camera_alt,
                   color: Color(0xFF667eea),
                 ),
                 _buildQuickTipCard(
                   title: 'First Messages',
-                  tip: 'Reference something from their profile. Ask engaging questions, avoid generic "hey".',
+                  tip:
+                      'Reference something from their profile. Ask engaging questions, avoid generic "hey".',
                   icon: Icons.message,
                   color: Color(0xFFE94057),
                 ),
                 _buildQuickTipCard(
                   title: 'Bio Writing',
-                  tip: 'Be authentic, show interests, add humor. Keep it concise but memorable.',
+                  tip:
+                      'Be authentic, show interests, add humor. Keep it concise but memorable.',
                   icon: Icons.edit,
                   color: Color(0xFF4facfe),
                 ),
                 _buildQuickTipCard(
                   title: 'Safety First',
-                  tip: 'Meet in public places, trust your instincts, and tell someone your plans.',
+                  tip:
+                      'Meet in public places, trust your instincts, and tell someone your plans.',
                   icon: Icons.security,
                   color: Color(0xFFfa709a),
                 ),
@@ -79,7 +83,8 @@ class DatingInfoPanel extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.trending_up, color: Colors.greenAccent, size: 20),
+                    Icon(Icons.trending_up,
+                        color: Colors.greenAccent, size: 20),
                     SizedBox(width: 8),
                     Text(
                       'Dating Success Stats',
@@ -97,11 +102,13 @@ class DatingInfoPanel extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildStatCard('73%', 'People prefer authentic profiles over perfect ones'),
+                      child: _buildStatCard('73%',
+                          'People prefer authentic profiles over perfect ones'),
                     ),
                     SizedBox(width: 12),
                     Expanded(
-                      child: _buildStatCard('85%', 'First dates successful when both feel comfortable'),
+                      child: _buildStatCard('85%',
+                          'First dates successful when both feel comfortable'),
                     ),
                   ],
                 ),
@@ -109,11 +116,13 @@ class DatingInfoPanel extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildStatCard('92%', 'Relationships start with good conversation'),
+                      child: _buildStatCard(
+                          '92%', 'Relationships start with good conversation'),
                     ),
                     SizedBox(width: 12),
                     Expanded(
-                      child: _buildStatCard('67%', 'People value emotional intelligence'),
+                      child: _buildStatCard(
+                          '67%', 'People value emotional intelligence'),
                     ),
                   ],
                 ),
@@ -154,7 +163,10 @@ class DatingInfoPanel extends StatelessWidget {
                 ),
               ),
             ],
-          ).animate().fadeIn(delay: 600.ms, duration: 600.ms).slideY(begin: 0.3),
+          )
+              .animate()
+              .fadeIn(delay: 600.ms, duration: 600.ms)
+              .slideY(begin: 0.3),
         ],
       ),
     );
@@ -333,25 +345,29 @@ class _DatingFactsCarouselState extends State<DatingFactsCarousel> {
   final List<DatingFact> _facts = [
     DatingFact(
       title: 'The 7-Second Rule',
-      description: 'People decide if they\'re attracted to someone within the first 7 seconds of meeting.',
+      description:
+          'People decide if they\'re attracted to someone within the first 7 seconds of meeting.',
       icon: Icons.timer,
       color: Color(0xFFE94057),
     ),
     DatingFact(
       title: 'Similarity Attraction',
-      description: 'People are more attracted to others who share similar interests and values.',
+      description:
+          'People are more attracted to others who share similar interests and values.',
       icon: Icons.favorite,
       color: Color(0xFF667eea),
     ),
     DatingFact(
       title: 'Mirror Neurons',
-      description: 'Mirroring someone\'s body language can increase attraction and rapport.',
+      description:
+          'Mirroring someone\'s body language can increase attraction and rapport.',
       icon: Icons.psychology,
       color: Color(0xFF4facfe),
     ),
     DatingFact(
       title: 'The Halo Effect',
-      description: 'One positive trait can influence perception of other qualities.',
+      description:
+          'One positive trait can influence perception of other qualities.',
       icon: Icons.star,
       color: Color(0xFFfa709a),
     ),
@@ -404,7 +420,8 @@ class _DatingFactsCarouselState extends State<DatingFactsCarousel> {
                     ),
                   ),
                   child: Column(
-                    mainAxisSize: MainAxisSize.max, // ensure proper flex behavior
+                    mainAxisSize:
+                        MainAxisSize.max, // ensure proper flex behavior
                     children: [
                       Container(
                         padding: EdgeInsets.all(12), // reduced from 16
@@ -462,7 +479,9 @@ class _DatingFactsCarouselState extends State<DatingFactsCarousel> {
                 margin: EdgeInsets.symmetric(horizontal: 4),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _currentPage == index ? Colors.white : Colors.white.withOpacity(0.3),
+                  color: _currentPage == index
+                      ? Colors.white
+                      : Colors.white.withOpacity(0.3),
                 ),
               ),
             ),

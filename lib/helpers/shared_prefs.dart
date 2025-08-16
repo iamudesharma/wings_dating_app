@@ -45,7 +45,8 @@ class SharedPrefs {
         return null;
       }
 
-      print("SharedPrefs: Successfully loaded user ${user.username} (${user.id})");
+      print(
+          "SharedPrefs: Successfully loaded user ${user.username} (${user.id})");
       return user;
     } catch (e) {
       print("SharedPrefs: Error parsing user data: $e");
@@ -71,7 +72,10 @@ class SharedPrefs {
     if (userListJson == null) return [];
     try {
       final list = jsonDecode(userListJson) as List<dynamic>;
-      return list.map((e) => e != null ? UserModel.fromJson(e as Map<String, dynamic>) : null).toList();
+      return list
+          .map((e) =>
+              e != null ? UserModel.fromJson(e as Map<String, dynamic>) : null)
+          .toList();
     } catch (_) {
       return [];
     }

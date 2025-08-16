@@ -139,7 +139,10 @@ class EnhancedWelcomeSection extends StatelessWidget {
                 ),
               ),
             ],
-          ).animate().fadeIn(delay: 400.ms, duration: 600.ms).slideY(begin: 0.3),
+          )
+              .animate()
+              .fadeIn(delay: 400.ms, duration: 600.ms)
+              .slideY(begin: 0.3),
 
           SizedBox(height: 16),
 
@@ -167,7 +170,10 @@ class EnhancedWelcomeSection extends StatelessWidget {
                 ),
               ),
             ],
-          ).animate().fadeIn(delay: 600.ms, duration: 600.ms).slideY(begin: 0.3),
+          )
+              .animate()
+              .fadeIn(delay: 600.ms, duration: 600.ms)
+              .slideY(begin: 0.3),
 
           SizedBox(height: 24),
 
@@ -192,7 +198,10 @@ class EnhancedWelcomeSection extends StatelessWidget {
                 _buildStatItem('24/7', 'Available'),
               ],
             ),
-          ).animate().fadeIn(delay: 800.ms, duration: 600.ms).scale(begin: Offset(0.8, 0.8)),
+          )
+              .animate()
+              .fadeIn(delay: 800.ms, duration: 600.ms)
+              .scale(begin: Offset(0.8, 0.8)),
 
           SizedBox(height: 20),
 
@@ -222,7 +231,10 @@ class EnhancedWelcomeSection extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-          ).animate().fadeIn(delay: 1000.ms, duration: 600.ms).shimmer(duration: 2000.ms),
+          )
+              .animate()
+              .fadeIn(delay: 1000.ms, duration: 600.ms)
+              .shimmer(duration: 2000.ms),
         ],
       ),
     );

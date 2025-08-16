@@ -89,7 +89,8 @@ class PaginatedUsers extends _$PaginatedUsers {
       PaginatedUserResponse response;
 
       if (_currentFilters != null && _currentFilters!['enabled'] == true) {
-        print('PaginatedUsers: Using filtered list with filters: $_currentFilters');
+        print(
+            'PaginatedUsers: Using filtered list with filters: $_currentFilters');
         response = await ref.read(profileRepoProvider).getFilterList(
               filters: _currentFilters!,
               page: page,
@@ -103,7 +104,8 @@ class PaginatedUsers extends _$PaginatedUsers {
             );
       }
 
-      print('PaginatedUsers: Received response with ${response.data.length} users');
+      print(
+          'PaginatedUsers: Received response with ${response.data.length} users');
       print(
           'PaginatedUsers: Response details - total: ${response.total}, hasNext: ${response.hasNext}, totalPages: ${response.totalPages}');
 
@@ -131,10 +133,13 @@ class PaginatedUsers extends _$PaginatedUsers {
         print('PaginatedUsers: Load more mode - appending users');
         // Avoid duplicates when loading more
         final existingIds = state.users.map((u) => u.id).toSet();
-        print('PaginatedUsers: Existing user count: ${state.users.length}, existing IDs: ${existingIds.length}');
+        print(
+            'PaginatedUsers: Existing user count: ${state.users.length}, existing IDs: ${existingIds.length}');
 
-        final filteredNewUsers = newUsers.where((u) => !existingIds.contains(u.id)).toList();
-        print('PaginatedUsers: Filtered new users (no duplicates): ${filteredNewUsers.length}');
+        final filteredNewUsers =
+            newUsers.where((u) => !existingIds.contains(u.id)).toList();
+        print(
+            'PaginatedUsers: Filtered new users (no duplicates): ${filteredNewUsers.length}');
 
         allUsers = [...state.users, ...filteredNewUsers];
       }
@@ -152,7 +157,8 @@ class PaginatedUsers extends _$PaginatedUsers {
         error: null,
       );
 
-      print('PaginatedUsers: State updated successfully - currentPage: $page, hasNext: ${response.hasNext}');
+      print(
+          'PaginatedUsers: State updated successfully - currentPage: $page, hasNext: ${response.hasNext}');
     } catch (e) {
       print('PaginatedUsers: Error in loadUsers: $e');
       print('PaginatedUsers: Error type: ${e.runtimeType}');
@@ -174,12 +180,15 @@ class PaginatedUsers extends _$PaginatedUsers {
   }
 
   Future<void> loadMore() async {
-    print('PaginatedUsers: loadMore() called - hasNext: ${state.hasNext}, isLoadingMore: ${state.isLoadingMore}');
+    print(
+        'PaginatedUsers: loadMore() called - hasNext: ${state.hasNext}, isLoadingMore: ${state.isLoadingMore}');
     if (state.hasNext && !state.isLoadingMore) {
-      print('PaginatedUsers: Conditions met, calling loadUsers(refresh: false)');
+      print(
+          'PaginatedUsers: Conditions met, calling loadUsers(refresh: false)');
       await loadUsers(refresh: false);
     } else {
-      print('PaginatedUsers: Skipping loadMore - hasNext: ${state.hasNext}, isLoadingMore: ${state.isLoadingMore}');
+      print(
+          'PaginatedUsers: Skipping loadMore - hasNext: ${state.hasNext}, isLoadingMore: ${state.isLoadingMore}');
     }
     print('PaginatedUsers: loadMore() completed');
   }

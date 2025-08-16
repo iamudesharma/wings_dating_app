@@ -26,7 +26,8 @@ final _userControllerProvider = ChangeNotifierProvider<ProfileController>(
 );
 
 class ProfileController extends ChangeNotifier {
-  static ChangeNotifierProvider<ProfileController> userControllerProvider = _userControllerProvider;
+  static ChangeNotifierProvider<ProfileController> userControllerProvider =
+      _userControllerProvider;
   UserModel? userModel;
 
   Uint8List? profileImage;
@@ -94,12 +95,17 @@ class ProfileController extends ChangeNotifier {
     return meterToKm(data);
   }
 
-  Future<void> removeFromBlockList({required String id, required int cubeId}) async {
-    await ref.read(Dependency.profileProvider).removeToBlockList(id: id, cubeId: cubeId);
+  Future<void> removeFromBlockList(
+      {required String id, required int cubeId}) async {
+    await ref
+        .read(Dependency.profileProvider)
+        .removeToBlockList(id: id, cubeId: cubeId);
   }
 
   Future<void> addToBlockList({required String id, required int cubeId}) async {
-    await ref.read(Dependency.profileProvider).removeToBlockList(id: id, cubeId: cubeId);
+    await ref
+        .read(Dependency.profileProvider)
+        .removeToBlockList(id: id, cubeId: cubeId);
   }
 
   /// Call this when a user visits another user's profile
@@ -109,13 +115,15 @@ class ProfileController extends ChangeNotifier {
 
   /// Get the list of profiles the current user has visited
   Future<List<VisitRecord>> getVisitedProfiles() async {
-    final response = await ref.read(Dependency.profileProvider).getVisitedProfiles();
+    final response =
+        await ref.read(Dependency.profileProvider).getVisitedProfiles();
     return response.visits;
   }
 
   /// Get the list of users who have visited the current user's profile
   Future<List<VisitRecord>> getProfileVisitors() async {
-    final response = await ref.read(Dependency.profileProvider).getProfileVisitors();
+    final response =
+        await ref.read(Dependency.profileProvider).getProfileVisitors();
     return response.visits;
   }
 }

@@ -54,8 +54,10 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: UsersRoute.page, path: "users", initial: true),
         AutoRoute(page: ChatListRoute.page, path: "chats", keepHistory: true),
         AutoRoute(page: AlbumRoute.page, path: "album", keepHistory: true),
-        AutoRoute(page: MatchingRoute.page, path: "matching", keepHistory: true),
-        AutoRoute(page: AIChatRoute.page, path: "ai-wingman", keepHistory: true),
+        AutoRoute(
+            page: MatchingRoute.page, path: "matching", keepHistory: true),
+        AutoRoute(
+            page: AIChatRoute.page, path: "ai-wingman", keepHistory: true),
         AutoRoute(page: ProfileRoute.page, path: "profile", keepHistory: true),
       ],
       guards: [
@@ -92,13 +94,22 @@ class AppRouter extends RootStackRouter {
         page: AddAdditionalInformationRoute.page,
         type: const RouteType.adaptive(),
         path: "/add-additional-information"),
-    AutoRoute(page: EditProfileRoute.page, type: const RouteType.adaptive(), path: "/edit-profile"),
+    AutoRoute(
+        page: EditProfileRoute.page,
+        type: const RouteType.adaptive(),
+        path: "/edit-profile"),
     AutoRoute(
       page: AlbumDetailsRoute.page,
       type: const RouteType.adaptive(),
     ),
-    AutoRoute(page: UserBlockListRoute.page, type: const RouteType.adaptive(), path: "/user-block-list"),
-    AutoRoute(page: ImagePreviewRoute.page, type: const RouteType.adaptive(), path: "/image:path"),
+    AutoRoute(
+        page: UserBlockListRoute.page,
+        type: const RouteType.adaptive(),
+        path: "/user-block-list"),
+    AutoRoute(
+        page: ImagePreviewRoute.page,
+        type: const RouteType.adaptive(),
+        path: "/image:path"),
     AutoRoute(
       page: CreateAlbumRoute.page,
       type: const RouteType.adaptive(),

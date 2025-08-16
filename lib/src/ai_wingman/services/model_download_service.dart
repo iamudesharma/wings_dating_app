@@ -41,8 +41,10 @@ class ModelDownloadService {
       final file = File(filePath);
 
       // Check remote file size
-      final Map<String, String> headers = token.isNotEmpty ? {'Authorization': 'Bearer $token'} : {};
-      final headResponse = await http.head(Uri.parse(modelUrl), headers: headers);
+      final Map<String, String> headers =
+          token.isNotEmpty ? {'Authorization': 'Bearer $token'} : {};
+      final headResponse =
+          await http.head(Uri.parse(modelUrl), headers: headers);
 
       if (headResponse.statusCode == 200) {
         final contentLengthHeader = headResponse.headers['content-length'];
@@ -121,7 +123,8 @@ class ModelDownloadService {
         }
       } else {
         if (kDebugMode) {
-          print('Failed to download model. Status code: ${response.statusCode}');
+          print(
+              'Failed to download model. Status code: ${response.statusCode}');
           print('Headers: ${response.headers}');
           try {
             final errorBody = await response.stream.bytesToString();

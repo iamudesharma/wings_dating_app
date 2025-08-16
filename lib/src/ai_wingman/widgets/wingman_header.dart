@@ -99,7 +99,8 @@ class WingmanHeader extends StatelessWidget {
                           height: 8,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: isOnline ? Colors.greenAccent : Colors.orange,
+                            color:
+                                isOnline ? Colors.greenAccent : Colors.orange,
                             boxShadow: [
                               if (isOnline)
                                 BoxShadow(

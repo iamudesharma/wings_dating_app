@@ -18,7 +18,8 @@ class ModernChatInput extends StatefulWidget {
   State<ModernChatInput> createState() => _ModernChatInputState();
 }
 
-class _ModernChatInputState extends State<ModernChatInput> with TickerProviderStateMixin {
+class _ModernChatInputState extends State<ModernChatInput>
+    with TickerProviderStateMixin {
   final TextEditingController _textController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   Uint8List? _selectedImageBytes;
@@ -165,7 +166,10 @@ class _ModernChatInputState extends State<ModernChatInput> with TickerProviderSt
               gradient: LinearGradient(
                 colors: [
                   Theme.of(context).colorScheme.surface.withOpacity(0.95),
-                  Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.95),
+                  Theme.of(context)
+                      .colorScheme
+                      .surfaceVariant
+                      .withOpacity(0.95),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -201,7 +205,10 @@ class _ModernChatInputState extends State<ModernChatInput> with TickerProviderSt
                             )
                           : null,
                       color: _selectedImageBytes == null
-                          ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3)
+                          ? Theme.of(context)
+                              .colorScheme
+                              .primaryContainer
+                              .withOpacity(0.3)
                           : null,
                     ),
                     child: IconButton(
@@ -209,7 +216,10 @@ class _ModernChatInputState extends State<ModernChatInput> with TickerProviderSt
                         Icons.photo_camera,
                         color: _selectedImageBytes != null
                             ? Theme.of(context).colorScheme.onPrimary
-                            : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.7),
                       ),
                       onPressed: _pickImage,
                       tooltip: 'Add photo for analysis',
@@ -227,10 +237,14 @@ class _ModernChatInputState extends State<ModernChatInput> with TickerProviderSt
                       fontSize: 16,
                     ),
                     decoration: InputDecoration(
-                      hintText:
-                          _selectedImageBytes != null ? 'Ask about this photo...' : 'Ask your wingman anything...',
+                      hintText: _selectedImageBytes != null
+                          ? 'Ask about this photo...'
+                          : 'Ask your wingman anything...',
                       hintStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.6),
                         fontSize: 16,
                       ),
                       border: InputBorder.none,
@@ -260,7 +274,10 @@ class _ModernChatInputState extends State<ModernChatInput> with TickerProviderSt
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -337,7 +354,10 @@ class _ModernChatInputState extends State<ModernChatInput> with TickerProviderSt
                   Text(
                     '${(_selectedImageBytes!.length / 1024).toStringAsFixed(1)} KB',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
                       fontSize: 12,
                     ),
                   ),

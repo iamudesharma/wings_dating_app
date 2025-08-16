@@ -9,7 +9,8 @@ import 'package:wings_dating_app/src/ai_wingman/models/model.dart';
 import 'package:wings_dating_app/src/ai_wingman/services/model_download_service.dart';
 
 /// GemmaProvider manages a single instance of InferenceChat for the selected model.
-final gemmaProvider = StateNotifierProvider<GemmaNotifier, InferenceChat?>((ref) => GemmaNotifier());
+final gemmaProvider = StateNotifierProvider<GemmaNotifier, InferenceChat?>(
+    (ref) => GemmaNotifier());
 
 class GemmaNotifier extends StateNotifier<InferenceChat?> {
   GemmaNotifier() : super(null);
@@ -71,7 +72,8 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
       topP: _topP,
       tokenBuffer: 256,
       supportImage: model.supportImage,
-      supportsFunctionCalls: _supportsFunctionCalls && model.supportsFunctionCalls,
+      supportsFunctionCalls:
+          _supportsFunctionCalls && model.supportsFunctionCalls,
       tools: tools,
     );
 
@@ -125,7 +127,8 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
     if (topP != null) _topP = topP;
     if (supportsFunctionCalls != null) {
       // Only enable if model supports
-      _supportsFunctionCalls = supportsFunctionCalls && _currentModel.supportsFunctionCalls;
+      _supportsFunctionCalls =
+          supportsFunctionCalls && _currentModel.supportsFunctionCalls;
     }
 
     // Recreate model+chat using current model and tools
@@ -154,7 +157,8 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
       topP: _topP,
       tokenBuffer: 256,
       supportImage: _currentModel.supportImage,
-      supportsFunctionCalls: _supportsFunctionCalls && _currentModel.supportsFunctionCalls,
+      supportsFunctionCalls:
+          _supportsFunctionCalls && _currentModel.supportsFunctionCalls,
       tools: _tools,
     );
 

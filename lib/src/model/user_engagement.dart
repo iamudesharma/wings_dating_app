@@ -52,7 +52,8 @@ abstract class UserEngagement with _$UserEngagement {
     int? visitCount,
   }) = _UserEngagement;
 
-  factory UserEngagement.fromJson(Map<String, dynamic> json) => _$UserEngagementFromJson(json);
+  factory UserEngagement.fromJson(Map<String, dynamic> json) =>
+      _$UserEngagementFromJson(json);
 }
 
 @freezed
@@ -70,7 +71,8 @@ abstract class NotificationModel with _$NotificationModel {
     UserModel? fromUser,
   }) = _NotificationModel;
 
-  factory NotificationModel.fromJson(Map<String, dynamic> json) => _$NotificationModelFromJson(json);
+  factory NotificationModel.fromJson(Map<String, dynamic> json) =>
+      _$NotificationModelFromJson(json);
 }
 
 @freezed
@@ -83,7 +85,8 @@ abstract class TapResult with _$TapResult {
     EngagementStatus? engagementStatus,
   }) = _TapResult;
 
-  factory TapResult.fromJson(Map<String, dynamic> json) => _$TapResultFromJson(json);
+  factory TapResult.fromJson(Map<String, dynamic> json) =>
+      _$TapResultFromJson(json);
 }
 
 @freezed
@@ -97,7 +100,8 @@ abstract class TapStats with _$TapStats {
     EngagementStatus? engagementStatus,
   }) = _TapStats;
 
-  factory TapStats.fromJson(Map<String, dynamic> json) => _$TapStatsFromJson(json);
+  factory TapStats.fromJson(Map<String, dynamic> json) =>
+      _$TapStatsFromJson(json);
 }
 
 @freezed
@@ -109,7 +113,8 @@ abstract class EngagementStatus with _$EngagementStatus {
     DateTime? lastEngagement,
   }) = _EngagementStatus;
 
-  factory EngagementStatus.fromJson(Map<String, dynamic> json) => _$EngagementStatusFromJson(json);
+  factory EngagementStatus.fromJson(Map<String, dynamic> json) =>
+      _$EngagementStatusFromJson(json);
 }
 
 @freezed
@@ -120,7 +125,8 @@ abstract class ViewResult with _$ViewResult {
     required List<ViewerInfo> viewers,
   }) = _ViewResult;
 
-  factory ViewResult.fromJson(Map<String, dynamic> json) => _$ViewResultFromJson(json);
+  factory ViewResult.fromJson(Map<String, dynamic> json) =>
+      _$ViewResultFromJson(json);
 }
 
 @freezed
@@ -132,7 +138,8 @@ abstract class ViewerInfo with _$ViewerInfo {
     UserModel? user,
   }) = _ViewerInfo;
 
-  factory ViewerInfo.fromJson(Map<String, dynamic> json) => _$ViewerInfoFromJson(json);
+  factory ViewerInfo.fromJson(Map<String, dynamic> json) =>
+      _$ViewerInfoFromJson(json);
 }
 
 @freezed
@@ -147,5 +154,6 @@ abstract class MatchResult with _$MatchResult {
     UserModel? user2,
   }) = _MatchResult;
 
-  factory MatchResult.fromJson(Map<String, dynamic> json) => _$MatchResultFromJson(json);
+  factory MatchResult.fromJson(Map<String, dynamic> json) =>
+      _$MatchResultFromJson(json);
 }

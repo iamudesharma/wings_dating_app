@@ -4,15 +4,18 @@ import 'package:wings_dating_app/src/profile/controller/profile_controller.dart'
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 // Simple StateProvider for managing favorites list
-final favoritesProvider = StateNotifierProvider<FavoritesNotifier, List<String>>((ref) {
-  final currentUser = ref.watch(ProfileController.userControllerProvider).userModel;
+final favoritesProvider =
+    StateNotifierProvider<FavoritesNotifier, List<String>>((ref) {
+  final currentUser =
+      ref.watch(ProfileController.userControllerProvider).userModel;
   return FavoritesNotifier(ref, currentUser?.favoriteList ?? []);
 });
 
 class FavoritesNotifier extends StateNotifier<List<String>> {
   final Ref ref;
 
-  FavoritesNotifier(this.ref, List<String> initialFavorites) : super(initialFavorites);
+  FavoritesNotifier(this.ref, List<String> initialFavorites)
+      : super(initialFavorites);
 
   bool isFavorited(String userId) {
     return state.contains(userId);
@@ -25,12 +28,15 @@ class FavoritesNotifier extends StateNotifier<List<String>> {
       if (isFavorited) {
         // Remove from favorites
         print('FavoritesProvider: Removing $userId from favorites');
-        final response = await ref.read(profileRepoProvider).removeUserFromFavorite(userId);
-        print('FavoritesProvider: Remove response: ${response.status} - ${response.message}');
+        final response =
+            await ref.read(profileRepoProvider).removeUserFromFavorite(userId);
+        print(
+            'FavoritesProvider: Remove response: ${response.status} - ${response.message}');
 
         if (response.status == 'success') {
           state = state.where((id) => id != userId).toList();
-          print('FavoritesProvider: Successfully removed from global favorites');
+          print(
+              'FavoritesProvider: Successfully removed from global favorites');
 
           FirebaseAnalytics.instance.logEvent(
             name: 'user_unfavorited',
@@ -43,8 +49,10 @@ class FavoritesNotifier extends StateNotifier<List<String>> {
       } else {
         // Add to favorites
         print('FavoritesProvider: Adding $userId to favorites');
-        final response = await ref.read(profileRepoProvider).addUserToFavorite(userId);
-        print('FavoritesProvider: Add response: ${response.status} - ${response.message}');
+        final response =
+            await ref.read(profileRepoProvider).addUserToFavorite(userId);
+        print(
+            'FavoritesProvider: Add response: ${response.status} - ${response.message}');
 
         if (response.status == 'success') {
           state = [...state, userId];

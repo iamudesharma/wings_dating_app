@@ -49,7 +49,8 @@ enum Model {
 
   // Models from JSON - Gemma 3n E2B (Updated version)
   gemma3nGpu_2B(
-    url: 'https://huggingface.co/google/gemma-3n-E2B-it-litert-preview/resolve/main/gemma-3n-E2B-it-int4.task',
+    url:
+        'https://huggingface.co/google/gemma-3n-E2B-it-litert-preview/resolve/main/gemma-3n-E2B-it-int4.task',
     filename: 'gemma-3n-E2B-it-int4.task',
     displayName: 'Gemma 3n E2B IT Multimodal (GPU) 3.1Gb',
     licenseUrl: 'https://huggingface.co/google/gemma-3n-E2B-it-litert-preview',
@@ -65,7 +66,8 @@ enum Model {
     supportsFunctionCalls: true,
   ),
   gemma3nCpu_2B(
-    url: 'https://huggingface.co/google/gemma-3n-E2B-it-litert-preview/resolve/main/gemma-3n-E2B-it-int4.task',
+    url:
+        'https://huggingface.co/google/gemma-3n-E2B-it-litert-preview/resolve/main/gemma-3n-E2B-it-int4.task',
     filename: 'gemma-3n-E2B-it-int4.task',
     displayName: 'Gemma 3n E2B IT Multimodal (CPU) 3.1Gb',
     licenseUrl: 'https://huggingface.co/google/gemma-3n-E2B-it-litert-preview',
@@ -82,7 +84,8 @@ enum Model {
   ),
 
   gemma3nGpu_4B(
-    url: 'https://huggingface.co/google/gemma-3n-E4B-it-litert-preview/resolve/main/gemma-3n-E4B-it-int4.task',
+    url:
+        'https://huggingface.co/google/gemma-3n-E4B-it-litert-preview/resolve/main/gemma-3n-E4B-it-int4.task',
     filename: 'gemma-3n-E4B-it-int4.task',
     displayName: 'Gemma 3n E4B IT Multimodal (GPU) 6.5Gb',
     licenseUrl: 'https://huggingface.co/google/gemma-3n-E4B-it-litert-preview',
@@ -98,7 +101,8 @@ enum Model {
     supportsFunctionCalls: true,
   ),
   gemma3nCpu_4B(
-    url: 'https://huggingface.co/google/gemma-3n-E4B-it-litert-preview/resolve/main/gemma-3n-E4B-it-int4.task',
+    url:
+        'https://huggingface.co/google/gemma-3n-E4B-it-litert-preview/resolve/main/gemma-3n-E4B-it-int4.task',
     filename: 'gemma-3n-E4B-it-int4.task',
     displayName: 'Gemma 3n E4B IT Multimodal (CPU) 6.5Gb',
     licenseUrl: 'https://huggingface.co/google/gemma-3n-E4B-it-litert-preview',

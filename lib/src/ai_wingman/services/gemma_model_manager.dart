@@ -11,10 +11,12 @@ class GemmaLocalService {
 
   /// Process message and return stream - back to direct streaming!
   Future<Stream<ModelResponse>> processMessage(Message message) async {
-    debugPrint('GemmaLocalService: processMessage() called with: "${message.text}"');
+    debugPrint(
+        'GemmaLocalService: processMessage() called with: "${message.text}"');
     debugPrint('GemmaLocalService: Adding query to chat: "${message.text}"');
     await _chat.addQueryChunk(message);
-    debugPrint('GemmaLocalService: Using direct InferenceChat stream (function handling: integrated)');
+    debugPrint(
+        'GemmaLocalService: Using direct InferenceChat stream (function handling: integrated)');
 
     // Return direct stream from InferenceChat - no more intermediate processing!
     return _chat.generateChatResponseAsync();
