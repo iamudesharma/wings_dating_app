@@ -1,87 +1,95 @@
 # Wings Dating App
 
-A new Flutter project.
-
-## This A Dating APP
-
-This project is a starting point for a Flutter application.
+A feature-rich dating application built using Flutter.
 
 ---
 
-## Prerequisites
+## Features
 
-- [Flutter](https://docs.flutter.dev/get-started/install) (for frontend)
-- [Node.js](https://nodejs.org/) & [npm](https://www.npmjs.com/) or [bun](https://bun.sh/) (for backend & admin UI)
-- [Firebase CLI](https://firebase.google.com/docs/cli) (if using Firebase features)
+- Cross-platform support (Android, iOS, Web, Desktop).
+- Firebase integration for authentication and real-time updates.
+- Admin panel for managing users and content.
+- Backend API for seamless data handling.
 
 ---
 
-## Running the Flutter Frontend
+## Installation
 
-1. Install dependencies:
-   ```sh
+### Prerequisites
+
+- [Flutter](https://docs.flutter.dev/get-started/install)
+- [Node.js](https://nodejs.org/) & [npm](https://www.npmjs.com/)
+- [Firebase CLI](https://firebase.google.com/docs/cli)
+
+### Steps
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/iamudesharma/wings_dating_app.git
+   cd wings_dating_app
+   ```
+
+2. Install Flutter dependencies:
+   ```bash
    flutter pub get
    ```
-2. Run the app (choose your platform):
-   ```sh
+
+3. Navigate to the backend and admin panel directories to install their dependencies:
+   ```bash
+   cd main
+   npm install
+   ```
+
+4. Set up Firebase:
+   ```bash
+   firebase login
+   firebase init
+   ```
+
+5. Run the application:
+   ```bash
    flutter run
    ```
-   - For web: `flutter run -d chrome`
-   - For iOS: `flutter run -d ios`
-   - For Android: `flutter run -d android`
 
 ---
 
-## Running the Backend API
+## Directory Structure
 
-1. Go to the backend folder:
-   ```sh
-   cd main
-   ```
-2. Install dependencies (choose one):
-   - With npm:
-     ```sh
-     npm install
-     ```
-   - Or with bun:
-     ```sh
-     bun install
-     ```
-3. Start the backend server:
-   - With npm:
-     ```sh
-     npm run dev
-     ```
-   - Or with bun:
-     ```sh
-     bun run index.ts
-     ```
+- **lib/** - Main application code.
+- **android/**, **ios/**, **web/**, etc. - Platform-specific implementations.
+- **assets/** - Static resources like images and fonts.
+- **main/** - Backend and admin panel code.
+- **test/** - Shell scripts for testing.
 
 ---
 
-## Running the Admin UI
+## Contributing
 
-1. Go to the admin panel directory:
-   ```sh
-   cd main/admin\ panel
+Contributions are welcome! Please fork the repository and submit a pull request.
+
+1. Fork the repository.
+2. Create a new feature branch:
+   ```bash
+   git checkout -b feature-name
    ```
-2. Install dependencies:
-   ```sh
-   npm install
-   # or
-   bun install
+3. Commit your changes:
+   ```bash
+   git commit -m "Description of changes"
    ```
-3. Start the admin UI:
-   ```sh
-   npm start
-   # or
-   bun run start
+4. Push to the branch:
+   ```bash
+   git push origin feature-name
    ```
+5. Create a pull request.
 
 ---
 
-A few resources to get you started if this is your first Flutter project:
+## License
 
-<!-- q:How show image for url  -->
+This project is currently unlicensed.
 
-a:![Flutter logo](https://flutter.dev/images/catalog-widget-placeholder.png)
+---
+
+## Contact
+
+For any queries or suggestions, feel free to reach out to the repository owner: [iamudesharma](https://github.com/iamudesharma).
