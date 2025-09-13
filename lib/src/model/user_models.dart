@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:wings_dating_app/helpers/extra_data.dart';
 import 'geo_point_data.dart';
+// Keep user model lean; extra onboarding data is kept locally via providers
 
 part 'user_models.g.dart';
 
@@ -18,8 +19,7 @@ class UserModel with _$UserModel {
     required this.username,
     this.bio,
     this.albumUrl,
-    this.profileUrl =
-        "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
+    this.profileUrl = "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
     this.birthday,
     this.age,
     this.position,
@@ -95,13 +95,14 @@ class UserModel with _$UserModel {
   final List<String> favoriteList;
   @override
   final List<String> interests;
+  // Extra onboarding fields (prompts, habits, values, social, verifications, video)
+  // are intentionally not part of the persisted UserModel to avoid backend schema changes.
   @override
   final String id;
   @override
   final String fcmToken;
 
-  factory UserModel.fromJson(Map<String, Object?> json) =>
-      _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, Object?> json) => _$UserModelFromJson(json);
 
   Map<String, Object?> toJson() => _$UserModelToJson(this);
 }

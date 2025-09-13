@@ -34,6 +34,32 @@ class ModelDownloadService {
     return '${directory.path}/$modelFilename';
   }
 
+  String get _modelPathPrefsKey => 'model_path_$modelFilename';
+
+  /// Persist the resolved model file path so other layers can quickly retrieve it.
+  Future<void> _persistModelPath(String path) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_modelPathPrefsKey, path);
+    } catch (_) {
+      // ignore
+    }
+  }
+
+  /// Load a previously persisted model path (if any).
+  Future<String?> loadPersistedModelPath() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final path = prefs.getString(_modelPathPrefsKey);
+      if (path == null) return null;
+      final file = File(path);
+      if (file.existsSync()) return path; // validate existence
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
   /// Checks if the model file exists and matches the remote file size.
   Future<bool> checkModelExistence(String token) async {
     try {
@@ -41,10 +67,8 @@ class ModelDownloadService {
       final file = File(filePath);
 
       // Check remote file size
-      final Map<String, String> headers =
-          token.isNotEmpty ? {'Authorization': 'Bearer $token'} : {};
-      final headResponse =
-          await http.head(Uri.parse(modelUrl), headers: headers);
+      final Map<String, String> headers = token.isNotEmpty ? {'Authorization': 'Bearer $token'} : {};
+      final headResponse = await http.head(Uri.parse(modelUrl), headers: headers);
 
       if (headResponse.statusCode == 200) {
         final contentLengthHeader = headResponse.headers['content-length'];
@@ -121,10 +145,14 @@ class ModelDownloadService {
           // Update progress
           onProgress(totalBytes > 0 ? received / totalBytes : 0.0);
         }
+
+        // Persist final path after successful full download
+        if (await file.exists()) {
+          await _persistModelPath(filePath);
+        }
       } else {
         if (kDebugMode) {
-          print(
-              'Failed to download model. Status code: ${response.statusCode}');
+          print('Failed to download model. Status code: ${response.statusCode}');
           print('Headers: ${response.headers}');
           try {
             final errorBody = await response.stream.bytesToString();
@@ -154,6 +182,12 @@ class ModelDownloadService {
       if (file.existsSync()) {
         await file.delete();
       }
+
+      // Remove persisted path
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove(_modelPathPrefsKey);
+      } catch (_) {}
     } catch (e) {
       if (kDebugMode) {
         print('Error deleting model: $e');

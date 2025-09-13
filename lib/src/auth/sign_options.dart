@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
 
 import 'package:wings_dating_app/assets.dart';
 
@@ -39,24 +38,32 @@ class SignOptionsView extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    LottieBuilder.asset(
-                      Assets.rainbowJSON,
+                    Container(
                       height: 100,
                       width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        gradient: const LinearGradient(
+                          colors: [Colors.purple, Colors.blue, Colors.green, Colors.yellow, Colors.orange, Colors.red],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.favorite,
+                        color: Colors.white,
+                        size: 50,
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
                           'Wings Dating',
-                          style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
                         )
                             .animate(
-                              adapter: ValueNotifierAdapter(isFromCom,
-                                  animated: true),
+                              adapter: ValueNotifierAdapter(isFromCom, animated: true),
                             )
                             .shake(),
                         SvgPicture.asset(
@@ -78,10 +85,22 @@ class SignOptionsView extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  LottieBuilder.asset(
-                    Assets.rainbowJSON,
+                  Container(
                     height: 300,
                     width: 300,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(150),
+                      gradient: const LinearGradient(
+                        colors: [Colors.purple, Colors.blue, Colors.green, Colors.yellow, Colors.orange, Colors.red],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 150,
+                    ),
                   ),
                   SizedBox(height: 20),
                   Row(
@@ -89,16 +108,10 @@ class SignOptionsView extends ConsumerWidget {
                     children: [
                       const Text(
                         'Wings Dating',
-                        style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ).animate(
-                          onInit: (controller) =>
-                              controller.repeat(reverse: true),
-                          effects: [
-                            const ShakeEffect(),
-                          ]),
+                        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
+                      ).animate(onInit: (controller) => controller.repeat(reverse: true), effects: [
+                        const ShakeEffect(),
+                      ]),
                       SvgPicture.asset(
                         Assets.rainbow3SVG,
                         height: 50,

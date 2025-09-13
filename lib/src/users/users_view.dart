@@ -21,8 +21,7 @@ import '../profile/controller/profile_controller.dart';
 import 'widget/user_grid_item.dart';
 
 final user = FirebaseAuth.instance.currentUser;
-final DatabaseReference statusRef =
-    FirebaseDatabase.instance.ref("status/${user!.uid}");
+final DatabaseReference statusRef = FirebaseDatabase.instance.ref("status/${user!.uid}");
 
 final onlineStatus = {
   "isOnline": true,
@@ -52,8 +51,7 @@ class UsersView extends ConsumerStatefulWidget {
   ConsumerState<UsersView> createState() => _UsersViewState();
 }
 
-class _UsersViewState extends ConsumerState<UsersView>
-    with WidgetsBindingObserver {
+class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserver {
   // late StreamSubscription<List<ConnectivityResult>> connectivityStateSubscription;
   AppLifecycleState? appState;
 
@@ -68,8 +66,7 @@ class _UsersViewState extends ConsumerState<UsersView>
         nullWidget = _buildGate(
           icon: Icons.location_disabled,
           title: 'Enable Location Services',
-          message:
-              'Location services are turned off. Please enable them to continue.',
+          message: 'Location services are turned off. Please enable them to continue.',
           actionText: 'Open Location Settings',
           onAction: () {
             Geolocator.openLocationSettings();
@@ -85,15 +82,13 @@ class _UsersViewState extends ConsumerState<UsersView>
       permission = await Geolocator.requestPermission();
     }
 
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
       if (!mounted) return;
       setState(() {
         nullWidget = _buildGate(
           icon: Icons.location_off_outlined,
           title: 'Location Permission Required',
-          message:
-              'We need your location to show nearby users. Enable it in Settings.',
+          message: 'We need your location to show nearby users. Enable it in Settings.',
           actionText: 'Open App Settings',
           onAction: () {
             Geolocator.openAppSettings();
@@ -128,20 +123,14 @@ class _UsersViewState extends ConsumerState<UsersView>
             Text(
               title,
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
               message,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                   ),
             ),
             const SizedBox(height: 20),
@@ -186,8 +175,7 @@ class _UsersViewState extends ConsumerState<UsersView>
         print('Message data: ${message.data}');
 
         if (message.notification != null) {
-          print(
-              'Message also contained a notification: ${message.notification}');
+          print('Message also contained a notification: ${message.notification}');
 
           // showNotification(message);
         }
@@ -213,11 +201,9 @@ class _UsersViewState extends ConsumerState<UsersView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final statusRef = FirebaseDatabase.instance
-        .ref("status/${FirebaseAuth.instance.currentUser!.uid}");
+    final statusRef = FirebaseDatabase.instance.ref("status/${FirebaseAuth.instance.currentUser!.uid}");
 
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive) {
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
       statusRef.set({
         "isOnline": false,
         "lastSeen": ServerValue.timestamp,
@@ -243,8 +229,7 @@ class _UsersViewState extends ConsumerState<UsersView>
 
   @override
   Widget build(BuildContext context) {
-    final userData =
-        ref.watch(ProfileController.userControllerProvider).userModel;
+    final userData = ref.watch(ProfileController.userControllerProvider).userModel;
     final usersProvider = paginatedUsersProvider(filters);
     final usersState = ref.watch(usersProvider);
     final usersNotifier = ref.watch(usersProvider.notifier);
@@ -269,8 +254,7 @@ class _UsersViewState extends ConsumerState<UsersView>
       if (prevIsNull && usersIsEmpty && notLoading) {
         print('UsersView: All conditions met, triggering loadUsers');
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          print(
-              'UsersView: Executing loadUsers(refresh: true) in post frame callback');
+          print('UsersView: Executing loadUsers(refresh: true) in post frame callback');
           usersNotifier.loadUsers(refresh: true);
         });
       } else {
@@ -280,17 +264,13 @@ class _UsersViewState extends ConsumerState<UsersView>
 
     // Alternative trigger - load users on first build if no users
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print(
-          'UsersView: Post frame callback - checking if we need to load users');
+      print('UsersView: Post frame callback - checking if we need to load users');
       print('UsersView: usersState.users.length = ${usersState.users.length}');
       print('UsersView: usersState.isLoading = ${usersState.isLoading}');
       print('UsersView: usersState.error = ${usersState.error}');
 
-      if (usersState.users.isEmpty &&
-          !usersState.isLoading &&
-          usersState.error == null) {
-        print(
-            'UsersView: Alternative trigger - loading users because list is empty and not loading');
+      if (usersState.users.isEmpty && !usersState.isLoading && usersState.error == null) {
+        print('UsersView: Alternative trigger - loading users because list is empty and not loading');
         usersNotifier.loadUsers(refresh: true);
       } else {
         print('UsersView: Alternative trigger - not loading users');
@@ -306,9 +286,8 @@ class _UsersViewState extends ConsumerState<UsersView>
                   child: AppBar(
                     leadingWidth: 40,
                     leading: CircleAvatar(
-                      backgroundImage: CachedNetworkImageProvider(userData!
-                              .profileUrl ??
-                          "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
+                      backgroundImage: CachedNetworkImageProvider(
+                          userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                     ),
                     title: Text(userData.username),
                     actions: [
@@ -325,18 +304,14 @@ class _UsersViewState extends ConsumerState<UsersView>
                       ),
                       InkWell(
                           onTap: () {
-                            AutoRouter.of(context)
-                                .push(const SearchUsersRoute());
+                            AutoRouter.of(context).push(const SearchUsersRoute());
                           },
                           child: Icon(Icons.search)),
                       SizedBox(width: 10),
                       InkWell(
                           onTap: () {
-                            AutoRouter.of(context)
-                                .push(const FilterRoute())
-                                .then((result) {
-                              if (result != null &&
-                                  result is Map<String, dynamic>) {
+                            AutoRouter.of(context).push(const FilterRoute()).then((result) {
+                              if (result != null && result is Map<String, dynamic>) {
                                 setState(() {
                                   filters = result;
                                 });
@@ -361,19 +336,16 @@ class _UsersViewState extends ConsumerState<UsersView>
                         flex: 5,
                         child: RefreshIndicator.adaptive(
                           onRefresh: () async {
-                            final currentLocation =
-                                await Geolocator.getCurrentPosition(
+                            final currentLocation = await Geolocator.getCurrentPosition(
                               locationSettings: LocationSettings(
                                 accuracy: LocationAccuracy.high,
                               ),
                             );
 
-                            logger.d(
-                                "currentLocation ${currentLocation.toJson()}");
+                            logger.d("currentLocation ${currentLocation.toJson()}");
                             await usersNotifier.refresh();
                           },
-                          child: _buildUserGrid(sizingInformation, usersState,
-                              usersNotifier, userData),
+                          child: _buildUserGrid(sizingInformation, usersState, usersNotifier, userData),
                         ),
                       ),
                     ],
@@ -401,10 +373,7 @@ class _UsersViewState extends ConsumerState<UsersView>
             Text(
               'Discovering amazing people...',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                   ),
             ),
           ],
@@ -460,8 +429,7 @@ class _UsersViewState extends ConsumerState<UsersView>
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -524,10 +492,7 @@ class _UsersViewState extends ConsumerState<UsersView>
                 'Try adjusting your filters or check back later',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onPrimaryContainer
-                          .withOpacity(0.8),
+                      color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.8),
                     ),
               ),
             ],
@@ -565,17 +530,12 @@ class _UsersViewState extends ConsumerState<UsersView>
               // Header section
               Container(
                 margin: const EdgeInsets.only(bottom: 20),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primaryContainer
-                      .withOpacity(0.5),
+                  color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
                   ),
                 ),
                 child: Row(
@@ -586,43 +546,29 @@ class _UsersViewState extends ConsumerState<UsersView>
                       children: [
                         Text(
                           'Discover People',
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimaryContainer,
-                                  ),
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                              ),
                         ),
                         Text(
                           '${usersState.users.length} people nearby',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimaryContainer
-                                        .withOpacity(0.7),
-                                  ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+                              ),
                         ),
                       ],
                     ),
                     if (usersState.hasNext)
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.1),
+                          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
                           'More available',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall
-                              ?.copyWith(
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                 color: Theme.of(context).colorScheme.primary,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -644,8 +590,7 @@ class _UsersViewState extends ConsumerState<UsersView>
                           : 4,
                   mainAxisSpacing: sizingInformation.isMobile ? 16 : 20,
                   crossAxisSpacing: sizingInformation.isMobile ? 16 : 20,
-                  childAspectRatio:
-                      0.68, // Adjusted to accommodate more content
+                  childAspectRatio: 0.68, // Adjusted to accommodate more content
                 ),
                 itemBuilder: (context, index) {
                   final user = usersState.users[index];
@@ -668,21 +613,15 @@ class _UsersViewState extends ConsumerState<UsersView>
                       isCurrentUser: user.id == userData.id,
                       users: user,
                       userCoordinates: userData.position != null
-                          ? GeoPoint(userData.position!.geopoint[1],
-                              userData.position!.geopoint[0])
+                          ? GeoPoint(userData.position!.geopoint[1], userData.position!.geopoint[0])
                           : null,
                     ),
                   )
                       .animate()
                       .fadeIn(duration: const Duration(milliseconds: 300))
-                      .slideY(
-                          begin: 0.2,
-                          end: 0,
-                          duration: const Duration(milliseconds: 400))
+                      .slideY(begin: 0.2, end: 0, duration: const Duration(milliseconds: 400))
                       .then(delay: const Duration(milliseconds: 100))
-                      .scale(
-                          begin: const Offset(0.9, 0.9),
-                          end: const Offset(1.0, 1.0));
+                      .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.0, 1.0));
                 },
                 itemCount: usersState.users.length,
               ),
@@ -693,10 +632,7 @@ class _UsersViewState extends ConsumerState<UsersView>
                   margin: const EdgeInsets.only(top: 24),
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .surfaceVariant
-                        .withOpacity(0.5),
+                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
@@ -706,9 +642,7 @@ class _UsersViewState extends ConsumerState<UsersView>
                       Text(
                         'Loading more amazing people...',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                       ),
                     ],
@@ -724,18 +658,12 @@ class _UsersViewState extends ConsumerState<UsersView>
                     gradient: LinearGradient(
                       colors: [
                         Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                        Theme.of(context)
-                            .colorScheme
-                            .secondary
-                            .withOpacity(0.1),
+                        Theme.of(context).colorScheme.secondary.withOpacity(0.1),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.2),
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
                     ),
                   ),
                   child: Row(
@@ -776,50 +704,136 @@ class NavigationBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!sizingInformation.isMobile) {
-      return Expanded(
-        child: SizedBox(
-          height: sizingInformation.screenSize.height,
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: ListenableBuilder(
-              listenable: AutoTabsRouter.of(context),
-              builder: (context, child) {
-                return NavigationRail(
-                  selectedIndex: AutoTabsRouter.of(context).activeIndex,
-                  extended: sizingInformation.isTablet ? false : true,
-                  onDestinationSelected: (value) {
-                    FirebaseAnalytics.instance.logEvent(
-                      name: 'navigation_rail_tapped',
-                      parameters: <String, Object>{
-                        'index': value as Object,
-                      },
-                    );
-                    AutoTabsRouter.of(context).setActiveIndex(value);
-                  },
-                  destinations: const [
-                    NavigationRailDestination(
-                        icon: Icon(Icons.home), label: Text("Users")),
-                    NavigationRailDestination(
-                        icon: Icon(Icons.chat_bubble), label: Text("Chat")),
-                    NavigationRailDestination(
-                        icon: Icon(Icons.album_outlined), label: Text("Album")),
-                    NavigationRailDestination(
-                        icon: Icon(Icons.add_card), label: Text("Matching")),
-                    NavigationRailDestination(
-                        icon: Icon(Icons.psychology),
-                        label: Text("AI Wingman")),
-                    NavigationRailDestination(
-                        icon: Icon(Icons.person), label: Text("Profile"))
-                  ],
-                );
-              },
+    if (sizingInformation.isMobile) return const SizedBox.shrink();
+
+    // Extended for desktop, compact for tablet by default
+    final bool extended = !sizingInformation.isTablet;
+    final theme = Theme.of(context);
+
+    return Expanded(
+      child: SizedBox(
+        height: sizingInformation.screenSize.height,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.colorScheme.shadow.withOpacity(0.15),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                )
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: ListenableBuilder(
+                listenable: AutoTabsRouter.of(context),
+                builder: (context, child) {
+                  final tabsRouter = AutoTabsRouter.of(context);
+                  return NavigationRail(
+                    backgroundColor: theme.colorScheme.surface,
+                    selectedIndex: tabsRouter.activeIndex,
+                    extended: extended,
+                    minWidth: 72,
+                    groupAlignment: -1.0,
+                    indicatorColor: theme.colorScheme.primary.withOpacity(0.10),
+                    indicatorShape: const StadiumBorder(),
+                    selectedIconTheme: IconThemeData(
+                      color: theme.colorScheme.primary,
+                    ),
+                    unselectedIconTheme: IconThemeData(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    selectedLabelTextStyle: theme.textTheme.labelLarge?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    unselectedLabelTextStyle: theme.textTheme.labelLarge?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    leading: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: extended
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(width: 12),
+                                Icon(Icons.favorite, color: theme.colorScheme.primary),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Wings',
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Icon(Icons.favorite, color: theme.colorScheme.primary),
+                    ),
+                    trailing: Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            tooltip: 'Settings',
+                            icon: const Icon(Icons.settings),
+                            onPressed: () => tabsRouter.setActiveIndex(5),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onDestinationSelected: (value) {
+                      FirebaseAnalytics.instance.logEvent(
+                        name: 'navigation_rail_tapped',
+                        parameters: <String, Object>{
+                          'index': value as Object,
+                        },
+                      );
+                      tabsRouter.setActiveIndex(value);
+                    },
+                    destinations: const [
+                      NavigationRailDestination(
+                        icon: Icon(Icons.home_outlined),
+                        selectedIcon: Icon(Icons.home),
+                        label: Text('Users'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.chat_bubble_outline),
+                        selectedIcon: Icon(Icons.chat_bubble),
+                        label: Text('Chat'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.photo_album_outlined),
+                        selectedIcon: Icon(Icons.photo_album),
+                        label: Text('Album'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.person_search_outlined),
+                        selectedIcon: Icon(Icons.person_search),
+                        label: Text('Matching'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.smart_toy_outlined),
+                        selectedIcon: Icon(Icons.smart_toy),
+                        label: Text('AI Wingman'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.person_outline),
+                        selectedIcon: Icon(Icons.person),
+                        label: Text('Profile'),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),
-      );
-    } else {
-      return Container();
-    }
+      ),
+    );
   }
 }

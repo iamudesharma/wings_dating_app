@@ -7,15 +7,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wings_dating_app/src/ai_wingman/models/model.dart';
 import 'package:wings_dating_app/src/ai_wingman/services/model_download_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// GemmaProvider manages a single instance of InferenceChat for the selected model.
-final gemmaProvider = StateNotifierProvider<GemmaNotifier, InferenceChat?>(
-    (ref) => GemmaNotifier());
+final gemmaProvider = StateNotifierProvider<GemmaNotifier, InferenceChat?>((ref) => GemmaNotifier());
 
 class GemmaNotifier extends StateNotifier<InferenceChat?> {
   GemmaNotifier() : super(null);
 
-  Model _currentModel = Model.gemma3GpuLocalAsset;
+  Model _currentModel = Model.gemma3_270M;
   List<Tool> _tools = [];
   bool _isModelInitialized = false;
 
@@ -57,6 +57,9 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
     // Ensure model path is set for the plugin
     await gemma.modelManager.setModelPath(resolvedPath);
 
+    // Persist resolved path for future sessions (mobile only). Safe to ignore failures.
+    await _persistModelPathIfNeeded(model, resolvedPath);
+
     final gemmaModel = await gemma.createModel(
       modelType: model.modelType,
       preferredBackend: model.preferredBackend,
@@ -72,8 +75,7 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
       topP: _topP,
       tokenBuffer: 256,
       supportImage: model.supportImage,
-      supportsFunctionCalls:
-          _supportsFunctionCalls && model.supportsFunctionCalls,
+      supportsFunctionCalls: _supportsFunctionCalls && model.supportsFunctionCalls,
       tools: tools,
     );
 
@@ -97,17 +99,34 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
     if (Platform.isAndroid || Platform.isIOS) {
       if (model.localModel) return model.url;
 
-      // Check if downloaded file exists in app documents dir
+      // 1. Try persisted path first
+      final persisted = await _getPersistedModelPath(model);
+      if (persisted != null) {
+        final file = File(persisted);
+        if (await file.exists()) return persisted;
+      }
+
+      // 2. Expected default documents directory path
+      final docsDir = await getApplicationDocumentsDirectory();
+      final expectedPath = '${docsDir.path}/${model.filename}';
+      final expectedFile = File(expectedPath);
+      if (await expectedFile.exists()) {
+        await _persistModelPathIfNeeded(model, expectedPath);
+        return expectedPath;
+      }
+
+      // 3. Fallback: ask downloader service (may perform additional checks)
       final downloader = ModelDownloadService(
         modelUrl: model.url,
         modelFilename: model.filename,
         licenseUrl: model.licenseUrl,
       );
       final exists = await downloader.existsLocally();
-      if (!exists) return null;
-
-      final docsDir = await getApplicationDocumentsDirectory();
-      return '${docsDir.path}/${model.filename}';
+      if (exists) {
+        await _persistModelPathIfNeeded(model, expectedPath);
+        return expectedPath;
+      }
+      return null; // not available yet
     }
 
     // Fallback: do not initialize
@@ -127,8 +146,7 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
     if (topP != null) _topP = topP;
     if (supportsFunctionCalls != null) {
       // Only enable if model supports
-      _supportsFunctionCalls =
-          supportsFunctionCalls && _currentModel.supportsFunctionCalls;
+      _supportsFunctionCalls = supportsFunctionCalls && _currentModel.supportsFunctionCalls;
     }
 
     // Recreate model+chat using current model and tools
@@ -141,6 +159,9 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
       return;
     }
     await gemma.modelManager.setModelPath(resolvedPath);
+
+    // Persist again (in case it changed)
+    await _persistModelPathIfNeeded(_currentModel, resolvedPath);
 
     final gemmaModel = await gemma.createModel(
       modelType: _currentModel.modelType,
@@ -157,8 +178,7 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
       topP: _topP,
       tokenBuffer: 256,
       supportImage: _currentModel.supportImage,
-      supportsFunctionCalls:
-          _supportsFunctionCalls && _currentModel.supportsFunctionCalls,
+      supportsFunctionCalls: _supportsFunctionCalls && _currentModel.supportsFunctionCalls,
       tools: _tools,
     );
 
@@ -168,5 +188,35 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
   void disposeChat() {
     state = null;
     _isModelInitialized = false;
+  }
+
+  // -------------------------------------------------------------------------
+  // Persistence helpers (mobile only)
+  // -------------------------------------------------------------------------
+  String _prefsKeyForModel(Model model) => 'gemma_model_path_${model.filename}';
+
+  Future<void> _persistModelPathIfNeeded(Model model, String path) async {
+    if (kIsWeb) return;
+    if (!(Platform.isAndroid || Platform.isIOS)) return;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final existing = prefs.getString(_prefsKeyForModel(model));
+      if (existing != path) {
+        await prefs.setString(_prefsKeyForModel(model), path);
+      }
+    } catch (_) {
+      // Ignore persistence errors
+    }
+  }
+
+  Future<String?> _getPersistedModelPath(Model model) async {
+    if (kIsWeb) return null;
+    if (!(Platform.isAndroid || Platform.isIOS)) return null;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(_prefsKeyForModel(model));
+    } catch (_) {
+      return null;
+    }
   }
 }

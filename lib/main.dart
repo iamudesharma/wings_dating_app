@@ -10,12 +10,10 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 //
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:get_it/get_it.dart';
-import 'package:google_fonts/google_fonts.dart';
 // ignore: depend_on_referenced_packages
 import 'package:google_mobile_ads/google_mobile_ads.dart' show MobileAds;
 import 'package:meta_seo/meta_seo.dart';
@@ -28,6 +26,7 @@ import 'package:wings_dating_app/services/chat_services.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'firebase_options.dart';
+import 'src/provider/theme_provider.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
@@ -51,8 +50,7 @@ void main() async {
     EmailAuthProvider(),
     PhoneAuthProvider(),
     GoogleProvider(
-      clientId:
-          "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
+      clientId: "546119961072-ub3rclq1ocqd5v2eikflmb13j97rg27u.apps.googleusercontent.com",
     ),
   ]);
 
@@ -94,6 +92,10 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     final appRouter = ref.watch(appRouteProvider);
+    final lightTheme = ref.watch(lightThemeProvider);
+    final darkTheme = ref.watch(darkThemeProvider);
+    final themeMode = ref.watch(themeModeProvider);
+
     return MaterialApp.router(
       builder: (context, child) => StreamChat(
         client: ref.read(chatClientProvider),
@@ -105,39 +107,9 @@ class _MyAppState extends ConsumerState<MyApp> {
         DefaultWidgetsLocalizations.delegate,
         DefaultCupertinoLocalizations.delegate,
       ],
-      theme: FlexThemeData.light(
-        lightIsWhite: true,
-        scheme: FlexScheme.deepPurple,
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 20,
-        appBarOpacity: 0.95,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 20,
-          blendOnColors: false,
-          inputDecoratorRadius: 12.0,
-          blendTextTheme: true,
-        ),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        // To use the playground font, add GoogleFonts package and uncomment
-        fontFamily: GoogleFonts.notoSans().fontFamily,
-      ),
-      darkTheme: FlexThemeData.dark(
-        darkIsTrueBlack: true,
-        scheme: FlexScheme.deepPurple,
-        surfaceMode: FlexSurfaceMode.highBackgroundLowScaffold,
-        tones: FlexTones.jolly(Brightness.dark),
-        blendLevel: 15,
-        appBarOpacity: 0.90,
-        subThemesData: const FlexSubThemesData(
-            blendOnLevel: 30, inputDecoratorRadius: 20.0, cardRadius: 20),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        fontFamily: GoogleFonts.notoSans().fontFamily,
-        appBarStyle: FlexAppBarStyle.material,
-        useMaterial3ErrorColors: true,
-      ),
-      themeMode: ThemeMode.dark,
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: themeMode,
       title: 'Wings Dating App',
     );
   }

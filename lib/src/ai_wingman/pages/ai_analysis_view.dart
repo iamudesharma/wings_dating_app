@@ -16,7 +16,7 @@ import 'package:wings_dating_app/src/ai_wingman/providers/profile_analysis_provi
 class AIAnalysisScreen extends ConsumerStatefulWidget {
   const AIAnalysisScreen({
     super.key,
-    this.model = Model.gemma3GpuLocalAsset,
+    this.model = Model.gemma3_270M,
   });
 
   final Model model;
@@ -70,9 +70,8 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
         path = widget.model.url;
       } else {
         // Use remote URL on web, or documents directory on device
-        path = kIsWeb
-            ? widget.model.url
-            : '${(await getApplicationDocumentsDirectory()).path}/${widget.model.filename}';
+        path =
+            kIsWeb ? widget.model.url : '${(await getApplicationDocumentsDirectory()).path}/${widget.model.filename}';
       }
       print('📁 Model path: $path');
       await _gemma.modelManager.setModelPath(path);
@@ -99,8 +98,7 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
       topP: _topP,
       tokenBuffer: 256,
       supportImage: widget.model.supportImage,
-      supportsFunctionCalls:
-          _supportsFunctionCalls && widget.model.supportsFunctionCalls,
+      supportsFunctionCalls: _supportsFunctionCalls && widget.model.supportsFunctionCalls,
       tools: const [], // No tools in analysis screen
     );
     print('✅ Chat instance created');
@@ -142,8 +140,7 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
         topP: _topP,
         tokenBuffer: 256,
         supportImage: widget.model.supportImage,
-        supportsFunctionCalls:
-            _supportsFunctionCalls && widget.model.supportsFunctionCalls,
+        supportsFunctionCalls: _supportsFunctionCalls && widget.model.supportsFunctionCalls,
         tools: const [],
       );
       setState(() {});
@@ -159,8 +156,7 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
     final shouldAutoAnalyze = ref.read(autoAnalysisProvider);
     final profileData = ref.read(profileAnalysisProvider);
 
-    print(
-        '📊 Auto analysis state: shouldAutoAnalyze=$shouldAutoAnalyze, profileData=${profileData?.username}');
+    print('📊 Auto analysis state: shouldAutoAnalyze=$shouldAutoAnalyze, profileData=${profileData?.username}');
 
     if (shouldAutoAnalyze && profileData != null) {
       print('✅ Starting auto analysis for profile: ${profileData.username}');
@@ -178,9 +174,7 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
 
   Future<void> _sendTestMessage() async {
     print('🧪 Sending test message to verify AI functionality...');
-    final testMessage = Message.text(
-        text:
-            'Hello AI! Please respond with a simple greeting to test the connection.');
+    final testMessage = Message.text(text: 'Hello AI! Please respond with a simple greeting to test the connection.');
     setState(() {
       _messages.add(testMessage);
     });
@@ -231,8 +225,7 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
       prompt.writeln('Occupation: ${profile.role.value}');
     }
     if (profile.relationshipStatus.value != "Do not show") {
-      prompt
-          .writeln('Relationship Status: ${profile.relationshipStatus.value}');
+      prompt.writeln('Relationship Status: ${profile.relationshipStatus.value}');
     }
     if (profile.lookingFor.value != "Do not show") {
       prompt.writeln('Looking For: ${profile.lookingFor.value}');
@@ -244,10 +237,8 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
     prompt.writeln('');
     prompt.writeln('Please provide a comprehensive dating analysis including:');
     prompt.writeln('1. Personality assessment based on available information');
-    prompt.writeln(
-        '2. Compatibility insights - what type of person would match well');
-    prompt
-        .writeln('3. 5 specific conversation starters based on their profile');
+    prompt.writeln('2. Compatibility insights - what type of person would match well');
+    prompt.writeln('3. 5 specific conversation starters based on their profile');
     prompt.writeln('4. Dating approach strategy');
     prompt.writeln('5. Green flags and potential red flags to watch for');
     prompt.writeln('6. Creative first date ideas that would appeal to them');
@@ -347,8 +338,7 @@ Good luck! 💕''';
               print('🔄 Updating existing AI message');
               // Update existing AI message
               if (_messages.isNotEmpty) {
-                _messages[_messages.length - 1] =
-                    Message.text(text: accumulatedResponse);
+                _messages[_messages.length - 1] = Message.text(text: accumulatedResponse);
               }
             }
           });
@@ -361,8 +351,7 @@ Good luck! 💕''';
 
       // If nothing was generated, avoid leaving the UI stuck on "Thinking..."
       final bool isAnalysisPrompt =
-          message.text.contains('PROFILE TO ANALYZE:') ||
-              message.text.contains('comprehensive dating analysis');
+          message.text.contains('PROFILE TO ANALYZE:') || message.text.contains('comprehensive dating analysis');
       if (accumulatedResponse.trim().isEmpty) {
         print('⚠️ No tokens received; providing fallback response');
         final fallback = isAnalysisPrompt
@@ -389,8 +378,7 @@ Good luck! 💕''';
 
   @override
   Widget build(BuildContext context) {
-    print(
-        '🏗️ AIAnalysisScreen build called, _isModelInitialized: $_isModelInitialized');
+    print('🏗️ AIAnalysisScreen build called, _isModelInitialized: $_isModelInitialized');
 
     if (!_isModelInitialized) {
       return _buildLoadingState();
@@ -428,8 +416,7 @@ Good luck! 💕''';
                 ),
               ],
             ),
-            child: Icon(Icons.arrow_back,
-                color: Theme.of(context).colorScheme.onSurface, size: 20),
+            child: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface, size: 20),
           ),
           onPressed: () => context.router.maybePop(),
         ),
@@ -509,8 +496,7 @@ Good luck! 💕''';
             // Explicit profile analysis button
             if (profileData != null)
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
@@ -518,18 +504,13 @@ Good luck! 💕''';
                     label: const Text('Analyze My Profile'),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      textStyle: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
                     onPressed: () async {
-                      final prompt =
-                          _generateProfileAnalysisPrompt(profileData);
+                      final prompt = _generateProfileAnalysisPrompt(profileData);
                       setState(() {
                         _error = null;
                         _messages.add(Message.text(text: prompt));
@@ -545,8 +526,7 @@ Good luck! 💕''';
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  color:
-                      Theme.of(context).colorScheme.surface.withOpacity(0.95),
+                  color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
@@ -577,9 +557,7 @@ Good luck! 💕''';
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.errorContainer,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                      color:
-                          Theme.of(context).colorScheme.error.withOpacity(0.3)),
+                  border: Border.all(color: Theme.of(context).colorScheme.error.withOpacity(0.3)),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.05),
@@ -590,22 +568,18 @@ Good luck! 💕''';
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.error_outline,
-                        color: Theme.of(context).colorScheme.error, size: 20),
+                    Icon(Icons.error_outline, color: Theme.of(context).colorScheme.error, size: 20),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         _error!,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onErrorContainer,
+                              color: Theme.of(context).colorScheme.onErrorContainer,
                             ),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.close,
-                          color: Theme.of(context).colorScheme.error, size: 18),
+                      icon: Icon(Icons.close, color: Theme.of(context).colorScheme.error, size: 18),
                       onPressed: () => setState(() => _error = null),
                     ),
                   ],
@@ -674,15 +648,11 @@ Good luck! 💕''';
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.settings,
-                          color: Theme.of(context).colorScheme.primary),
+                      Icon(Icons.settings, color: Theme.of(context).colorScheme.primary),
                       const SizedBox(width: 8),
                       Text(
                         'AI Profile Settings',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -724,13 +694,9 @@ Good luck! 💕''';
                   // function calls
                   Row(
                     children: [
-                      Switch(
-                          value: fc,
-                          onChanged: (v) => setStateSB(() => fc = v)),
+                      Switch(value: fc, onChanged: (v) => setStateSB(() => fc = v)),
                       const SizedBox(width: 8),
-                      Expanded(
-                          child: Text(
-                              'Enable function calls (if model supports)')),
+                      Expanded(child: Text('Enable function calls (if model supports)')),
                     ],
                   ),
 
@@ -798,10 +764,7 @@ Good luck! 💕''';
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.3),
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -815,8 +778,7 @@ Good luck! 💕''';
               ),
               const SizedBox(height: 32),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
                   borderRadius: BorderRadius.circular(20),
@@ -845,8 +807,7 @@ Good luck! 💕''';
                 ),
                 child: CircularProgressIndicator(
                   strokeWidth: 3,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).colorScheme.primary),
+                  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
                 ),
               ),
             ],
