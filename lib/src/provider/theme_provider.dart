@@ -1,22 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import '../model/theme_models.dart';
 
+part 'theme_provider.g.dart';
+
 /// Theme preferences key for SharedPreferences
 const String _themePreferencesKey = 'theme_preferences';
 
-/// Theme provider using Riverpod
-final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeState>((ref) {
-  return ThemeNotifier();
-});
+/// Theme provider using Riverpod 3.0 syntax
+@Riverpod(keepAlive: true)
+class Theme extends _$Theme {
+  @override
+  ThemeState build() {
+    final initialState = ThemeState.defaultState();
+    // Asynchronously load preferences (don't block initial build)
+    _loadThemePreferencesAsync();
+    return initialState;
+  }
 
-/// Theme notifier that manages theme state
-class ThemeNotifier extends StateNotifier<ThemeState> {
-  ThemeNotifier() : super(ThemeState.defaultState()) {
-    _loadThemePreferences();
+  /// Asynchronously load theme preferences without blocking the initial build
+  Future<void> _loadThemePreferencesAsync() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final themeJson = prefs.getString(_themePreferencesKey);
+
+      if (themeJson != null) {
+        final jsonMap = json.decode(themeJson) as Map<String, dynamic>;
+        final preferences = ThemePreferences.fromJson(jsonMap);
+        state = ThemeState.fromPreferences(preferences);
+      }
+    } catch (e) {
+      state = state.copyWith(
+        error: 'Failed to load theme preferences: $e',
+        isLoading: false,
+      );
+    }
   }
 
   /// Update theme mode
@@ -92,32 +114,6 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
     await _updatePreferences(defaultPrefs);
   }
 
-  /// Load theme preferences from SharedPreferences
-  Future<void> _loadThemePreferences() async {
-    try {
-      state = state.copyWith(isLoading: true);
-
-      final prefs = await SharedPreferences.getInstance();
-      final themeJson = prefs.getString(_themePreferencesKey);
-
-      if (themeJson != null) {
-        final jsonMap = json.decode(themeJson) as Map<String, dynamic>;
-        final preferences = ThemePreferences.fromJson(jsonMap);
-        state = ThemeState.fromPreferences(preferences);
-      } else {
-        // Use default state
-        state = ThemeState.defaultState();
-      }
-    } catch (e) {
-      state = state.copyWith(
-        error: 'Failed to load theme preferences: $e',
-        isLoading: false,
-      );
-    } finally {
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
   /// Update preferences and save to storage
   Future<void> _updatePreferences(ThemePreferences newPreferences) async {
     try {
@@ -150,37 +146,43 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
 }
 
 /// Provider for accessing current theme mode
-final themeModeProvider = Provider<ThemeMode>((ref) {
+@riverpod
+ThemeMode themeMode(Ref ref) {
   final themeState = ref.watch(themeProvider);
   return themeState.preferences.actualThemeMode;
-});
+}
 
 /// Provider for accessing current light theme
-final lightThemeProvider = Provider<ThemeData>((ref) {
+@riverpod
+ThemeData lightTheme(Ref ref) {
   final themeState = ref.watch(themeProvider);
   return themeState.lightTheme;
-});
+}
 
 /// Provider for accessing current dark theme
-final darkThemeProvider = Provider<ThemeData>((ref) {
+@riverpod
+ThemeData darkTheme(Ref ref) {
   final themeState = ref.watch(themeProvider);
   return themeState.darkTheme;
-});
+}
 
 /// Provider for accessing theme preferences
-final themePreferencesProvider = Provider<ThemePreferences>((ref) {
+@riverpod
+ThemePreferences themePreferences(Ref ref) {
   final themeState = ref.watch(themeProvider);
   return themeState.preferences;
-});
+}
 
 /// Provider for checking if theme is loading
-final themeLoadingProvider = Provider<bool>((ref) {
+@riverpod
+bool themeLoading(Ref ref) {
   final themeState = ref.watch(themeProvider);
   return themeState.isLoading;
-});
+}
 
 /// Provider for theme error state
-final themeErrorProvider = Provider<String?>((ref) {
+@riverpod
+String? themeError(Ref ref) {
   final themeState = ref.watch(themeProvider);
   return themeState.error;
-});
+}

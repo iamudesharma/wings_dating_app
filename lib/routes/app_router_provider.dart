@@ -32,9 +32,7 @@ class AuthGuard extends AutoRouteGuard {
       if (await ref.read(profileRepoProvider).checkUserDocExist()) {
         logger.i('user doc exist');
 
-        await ref
-            .read(ProfileController.userControllerProvider)
-            .getCurrentUser();
+        await ref.read(profileControllerProvider.notifier).getCurrentUser();
         // await ref.read(profileRepoProvider).isUserOnline(true);
 
         // final userModel = await SharedPrefs.instance.init();

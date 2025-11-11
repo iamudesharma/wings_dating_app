@@ -2,11 +2,11 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:geoflutterfire2/geoflutterfire2.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -17,53 +17,67 @@ import '../../../dependency/dependencies.dart';
 import '../../../helpers/extra_data.dart';
 import '../../../helpers/helpers.dart';
 
-// part 'profile_controller.g.dart';
+part 'profile_controller.freezed.dart';
+part 'profile_controller.g.dart';
 
-final _userControllerProvider = ChangeNotifierProvider<ProfileController>(
-  (ref) {
-    return ProfileController(ref: ref);
-  },
-);
+@freezed
+abstract class ProfileState with _$ProfileState {
+  const factory ProfileState({
+    @Default(null) UserModel? userModel,
+    @Default(null) Uint8List? profileImage,
+    @Default([]) List<String> albumImages,
+    @Default(false) bool isLoading,
+    @Default(null) String? error,
+  }) = _ProfileState;
+}
 
-class ProfileController extends ChangeNotifier {
-  static ChangeNotifierProvider<ProfileController> userControllerProvider = _userControllerProvider;
-  UserModel? userModel;
-
-  Uint8List? profileImage;
-
-  List<String> albumImages = [];
-
-  final Ref ref;
-  ProfileController({
-    required this.ref,
-  });
-
-  Future<void> getCurrentUser() async {
-    userModel = await ref.read(Dependency.profileProvider).getCurrentUser();
-    notifyListeners();
+@Riverpod(keepAlive: true)
+class ProfileController extends _$ProfileController {
+  // Backward compatibility - apps can still use ProfileController.userControllerProvider
+  static get userControllerProvider => profileControllerProvider;
+  @override
+  ProfileState build() {
+    return const ProfileState();
   }
 
-  Future updateUserData(UserModel user) async {
-    await ref.read(Dependency.profileProvider).updateUserDoc(user);
-    userModel = await ref.read(Dependency.profileProvider).getCurrentUser();
-    notifyListeners();
+  Future<void> getCurrentUser() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final user = await ref.read(Dependency.profileProvider).getCurrentUser();
+      state = state.copyWith(userModel: user, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(error: e.toString(), isLoading: false);
+    }
+  }
+
+  Future<void> updateUserData(UserModel user) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      await ref.read(Dependency.profileProvider).updateUserDoc(user);
+      final updatedUser = await ref.read(Dependency.profileProvider).getCurrentUser();
+      state = state.copyWith(userModel: updatedUser, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(error: e.toString(), isLoading: false);
+    }
   }
 
   Future<void> pickImage({required ImageSource imageSource}) async {
-    final image = await pickImageForm(imageSource);
-
-    profileImage = image;
-    notifyListeners();
+    try {
+      final image = await pickImageForm(imageSource);
+      state = state.copyWith(profileImage: image);
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+    }
   }
 
   Future<String?> uploadImage() async {
-    if (profileImage != null) {
+    if (state.profileImage != null) {
       final image = await ref
           .read(Dependency.firebaseStorageProvider)
           .ref("profileImages")
           .child("${DateTime.now().millisecondsSinceEpoch.toString()}.jpg")
           .putData(
-            profileImage!,
+            state.profileImage!,
             SettableMetadata(contentType: 'image/jpeg'),
           )
           .then((p0) async {
@@ -100,8 +114,8 @@ class ProfileController extends ChangeNotifier {
 
   String getDistance(GeoPoint coordinates, {GeoPoint? userCoordinates}) {
     final data = Geolocator.distanceBetween(
-      userCoordinates?.latitude ?? userModel!.position!.geopoint[1],
-      userCoordinates?.longitude ?? userModel!.position!.geopoint[0],
+      userCoordinates?.latitude ?? state.userModel!.position!.geopoint[1],
+      userCoordinates?.longitude ?? state.userModel!.position!.geopoint[0],
       coordinates.latitude,
       coordinates.longitude,
     );
@@ -143,31 +157,88 @@ String meterToKm(double meter) {
   }
 }
 
-final roleProvider = StateProvider<Role>((ref) {
-  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata?.role ?? Role.doNotShow;
-});
+@riverpod
+class RoleNotifier extends _$RoleNotifier {
+  @override
+  Role build() {
+    final userdata = ref.watch(profileControllerProvider).userModel;
+    return userdata?.role ?? Role.doNotShow;
+  }
 
-final bodyTypeProvider = StateProvider<BodyType>((ref) {
-  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata?.bodyType ?? BodyType.doNotShow;
-});
+  void update(Role newRole) {
+    state = newRole;
+  }
+}
 
-final relationshipStatusProvider = StateProvider<RelationshipStatus>((ref) {
-  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata?.relationshipStatus ?? RelationshipStatus.doNotShow;
-});
+@riverpod
+class BodyTypeNotifier extends _$BodyTypeNotifier {
+  @override
+  BodyType build() {
+    final userdata = ref.watch(profileControllerProvider).userModel;
+    return userdata?.bodyType ?? BodyType.doNotShow;
+  }
 
-final ethnicityProvider = StateProvider<Ethnicity>((ref) {
-  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata?.ethnicity ?? Ethnicity.doNotShow;
-});
-final lookingForProvider = StateProvider<LookingFor>((ref) {
-  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata?.lookingFor ?? LookingFor.doNotShow;
-});
+  void update(BodyType newBodyType) {
+    state = newBodyType;
+  }
+}
 
-final whereToMeetProvider = StateProvider<WhereToMeet>((ref) {
-  final userdata = ref.read(ProfileController.userControllerProvider).userModel;
-  return userdata?.whereToMeet ?? WhereToMeet.doNotShow;
-});
+@riverpod
+class RelationshipStatusNotifier extends _$RelationshipStatusNotifier {
+  @override
+  RelationshipStatus build() {
+    final userdata = ref.watch(profileControllerProvider).userModel;
+    return userdata?.relationshipStatus ?? RelationshipStatus.doNotShow;
+  }
+
+  void update(RelationshipStatus newStatus) {
+    state = newStatus;
+  }
+}
+
+@riverpod
+class EthnicityNotifier extends _$EthnicityNotifier {
+  @override
+  Ethnicity build() {
+    final userdata = ref.watch(profileControllerProvider).userModel;
+    return userdata?.ethnicity ?? Ethnicity.doNotShow;
+  }
+
+  void update(Ethnicity newEthnicity) {
+    state = newEthnicity;
+  }
+}
+
+@riverpod
+class LookingForNotifier extends _$LookingForNotifier {
+  @override
+  LookingFor build() {
+    final userdata = ref.watch(profileControllerProvider).userModel;
+    return userdata?.lookingFor ?? LookingFor.doNotShow;
+  }
+
+  void update(LookingFor newLookingFor) {
+    state = newLookingFor;
+  }
+}
+
+@riverpod
+class WhereToMeetNotifier extends _$WhereToMeetNotifier {
+  @override
+  WhereToMeet build() {
+    final userdata = ref.watch(profileControllerProvider).userModel;
+    return userdata?.whereToMeet ?? WhereToMeet.doNotShow;
+  }
+
+  void update(WhereToMeet newWhereToMeet) {
+    state = newWhereToMeet;
+  }
+}
+
+// Compatibility providers for existing code
+final roleProvider = roleNotifierProvider;
+final bodyTypeProvider = bodyTypeNotifierProvider;
+final relationshipStatusProvider = relationshipStatusNotifierProvider;
+final ethnicityProvider = ethnicityNotifierProvider;
+final lookingForProvider = lookingForNotifierProvider;
+final whereToMeetProvider = whereToMeetNotifierProvider;

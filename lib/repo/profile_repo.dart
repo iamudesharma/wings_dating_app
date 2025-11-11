@@ -52,12 +52,9 @@ class ProfileRepo with RepositoryExceptionMixin {
     try {
       final Map<String, dynamic> response =
           await httpTemplate.get("/users/$currentUserId");
-      print("getCurrentUser response: $response");
       if (response.containsKey('data') &&
           response['data'] is Map<String, dynamic>) {
         final Map<String, dynamic> userMap = response['data'];
-        print("getCurrentUser userMap: $userMap");
-        print("userMap runtimeType: ${userMap.runtimeType}");
         final user = UserModel.fromJson(userMap);
         return user;
       } else {
@@ -65,7 +62,6 @@ class ProfileRepo with RepositoryExceptionMixin {
             'Failed to fetch user: ${response['message'] ?? response}');
       }
     } catch (e) {
-      print("Error in getCurrentUser: $e");
       rethrow;
     }
   }
@@ -81,7 +77,26 @@ class ProfileRepo with RepositoryExceptionMixin {
 
   Future<void> updateUserDoc(UserModel userModel) async {
     logger.i("updateUserDoc userModel");
-    await httpTemplate.put("/users/${userModel.id}", body: userModel.toJson());
+    final payload = userModel.toJson();
+    // Normalize enum/string fields for backend expectations
+    payload['role'] = userModel.role.value;
+    payload['bodyType'] = userModel.bodyType.value;
+    payload['relationshipStatus'] = userModel.relationshipStatus.value;
+    payload['ethnicity'] = userModel.ethnicity.value;
+    payload['lookingFor'] = userModel.lookingFor.value;
+    payload['whereToMeet'] = userModel.whereToMeet.value;
+
+    // Convert GeoPointData to GeoJSON structure expected by backend
+    final position = userModel.position;
+    if (position != null && position.geopoint.length == 2) {
+      payload['position'] = {
+        'type': position.type,
+        'coordinates': position.geopoint,
+      };
+    }
+
+    logger.i("Payload for updateUserDoc: ${payload}");
+    await httpTemplate.put("/users/${userModel.id}", body: payload);
   }
 
   // Future<void> updateLocation(dynamic pointData) async {
@@ -110,14 +125,11 @@ class ProfileRepo with RepositoryExceptionMixin {
       );
 
       // Check if response contains 'data' key and it's a Map
-      print("users runtimeType: ${response["data"].runtimeType}");
 
       if (response.containsKey('data') && response['data'] is List<dynamic>) {
         final List<dynamic> users = response['data'];
         // final Map<String, dynamic> userMap = response['data'];
 
-        print("users userMap: $users");
-        print("users runtimeType: ${users.runtimeType}");
 
         return (users).map((e) => UserModel.fromJson(e)).toList();
       } else {
@@ -150,24 +162,16 @@ class ProfileRepo with RepositoryExceptionMixin {
           "lng=${geopoint[0]}&lat=${geopoint[1]}&distance=50000000&userId=${userModel.id}&page=$page&limit=$limit";
       final response = await httpTemplate.get("/users/near/?$query");
 
-      print("Raw API response: $response");
-      print("Response type: ${response.runtimeType}");
-      print("Response keys: ${response.keys}");
 
       if (response.containsKey('data')) {
         final data = response['data'];
-        print("Data field type: ${data.runtimeType}");
-        print("Data field value: $data");
 
         // Handle different response structures
         if (data is Map<String, dynamic>) {
           // If data is a map, it might contain the actual paginated structure
-          print("Data is Map, checking for nested structure");
           if (data.containsKey('data') && data['data'] is List) {
-            print("Found nested data structure");
             return PaginatedUserResponse.fromJson(data);
           } else if (data.containsKey('users') && data['users'] is List) {
-            print("Found users field in data");
             // Convert to expected structure
             final convertedResponse = {
               'data': data['users'],
@@ -179,11 +183,9 @@ class ProfileRepo with RepositoryExceptionMixin {
             };
             return PaginatedUserResponse.fromJson(convertedResponse);
           } else {
-            print("Data map doesn't contain expected list field");
             throw Exception('Unexpected data structure: $data');
           }
         } else if (data is List) {
-          print("Data is List, creating paginated response");
           // If data is directly a list, wrap it in pagination structure
           final convertedResponse = {
             'data': data,
@@ -195,11 +197,9 @@ class ProfileRepo with RepositoryExceptionMixin {
           };
           return PaginatedUserResponse.fromJson(convertedResponse);
         } else {
-          print("Data is neither Map nor List: ${data.runtimeType}");
           throw Exception('Unexpected data type: ${data.runtimeType}');
         }
       } else {
-        print("Response doesn't contain 'data' key");
         throw Exception(
             'Failed to fetch user: ${response['message'] ?? response}');
       }
@@ -221,7 +221,6 @@ class ProfileRepo with RepositoryExceptionMixin {
     int page = 1,
     int limit = 20,
   }) async {
-    print("getFilterList filters: $filters");
     try {
       // Prefer using a preloaded user from the controller, but fall back to fetching
       var currentUser =
@@ -285,24 +284,16 @@ class ProfileRepo with RepositoryExceptionMixin {
           .join('&');
       final response = await httpTemplate.get("/users/discover?$uriParams");
 
-      print("Filter API response: $response");
-      print("Filter response type: ${response.runtimeType}");
-      print("Filter response keys: ${response.keys}");
 
       if (response.containsKey('data')) {
         final data = response['data'];
-        print("Filter data field type: ${data.runtimeType}");
-        print("Filter data field value: $data");
 
         // Handle different response structures
         if (data is Map<String, dynamic>) {
           // If data is a map, it might contain the actual paginated structure
-          print("Filter data is Map, checking for nested structure");
           if (data.containsKey('data') && data['data'] is List) {
-            print("Found nested data structure");
             return PaginatedUserResponse.fromJson(data);
           } else if (data.containsKey('users') && data['users'] is List) {
-            print("Found users field in data");
             // Convert to expected structure
             final convertedResponse = {
               'data': data['users'],
@@ -314,11 +305,9 @@ class ProfileRepo with RepositoryExceptionMixin {
             };
             return PaginatedUserResponse.fromJson(convertedResponse);
           } else {
-            print("Filter data map doesn't contain expected list field");
             throw Exception('Unexpected data structure: $data');
           }
         } else if (data is List) {
-          print("Filter data is List, creating paginated response");
           // If data is directly a list, wrap it in pagination structure
           final convertedResponse = {
             'data': data,
@@ -330,11 +319,9 @@ class ProfileRepo with RepositoryExceptionMixin {
           };
           return PaginatedUserResponse.fromJson(convertedResponse);
         } else {
-          print("Filter data is neither Map nor List: ${data.runtimeType}");
           throw Exception('Unexpected data type: ${data.runtimeType}');
         }
       } else {
-        print("Filter response doesn't contain 'data' key");
         throw Exception(
             'Failed to fetch user: ${response['message'] ?? response}');
       }

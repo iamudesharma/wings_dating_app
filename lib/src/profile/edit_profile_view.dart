@@ -13,11 +13,17 @@ import 'package:wings_dating_app/dependency/dependencies.dart';
 import 'package:wings_dating_app/helpers/age.dart';
 import 'package:wings_dating_app/helpers/extra_data.dart';
 import 'package:wings_dating_app/helpers/logger.dart';
-import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/model/geo_point_data.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
+import 'package:wings_dating_app/src/profile/providers/onboarding_providers.dart';
 import 'package:wings_dating_app/src/profile/onboarding/onboarding_view.dart';
+import 'package:wings_dating_app/src/profile/widgets/profile_completion_meter.dart';
+import 'package:wings_dating_app/src/profile/widgets/prompts_editor.dart';
+import 'package:wings_dating_app/src/profile/widgets/chips_selector.dart';
+import 'package:wings_dating_app/src/profile/widgets/social_links_form.dart';
+import 'package:wings_dating_app/src/profile/widgets/video_clip_uploader.dart';
+import 'package:wings_dating_app/helpers/send_notification.dart';
 import 'package:wings_dating_app/src/profile/add_additional_information_view.dart';
 
 @RoutePage()
@@ -48,8 +54,317 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   bool isImageUpdate = false;
   // final geo = GeoFlutterFire();
 
+  Widget _sectionHeader(BuildContext context, String title, {IconData? icon}) {
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        if (icon != null)
+          Icon(
+            icon,
+            color: theme.colorScheme.primary,
+          ),
+        if (icon != null) const SizedBox(width: 8),
+        Text(
+          title,
+          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+        ),
+      ],
+    );
+  }
+
+  Widget _enumDropdown<T>({
+    required BuildContext context,
+    required String label,
+    required T value,
+    required List<DropdownMenuItem<T>> items,
+    required ValueChanged<T?> onChanged,
+    IconData? icon,
+    double? width,
+  }) {
+    final theme = Theme.of(context);
+    final field = DropdownButtonFormField<T>(
+      value: value,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: icon != null ? Icon(icon, color: theme.colorScheme.primary) : null,
+        isDense: true,
+      ),
+      items: items,
+      onChanged: onChanged,
+    );
+    if (width != null) {
+      return SizedBox(width: width, child: field);
+    }
+    return field;
+  }
+
+  Widget _stringDropdown({
+    required BuildContext context,
+    required String label,
+    required String value,
+    required List<String> options,
+    required ValueChanged<String?> onChanged,
+    IconData? icon,
+    double? width,
+  }) {
+    final theme = Theme.of(context);
+    final normalizedValue = options.contains(value) ? value : options.first;
+
+    final field = DropdownButtonFormField<String>(
+      value: normalizedValue,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: icon != null ? Icon(icon, color: theme.colorScheme.primary) : null,
+        isDense: true,
+      ),
+      items: options
+          .map(
+            (option) => DropdownMenuItem<String>(
+              value: option,
+              child: Text(option),
+            ),
+          )
+          .toList(),
+      onChanged: onChanged,
+    );
+    if (width != null) {
+      return SizedBox(width: width, child: field);
+    }
+    return field;
+  }
+
+  Widget _buildAdditionalInfoSection(BuildContext context) {
+    final role = ref.watch(roleProvider);
+    final bodyType = ref.watch(bodyTypeProvider);
+    final relationshipStatus = ref.watch(relationshipStatusProvider);
+    final ethnicity = ref.watch(ethnicityProvider);
+    final lookingFor = ref.watch(lookingForProvider);
+    final whereToMeet = ref.watch(whereToMeetProvider);
+    final height = ref.watch(heightProvider);
+    final weight = ref.watch(weightProvider);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double maxWidth = constraints.maxWidth;
+        final bool useTwoColumns = maxWidth > 640;
+        final double fieldWidth = useTwoColumns ? (maxWidth - 16) / 2 : maxWidth;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _sectionHeader(context, 'Additional Information', icon: Icons.badge_outlined),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              children: [
+                _enumDropdown<Role>(
+                  context: context,
+                  label: 'Role',
+                  value: role,
+                  items: Role.values
+                      .map((value) => DropdownMenuItem<Role>(
+                            value: value,
+                            child: Text(value.value),
+                          ))
+                      .toList(),
+                  icon: Icons.person_outline,
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(roleProvider.notifier).update(value);
+                    }
+                  },
+                  width: fieldWidth,
+                ),
+                _enumDropdown<BodyType>(
+                  context: context,
+                  label: 'Body Type',
+                  value: bodyType,
+                  items: BodyType.values
+                      .map((value) => DropdownMenuItem<BodyType>(
+                            value: value,
+                            child: Text(value.value),
+                          ))
+                      .toList(),
+                  icon: Icons.accessibility_new_outlined,
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(bodyTypeProvider.notifier).update(value);
+                    }
+                  },
+                  width: fieldWidth,
+                ),
+                _enumDropdown<RelationshipStatus>(
+                  context: context,
+                  label: 'Relationship Status',
+                  value: relationshipStatus,
+                  items: RelationshipStatus.values
+                      .map((value) => DropdownMenuItem<RelationshipStatus>(
+                            value: value,
+                            child: Text(value.value),
+                          ))
+                      .toList(),
+                  icon: Icons.favorite_outline,
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(relationshipStatusProvider.notifier).update(value);
+                    }
+                  },
+                  width: fieldWidth,
+                ),
+                _enumDropdown<Ethnicity>(
+                  context: context,
+                  label: 'Ethnicity',
+                  value: ethnicity,
+                  items: Ethnicity.values
+                      .map((value) => DropdownMenuItem<Ethnicity>(
+                            value: value,
+                            child: Text(value.value),
+                          ))
+                      .toList(),
+                  icon: Icons.public_outlined,
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(ethnicityProvider.notifier).update(value);
+                    }
+                  },
+                  width: fieldWidth,
+                ),
+                _enumDropdown<LookingFor>(
+                  context: context,
+                  label: 'Looking For',
+                  value: lookingFor,
+                  items: LookingFor.values
+                      .map((value) => DropdownMenuItem<LookingFor>(
+                            value: value,
+                            child: Text(value.value),
+                          ))
+                      .toList(),
+                  icon: Icons.search_outlined,
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(lookingForProvider.notifier).update(value);
+                    }
+                  },
+                  width: fieldWidth,
+                ),
+                _enumDropdown<WhereToMeet>(
+                  context: context,
+                  label: 'Where to Meet',
+                  value: whereToMeet,
+                  items: WhereToMeet.values
+                      .map((value) => DropdownMenuItem<WhereToMeet>(
+                            value: value,
+                            child: Text(value.value),
+                          ))
+                      .toList(),
+                  icon: Icons.place_outlined,
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(whereToMeetProvider.notifier).update(value);
+                    }
+                  },
+                  width: fieldWidth,
+                ),
+                _stringDropdown(
+                  context: context,
+                  label: 'Height',
+                  value: height,
+                  options: heightList,
+                  icon: Icons.height,
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(heightProvider.notifier).state = value;
+                    }
+                  },
+                  width: fieldWidth,
+                ),
+                _stringDropdown(
+                  context: context,
+                  label: 'Weight',
+                  value: weight,
+                  options: weightList,
+                  icon: Icons.monitor_weight_outlined,
+                  onChanged: (value) {
+                    if (value != null) {
+                      ref.read(weightProvider.notifier).state = value;
+                    }
+                  },
+                  width: fieldWidth,
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildOnboardingSection(BuildContext context) {
+    final habits = ref.watch(habitsProvider);
+    final values = ref.watch(valuesProvider);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double maxWidth = constraints.maxWidth;
+        final bool useTwoColumns = maxWidth > 900;
+        final double columnWidth = useTwoColumns ? (maxWidth - 24) / 2 : maxWidth;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _sectionHeader(context, 'Profile Story', icon: Icons.auto_awesome_outlined),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: maxWidth,
+              child: const ProfileCompletionMeter(),
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              children: [
+                SizedBox(
+                  width: columnWidth,
+                  child: const PromptsEditor(),
+                ),
+                SizedBox(
+                  width: columnWidth,
+                  child: ChipsSelector(
+                    title: 'Habits',
+                    options: defaultHabits,
+                    selected: habits,
+                    onToggle: (value) => ref.read(habitsProvider.notifier).toggle(value),
+                  ),
+                ),
+                SizedBox(
+                  width: columnWidth,
+                  child: ChipsSelector(
+                    title: 'Values',
+                    options: defaultValues,
+                    selected: values,
+                    onToggle: (value) => ref.read(valuesProvider.notifier).toggle(value),
+                  ),
+                ),
+                SizedBox(
+                  width: columnWidth,
+                  child: const SocialLinksForm(),
+                ),
+                SizedBox(
+                  width: columnWidth,
+                  child: const VideoClipUploader(),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
+    super.initState();
     _usernameController = TextEditingController();
     _dobController = TextEditingController();
     _bioController = TextEditingController();
@@ -62,10 +377,25 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
         _usernameController.text = userdata.username;
         _dobController.text = userdata.birthday ?? "";
         _bioController.text = userdata.bio ?? "";
+
+        // Defer provider mutations until after the first frame to avoid updating while the widget tree builds
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          ref.read(roleProvider.notifier).update(userdata.role);
+          ref.read(bodyTypeProvider.notifier).update(userdata.bodyType);
+          ref
+              .read(relationshipStatusProvider.notifier)
+              .update(userdata.relationshipStatus);
+          ref.read(ethnicityProvider.notifier).update(userdata.ethnicity);
+          ref.read(lookingForProvider.notifier).update(userdata.lookingFor);
+          ref.read(whereToMeetProvider.notifier).update(userdata.whereToMeet);
+          ref.read(heightProvider.notifier).state =
+              (userdata.height?.isNotEmpty ?? false) ? userdata.height! : heightList.first;
+          ref.read(weightProvider.notifier).state =
+              (userdata.weight?.isNotEmpty ?? false) ? userdata.weight! : weightList.first;
+        });
       }
     }
-
-    super.initState();
   }
 
   @override
@@ -79,15 +409,15 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     final isDesktop = MediaQuery.of(context).size.width >= 900;
     final isTablet = MediaQuery.of(context).size.width >= 600 && MediaQuery.of(context).size.width < 900;
     final double maxWidth = isDesktop
-        ? 600
+        ? 1040
         : isTablet
-            ? 450
+            ? 720
             : double.infinity;
     final double cardPadding = isDesktop
-        ? 40
+        ? 48
         : isTablet
-            ? 24
-            : 12;
+            ? 32
+            : 16;
     final double imageSize = isDesktop
         ? 120
         : isTablet
@@ -276,17 +606,28 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: FilledButton.tonalIcon(
-                            icon: const Icon(Icons.add),
-                            onPressed: () async {
-                              context.router.push(const AddAdditionalInformationRoute());
-                            },
-                            label: const Text("Add Additional Information"),
+                        if (widget.isEditProfile) ...[
+                          _buildAdditionalInfoSection(context),
+                          const SizedBox(height: 24),
+                          _buildOnboardingSection(context),
+                          const SizedBox(height: 24),
+                        ] else ...[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: FilledButton.tonalIcon(
+                              icon: const Icon(Icons.add),
+                              onPressed: () async {
+                                await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const AddAdditionalInformationView(),
+                                  ),
+                                );
+                              },
+                              label: const Text("Add Additional Information"),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
+                          const SizedBox(height: 24),
+                        ],
                         AnimatedContainer(
                           duration: const Duration(seconds: 1),
                           curve: Curves.easeInOut,
@@ -314,27 +655,54 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       }
                                       final data = await Geolocator.getCurrentPosition();
                                       final myLocation = GeoFirePoint(GeoPoint(data.latitude, data.longitude));
-                                      final userdata = ref.read(ProfileController.userControllerProvider).userModel;
+                                      final profileNotifier =
+                                          ref.read(ProfileController.userControllerProvider.notifier);
+                                      final userdata =
+                                          ref.read(ProfileController.userControllerProvider).userModel;
+
+                                      final updatedRole = ref.read(roleProvider);
+                                      final updatedBodyType = ref.read(bodyTypeProvider);
+                                      final updatedRelationship = ref.read(relationshipStatusProvider);
+                                      final updatedEthnicity = ref.read(ethnicityProvider);
+                                      final updatedLookingFor = ref.read(lookingForProvider);
+                                      final updatedWhereToMeet = ref.read(whereToMeetProvider);
+                                      final updatedHeight = ref.read(heightProvider);
+                                      final updatedWeight = ref.read(weightProvider);
+                                      final updatedHabits = ref.read(habitsProvider);
+                                      final updatedValues = ref.read(valuesProvider);
+                                      final uploadedProfileUrl = isImageUpdate
+                                          ? await profileNotifier.uploadImage()
+                                          : null;
 
                                       await ref.read(Dependency.profileProvider).updateUserDoc(
                                             userdata!.copyWith(
                                               bio: _bioController.text,
                                               username: _usernameController.text,
+                                              role: updatedRole,
+                                              bodyType: updatedBodyType,
+                                              relationshipStatus: updatedRelationship,
+                                              ethnicity: updatedEthnicity,
+                                              lookingFor: updatedLookingFor,
+                                              whereToMeet: updatedWhereToMeet,
+                                              height: updatedHeight,
+                                              weight: updatedWeight,
+                                              habits: updatedHabits,
+                                              values: updatedValues,
                                               position: GeoPointData(
                                                 geopoint: [
                                                   myLocation.geopoint.longitude,
                                                   myLocation.geopoint.latitude,
                                                 ],
                                               ),
-                                              profileUrl: await ref
-                                                  .read(ProfileController.userControllerProvider)
-                                                  .uploadImage(),
+                                              profileUrl: uploadedProfileUrl ?? userdata.profileUrl,
                                             ),
                                           );
+                                      await profileNotifier.getCurrentUser();
 
                                       if (!mounted) return;
                                       setState(() {
                                         _loading = false;
+                                        isImageUpdate = false;
                                       });
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('Profile updated')),

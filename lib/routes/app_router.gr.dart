@@ -64,7 +64,7 @@ class AIAnalysisRouteArgs {
 class AIChatRoute extends PageRouteInfo<AIChatRouteArgs> {
   AIChatRoute({
     Key? key,
-    Model model = Model.gemma3_270M,
+    Model model = Model.gemma3LocalAsset,
     List<PageRouteInfo>? children,
   }) : super(
           AIChatRoute.name,
@@ -560,6 +560,22 @@ class OtherUserProfileRouteArgs {
 }
 
 /// generated route for
+/// [ProfileOnboardingView]
+class ProfileOnboardingRoute extends PageRouteInfo<void> {
+  const ProfileOnboardingRoute({List<PageRouteInfo>? children})
+      : super(ProfileOnboardingRoute.name, initialChildren: children);
+
+  static const String name = 'ProfileOnboardingRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ProfileOnboardingView();
+    },
+  );
+}
+
+/// generated route for
 /// [ProfileView]
 class ProfileRoute extends PageRouteInfo<void> {
   const ProfileRoute({List<PageRouteInfo>? children}) : super(ProfileRoute.name, initialChildren: children);
@@ -615,6 +631,21 @@ class SignOptionsRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const SignOptionsView();
+    },
+  );
+}
+
+/// generated route for
+/// [SwipeDeckView]
+class SwipeDeckRoute extends PageRouteInfo<void> {
+  const SwipeDeckRoute({List<PageRouteInfo>? children}) : super(SwipeDeckRoute.name, initialChildren: children);
+
+  static const String name = 'SwipeDeckRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SwipeDeckView();
     },
   );
 }

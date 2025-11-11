@@ -32,19 +32,16 @@ class AddAdditionalInformationView extends ConsumerStatefulWidget {
   const AddAdditionalInformationView({super.key});
 
   @override
-  ConsumerState<AddAdditionalInformationView> createState() =>
-      _AddAdditionalInformationViewState();
+  ConsumerState<AddAdditionalInformationView> createState() => _AddAdditionalInformationViewState();
 }
 
-class _AddAdditionalInformationViewState
-    extends ConsumerState<AddAdditionalInformationView> {
+class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInformationView> {
   @override
   Widget build(
     BuildContext context,
   ) {
     ref.watch(Dependency.profileProvider);
-    final profiledata =
-        ref.read(ProfileController.userControllerProvider).userModel;
+    final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
     // Safely watch providers with null checks
     Role role;
@@ -85,8 +82,7 @@ class _AddAdditionalInformationViewState
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar.medium(
-              title: const Text("Additional Information"), floating: false),
+          SliverAppBar.medium(title: const Text("Additional Information"), floating: false),
           // SliverToBoxAdapter(
           //   child: StaggeredGrid.count(
           //     crossAxisCount: 4,
@@ -241,7 +237,6 @@ class _AddAdditionalInformationViewState
 
                   ElevatedButton(
                     onPressed: () async {
-                      final router = AutoRouter.of(context);
                       final data = profiledata?.copyWith(
                         bodyType: bodyType,
                         lookingFor: lookingFor,
@@ -254,15 +249,12 @@ class _AddAdditionalInformationViewState
                       );
 
                       logger.i(data?.toJson());
-                      await ref
-                          .read(ProfileController.userControllerProvider)
-                          .updateUserData(data!);
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                       AutoRouter.of(context).pop();
 
                       // router.replace(const DashboardRoute());
                     },
-                    style: ElevatedButton.styleFrom(
-                        fixedSize: Size(MediaQuery.of(context).size.width, 35)),
+                    style: ElevatedButton.styleFrom(fixedSize: Size(MediaQuery.of(context).size.width, 35)),
                     child: const Text("Save"),
                   ),
                 ],
@@ -281,24 +273,21 @@ class _AddAdditionalInformationViewState
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
-              final profiledata =
-                  ref.read(ProfileController.userControllerProvider).userModel;
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
               final role = ref.watch(roleProvider);
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<Role>(
                     selected: role,
-                    onChanged: <Role>(value) async {
+                    onChanged: (value) async {
                       logger.i(value);
-                      ref.read(roleProvider.notifier).update((state) => value);
+                      ref.read(roleProvider.notifier).update(value!);
                       // context.router.back();
                       final data = profiledata?.copyWith(
-                        role: role,
+                        role: value,
                       );
-                      await ref
-                          .read(ProfileController.userControllerProvider)
-                          .updateUserData(data!);
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: Role.values,
                   ));
@@ -314,30 +303,25 @@ class _AddAdditionalInformationViewState
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
-              final profiledata =
-                  ref.read(ProfileController.userControllerProvider).userModel;
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
               final bodyType = ref.watch(bodyTypeProvider);
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<BodyType>(
                     selected: bodyType,
-                    onChanged: <BodyType>(value) async {
+                    onChanged: (value) async {
                       logger.i(value);
-                      ref
-                          .read(bodyTypeProvider.notifier)
-                          .update((sate) => value);
+                      ref.read(bodyTypeProvider.notifier).update(value!);
                       // context.router.back();
                       final data = profiledata?.copyWith(
-                        bodyType: bodyType,
+                        bodyType: value,
                         position: GeoPointData(
                           type: "Point",
                           geopoint: profiledata.position?.geopoint ?? [0, 0],
                         ),
                       );
-                      await ref
-                          .read(ProfileController.userControllerProvider)
-                          .updateUserData(data!);
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: BodyType.values,
                   ));
@@ -352,8 +336,7 @@ class _AddAdditionalInformationViewState
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (context, setState) {
-            final profiledata =
-                ref.read(ProfileController.userControllerProvider).userModel;
+            final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
             return Consumer(builder: (context, ref, child) {
               final weight = ref.watch(weightProvider);
@@ -369,9 +352,7 @@ class _AddAdditionalInformationViewState
                       final data = profiledata?.copyWith(
                         weight: weight,
                       );
-                      await ref
-                          .read(ProfileController.userControllerProvider)
-                          .updateUserData(data!);
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: weightList,
                   ));
@@ -387,8 +368,7 @@ class _AddAdditionalInformationViewState
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
-              final profiledata =
-                  ref.read(ProfileController.userControllerProvider).userModel;
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
               final height = ref.watch(heightProvider);
               return SizedBox(
@@ -403,9 +383,7 @@ class _AddAdditionalInformationViewState
                       final data = profiledata?.copyWith(
                         height: height,
                       );
-                      await ref
-                          .read(ProfileController.userControllerProvider)
-                          .updateUserData(data!);
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: heightList,
                   ));
@@ -421,26 +399,22 @@ class _AddAdditionalInformationViewState
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
-              final profiledata =
-                  ref.read(ProfileController.userControllerProvider).userModel;
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
               final relationShip = ref.watch(relationshipStatusProvider);
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<RelationshipStatus>(
                     selected: relationShip,
-                    onChanged: <BodyType>(value) async {
+                    onChanged: (value) async {
                       logger.i(value);
-                      ref.read(relationshipStatusProvider.notifier).state =
-                          value;
+                      ref.read(relationshipStatusProvider.notifier).update(value!);
 
                       setState(() {});
                       final data = profiledata?.copyWith(
-                        relationshipStatus: relationShip,
+                        relationshipStatus: value,
                       );
-                      await ref
-                          .read(ProfileController.userControllerProvider)
-                          .updateUserData(data!);
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
 
                       // context.router.back();
                     },
@@ -458,27 +432,22 @@ class _AddAdditionalInformationViewState
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
-              final profiledata =
-                  ref.read(ProfileController.userControllerProvider).userModel;
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
               final ethnicity = ref.watch(ethnicityProvider);
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<Ethnicity>(
                     selected: ethnicity,
-                    onChanged: <BodyType>(value) async {
+                    onChanged: (value) async {
                       logger.i(value);
-                      ref
-                          .read(ethnicityProvider.notifier)
-                          .update((state) => value);
+                      ref.read(ethnicityProvider.notifier).update(value!);
 
                       // context.router.back();
                       final data = profiledata?.copyWith(
-                        ethnicity: ethnicity,
+                        ethnicity: value,
                       );
-                      await ref
-                          .read(ProfileController.userControllerProvider)
-                          .updateUserData(data!);
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: Ethnicity.values,
                   ));
@@ -495,26 +464,21 @@ class _AddAdditionalInformationViewState
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
               final lookingFor = ref.watch(lookingForProvider);
-              final profiledata =
-                  ref.read(ProfileController.userControllerProvider).userModel;
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<LookingFor>(
                     selected: lookingFor,
-                    onChanged: <BodyType>(value) async {
+                    onChanged: (value) async {
                       logger.i(value);
-                      ref
-                          .read(lookingForProvider.notifier)
-                          .update((sate) => value);
+                      ref.read(lookingForProvider.notifier).update(value!);
                       context.router.back();
 
                       final data = profiledata?.copyWith(
-                        lookingFor: lookingFor,
+                        lookingFor: value,
                       );
-                      await ref
-                          .read(ProfileController.userControllerProvider)
-                          .updateUserData(data!);
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: LookingFor.values,
                   ));
@@ -531,25 +495,20 @@ class _AddAdditionalInformationViewState
           return StatefulBuilder(builder: (context, setState) {
             return Consumer(builder: (context, ref, child) {
               final whereToMeet = ref.watch(whereToMeetProvider);
-              final profiledata =
-                  ref.read(ProfileController.userControllerProvider).userModel;
+              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
               return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<WhereToMeet>(
                     selected: whereToMeet,
-                    onChanged: <BodyType>(value) async {
+                    onChanged: (value) async {
                       logger.i(value);
-                      ref
-                          .read(whereToMeetProvider.notifier)
-                          .update((sate) => value);
+                      ref.read(whereToMeetProvider.notifier).update(value!);
                       // context.router.back();
                       final data = profiledata?.copyWith(
-                        whereToMeet: whereToMeet,
+                        whereToMeet: value,
                       );
-                      await ref
-                          .read(ProfileController.userControllerProvider)
-                          .updateUserData(data!);
+                      await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: WhereToMeet.values,
                   ));
@@ -595,9 +554,7 @@ class _AdditionalDataWidgetState extends State<AdditionalDataWidget> {
           color: widget.selected == widget.value[index]
               ? Theme.of(context).primaryColor
               : Theme.of(context).primaryColor.withOpacity(0.2),
-          role: widget.isString!
-              ? widget.value[index]
-              : "${widget.value[index].value}",
+          role: widget.isString! ? widget.value[index] : "${widget.value[index].value}",
         ),
       ),
     );
@@ -664,9 +621,7 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
               builder: (context) {
                 return ImagePickerWidget(
                   camera: () async {
-                    final data = await ref
-                        .read(ProfileController.userControllerProvider)
-                        .pickImageFromAlbum(
+                    final data = await ref.read(ProfileController.userControllerProvider).pickImageFromAlbum(
                           ImageSource.camera,
                         );
 
@@ -678,9 +633,7 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
                     }
                   },
                   gallery: () async {
-                    final data = await ref
-                        .read(ProfileController.userControllerProvider)
-                        .pickImageFromAlbum(
+                    final data = await ref.read(ProfileController.userControllerProvider).pickImageFromAlbum(
                           ImageSource.gallery,
                         );
 

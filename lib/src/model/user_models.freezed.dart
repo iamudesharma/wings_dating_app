@@ -38,7 +38,9 @@ mixin _$UserModel {
   bool get isBlocked;
   List<String> get blockList;
   List<String> get favoriteList;
-  List<String> get interests;
+  List<String>
+      get interests; // Extra onboarding fields (prompts, habits, values, social, verifications, video)
+// are intentionally not part of the persisted UserModel to avoid backend schema changes.
   String get id;
   String get fcmToken;
 

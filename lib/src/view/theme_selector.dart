@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../model/theme_models.dart';
-import '../provider/theme_provider.dart';
+import '../provider/theme_provider.dart' hide Theme;
 import '../service/theme_service.dart';
 
 /// Theme selector widget
@@ -64,7 +64,7 @@ class _ThemeSelectorState extends ConsumerState<ThemeSelector> with TickerProvid
     );
   }
 
-  Widget _buildPresetsTab(ThemeState themeState, ThemeNotifier themeNotifier) {
+  Widget _buildPresetsTab(ThemeState themeState, dynamic themeNotifier) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -87,7 +87,7 @@ class _ThemeSelectorState extends ConsumerState<ThemeSelector> with TickerProvid
   Widget _buildPresetCard(
     ThemePreset preset,
     ThemeState themeState,
-    ThemeNotifier themeNotifier,
+    dynamic themeNotifier,
   ) {
     final isSelected = themeState.preferences.colorScheme == preset.preferences.colorScheme;
 
@@ -215,7 +215,7 @@ class _ThemeSelectorState extends ConsumerState<ThemeSelector> with TickerProvid
     );
   }
 
-  Widget _buildCustomizeTab(ThemeState themeState, ThemeNotifier themeNotifier) {
+  Widget _buildCustomizeTab(ThemeState themeState, dynamic themeNotifier) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -230,7 +230,7 @@ class _ThemeSelectorState extends ConsumerState<ThemeSelector> with TickerProvid
     );
   }
 
-  Widget _buildThemeModeSelector(ThemeState themeState, ThemeNotifier themeNotifier) {
+  Widget _buildThemeModeSelector(ThemeState themeState, dynamic themeNotifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -268,7 +268,7 @@ class _ThemeSelectorState extends ConsumerState<ThemeSelector> with TickerProvid
     );
   }
 
-  Widget _buildColorSchemeSelector(ThemeState themeState, ThemeNotifier themeNotifier) {
+  Widget _buildColorSchemeSelector(ThemeState themeState, dynamic themeNotifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -305,7 +305,7 @@ class _ThemeSelectorState extends ConsumerState<ThemeSelector> with TickerProvid
     );
   }
 
-  Widget _buildBlendLevelSlider(ThemeState themeState, ThemeNotifier themeNotifier) {
+  Widget _buildBlendLevelSlider(ThemeState themeState, dynamic themeNotifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -325,7 +325,7 @@ class _ThemeSelectorState extends ConsumerState<ThemeSelector> with TickerProvid
     );
   }
 
-  Widget _buildRadiusSettings(ThemeState themeState, ThemeNotifier themeNotifier) {
+  Widget _buildRadiusSettings(ThemeState themeState, dynamic themeNotifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -373,7 +373,7 @@ class _ThemeSelectorState extends ConsumerState<ThemeSelector> with TickerProvid
     );
   }
 
-  Widget _buildAdvancedTab(ThemeState themeState, ThemeNotifier themeNotifier) {
+  Widget _buildAdvancedTab(ThemeState themeState, dynamic themeNotifier) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -390,7 +390,7 @@ class _ThemeSelectorState extends ConsumerState<ThemeSelector> with TickerProvid
     );
   }
 
-  Widget _buildMaterial3Toggle(ThemeState themeState, ThemeNotifier themeNotifier) {
+  Widget _buildMaterial3Toggle(ThemeState themeState, dynamic themeNotifier) {
     return SwitchListTile(
       title: const Text('Material 3 Design'),
       subtitle: const Text('Use modern Material Design 3 components'),
@@ -399,7 +399,7 @@ class _ThemeSelectorState extends ConsumerState<ThemeSelector> with TickerProvid
     );
   }
 
-  Widget _buildAnimationsToggle(ThemeState themeState, ThemeNotifier themeNotifier) {
+  Widget _buildAnimationsToggle(ThemeState themeState, dynamic themeNotifier) {
     return SwitchListTile(
       title: const Text('Theme Animations'),
       subtitle: const Text('Animate theme changes'),
@@ -408,7 +408,7 @@ class _ThemeSelectorState extends ConsumerState<ThemeSelector> with TickerProvid
     );
   }
 
-  Widget _buildAppBarOpacitySlider(ThemeState themeState, ThemeNotifier themeNotifier) {
+  Widget _buildAppBarOpacitySlider(ThemeState themeState, dynamic themeNotifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -520,7 +520,7 @@ class _ThemeSelectorState extends ConsumerState<ThemeSelector> with TickerProvid
     }
   }
 
-  void _showResetDialog(BuildContext context, ThemeNotifier themeNotifier) {
+  void _showResetDialog(BuildContext context, dynamic themeNotifier) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

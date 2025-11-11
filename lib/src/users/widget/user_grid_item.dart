@@ -31,8 +31,7 @@ class UserGridItem extends ConsumerStatefulWidget {
 class _UserGridItemState extends ConsumerState<UserGridItem> {
   bool isProcessingFavorite = false;
 
-  bool get isFavorited =>
-      ref.watch(favoritesProvider).contains(widget.users.id);
+  bool get isFavorited => ref.watch(favoritesProvider).contains(widget.users.id);
 
   Future<void> _toggleFavorite() async {
     if (isProcessingFavorite) return;
@@ -45,9 +44,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
     });
 
     try {
-      final success = await ref
-          .read(favoritesProvider.notifier)
-          .toggleFavorite(widget.users.id);
+      final success = await ref.read(favoritesProvider.notifier).toggleFavorite(widget.users.id);
 
       if (success) {
         print('UserGridItem: Successfully toggled favorite');
@@ -83,8 +80,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
 
   @override
   Widget build(BuildContext context) {
-    DatabaseReference refData =
-        FirebaseDatabase.instance.ref('status/${widget.users.id}');
+    DatabaseReference refData = FirebaseDatabase.instance.ref('status/${widget.users.id}');
     final theme = Theme.of(context);
     return InkWell(
       onTap: () {
@@ -97,8 +93,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
         if (widget.isCurrentUser!) {
           AutoTabsRouter.of(context).setActiveIndex(3);
         } else {
-          print(
-              'DEBUG: Navigating to OtherUserProfileView for user: ${widget.users.id}');
+          print('DEBUG: Navigating to OtherUserProfileView for user: ${widget.users.id}');
           AutoRouter.of(context).push(
             OtherUserProfileRoute(
               id: widget.users.id,
@@ -133,8 +128,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18),
                 child: CachedNetworkImage(
-                  imageUrl: widget.users.profileUrl ??
-                      "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
+                  imageUrl: widget.users.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
                   fit: BoxFit.cover,
                   color: Colors.black.withOpacity(0.18),
                   colorBlendMode: BlendMode.darken,
@@ -172,8 +166,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                         stream: refData.onValue,
                         builder: (context, snapshot) {
                           bool isOnline = false;
-                          if (snapshot.hasData &&
-                              snapshot.data!.snapshot.value != null) {
+                          if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
                             final data = snapshot.data!.snapshot.value as Map;
                             isOnline = data['isOnline'] ?? false;
                           }
@@ -183,8 +176,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white, width: 2),
-                              color:
-                                  isOnline ? Colors.greenAccent : Colors.amber,
+                              color: isOnline ? Colors.greenAccent : Colors.amber,
                               boxShadow: [
                                 if (isOnline)
                                   BoxShadow(
@@ -200,8 +192,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                       const SizedBox(width: 8),
                       if (widget.users.isVerified)
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: Colors.blue.withOpacity(0.8),
                             borderRadius: BorderRadius.circular(8),
@@ -209,8 +200,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.verified,
-                                  size: 12, color: Colors.white),
+                              Icon(Icons.verified, size: 12, color: Colors.white),
                               const SizedBox(width: 2),
                               Text(
                                 'Verified',
@@ -225,8 +215,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                       if (isFavorited && !widget.isCurrentUser!)
                         Container(
                           margin: const EdgeInsets.only(left: 4),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: Colors.pink.withOpacity(0.8),
                             borderRadius: BorderRadius.circular(8),
@@ -234,8 +223,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.favorite,
-                                  size: 10, color: Colors.white),
+                              Icon(Icons.favorite, size: 10, color: Colors.white),
                               const SizedBox(width: 2),
                               Text(
                                 'Liked',
@@ -259,8 +247,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                               color: Colors.white.withOpacity(0.2),
                               shape: BoxShape.circle,
                             ),
-                            child:
-                                Icon(Icons.edit, size: 16, color: Colors.white),
+                            child: Icon(Icons.edit, size: 16, color: Colors.white),
                           ),
                         ),
                     ],
@@ -294,8 +281,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                           ),
                           if (widget.users.age != null)
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 2),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(12),
@@ -314,11 +300,9 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                       const SizedBox(height: 6),
 
                       // Bio preview (if available)
-                      if (widget.users.bio != null &&
-                          widget.users.bio!.isNotEmpty)
+                      if (widget.users.bio != null && widget.users.bio!.isNotEmpty)
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(8),
@@ -342,14 +326,10 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                         runSpacing: 4,
                         children: [
                           // Distance chip
-                          if (widget.users.position != null &&
-                              widget.userCoordinates != null)
+                          if (widget.users.position != null && widget.userCoordinates != null)
                             _buildInfoChip(
                               icon: Icons.location_on,
-                              text: ref
-                                  .read(
-                                      ProfileController.userControllerProvider)
-                                  .getDistance(
+                              text: ref.read(profileControllerProvider.notifier).getDistance(
                                     GeoPoint(
                                       widget.users.position!.geopoint[1],
                                       widget.users.position!.geopoint[0],
@@ -360,8 +340,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                             ),
 
                           // Height chip
-                          if (widget.users.height != null &&
-                              widget.users.height!.isNotEmpty)
+                          if (widget.users.height != null && widget.users.height!.isNotEmpty)
                             _buildInfoChip(
                               icon: Icons.height,
                               text: widget.users.height!,
@@ -377,12 +356,10 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                             ),
 
                           // Relationship status chip
-                          if (widget.users.relationshipStatus.name !=
-                              'doNotShow')
+                          if (widget.users.relationshipStatus.name != 'doNotShow')
                             _buildInfoChip(
                               icon: Icons.favorite,
-                              text: _formatEnumValue(
-                                  widget.users.relationshipStatus.name),
+                              text: _formatEnumValue(widget.users.relationshipStatus.name),
                               color: Colors.pink.withOpacity(0.8),
                             ),
 
@@ -390,8 +367,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                           if (widget.users.lookingFor.name != 'doNotShow')
                             _buildInfoChip(
                               icon: Icons.search,
-                              text: _formatEnumValue(
-                                  widget.users.lookingFor.name),
+                              text: _formatEnumValue(widget.users.lookingFor.name),
                               color: Colors.green.withOpacity(0.8),
                             ),
                         ],
@@ -404,11 +380,9 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                         Wrap(
                           spacing: 3,
                           runSpacing: 3,
-                          children:
-                              widget.users.interests.take(3).map((interest) {
+                          children: widget.users.interests.take(3).map((interest) {
                             return Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.15),
                                 borderRadius: BorderRadius.circular(8),
@@ -445,19 +419,12 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: isFavorited
-                          ? Colors.red.withOpacity(0.9)
-                          : Colors.white.withOpacity(0.2),
+                      color: isFavorited ? Colors.red.withOpacity(0.9) : Colors.white.withOpacity(0.2),
                       shape: BoxShape.circle,
-                      border: isFavorited
-                          ? null
-                          : Border.all(
-                              color: Colors.white.withOpacity(0.6), width: 1.5),
+                      border: isFavorited ? null : Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
                       boxShadow: [
                         BoxShadow(
-                          color: isFavorited
-                              ? Colors.red.withOpacity(0.3)
-                              : Colors.black.withOpacity(0.1),
+                          color: isFavorited ? Colors.red.withOpacity(0.3) : Colors.black.withOpacity(0.1),
                           blurRadius: 8,
                           spreadRadius: 1,
                         ),
@@ -475,9 +442,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                             ),
                           )
                         : Icon(
-                            isFavorited
-                                ? Icons.favorite
-                                : Icons.favorite_border,
+                            isFavorited ? Icons.favorite : Icons.favorite_border,
                             color: isFavorited ? Colors.white : Colors.white,
                             size: 16,
                           ),

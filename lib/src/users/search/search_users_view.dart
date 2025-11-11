@@ -286,6 +286,7 @@ class SearchUsersView extends ConsumerWidget {
         children: [
           Expanded(
             child: FlutterLocationPicker(
+              userAgent: 'Wings Dating App',
               initZoom: 11,
               minZoomLevel: 5,
               maxZoomLevel: 16,

@@ -9,14 +9,20 @@ import 'package:wings_dating_app/src/profile/widgets/social_links_form.dart';
 import 'package:wings_dating_app/src/profile/widgets/video_clip_uploader.dart';
 
 @RoutePage()
-class ProfileOnboardingView extends ConsumerWidget {
+class ProfileOnboardingView extends ConsumerStatefulWidget {
   const ProfileOnboardingView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProfileOnboardingView> createState() => _ProfileOnboardingViewState();
+}
+
+class _ProfileOnboardingViewState extends ConsumerState<ProfileOnboardingView> {
+  bool _dontAskAgain = false;
+
+  @override
+  Widget build(BuildContext context) {
     final habits = ref.watch(habitsProvider);
     final values = ref.watch(valuesProvider);
-    bool dontAskAgain = false;
     return Scaffold(
       appBar: AppBar(title: const Text('Complete your profile')),
       body: ListView(
@@ -46,25 +52,25 @@ class ProfileOnboardingView extends ConsumerWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              StatefulBuilder(
-                builder: (context, setState) => Checkbox(
-                  value: dontAskAgain,
-                  onChanged: (v) => setState(() => dontAskAgain = v ?? false),
-                ),
+              Checkbox(
+                value: _dontAskAgain,
+                onChanged: (v) => setState(() => _dontAskAgain = v ?? false),
               ),
               const Text("Don't ask again"),
             ],
           ),
           const SizedBox(height: 24),
           FilledButton(
-            onPressed: () {
+            onPressed: () async {
               // Ensure current selections are persisted and optionally skip future prompts
               ref.read(habitsProvider.notifier).save();
               ref.read(valuesProvider.notifier).save();
-              if (dontAskAgain) {
-                ref.read(onboardingSkipProvider.notifier).set(true);
+              if (_dontAskAgain) {
+                await ref.read(onboardingSkipProvider.notifier).set(true);
               }
-              context.router.pop();
+              if (context.mounted) {
+                context.router.pop();
+              }
             },
             child: const Text('Done'),
           ),

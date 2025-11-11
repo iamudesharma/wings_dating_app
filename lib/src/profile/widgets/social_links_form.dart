@@ -20,10 +20,12 @@ class _SocialLinksFormState extends ConsumerState<SocialLinksForm> {
 
   Timer? _debounce;
   SocialLinks? _lastApplied;
+  late final SocialNotifier _socialNotifier;
 
   @override
   void initState() {
     super.initState();
+    _socialNotifier = ref.read(socialProvider.notifier);
     final social = ref.read(socialProvider);
     _applyToCtrls(social);
   }
@@ -51,6 +53,7 @@ class _SocialLinksFormState extends ConsumerState<SocialLinksForm> {
   }
 
   Future<void> _saveNow() async {
+    if (!mounted) return;
     final draft = SocialLinks(
       instagram: _instagramCtrl.text.trim().isEmpty ? null : _instagramCtrl.text.trim(),
       twitter: _twitterCtrl.text.trim().isEmpty ? null : _twitterCtrl.text.trim(),
@@ -58,14 +61,26 @@ class _SocialLinksFormState extends ConsumerState<SocialLinksForm> {
       tiktok: _tiktokCtrl.text.trim().isEmpty ? null : _tiktokCtrl.text.trim(),
       website: _websiteCtrl.text.trim().isEmpty ? null : _websiteCtrl.text.trim(),
     );
-    await ref.read(socialProvider.notifier).update(draft);
+    if (!mounted) return;
+    await _socialNotifier.update(draft);
   }
 
   @override
   void dispose() {
     _debounce?.cancel();
-    // Persist latest values before leaving
-    _saveNow();
+    // Persist latest values before leaving, but only if widget is still mounted
+    if (mounted) {
+      final draft = SocialLinks(
+        instagram: _instagramCtrl.text.trim().isEmpty ? null : _instagramCtrl.text.trim(),
+        twitter: _twitterCtrl.text.trim().isEmpty ? null : _twitterCtrl.text.trim(),
+        linkedin: _linkedinCtrl.text.trim().isEmpty ? null : _linkedinCtrl.text.trim(),
+        tiktok: _tiktokCtrl.text.trim().isEmpty ? null : _tiktokCtrl.text.trim(),
+        website: _websiteCtrl.text.trim().isEmpty ? null : _websiteCtrl.text.trim(),
+      );
+      // Save asynchronously using cached notifier before dispose completes
+      // Guard against synchronous disposal callbacks running after the state is detached
+      scheduleMicrotask(() => _socialNotifier.update(draft));
+    }
     _instagramCtrl.dispose();
     _twitterCtrl.dispose();
     _linkedinCtrl.dispose();

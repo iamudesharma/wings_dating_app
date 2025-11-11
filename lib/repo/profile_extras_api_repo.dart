@@ -29,6 +29,7 @@ class ProfileExtrasApiRepo {
     List<PromptQA>? prompts,
     List<String>? habits,
     List<String>? values,
+    List<String>? interests,
     SocialLinks? social,
     String? videoUrl,
     VerificationStatus? verification,
@@ -40,6 +41,7 @@ class ProfileExtrasApiRepo {
       if (prompts != null) payload['prompts'] = prompts.map((e) => e.toJson()).toList();
       if (habits != null) payload['habits'] = habits;
       if (values != null) payload['values'] = values;
+      if (interests != null) payload['interests'] = interests;
       if (social != null) payload['social'] = social.toJson();
       if (videoUrl != null) payload['videoUrl'] = videoUrl;
       if (verification != null) payload['verification'] = verification.toJson();

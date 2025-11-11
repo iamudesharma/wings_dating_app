@@ -3,6 +3,7 @@ import 'package:wings_dating_app/src/model/user_models.dart';
 
 // Provider to hold profile data for AI analysis
 final profileAnalysisProvider = StateProvider<UserModel?>((ref) => null);
+final lastAnalyzedProfileIdProvider = StateProvider<String?>((ref) => null);
 
 // Provider to control auto-analysis trigger
 final autoAnalysisProvider = StateProvider<bool>((ref) => false);
@@ -17,4 +18,5 @@ void triggerProfileAnalysis(WidgetRef ref, UserModel profile) {
 void clearProfileAnalysis(WidgetRef ref) {
   ref.read(profileAnalysisProvider.notifier).state = null;
   ref.read(autoAnalysisProvider.notifier).state = false;
+  ref.read(lastAnalyzedProfileIdProvider.notifier).state = null;
 }

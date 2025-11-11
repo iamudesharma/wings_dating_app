@@ -49,25 +49,29 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
     final social = ref.watch(socialProvider);
     final videoUrl = ref.watch(videoUrlProvider);
     final skipOnboarding = ref.watch(onboardingSkipProvider);
+    final skipOnboardingLoaded = ref.read(onboardingSkipProvider.notifier).isLoaded;
 
     final hasSocial =
         (social.instagram ?? social.twitter ?? social.linkedin ?? social.tiktok ?? social.website) != null;
     final isOnboardingDataMissing =
         prompts.isEmpty && habits.isEmpty && values.isEmpty && !hasSocial && videoUrl == null;
 
-    if (isOnboardingDataMissing && !_onboardingPrompted && !skipOnboarding) {
+    if (!skipOnboardingLoaded) {
+      // Still loading preference; wait before showing prompt
+    } else if (isOnboardingDataMissing && !_onboardingPrompted && skipOnboarding == false) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!mounted || _onboardingPrompted) return;
         _onboardingPrompted = true;
         // Ask the user to complete onboarding before using the app
-        bool localDontAskAgain = false;
+        final dontAskAgainNotifier = ValueNotifier<bool>(false);
         await showDialog(
           context: context,
           barrierDismissible: true,
           builder: (ctx) => AlertDialog(
             title: const Text('Complete your profile'),
-            content: StatefulBuilder(
-              builder: (context, setState) {
+            content: ValueListenableBuilder<bool>(
+              valueListenable: dontAskAgainNotifier,
+              builder: (context, dontAskAgain, _) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,8 +83,8 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                     Row(
                       children: [
                         Checkbox(
-                          value: localDontAskAgain,
-                          onChanged: (v) => setState(() => localDontAskAgain = v ?? false),
+                          value: dontAskAgain,
+                          onChanged: (v) => dontAskAgainNotifier.value = v ?? false,
                         ),
                         const Text("Don't ask again"),
                       ],
@@ -91,26 +95,32 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
             ),
             actions: [
               TextButton(
-                onPressed: () {
-                  if (localDontAskAgain) {
-                    ref.read(onboardingSkipProvider.notifier).set(true);
+                onPressed: () async {
+                  if (dontAskAgainNotifier.value) {
+                    await ref.read(onboardingSkipProvider.notifier).set(true);
                   }
                   Navigator.of(ctx).pop();
                 },
                 child: const Text('Later'),
               ),
               FilledButton(
-                onPressed: () {
+                onPressed: () async {
+                  if (dontAskAgainNotifier.value) {
+                    await ref.read(onboardingSkipProvider.notifier).set(true);
+                  }
                   Navigator.of(ctx).pop();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const ProfileOnboardingView()),
-                  );
+                  if (context.mounted) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const ProfileOnboardingView()),
+                    );
+                  }
                 },
                 child: const Text('Start'),
               ),
             ],
           ),
         );
+        dontAskAgainNotifier.dispose();
       });
     }
 

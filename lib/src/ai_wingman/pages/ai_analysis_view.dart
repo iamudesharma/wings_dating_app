@@ -16,7 +16,7 @@ import 'package:wings_dating_app/src/ai_wingman/providers/profile_analysis_provi
 class AIAnalysisScreen extends ConsumerStatefulWidget {
   const AIAnalysisScreen({
     super.key,
-    this.model = Model.gemma3_270M,
+    this.model = Model.gemma3LocalAsset,
   });
 
   final Model model;
@@ -26,10 +26,11 @@ class AIAnalysisScreen extends ConsumerStatefulWidget {
 }
 
 class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
-  final _gemma = FlutterGemmaPlugin.instance;
+  // final _gemma = FlutterGemmaPlugin.instance;
   InferenceChat? chat;
   final _messages = <Message>[];
   bool _isModelInitialized = false;
+  bool _isInitializing = false;
   String? _error;
   String _appTitle = 'AI Dating Profile Analysis 💕';
 
@@ -47,8 +48,10 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
 
   @override
   void dispose() {
+    _isInitializing = false; // Reset initialization flag
+    _isModelInitialized = false;
     super.dispose();
-    _gemma.modelManager.deleteModel();
+    // _gemma.modelManager.deleteModel();
   }
 
   Future<void> _initializeModel() async {
@@ -59,52 +62,92 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
     _topK = widget.model.topK;
     _topP = widget.model.topP;
     _supportsFunctionCalls = widget.model.supportsFunctionCalls;
+    _isInitializing = true;
+    print(
+        '⚙️ Model details -> name=${widget.model.name}, local=${widget.model.localModel}, baseUrl=${widget.model.baseUrl}, webUrl=${widget.model.webUrl ?? 'N/A'}');
 
-    // Determine proper model path; local assets should use the asset URL directly
-    final isInstalled = await _gemma.modelManager.isModelInstalled;
-    if (!isInstalled) {
-      print('📦 Model not installed, setting path...');
-      String path;
+    // Determine proper model path; local assets should use bundled file on native, but network on web
+    final installer = FlutterGemma.installModel(
+      modelType: widget.model.modelType,
+      fileType: widget.model.fileType,
+    );
+    print('🔄 Installer prepared (modelType=${widget.model.modelType}, fileType=${widget.model.fileType})');
+
+    try {
       if (widget.model.localModel) {
-        // Use asset path for local bundled models
-        path = widget.model.url;
+        if (kIsWeb) {
+          final remoteUrl = widget.model.webUrl ?? widget.model.baseUrl;
+          if (remoteUrl.startsWith('http')) {
+            print('🌐 Web build detected. Installing local model via network: $remoteUrl');
+            await installer.fromNetwork(remoteUrl).install();
+            print('📦 Network install completed for local model.');
+          } else {
+            setState(() {
+              _error =
+                  'This model relies on bundled assets which are not supported on Flutter web. Please pick an online model instead.';
+              _isInitializing = false;
+              _isModelInitialized = false;
+            });
+            print('❌ Aborting: local asset not accessible on web.');
+            return;
+          }
+        } else {
+          print('💾 Installing local asset model from ${widget.model.baseUrl}');
+          await installer.fromAsset(widget.model.baseUrl).install();
+          print('📦 Local asset install completed.');
+        }
       } else {
-        // Use remote URL on web, or documents directory on device
-        path =
-            kIsWeb ? widget.model.url : '${(await getApplicationDocumentsDirectory()).path}/${widget.model.filename}';
+        // Load token if model needs authentication
+        String? token;
+        if (widget.model.needsAuth) {
+          // token = await AuthTokenService.loadToken();
+          debugPrint('[ChatScreen] Loaded auth token: ${token != null ? "✅" : "❌"}');
+        }
+
+        print('🌐 Installing remote model from ${widget.model.url}');
+        await installer.fromNetwork(widget.model.url, token: token).install();
+        print('📦 Remote model install completed.');
       }
-      print('📁 Model path: $path');
-      await _gemma.modelManager.setModelPath(path);
-      print('✅ Model path set');
-    } else {
-      print('✅ Model already installed');
+      print('✅ Model installation step finished without exceptions.');
+    } catch (e, st) {
+      debugPrint('❌ Failed to install model: $e');
+      debugPrintStack(stackTrace: st);
+      setState(() {
+        _error = 'Failed to initialise model: $e';
+        _isInitializing = false;
+        _isModelInitialized = false;
+      });
+      print('❌ Model installation failed. Error stored in state.');
+      return;
     }
 
     print('🔧 Creating model instance...');
-    final model = await _gemma.createModel(
-      modelType: super.widget.model.modelType,
-      preferredBackend: super.widget.model.preferredBackend,
+    final model = await FlutterGemma.getActiveModel(
       maxTokens: widget.model.maxTokens,
+      preferredBackend: widget.model.preferredBackend,
       supportImage: widget.model.supportImage,
       maxNumImages: widget.model.maxNumImages,
     );
-    print('✅ Model instance created');
-
-    print('💬 Creating chat instance...');
+    print('🧠 Creating chat instance...');
     chat = await model.createChat(
-      temperature: _temperature,
+      temperature: widget.model.temperature,
       randomSeed: 1,
-      topK: _topK,
-      topP: _topP,
+      topK: widget.model.topK,
+      topP: widget.model.topP,
       tokenBuffer: 256,
       supportImage: widget.model.supportImage,
-      supportsFunctionCalls: _supportsFunctionCalls && widget.model.supportsFunctionCalls,
-      tools: const [], // No tools in analysis screen
+      supportsFunctionCalls: widget.model.supportsFunctionCalls,
+      tools: [],
+      isThinking: widget.model.isThinking,
+      modelType: widget.model.modelType,
     );
     print('✅ Chat instance created');
+    print('✅ Model instance created');
 
     setState(() {
       _isModelInitialized = true;
+      _isInitializing = false;
+      _error = null;
     });
     print('🎉 Model initialization complete');
 
@@ -117,80 +160,68 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
       Future.delayed(const Duration(seconds: 2), () {
         if (_messages.isEmpty) {
           print('🧪 No auto-analysis triggered, testing AI manually...');
-          _sendTestMessage();
+          // _sendTestMessage();
         }
       });
     });
   }
 
-  Future<void> _recreateChat() async {
-    try {
-      print('♻️ Recreating chat with new settings...');
-      final model = await _gemma.createModel(
-        modelType: widget.model.modelType,
-        preferredBackend: widget.model.preferredBackend,
-        maxTokens: widget.model.maxTokens,
-        supportImage: widget.model.supportImage,
-        maxNumImages: widget.model.maxNumImages,
-      );
-      chat = await model.createChat(
-        temperature: _temperature,
-        randomSeed: 1,
-        topK: _topK,
-        topP: _topP,
-        tokenBuffer: 256,
-        supportImage: widget.model.supportImage,
-        supportsFunctionCalls: _supportsFunctionCalls && widget.model.supportsFunctionCalls,
-        tools: const [],
-      );
-      setState(() {});
-      print('✅ Chat recreated');
-    } catch (e) {
-      print('❌ Error recreating chat: $e');
-      setState(() => _error = 'Failed to apply settings: $e');
-    }
-  }
+  // Future<void> _recreateChat() async {
+  //   try {
+  //     print('♻️ Recreating chat with new settings...');
+  //     final model = await _gemma.createModel(
+  //       modelType: widget.model.modelType,
+  //       preferredBackend: widget.model.preferredBackend,
+  //       maxTokens: widget.model.maxTokens,
+  //       supportImage: widget.model.supportImage,
+  //       maxNumImages: widget.model.maxNumImages,
+  //     );
+  //     chat = await model.createChat(
+  //       temperature: _temperature,
+  //       randomSeed: 1,
+  //       topK: _topK,
+  //       topP: _topP,
+  //       tokenBuffer: 256,
+  //       supportImage: widget.model.supportImage,
+  //       supportsFunctionCalls: _supportsFunctionCalls && widget.model.supportsFunctionCalls,
+  //       tools: const [],
+  //     );
+  //     setState(() {});
+  //     print('✅ Chat recreated');
+  //   } catch (e) {
+  //     print('❌ Error recreating chat: $e');
+  //     setState(() => _error = 'Failed to apply settings: $e');
+  //   }
+  // }
 
   void _checkForAutoAnalysis() {
     print('🔍 Checking for auto analysis...');
     final shouldAutoAnalyze = ref.read(autoAnalysisProvider);
     final profileData = ref.read(profileAnalysisProvider);
+    final lastAnalyzedId = ref.read(lastAnalyzedProfileIdProvider);
 
-    print('📊 Auto analysis state: shouldAutoAnalyze=$shouldAutoAnalyze, profileData=${profileData?.username}');
+    print(
+        '📊 Auto analysis state: shouldAutoAnalyze=$shouldAutoAnalyze, profileData=${profileData?.username}, lastAnalyzed=$lastAnalyzedId');
 
     if (shouldAutoAnalyze && profileData != null) {
+      if (profileData.id == lastAnalyzedId) {
+        print('⏭️ Skipping auto analysis; profile ${profileData.id} already handled.');
+        ref.read(autoAnalysisProvider.notifier).state = false;
+        ref.read(profileAnalysisProvider.notifier).state = null;
+        return;
+      }
       print('✅ Starting auto analysis for profile: ${profileData.username}');
       final analysisPrompt = _generateProfileAnalysisPrompt(profileData);
       print('📝 Generated prompt (${analysisPrompt.length} chars)');
-      _sendAutoMessage(analysisPrompt);
-      // Clear the analysis state after using it
-      clearProfileAnalysis(ref);
-      print('🧹 Cleared analysis state');
+      // _sendAutoMessage(analysisPrompt);
+      ref.read(lastAnalyzedProfileIdProvider.notifier).state = profileData.id;
+      ref.read(profileAnalysisProvider.notifier).state = null;
+      ref.read(autoAnalysisProvider.notifier).state = false;
+      print('🧹 Cleared analysis request & marked ${profileData.id} as analyzed');
     } else {
       print(
           '❌ Auto analysis not triggered: shouldAutoAnalyze=$shouldAutoAnalyze, hasProfileData=${profileData != null}');
     }
-  }
-
-  Future<void> _sendTestMessage() async {
-    print('🧪 Sending test message to verify AI functionality...');
-    final testMessage = Message.text(text: 'Hello AI! Please respond with a simple greeting to test the connection.');
-    setState(() {
-      _messages.add(testMessage);
-    });
-    await _processMessage(testMessage);
-  }
-
-  Future<void> _sendAutoMessage(String text) async {
-    print('📨 _sendAutoMessage called with text length: ${text.length}');
-    final message = Message.text(text: text);
-    setState(() {
-      _messages.add(message);
-      print('💬 Added message to list, total messages: ${_messages.length}');
-    });
-    print('🔄 Calling _processMessage...');
-    await _processMessage(message);
-    print('✅ _processMessage completed');
   }
 
   String _generateProfileAnalysisPrompt(UserModel profile) {
@@ -297,84 +328,6 @@ This profile would be compatible with someone who:
 Good luck! 💕''';
   }
 
-  // Process user message and get AI response
-  Future<void> _processMessage(Message message) async {
-    print(
-        '🔄 _processMessage called with message: ${message.text.substring(0, message.text.length > 100 ? 100 : message.text.length)}...');
-
-    if (chat == null) {
-      print('❌ Chat is null, cannot process message');
-      setState(() {
-        _error = 'Chat not initialized';
-        _messages.add(Message.text(text: '❌ Error: Chat not initialized'));
-      });
-      return;
-    }
-
-    try {
-      print('📤 Adding query to chat...');
-      await chat!.addQuery(message);
-      print('✅ Query added successfully');
-
-      String accumulatedResponse = '';
-      bool hasStartedResponse = false;
-
-      print('🔄 Starting chat response generation...');
-      await for (final token in chat!.generateChatResponseAsync()) {
-        print('📥 Received token: ${token.runtimeType}');
-
-        if (token is TextResponse) {
-          print('📝 Text token: "${token.token}"');
-          // Handle text response
-          accumulatedResponse += token.token;
-
-          setState(() {
-            if (!hasStartedResponse) {
-              print('🆕 Adding new AI message to list');
-              // First token - add new AI message
-              _messages.add(Message.text(text: accumulatedResponse));
-              hasStartedResponse = true;
-            } else {
-              print('🔄 Updating existing AI message');
-              // Update existing AI message
-              if (_messages.isNotEmpty) {
-                _messages[_messages.length - 1] = Message.text(text: accumulatedResponse);
-              }
-            }
-          });
-        } else if (token is FunctionCallResponse) {
-          print('🔧 Function call received: ${token.name}');
-          // No tools here; ignore
-          break; // Exit the stream after handling function call
-        }
-      }
-
-      // If nothing was generated, avoid leaving the UI stuck on "Thinking..."
-      final bool isAnalysisPrompt =
-          message.text.contains('PROFILE TO ANALYZE:') || message.text.contains('comprehensive dating analysis');
-      if (accumulatedResponse.trim().isEmpty) {
-        print('⚠️ No tokens received; providing fallback response');
-        final fallback = isAnalysisPrompt
-            ? _generateFallbackResponse()
-            : 'I couldn\'t generate a response this time. Please try again or rephrase your message.';
-        setState(() {
-          if (_messages.isNotEmpty && _messages.last.text.trim().isEmpty) {
-            _messages[_messages.length - 1] = Message.text(text: fallback);
-          } else {
-            _messages.add(Message.text(text: fallback));
-          }
-        });
-      }
-
-      print('✅ Chat response generation completed');
-    } catch (e) {
-      print('❌ Error in _processMessage: $e');
-      setState(() {
-        _error = e.toString();
-        _messages.add(Message.text(text: '❌ Error: $e'));
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -510,12 +463,12 @@ Good luck! 💕''';
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
                     onPressed: () async {
-                      final prompt = _generateProfileAnalysisPrompt(profileData);
+                      // final prompt = _generateProfileAnalysisPrompt(profileData);
                       setState(() {
                         _error = null;
-                        _messages.add(Message.text(text: prompt));
+                        _messages.add(Message.text(text: "Hello"));
                       });
-                      await _processMessage(Message.text(text: prompt));
+                      // await _processMessage(Message.text(text: prompt));
                     },
                   ),
                 ),
@@ -608,7 +561,7 @@ Good luck! 💕''';
                   });
 
                   // Process the message with AI
-                  await _processMessage(message);
+                  // await _processMessage(message);
                 },
                 supportsImages: chat?.supportsImages ?? false,
               ),
@@ -715,7 +668,7 @@ Good luck! 💕''';
                               _topP = topP;
                               _supportsFunctionCalls = fc;
                             });
-                            await _recreateChat();
+                            // await _recreateChat();
                           },
                         ),
                       ),

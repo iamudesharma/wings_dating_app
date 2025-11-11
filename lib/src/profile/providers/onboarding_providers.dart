@@ -1,42 +1,60 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/models/profile_extras.dart';
 import 'package:wings_dating_app/repo/profile_extras_api_repo.dart';
+import 'package:wings_dating_app/helpers/extra_data.dart';
+
+part 'onboarding_providers.g.dart';
 
 // Persistence keys
 const _kPromptsKey = 'profile.prompts';
 const _kHabitsKey = 'profile.habits';
 const _kValuesKey = 'profile.values';
+const _kInterestsKey = 'profile.interests';
 const _kSocialKey = 'profile.social';
 const _kOnboardingSkipKey = 'onboarding.skipPrompt';
 
-final sharedPrefsProvider = FutureProvider<SharedPreferences>((ref) async {
+@Riverpod(keepAlive: true)
+Future<SharedPreferences> sharedPrefs(SharedPrefsRef ref) async {
   return SharedPreferences.getInstance();
-});
+}
 
-class OnboardingSkipPromptNotifier extends StateNotifier<bool> {
-  final Ref ref;
-  OnboardingSkipPromptNotifier(this.ref) : super(false) {
-    _load();
+@Riverpod(keepAlive: true)
+class OnboardingSkip extends _$OnboardingSkip {
+  bool _loadStarted = false;
+  bool _loaded = false;
+
+  bool get isLoaded => _loaded;
+
+  @override
+  bool build() {
+    if (!_loadStarted) {
+      _loadStarted = true;
+      _load();
+    }
+    return false;
   }
+
   Future<void> _load() async {
     final prefs = await ref.read(sharedPrefsProvider.future);
     state = prefs.getBool(_kOnboardingSkipKey) ?? false;
+    _loaded = true;
   }
 
   Future<void> set(bool value) async {
     state = value;
+    _loaded = true;
     final prefs = await ref.read(sharedPrefsProvider.future);
     await prefs.setBool(_kOnboardingSkipKey, value);
   }
 }
 
-final onboardingSkipProvider = StateNotifierProvider<OnboardingSkipPromptNotifier, bool>(
-  (ref) => OnboardingSkipPromptNotifier(ref),
-);
+// Backward compatibility alias
+// final onboardingSkipProvider = onboardingSkipProvider;
 
 class PromptsNotifier extends StateNotifier<List<PromptQA>> {
   final Ref ref;
@@ -100,14 +118,14 @@ final promptsProvider = StateNotifierProvider<PromptsNotifier, List<PromptQA>>(
 class SimpleListNotifier extends StateNotifier<List<String>> {
   final Ref ref;
   final String key;
-  SimpleListNotifier(this.ref, this.key) : super(const []) {
+  final String field;
+  SimpleListNotifier(this.ref, this.key, this.field) : super(const []) {
     _load();
   }
   Future<void> _load() async {
     final prefs = await ref.read(sharedPrefsProvider.future);
     var local = prefs.getStringList(key) ?? [];
     final extras = await ref.read(profileExtrasApiRepoProvider).fetch();
-    final field = key == _kHabitsKey ? 'habits' : 'values';
     if (extras != null && extras[field] is List) {
       final remote = (extras[field] as List).whereType<String>().toList();
       if (remote.isNotEmpty) {
@@ -122,8 +140,9 @@ class SimpleListNotifier extends StateNotifier<List<String>> {
     final prefs = await ref.read(sharedPrefsProvider.future);
     await prefs.setStringList(key, state);
     await ref.read(profileExtrasApiRepoProvider).saveAll(
-          habits: key == _kHabitsKey ? state : null,
-          values: key == _kValuesKey ? state : null,
+          habits: field == 'habits' ? state : null,
+          values: field == 'values' ? state : null,
+          interests: field == 'interests' ? state : null,
         );
   }
 
@@ -144,10 +163,12 @@ class SimpleListNotifier extends StateNotifier<List<String>> {
   }
 }
 
-final habitsProvider =
-    StateNotifierProvider<SimpleListNotifier, List<String>>((ref) => SimpleListNotifier(ref, _kHabitsKey));
-final valuesProvider =
-    StateNotifierProvider<SimpleListNotifier, List<String>>((ref) => SimpleListNotifier(ref, _kValuesKey));
+final habitsProvider = StateNotifierProvider<SimpleListNotifier, List<String>>(
+    (ref) => SimpleListNotifier(ref, _kHabitsKey, 'habits'));
+final valuesProvider = StateNotifierProvider<SimpleListNotifier, List<String>>(
+    (ref) => SimpleListNotifier(ref, _kValuesKey, 'values'));
+final interestsProvider = StateNotifierProvider<SimpleListNotifier, List<String>>(
+    (ref) => SimpleListNotifier(ref, _kInterestsKey, 'interests'));
 
 class SocialNotifier extends StateNotifier<SocialLinks> {
   final Ref ref;
@@ -223,8 +244,8 @@ final profileCompletionProvider = Provider<double>((ref) {
     if (user.albumUrl != null && user.albumUrl!.isNotEmpty) score++;
     if ((user.username).isNotEmpty) score++;
     if (user.interests.isNotEmpty) score++;
-    if (user.role.name != 'doNotShow') score++;
-    if (user.bodyType.name != 'doNotShow') score++;
+    if (user.role != Role.doNotShow) score++;
+    if (user.bodyType != BodyType.doNotShow) score++;
   }
   if (prompts.isNotEmpty) score++;
   if (habits.isNotEmpty) score++;
