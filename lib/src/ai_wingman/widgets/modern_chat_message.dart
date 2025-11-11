@@ -19,7 +19,8 @@ class ModernChatMessage extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Row(
-        mainAxisAlignment: message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!message.isUser) ...[
@@ -49,15 +50,24 @@ class ModernChatMessage extends StatelessWidget {
                       )
                     : LinearGradient(
                         colors: [
-                          Theme.of(context).colorScheme.surface.withOpacity(0.95),
-                          Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.95),
+                          Theme.of(context)
+                              .colorScheme
+                              .surface
+                              .withOpacity(0.95),
+                          Theme.of(context)
+                              .colorScheme
+                              .surfaceVariant
+                              .withOpacity(0.95),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                 border: !message.isUser
                     ? Border.all(
-                        color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .outline
+                            .withOpacity(0.2),
                         width: 1,
                       )
                     : null,
@@ -72,7 +82,8 @@ class ModernChatMessage extends StatelessWidget {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

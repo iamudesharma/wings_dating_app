@@ -22,7 +22,7 @@ import 'package:wings_dating_app/src/users/users_view.dart';
 class AIChatScreen extends ConsumerStatefulWidget {
   const AIChatScreen({
     super.key,
-    this.model = Model.gemma3GpuLocalAsset,
+    this.model = Model.gemma3_270M,
   });
 
   final Model model;
@@ -34,6 +34,7 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
   final _messages = <Message>[];
   String? _error;
   String _appTitle = 'AI Dating Wingman 💕';
+  bool _redirectedForDownload = false; // guard to avoid multiple navigations
 
   // Mobile-only platforms for model download/selection
   bool get _isAndroidOrIOS => !kIsWeb && (Platform.isAndroid || Platform.isIOS);
@@ -179,6 +180,7 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
 
   Future<void> _maybeRedirectForMobile() async {
     if (!_isAndroidOrIOS) return;
+    if (_redirectedForDownload) return; // already handled
     final model = widget.model;
     if (model.localModel) return;
     final downloader = ModelDownloadService(
@@ -188,12 +190,24 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
     );
     final exists = await downloader.existsLocally();
     if (!exists && mounted) {
-      Navigator.pushReplacement(
-        context,
+      _redirectedForDownload = true;
+      // Use push instead of pushReplacement during initial mount to avoid
+      // "page-based route cannot be completed using imperative api" assertion
+      // with AutoRoute's page-based Navigator. We'll simply push the selection
+      // screen; when it pops back we can attempt initialization again if needed.
+      Navigator.of(context)
+          .push(
         MaterialPageRoute<void>(
           builder: (context) => const ModelSelectionScreen(),
         ),
-      );
+      )
+          .then((_) {
+        // Re-check after returning (user may have downloaded a model)
+        if (mounted) {
+          _redirectedForDownload = false; // allow future checks if needed
+          _initializeGemmaProvider();
+        }
+      });
     }
   }
 

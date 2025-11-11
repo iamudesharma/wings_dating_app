@@ -46,7 +46,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '546119961072',
     projectId: 'wings-dating-951ed',
     authDomain: 'wings-dating-951ed.firebaseapp.com',
-    databaseURL: 'https://wings-dating-951ed-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://wings-dating-951ed-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'wings-dating-951ed.appspot.com',
     measurementId: 'G-9GGB2052VJ',
   );
@@ -56,7 +57,8 @@ class DefaultFirebaseOptions {
     appId: '1:546119961072:android:88eb4c91265e8e23d9b535',
     messagingSenderId: '546119961072',
     projectId: 'wings-dating-951ed',
-    databaseURL: 'https://wings-dating-951ed-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://wings-dating-951ed-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'wings-dating-951ed.appspot.com',
   );
 
@@ -65,10 +67,13 @@ class DefaultFirebaseOptions {
     appId: '1:546119961072:ios:e18673a382af989fd9b535',
     messagingSenderId: '546119961072',
     projectId: 'wings-dating-951ed',
-    databaseURL: 'https://wings-dating-951ed-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://wings-dating-951ed-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'wings-dating-951ed.appspot.com',
-    androidClientId: '546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com',
-    iosClientId: '546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com',
+    androidClientId:
+        '546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com',
+    iosClientId:
+        '546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com',
     iosBundleId: 'com.wings.wingsdating',
   );
 
@@ -77,11 +82,26 @@ class DefaultFirebaseOptions {
     appId: '1:546119961072:ios:e18673a382af989fd9b535',
     messagingSenderId: '546119961072',
     projectId: 'wings-dating-951ed',
-    databaseURL: 'https://wings-dating-951ed-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://wings-dating-951ed-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'wings-dating-951ed.appspot.com',
-    androidClientId: '546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com',
-    iosClientId: '546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com',
+    androidClientId:
+        '546119961072-tmgd1vdoobl00opni9252urkjgmbu4ku.apps.googleusercontent.com',
+    iosClientId:
+        '546119961072-gagar0rklvln2vdo82a5ha1enip01bp4.apps.googleusercontent.com',
     iosBundleId: 'com.wings.wingsdating',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDEN-ulbs3jlLrVGomO4Thon8xugfydWqc',
+    appId: '1:546119961072:web:88e7ace058f5c5e1d9b535',
+    messagingSenderId: '546119961072',
+    projectId: 'wings-dating-951ed',
+    authDomain: 'wings-dating-951ed.firebaseapp.com',
+    databaseURL:
+        'https://wings-dating-951ed-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'wings-dating-951ed.appspot.com',
+    measurementId: 'G-Z8K22GR1Z6',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

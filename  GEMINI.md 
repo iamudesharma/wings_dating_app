@@ -1,0 +1,70 @@
+# Flutter App Expert – Project Rules & Best Practices
+
+> **Flexibility Notice**  
+> This is a recommended project structure and set of guidelines.  
+> **Do not enforce these patterns if the existing project uses a different architecture.**  
+> Always adapt to the project’s current structure while maintaining **consistency** and applying **Flutter best practices**.
+
+---
+
+## 🛠 Flutter Best Practices
+- Adapt to existing project architecture while maintaining clean code principles.
+- Use **Flutter 3.x** features and **Material 3** design.
+- Implement **clean architecture** with **Riverpod** for state management.
+- Follow proper state management principles.
+- Use **dependency injection** where appropriate.
+- Implement **robust error handling**.
+- Follow **platform-specific design guidelines**.
+- Use **localization** techniques for multi-language support.
+- Leverage the **latest stable Dart and Flutter features** (e.g., records, pattern matching, enhanced enums, new widgets) to improve code efficiency and maintainability.
+
+
+---
+
+## 📏 Coding Guidelines
+1. Use proper **null safety** practices.
+2. Implement error handling with the **Either** type.
+3. Follow consistent **naming conventions**.
+4. Use **widget composition** to keep UI modular.
+5. Implement routing using **AutoRouter**.
+6. Use proper **form validation** techniques.
+7. Follow **Riverpod** for state management.
+8. Manage assets properly and reference them in `pubspec.yaml`.
+9. Write and maintain **unit, widget, and integration tests**.
+
+---
+
+## 🎨 Widget Guidelines
+1. Keep widgets **small and focused**.
+2. Use **const constructors** when possible.
+3. Add **keys** to widgets where needed.
+4. Follow clean **layout principles**.
+5. Use widget **lifecycle methods** appropriately.
+6. Implement **error boundaries** for crash prevention.
+7. Optimize **performance** (reduce rebuilds, reuse widgets).
+8. Ensure **accessibility** (semantics, labels, contrast).
+
+---
+
+## ⚡ Performance Guidelines
+1. Implement **image caching** where applicable.
+2. Optimize **ListView** and scrolling performance.
+3. Avoid heavy logic inside `build` methods.
+4. Manage state efficiently (minimize rebuilds).
+5. Use proper **memory management** techniques.
+6. Implement **platform channels** only when necessary.
+7. Apply **compilation optimizations** for faster builds.
+
+---
+
+## 🧪 Testing Guidelines
+1. Write **unit tests** for business logic.
+2. Implement **widget tests** for UI components.
+3. Use **integration tests** for complete feature validation.
+4. Apply proper **mocking strategies**.
+5. Track test coverage with tools.
+6. Follow consistent **test naming conventions**.
+7. Integrate testing in **CI/CD pipelines**.
+
+---
+

@@ -26,7 +26,8 @@ class PaginatedResponse<T> {
   ) =>
       _$PaginatedResponseFromJson(json, fromJsonT);
 
-  Map<String, dynamic> toJson(Object Function(T value) toJsonT) => _$PaginatedResponseToJson(this, toJsonT);
+  Map<String, dynamic> toJson(Object Function(T value) toJsonT) =>
+      _$PaginatedResponseToJson(this, toJsonT);
 }
 
 @JsonSerializable()
@@ -47,7 +48,8 @@ class PaginatedUserResponse {
     required this.hasPrev,
   });
 
-  factory PaginatedUserResponse.fromJson(Map<String, dynamic> json) => _$PaginatedUserResponseFromJson(json);
+  factory PaginatedUserResponse.fromJson(Map<String, dynamic> json) =>
+      _$PaginatedUserResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$PaginatedUserResponseToJson(this);
 }

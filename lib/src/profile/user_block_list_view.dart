@@ -7,7 +7,8 @@ import 'package:wings_dating_app/repo/profile_repo.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 // Removed unused imports
 
-final getUserBlockListProvider = FutureProvider.autoDispose<List<UserModel?>>((ref) async {
+final getUserBlockListProvider =
+    FutureProvider.autoDispose<List<UserModel?>>((ref) async {
   return await ref.read(profileRepoProvider).getBlockList();
 });
 

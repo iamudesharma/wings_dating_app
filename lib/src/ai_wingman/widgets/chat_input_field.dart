@@ -107,7 +107,9 @@ class ChatInputFieldState extends State<ChatInputField> {
                   IconButton(
                     icon: Icon(
                       Icons.image,
-                      color: _selectedImageBytes != null ? Colors.blue : Colors.white70,
+                      color: _selectedImageBytes != null
+                          ? Colors.blue
+                          : Colors.white70,
                     ),
                     onPressed: _pickImage,
                     tooltip: 'Add image',
@@ -118,7 +120,9 @@ class ChatInputFieldState extends State<ChatInputField> {
                     onSubmitted: _handleSubmitted,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      hintText: _selectedImageBytes != null ? 'Add description to image...' : 'Send message',
+                      hintText: _selectedImageBytes != null
+                          ? 'Add description to image...'
+                          : 'Send message',
                       hintStyle: const TextStyle(color: Colors.white54),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(

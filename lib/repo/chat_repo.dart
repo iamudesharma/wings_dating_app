@@ -28,16 +28,26 @@ class ChatRepo extends _$ChatRepo {
   connectUser({
     required userModel.UserModel user,
   }) async {
-    await ref.read(chatClientProvider).connectUser(
-          User(
-            id: user.id,
-            extraData: {
-              "name": user.username,
-              "image": user.profileUrl,
-            },
-          ),
-          ref.read(chatClientProvider).devToken(user.id).rawValue,
-        );
+    final client = ref.read(chatClientProvider);
+    // Avoid duplicate connection attempts
+    try {
+      if (client.wsConnectionStatus == ConnectionStatus.connected ||
+          client.wsConnectionStatus == ConnectionStatus.connecting) {
+        logger.w('📡 Stream chat already connected/connecting for ${user.id}, skipping connect');
+        return;
+      }
+    } catch (_) {}
+
+    await client.connectUser(
+      User(
+        id: user.id,
+        extraData: {
+          "name": user.username,
+          "image": user.profileUrl,
+        },
+      ),
+      client.devToken(user.id).rawValue,
+    );
   }
 }
 

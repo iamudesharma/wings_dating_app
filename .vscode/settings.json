@@ -3,5 +3,6 @@
     "geohash",
     "th"
   ],
-  "dart.flutterSdkPath": "~/fvm/versions/stable"
+  "dart.flutterSdkPath": "~/fvm/versions/stable",
+  "kiroAgent.configureMCP": "Disabled"
 }

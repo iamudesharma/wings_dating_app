@@ -10,7 +10,10 @@ class ImagePreviewView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(leading: const AutoLeadingButton(), backgroundColor: Colors.black, elevation: 0),
+      appBar: AppBar(
+          leading: const AutoLeadingButton(),
+          backgroundColor: Colors.black,
+          elevation: 0),
       body: Center(
         child: InteractiveViewer(
           minScale: 0.5,

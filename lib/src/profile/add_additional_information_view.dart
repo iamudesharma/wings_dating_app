@@ -237,7 +237,6 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
 
                   ElevatedButton(
                     onPressed: () async {
-                      final router = AutoRouter.of(context);
                       final data = profiledata?.copyWith(
                         bodyType: bodyType,
                         lookingFor: lookingFor,
@@ -281,12 +280,12 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                   height: 200,
                   child: AdditionalDataWidget<Role>(
                     selected: role,
-                    onChanged: <Role>(value) async {
+                    onChanged: (value) async {
                       logger.i(value);
-                      ref.read(roleProvider.notifier).update((state) => value);
+                      ref.read(roleProvider.notifier).update(value!);
                       // context.router.back();
                       final data = profiledata?.copyWith(
-                        role: role,
+                        role: value,
                       );
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
@@ -311,12 +310,12 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                   height: 200,
                   child: AdditionalDataWidget<BodyType>(
                     selected: bodyType,
-                    onChanged: <BodyType>(value) async {
+                    onChanged: (value) async {
                       logger.i(value);
-                      ref.read(bodyTypeProvider.notifier).update((sate) => value);
+                      ref.read(bodyTypeProvider.notifier).update(value!);
                       // context.router.back();
                       final data = profiledata?.copyWith(
-                        bodyType: bodyType,
+                        bodyType: value,
                         position: GeoPointData(
                           type: "Point",
                           geopoint: profiledata.position?.geopoint ?? [0, 0],
@@ -407,13 +406,13 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                   height: 200,
                   child: AdditionalDataWidget<RelationshipStatus>(
                     selected: relationShip,
-                    onChanged: <BodyType>(value) async {
+                    onChanged: (value) async {
                       logger.i(value);
-                      ref.read(relationshipStatusProvider.notifier).state = value;
+                      ref.read(relationshipStatusProvider.notifier).update(value!);
 
                       setState(() {});
                       final data = profiledata?.copyWith(
-                        relationshipStatus: relationShip,
+                        relationshipStatus: value,
                       );
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
 
@@ -440,13 +439,13 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                   height: 200,
                   child: AdditionalDataWidget<Ethnicity>(
                     selected: ethnicity,
-                    onChanged: <BodyType>(value) async {
+                    onChanged: (value) async {
                       logger.i(value);
-                      ref.read(ethnicityProvider.notifier).update((state) => value);
+                      ref.read(ethnicityProvider.notifier).update(value!);
 
                       // context.router.back();
                       final data = profiledata?.copyWith(
-                        ethnicity: ethnicity,
+                        ethnicity: value,
                       );
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
@@ -471,13 +470,13 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                   height: 200,
                   child: AdditionalDataWidget<LookingFor>(
                     selected: lookingFor,
-                    onChanged: <BodyType>(value) async {
+                    onChanged: (value) async {
                       logger.i(value);
-                      ref.read(lookingForProvider.notifier).update((sate) => value);
+                      ref.read(lookingForProvider.notifier).update(value!);
                       context.router.back();
 
                       final data = profiledata?.copyWith(
-                        lookingFor: lookingFor,
+                        lookingFor: value,
                       );
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
@@ -502,12 +501,12 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                   height: 200,
                   child: AdditionalDataWidget<WhereToMeet>(
                     selected: whereToMeet,
-                    onChanged: <BodyType>(value) async {
+                    onChanged: (value) async {
                       logger.i(value);
-                      ref.read(whereToMeetProvider.notifier).update((sate) => value);
+                      ref.read(whereToMeetProvider.notifier).update(value!);
                       // context.router.back();
                       final data = profiledata?.copyWith(
-                        whereToMeet: whereToMeet,
+                        whereToMeet: value,
                       );
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },

@@ -33,7 +33,8 @@ abstract class PaginatedResponse with _$PaginatedResponse {
     required bool hasPrev,
   }) = _PaginatedResponse;
 
-  factory PaginatedResponse.fromJson(Map<String, dynamic> json) => _$PaginatedResponseFromJson(json);
+  factory PaginatedResponse.fromJson(Map<String, dynamic> json) =>
+      _$PaginatedResponseFromJson(json);
 }
 
 /// Simple success response for operations that don't return data
@@ -45,7 +46,8 @@ abstract class SuccessResponse with _$SuccessResponse {
     required String message,
   }) = _SuccessResponse;
 
-  factory SuccessResponse.fromJson(Map<String, dynamic> json) => _$SuccessResponseFromJson(json);
+  factory SuccessResponse.fromJson(Map<String, dynamic> json) =>
+      _$SuccessResponseFromJson(json);
 }
 
 /// Error response wrapper
@@ -59,5 +61,6 @@ abstract class ErrorResponse with _$ErrorResponse {
     Map<String, dynamic>? details,
   }) = _ErrorResponse;
 
-  factory ErrorResponse.fromJson(Map<String, dynamic> json) => _$ErrorResponseFromJson(json);
+  factory ErrorResponse.fromJson(Map<String, dynamic> json) =>
+      _$ErrorResponseFromJson(json);
 }

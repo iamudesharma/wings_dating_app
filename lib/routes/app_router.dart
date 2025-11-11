@@ -6,13 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
-import 'package:wings_dating_app/src/ai_wingman/models/model.dart';
-import 'package:wings_dating_app/src/album/album_details_view.dart';
-import 'package:wings_dating_app/src/album/album_view.dart';
-import 'package:wings_dating_app/src/album/create_album_view.dart';
-import 'package:wings_dating_app/src/album/widget/image_preview.dart';
-import 'package:wings_dating_app/src/login.dart';
-import 'package:wings_dating_app/src/users/filters/filters_view.dart';
 
 import '../src/auth/sign_options.dart';
 import '../src/ai_wingman/pages/ai_wingman_view.dart';

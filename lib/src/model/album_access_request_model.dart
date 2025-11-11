@@ -1,27 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'album_model.dart';
 import 'user_models.dart';
-
-part 'album_access_request_model.freezed.dart';
 part 'album_access_request_model.g.dart';
-
-// Helpers to (de)serialize the embedded UserAlbumModel inside requests
-UserAlbumModel? _albumFromJson(Map<String, dynamic>? json) => json == null ? null : UserAlbumModel.fromJson(json);
-
-Map<String, dynamic>? _albumToJson(UserAlbumModel? album) {
-  if (album == null) return null;
-  return {
-    'ownerId': album.ownerId,
-    'name': album.name,
-    'photos': album.photos,
-    'sharedWith': album.sharedWith,
-    'createdAt': album.createdAt.toIso8601String(),
-    'updatedAt': album.updatedAt.toIso8601String(),
-    'isShared': album.isShared,
-    'owner': album.owner?.toJson(),
-    'id': album.id,
-  };
-}
+part 'album_access_request_model.freezed.dart';
+// Note: Any nested model serialization is handled by their own fromJson/toJson.
 
 enum AccessRequestStatus {
   @JsonValue('pending')
@@ -33,51 +16,93 @@ enum AccessRequestStatus {
 }
 
 @freezed
-abstract class AlbumAccessRequestModel with _$AlbumAccessRequestModel {
-  @JsonSerializable(
-    explicitToJson: true,
-    // createToJson: true,
-    // createFieldMap: true,
-    // createPerFieldToJson: true,
-  )
-  const factory AlbumAccessRequestModel({
-    @JsonKey(name: '_id') String? id,
-    required String albumId,
-    required String requesterId,
-    required String message,
-    @Default(AccessRequestStatus.pending) AccessRequestStatus status,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-    String? albumOwnerId,
-    String? moderatorId,
-    DateTime? respondedAt,
-    String? rejectionReason,
-    UserModel? requester,
-    UserModel? albumOwner,
-    UserAlbumModel? album,
-  }) = _AlbumAccessRequestModel;
+@JsonSerializable(explicitToJson: true)
+class AlbumAccessRequestModel with _$AlbumAccessRequestModel {
+  const AlbumAccessRequestModel({
+    this.id,
+    required this.albumId,
+    required this.requesterId,
+    required this.message,
+    this.status = AccessRequestStatus.pending,
+    required this.createdAt,
+    required this.updatedAt,
+    this.albumOwnerId,
+    this.moderatorId,
+    this.respondedAt,
+    this.rejectionReason,
+    this.requester,
+    this.albumOwner,
+    this.album,
+  });
 
-  factory AlbumAccessRequestModel.fromJson(Map<String, dynamic> json) => _$AlbumAccessRequestModelFromJson(json);
+  @override
+  final String? id;
+  @override
+  final String albumId;
+  @override
+  final String requesterId;
+  @override
+  final String message;
+  @override
+  final AccessRequestStatus status;
+  @override
+  final DateTime createdAt;
+  @override
+  final DateTime updatedAt;
+  @override
+  final String? albumOwnerId;
+  @override
+  final String? moderatorId;
+  @override
+  final DateTime? respondedAt;
+  @override
+  final String? rejectionReason;
+  @override
+  final UserModel? requester;
+  @override
+  final UserModel? albumOwner;
+  @override
+  final UserAlbumModel? album;
+
+  factory AlbumAccessRequestModel.fromJson(Map<String, dynamic> json) =>
+      _$AlbumAccessRequestModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AlbumAccessRequestModelToJson(this);
 }
 
 @freezed
-abstract class AlbumRequestStats with _$AlbumRequestStats {
-  @JsonSerializable(
-    explicitToJson: true,
-    createToJson: true,
-    createFieldMap: true,
-    createPerFieldToJson: true,
-  )
-  const factory AlbumRequestStats({
-    required int totalRequests,
-    required int pendingRequests,
-    required int approvedRequests,
-    required int rejectedRequests,
-    required int requestsToday,
-    required int requestsThisWeek,
-    required int requestsThisMonth,
-    required double averageResponseTime,
-  }) = _AlbumRequestStats;
+@JsonSerializable(explicitToJson: true)
+class AlbumRequestStats with _$AlbumRequestStats {
+  const AlbumRequestStats({
+    required this.totalRequests,
+    required this.pendingRequests,
+    required this.approvedRequests,
+    required this.rejectedRequests,
+    required this.requestsToday,
+    required this.requestsThisWeek,
+    required this.requestsThisMonth,
+    required this.averageResponseTime,
+  });
 
-  factory AlbumRequestStats.fromJson(Map<String, dynamic> json) => _$AlbumRequestStatsFromJson(json);
+  @override
+  final int totalRequests;
+  @override
+  final int pendingRequests;
+  @override
+  final int approvedRequests;
+  @override
+  final int rejectedRequests;
+  @override
+  final int requestsToday;
+  @override
+  final int requestsThisWeek;
+  @override
+  final int requestsThisMonth;
+  @override
+  final double averageResponseTime;
+
+  factory AlbumRequestStats.fromJson(Map<String, dynamic> json) =>
+      _$AlbumRequestStatsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AlbumRequestStatsToJson(this);
 }

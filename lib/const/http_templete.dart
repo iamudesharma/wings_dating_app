@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:wings_dating_app/helpers/helpers.dart';
 import 'error_handling_template.dart';
@@ -16,7 +15,7 @@ class HttpTemplate {
   }) : baseUrl = baseUrl ??
             (
                 // Platform.isAndroid ?
-                "http://192.168.1.4:3000"
+                "http://192.168.1.5:3000"
             //  :
             //  "http://localhost:3000"
             );
@@ -55,12 +54,15 @@ class HttpTemplate {
           response = await http.get(url, headers: defaultHeaders).timeout(timeout);
           break;
         case 'POST':
+          logger.i('HTTP POST $url headers=$defaultHeaders body=${jsonEncode(body)}');
           response = await http.post(url, headers: defaultHeaders, body: jsonEncode(body)).timeout(timeout);
           break;
         case 'PUT':
+          logger.i('HTTP PUT $url headers=$defaultHeaders body=${jsonEncode(body)}');
           response = await http.put(url, headers: defaultHeaders, body: jsonEncode(body)).timeout(timeout);
           break;
         case 'DELETE':
+          logger.i('HTTP DELETE $url headers=$defaultHeaders');
           response = await http.delete(url, headers: defaultHeaders).timeout(timeout);
           break;
         default:
@@ -68,14 +70,22 @@ class HttpTemplate {
       }
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        logger.i('Response: ${response.body}');
-        return {'status': 'success', 'code': response.statusCode, 'data': jsonDecode(response.body)};
+        final bodyText = response.body;
+        if (bodyText.trim().isEmpty) {
+          logger.i('Response(${response.statusCode}): <empty>');
+          return {'status': 'success', 'code': response.statusCode, 'data': null};
+        }
+        logger.i('Response(${response.statusCode}): $bodyText');
+        return {'status': 'success', 'code': response.statusCode, 'data': jsonDecode(bodyText)};
       } else {
+        logger.w('HTTP ${response.statusCode} error for $method $url. Body=${response.body}');
         return ErrorHandlingTemplate.handleHttpError(response);
       }
     } on http.ClientException catch (e) {
+      logger.e('HTTP ClientException for $method $url: $e');
       return ErrorHandlingTemplate.handleClientException(e);
     } catch (e) {
+      logger.e('HTTP Exception for $method $url: $e');
       return ErrorHandlingTemplate.handleGenericException(e);
     }
   }

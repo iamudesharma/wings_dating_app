@@ -329,7 +329,7 @@ class _UserGridItemState extends ConsumerState<UserGridItem> {
                           if (widget.users.position != null && widget.userCoordinates != null)
                             _buildInfoChip(
                               icon: Icons.location_on,
-                              text: ref.read(ProfileController.userControllerProvider).getDistance(
+                              text: ref.read(profileControllerProvider.notifier).getDistance(
                                     GeoPoint(
                                       widget.users.position!.geopoint[1],
                                       widget.users.position!.geopoint[0],

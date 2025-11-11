@@ -31,7 +31,8 @@ Future<bool> isUserFavorite(String id) async {
     final httpTemplate = HttpTemplate();
     final response = await httpTemplate.get("/users/$currentUserId");
 
-    if (response.containsKey('data') && response['data'] is Map<String, dynamic>) {
+    if (response.containsKey('data') &&
+        response['data'] is Map<String, dynamic>) {
       final userData = UserModel.fromJson(response['data']);
       return userData.favoriteList.contains(id);
     }

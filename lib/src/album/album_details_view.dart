@@ -65,19 +65,61 @@ class AlbumDetailsView extends ConsumerWidget {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final photo = data.photos[index];
+                final isOwner = FirebaseAuth.instance.currentUser?.uid == data.ownerId;
                 return GestureDetector(
                   onTap: () {
                     AutoRouter.of(context).push(ImagePreviewRoute(path: photo));
                   },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: Hero(
-                      tag: photo,
-                      child: Image.network(
-                        photo,
-                        fit: BoxFit.cover,
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child: Hero(
+                          tag: photo,
+                          child: Image.network(
+                            photo,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                    ),
+                      if (isOwner)
+                        Positioned(
+                          top: 6,
+                          right: 6,
+                          child: Material(
+                            color: Theme.of(context).colorScheme.surface.withOpacity(0.75),
+                            shape: const CircleBorder(),
+                            child: IconButton(
+                              visualDensity: VisualDensity.compact,
+                              iconSize: 20,
+                              tooltip: 'Remove photo',
+                              icon: Icon(
+                                Icons.delete_outline,
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                              onPressed: () async {
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                    title: const Text('Remove photo?'),
+                                    content: const Text('This will remove the photo from the album.'),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+                                      ElevatedButton(
+                                          onPressed: () => Navigator.pop(ctx, true), child: const Text('Remove')),
+                                    ],
+                                  ),
+                                );
+                                if (confirm == true) {
+                                  await ref.read(AlbumControllerProvider(id).notifier).removePhotos({photo});
+                                  await ref.read(AlbumControllerProvider(id).notifier).refreshAlbum(id);
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 );
               },
@@ -137,7 +179,7 @@ class AlbumDetailsView extends ConsumerWidget {
       body: albums.when(
         data: (data) {
           final isOwner = FirebaseAuth.instance.currentUser?.uid == data.ownerId;
-          final header = (!isOwner && data.owner != null)
+          final header = (!isOwner && data.isShared && data.owner != null)
               ? SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
@@ -292,8 +334,10 @@ class AlbumDetailsView extends ConsumerWidget {
                               ],
                             ),
                           );
-                          if (message != null && message.isNotEmpty) {
-                            final res = await ref.read(AlbumControllerProvider(id).notifier).requestAccess(message);
+                          if (message != null) {
+                            final res = await ref
+                                .read(AlbumControllerProvider(id).notifier)
+                                .requestAccess(message, albumId: id);
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(res != null ? 'Request sent' : 'Failed to send request')),
@@ -327,8 +371,9 @@ class AlbumDetailsView extends ConsumerWidget {
                             ],
                           ),
                         );
-                        if (message != null && message.isNotEmpty) {
-                          final res = await ref.read(AlbumControllerProvider(id).notifier).requestAccess(message);
+                        if (message != null) {
+                          final res =
+                              await ref.read(AlbumControllerProvider(id).notifier).requestAccess(message, albumId: id);
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(res != null ? 'Request sent' : 'Failed to send request')),

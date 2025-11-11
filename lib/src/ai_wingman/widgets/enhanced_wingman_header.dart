@@ -22,7 +22,8 @@ class EnhancedWingmanHeader extends StatefulWidget {
   State<EnhancedWingmanHeader> createState() => _EnhancedWingmanHeaderState();
 }
 
-class _EnhancedWingmanHeaderState extends State<EnhancedWingmanHeader> with TickerProviderStateMixin {
+class _EnhancedWingmanHeaderState extends State<EnhancedWingmanHeader>
+    with TickerProviderStateMixin {
   late AnimationController _heartController;
   late Animation<double> _heartAnimation;
   late AnimationController _glowController;
@@ -116,13 +117,15 @@ class _EnhancedWingmanHeaderState extends State<EnhancedWingmanHeader> with Tick
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
                             colors: [
-                              Colors.white.withOpacity(0.4 + (_glowController.value * 0.3)),
+                              Colors.white.withOpacity(
+                                  0.4 + (_glowController.value * 0.3)),
                               Colors.transparent,
                             ],
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.white.withOpacity(0.3 + (_glowController.value * 0.4)),
+                              color: Colors.white.withOpacity(
+                                  0.3 + (_glowController.value * 0.4)),
                               blurRadius: 20 + (_glowController.value * 10),
                               spreadRadius: 2 + (_glowController.value * 3),
                             ),
@@ -180,11 +183,14 @@ class _EnhancedWingmanHeaderState extends State<EnhancedWingmanHeader> with Tick
                               height: 10,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: widget.isOnline ? Colors.greenAccent : Colors.orange,
+                                color: widget.isOnline
+                                    ? Colors.greenAccent
+                                    : Colors.orange,
                                 boxShadow: widget.isOnline
                                     ? [
                                         BoxShadow(
-                                          color: Colors.greenAccent.withOpacity(0.6),
+                                          color: Colors.greenAccent
+                                              .withOpacity(0.6),
                                           blurRadius: 12,
                                           spreadRadius: 3,
                                         ),
@@ -192,11 +198,14 @@ class _EnhancedWingmanHeaderState extends State<EnhancedWingmanHeader> with Tick
                                     : null,
                               ),
                             )
-                                .animate(onPlay: (controller) => controller.repeat())
+                                .animate(
+                                    onPlay: (controller) => controller.repeat())
                                 .shimmer(duration: 1500.ms, delay: 500.ms),
                             SizedBox(width: 8),
                             Text(
-                              widget.isOnline ? 'Ready to help with dating' : 'Loading...',
+                              widget.isOnline
+                                  ? 'Ready to help with dating'
+                                  : 'Loading...',
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.white.withOpacity(0.9),
@@ -212,11 +221,14 @@ class _EnhancedWingmanHeaderState extends State<EnhancedWingmanHeader> with Tick
                           Row(
                             children: [
                               if (widget.chat?.supportsImages == true) ...[
-                                _buildFeatureBadge('📸 Photo Analysis', Colors.greenAccent),
+                                _buildFeatureBadge(
+                                    '📸 Photo Analysis', Colors.greenAccent),
                                 SizedBox(width: 8),
                               ],
-                              if (widget.chat?.supportsFunctionCalls == true) ...[
-                                _buildFeatureBadge('🧠 Smart Tools', Colors.blueAccent),
+                              if (widget.chat?.supportsFunctionCalls ==
+                                  true) ...[
+                                _buildFeatureBadge(
+                                    '🧠 Smart Tools', Colors.blueAccent),
                               ],
                             ],
                           ),
@@ -262,7 +274,8 @@ class _EnhancedWingmanHeaderState extends State<EnhancedWingmanHeader> with Tick
                           ),
                         ),
                         child: IconButton(
-                          onPressed: widget.onOpenSettings ?? widget.onModelSelection,
+                          onPressed:
+                              widget.onOpenSettings ?? widget.onModelSelection,
                           icon: Icon(
                             Icons.settings,
                             color: Colors.white,
@@ -301,7 +314,10 @@ class _EnhancedWingmanHeaderState extends State<EnhancedWingmanHeader> with Tick
                       _buildQuickStat('🛡️', 'Safety First'),
                     ],
                   ),
-                ).animate().fadeIn(delay: 800.ms, duration: 600.ms).slideY(begin: -0.3),
+                )
+                    .animate()
+                    .fadeIn(delay: 800.ms, duration: 600.ms)
+                    .slideY(begin: -0.3),
               ],
             ],
           ),

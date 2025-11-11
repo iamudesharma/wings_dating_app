@@ -20,7 +20,8 @@ class ChatListWidget extends StatelessWidget {
 
   final InferenceChat? chat;
   final List<Message> messages;
-  final ValueChanged<ModelResponse> gemmaHandler; // Принимает ModelResponse (TextToken | FunctionCall)
+  final ValueChanged<ModelResponse>
+      gemmaHandler; // Принимает ModelResponse (TextToken | FunctionCall)
   final ValueChanged<Message> humanHandler; // Changed from String to Message
   final ValueChanged<String> errorHandler;
 
@@ -43,7 +44,8 @@ class ChatListWidget extends StatelessWidget {
           if (messages.isEmpty || !messages.last.isUser) {
             return ChatInputField(
               handleSubmitted: humanHandler,
-              supportsImages: chat?.supportsImages ?? false, // Pass image support
+              supportsImages:
+                  chat?.supportsImages ?? false, // Pass image support
             );
           }
         } else if (index == 1) {

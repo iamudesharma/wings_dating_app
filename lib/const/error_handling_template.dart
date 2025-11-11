@@ -21,10 +21,18 @@ class ErrorHandlingTemplate {
   }
 
   static Map<String, dynamic> handleClientException(Exception e) {
-    return {'status': 'error', 'error_type': 'ClientException', 'message': e.toString()};
+    return {
+      'status': 'error',
+      'error_type': 'ClientException',
+      'message': e.toString()
+    };
   }
 
   static Map<String, dynamic> handleGenericException(dynamic error) {
-    return {'status': 'error', 'error_type': 'Exception', 'message': error.toString()};
+    return {
+      'status': 'error',
+      'error_type': 'Exception',
+      'message': error.toString()
+    };
   }
 }

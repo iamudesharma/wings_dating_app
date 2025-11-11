@@ -16,7 +16,8 @@ class ProfileVisitsView extends ConsumerStatefulWidget {
   ConsumerState<ProfileVisitsView> createState() => _ProfileVisitsViewState();
 }
 
-class _ProfileVisitsViewState extends ConsumerState<ProfileVisitsView> with SingleTickerProviderStateMixin {
+class _ProfileVisitsViewState extends ConsumerState<ProfileVisitsView>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -65,7 +66,8 @@ class _VisitedProfilesTab extends ConsumerStatefulWidget {
   const _VisitedProfilesTab();
 
   @override
-  ConsumerState<_VisitedProfilesTab> createState() => _VisitedProfilesTabState();
+  ConsumerState<_VisitedProfilesTab> createState() =>
+      _VisitedProfilesTabState();
 }
 
 class _VisitedProfilesTabState extends ConsumerState<_VisitedProfilesTab> {
@@ -75,7 +77,8 @@ class _VisitedProfilesTabState extends ConsumerState<_VisitedProfilesTab> {
       future: ref.read(profileRepoProvider).getVisitedProfiles(),
       builder: (context, snapshot) {
         // Add debug logging
-        print('VisitedProfiles - Connection State: ${snapshot.connectionState}');
+        print(
+            'VisitedProfiles - Connection State: ${snapshot.connectionState}');
         print('VisitedProfiles - Has Error: ${snapshot.hasError}');
         print('VisitedProfiles - Error: ${snapshot.error}');
         print('VisitedProfiles - Data: ${snapshot.data}');
@@ -155,7 +158,8 @@ class _ProfileVisitorsTab extends ConsumerStatefulWidget {
   const _ProfileVisitorsTab();
 
   @override
-  ConsumerState<_ProfileVisitorsTab> createState() => _ProfileVisitorsTabState();
+  ConsumerState<_ProfileVisitorsTab> createState() =>
+      _ProfileVisitorsTabState();
 }
 
 class _ProfileVisitorsTabState extends ConsumerState<_ProfileVisitorsTab> {
@@ -165,7 +169,8 @@ class _ProfileVisitorsTabState extends ConsumerState<_ProfileVisitorsTab> {
       future: ref.read(profileRepoProvider).getProfileVisitors(),
       builder: (context, snapshot) {
         // Add debug logging
-        print('ProfileVisitors - Connection State: ${snapshot.connectionState}');
+        print(
+            'ProfileVisitors - Connection State: ${snapshot.connectionState}');
         print('ProfileVisitors - Has Error: ${snapshot.hasError}');
         print('ProfileVisitors - Error: ${snapshot.error}');
         print('ProfileVisitors - Data: ${snapshot.data}');
@@ -261,13 +266,15 @@ class _VisitCard extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(
           radius: 24,
-          backgroundImage: user.profileUrl != null && user.profileUrl!.isNotEmpty
-              ? CachedNetworkImageProvider(user.profileUrl!)
-              : null,
+          backgroundImage:
+              user.profileUrl != null && user.profileUrl!.isNotEmpty
+                  ? CachedNetworkImageProvider(user.profileUrl!)
+                  : null,
           child: user.profileUrl == null || user.profileUrl!.isEmpty
               ? Text(
                   user.username.substring(0, 1).toUpperCase(),
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 )
               : null,
         ),
