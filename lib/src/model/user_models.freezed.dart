@@ -51,8 +51,6 @@ mixin _$UserModel {
   $UserModelCopyWith<UserModel> get copyWith =>
       _$UserModelCopyWithImpl<UserModel>(this as UserModel, _$identity);
 
-  /// Create a copy of UserModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||

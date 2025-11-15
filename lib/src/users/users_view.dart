@@ -695,148 +695,148 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
   }
 }
 
-class NavigationBarWidget extends StatelessWidget {
-  const NavigationBarWidget({
-    super.key,
-    required this.sizingInformation,
-  });
-  final SizingInformation sizingInformation;
+// class NavigationBarWidget extends StatelessWidget {
+//   const NavigationBarWidget({
+//     super.key,
+//     required this.sizingInformation,
+//   });
+//   final SizingInformation sizingInformation;
 
-  @override
-  Widget build(BuildContext context) {
-    if (sizingInformation.isMobile) return const SizedBox.shrink();
+//   @override
+//   Widget build(BuildContext context) {
+//     if (sizingInformation.isMobile) return const SizedBox.shrink();
 
-    // Extended for desktop, compact for tablet by default
-    final bool extended = !sizingInformation.isTablet;
-    final theme = Theme.of(context);
+//     // Extended for desktop, compact for tablet by default
+//     final bool extended = !sizingInformation.isTablet;
+//     final theme = Theme.of(context);
 
-    return Expanded(
-      child: SizedBox(
-        height: sizingInformation.screenSize.height,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.colorScheme.shadow.withOpacity(0.15),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                )
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: ListenableBuilder(
-                listenable: AutoTabsRouter.of(context),
-                builder: (context, child) {
-                  final tabsRouter = AutoTabsRouter.of(context);
-                  return NavigationRail(
-                    backgroundColor: theme.colorScheme.surface,
-                    selectedIndex: tabsRouter.activeIndex,
-                    extended: extended,
-                    minWidth: 72,
-                    groupAlignment: -1.0,
-                    indicatorColor: theme.colorScheme.primary.withOpacity(0.10),
-                    indicatorShape: const StadiumBorder(),
-                    selectedIconTheme: IconThemeData(
-                      color: theme.colorScheme.primary,
-                    ),
-                    unselectedIconTheme: IconThemeData(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                    selectedLabelTextStyle: theme.textTheme.labelLarge?.copyWith(
-                      color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    unselectedLabelTextStyle: theme.textTheme.labelLarge?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                    leading: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: extended
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const SizedBox(width: 12),
-                                Icon(Icons.favorite, color: theme.colorScheme.primary),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Wings',
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Icon(Icons.favorite, color: theme.colorScheme.primary),
-                    ),
-                    trailing: Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            tooltip: 'Settings',
-                            icon: const Icon(Icons.settings),
-                            onPressed: () => tabsRouter.setActiveIndex(5),
-                          ),
-                        ],
-                      ),
-                    ),
-                    onDestinationSelected: (value) {
-                      FirebaseAnalytics.instance.logEvent(
-                        name: 'navigation_rail_tapped',
-                        parameters: <String, Object>{
-                          'index': value as Object,
-                        },
-                      );
-                      tabsRouter.setActiveIndex(value);
-                    },
-                    destinations: const [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.home_outlined),
-                        selectedIcon: Icon(Icons.home),
-                        label: Text('Users'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.chat_bubble_outline),
-                        selectedIcon: Icon(Icons.chat_bubble),
-                        label: Text('Chat'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.photo_album_outlined),
-                        selectedIcon: Icon(Icons.photo_album),
-                        label: Text('Album'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.person_search_outlined),
-                        selectedIcon: Icon(Icons.person_search),
-                        label: Text('Matching'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.smart_toy_outlined),
-                        selectedIcon: Icon(Icons.smart_toy),
-                        label: Text('AI Wingman'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.person_outline),
-                        selectedIcon: Icon(Icons.person),
-                        label: Text('Profile'),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//     return Expanded(
+//       child: SizedBox(
+//         height: sizingInformation.screenSize.height,
+//         child: Padding(
+//           padding: const EdgeInsets.all(8.0),
+//           child: DecoratedBox(
+//             decoration: BoxDecoration(
+//               color: theme.colorScheme.surface,
+//               borderRadius: BorderRadius.circular(16),
+//               boxShadow: [
+//                 BoxShadow(
+//                   color: theme.colorScheme.shadow.withOpacity(0.15),
+//                   blurRadius: 12,
+//                   offset: const Offset(0, 4),
+//                 )
+//               ],
+//             ),
+//             child: ClipRRect(
+//               borderRadius: BorderRadius.circular(16),
+//               child: ListenableBuilder(
+//                 listenable: AutoTabsRouter.of(context),
+//                 builder: (context, child) {
+//                   final tabsRouter = AutoTabsRouter.of(context);
+//                   return NavigationRail(
+//                     backgroundColor: theme.colorScheme.surface,
+//                     selectedIndex: tabsRouter.activeIndex,
+//                     extended: extended,
+//                     minWidth: 72,
+//                     groupAlignment: -1.0,
+//                     indicatorColor: theme.colorScheme.primary.withOpacity(0.10),
+//                     indicatorShape: const StadiumBorder(),
+//                     selectedIconTheme: IconThemeData(
+//                       color: theme.colorScheme.primary,
+//                     ),
+//                     unselectedIconTheme: IconThemeData(
+//                       color: theme.colorScheme.onSurfaceVariant,
+//                     ),
+//                     selectedLabelTextStyle: theme.textTheme.labelLarge?.copyWith(
+//                       color: theme.colorScheme.primary,
+//                       fontWeight: FontWeight.w600,
+//                     ),
+//                     unselectedLabelTextStyle: theme.textTheme.labelLarge?.copyWith(
+//                       color: theme.colorScheme.onSurfaceVariant,
+//                     ),
+//                     leading: Padding(
+//                       padding: const EdgeInsets.symmetric(vertical: 12.0),
+//                       child: extended
+//                           ? Row(
+//                               mainAxisSize: MainAxisSize.min,
+//                               children: [
+//                                 const SizedBox(width: 12),
+//                                 Icon(Icons.favorite, color: theme.colorScheme.primary),
+//                                 const SizedBox(width: 8),
+//                                 Text(
+//                                   'Wings',
+//                                   style: theme.textTheme.titleMedium?.copyWith(
+//                                     fontWeight: FontWeight.bold,
+//                                   ),
+//                                 ),
+//                               ],
+//                             )
+//                           : Icon(Icons.favorite, color: theme.colorScheme.primary),
+//                     ),
+//                     trailing: Padding(
+//                       padding: const EdgeInsets.only(bottom: 12.0),
+//                       child: Column(
+//                         mainAxisSize: MainAxisSize.min,
+//                         children: [
+//                           IconButton(
+//                             tooltip: 'Settings',
+//                             icon: const Icon(Icons.settings),
+//                             onPressed: () => tabsRouter.setActiveIndex(5),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                     onDestinationSelected: (value) {
+//                       FirebaseAnalytics.instance.logEvent(
+//                         name: 'navigation_rail_tapped',
+//                         parameters: <String, Object>{
+//                           'index': value as Object,
+//                         },
+//                       );
+//                       tabsRouter.setActiveIndex(value);
+//                     },
+//                     destinations: const [
+//                       NavigationRailDestination(
+//                         icon: Icon(Icons.home_outlined),
+//                         selectedIcon: Icon(Icons.home),
+//                         label: Text('Users'),
+//                       ),
+//                       NavigationRailDestination(
+//                         icon: Icon(Icons.chat_bubble_outline),
+//                         selectedIcon: Icon(Icons.chat_bubble),
+//                         label: Text('Chat'),
+//                       ),
+//                       NavigationRailDestination(
+//                         icon: Icon(Icons.photo_album_outlined),
+//                         selectedIcon: Icon(Icons.photo_album),
+//                         label: Text('Album'),
+//                       ),
+//                       NavigationRailDestination(
+//                         icon: Icon(Icons.person_search_outlined),
+//                         selectedIcon: Icon(Icons.person_search),
+//                         label: Text('Matching'),
+//                       ),
+//                       NavigationRailDestination(
+//                         icon: Icon(Icons.smart_toy_outlined),
+//                         selectedIcon: Icon(Icons.smart_toy),
+//                         label: Text('AI Wingman'),
+//                       ),
+//                       NavigationRailDestination(
+//                         icon: Icon(Icons.person_outline),
+//                         selectedIcon: Icon(Icons.person),
+//                         label: Text('Profile'),
+//                       ),
+//                     ],
+//                   );
+//                 },
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class NavigationBarWidget extends StatelessWidget {
   const NavigationBarWidget({

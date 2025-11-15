@@ -214,25 +214,6 @@ extension GeoPointDataPatterns on GeoPointData {
         return null;
     }
   }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _GeoPointData &&
-            const DeepCollectionEquality().equals(other._geopoint, _geopoint) &&
-            (identical(other.type, type) || other.type == type));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_geopoint), type);
-
-  @override
-  String toString() {
-    return 'GeoPointData(geopoint: $geopoint, type: $type)';
-  }
 }
 
 // dart format on

@@ -22,12 +22,11 @@ final sharedPrefsProvider = FutureProvider<SharedPreferences>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SharedPrefsRef = FutureProviderRef<SharedPreferences>;
-String _$onboardingSkipHash() => r'5fd1ff165e1fe7b2afe85fe38bda8aaa28bad013';
+String _$onboardingSkipHash() => r'a8dd72a2e9de0fa51e6168cc8dbc116b428b6d3b';
 
 /// See also [OnboardingSkip].
 @ProviderFor(OnboardingSkip)
-final onboardingSkipProvider =
-    NotifierProvider<OnboardingSkip, bool>.internal(
+final onboardingSkipProvider = NotifierProvider<OnboardingSkip, bool>.internal(
   OnboardingSkip.new,
   name: r'onboardingSkipProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')

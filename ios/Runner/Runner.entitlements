@@ -6,6 +6,7 @@
 	<array>
 		<string>$(AppIdentifierPrefix)com.example.wingsDatingApp</string>
 		<string>$(AppIdentifierPrefix)com.wings.wingsdating</string>
+		
 	</array>
 </dict>
 </plist>

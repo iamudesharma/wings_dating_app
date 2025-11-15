@@ -8,7 +8,8 @@ import 'package:wings_dating_app/src/matching/providers/filters_provider.dart';
 import 'package:wings_dating_app/src/matching/providers/matching_providers.dart';
 import 'package:wings_dating_app/src/matching/providers/near_me_provider.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
-import 'package:wings_dating_app/src/users/users_view.dart' show NavigationBarWidget;
+import 'package:wings_dating_app/src/users/users_view.dart';
+// import 'package:wings_dating_app/src/users/users_view.dart' show NavigationBarWidget;
 import 'package:wings_dating_app/src/users/widget/user_grid_item.dart';
 
 @RoutePage()

@@ -22,7 +22,7 @@ import 'package:wings_dating_app/src/users/users_view.dart';
 class AIChatScreen extends ConsumerStatefulWidget {
   const AIChatScreen({
     super.key,
-    this.model = Model.gemma3_270M,
+    this.model = Model.gemma3LocalAsset,
   });
 
   final Model model;

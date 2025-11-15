@@ -104,15 +104,5 @@ class DefaultFirebaseOptions {
     measurementId: 'G-Z8K22GR1Z6',
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDEN-ulbs3jlLrVGomO4Thon8xugfydWqc',
-    appId: '1:546119961072:web:88e7ace058f5c5e1d9b535',
-    messagingSenderId: '546119961072',
-    projectId: 'wings-dating-951ed',
-    authDomain: 'wings-dating-951ed.firebaseapp.com',
-    databaseURL: 'https://wings-dating-951ed-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'wings-dating-951ed.appspot.com',
-    measurementId: 'G-Z8K22GR1Z6',
-  );
 
 }

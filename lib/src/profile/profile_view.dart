@@ -19,7 +19,7 @@ import 'widgets/profile_input_card.dart';
 // import 'widgets/social_links_form.dart';
 // import 'widgets/video_clip_uploader.dart';
 import '../view/theme_selector.dart';
-import '../users/users_view.dart' show NavigationBarWidget;
+import '../users/users_view.dart';
 
 @RoutePage()
 class ProfileView extends ConsumerWidget {

@@ -11,7 +11,7 @@ final gemmaProvider = StateNotifierProvider<GemmaNotifier, InferenceChat?>((ref)
 class GemmaNotifier extends StateNotifier<InferenceChat?> {
   GemmaNotifier() : super(null);
 
-  Model _currentModel = Model.gemma3_270M;
+  Model _currentModel = Model.gemma3LocalAsset;
   List<Tool> _tools = [];
   bool _isModelInitialized = false;
 

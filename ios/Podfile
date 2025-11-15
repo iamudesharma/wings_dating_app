@@ -44,7 +44,10 @@ post_install do |installer|
   installer.generated_projects.each do |project|
     project.targets.each do |target|
       target.build_configurations.each do |config|
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+  # Bump deployment target to satisfy newer plugin requirements (Firebase,
+  # GoogleAppMeasurement, flutter_gemma, etc.). Adjust if you need a
+  # higher minimum.
+  config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
       end
     end
   end
