@@ -17,6 +17,7 @@ Future<InferenceChat> installModelAndCreateChat({
     modelType: model.modelType,
     fileType: model.fileType,
   );
+ 
 
   if (model.localModel) {
     await installer.fromAsset(model.baseUrl).install();

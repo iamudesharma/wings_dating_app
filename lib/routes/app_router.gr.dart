@@ -505,6 +505,69 @@ class MatchingRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ModelDownloadView]
+class ModelDownloadRoute extends PageRouteInfo<ModelDownloadRouteArgs> {
+  ModelDownloadRoute({
+    Key? key,
+    required Model model,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ModelDownloadRoute.name,
+          args: ModelDownloadRouteArgs(key: key, model: model),
+          initialChildren: children,
+        );
+
+  static const String name = 'ModelDownloadRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ModelDownloadRouteArgs>();
+      return ModelDownloadView(key: args.key, model: args.model);
+    },
+  );
+}
+
+class ModelDownloadRouteArgs {
+  const ModelDownloadRouteArgs({this.key, required this.model});
+
+  final Key? key;
+
+  final Model model;
+
+  @override
+  String toString() {
+    return 'ModelDownloadRouteArgs{key: $key, model: $model}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! ModelDownloadRouteArgs) return false;
+    return key == other.key && model == other.model;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ model.hashCode;
+}
+
+/// generated route for
+/// [ModelSelectionView]
+class ModelSelectionRoute extends PageRouteInfo<void> {
+  const ModelSelectionRoute({List<PageRouteInfo>? children})
+      : super(ModelSelectionRoute.name, initialChildren: children);
+
+  static const String name = 'ModelSelectionRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ModelSelectionView();
+    },
+  );
+}
+
+/// generated route for
 /// [OtherUserProfileView]
 class OtherUserProfileRoute extends PageRouteInfo<OtherUserProfileRouteArgs> {
   OtherUserProfileRoute({

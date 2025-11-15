@@ -170,45 +170,46 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
   void initState() {
     super.initState();
     // On mobile, if the selected model isn't available locally, redirect to selection/download
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_isAndroidOrIOS) {
-        _maybeRedirectForMobile();
-      }
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (_isAndroidOrIOS) {
+    //     _maybeRedirectForMobile();
+    //   }
+    // });
     _initializeGemmaProvider();
   }
 
   Future<void> _maybeRedirectForMobile() async {
-    if (!_isAndroidOrIOS) return;
-    if (_redirectedForDownload) return; // already handled
-    final model = widget.model;
-    if (model.localModel) return;
-    final downloader = ModelDownloadService(
-      modelUrl: model.url,
-      modelFilename: model.filename,
-      licenseUrl: model.licenseUrl,
-    );
-    final exists = await downloader.existsLocally();
-    if (!exists && mounted) {
-      _redirectedForDownload = true;
-      // Use push instead of pushReplacement during initial mount to avoid
-      // "page-based route cannot be completed using imperative api" assertion
-      // with AutoRoute's page-based Navigator. We'll simply push the selection
-      // screen; when it pops back we can attempt initialization again if needed.
-      Navigator.of(context)
-          .push(
-        MaterialPageRoute<void>(
-          builder: (context) => const ModelSelectionScreen(),
-        ),
-      )
-          .then((_) {
-        // Re-check after returning (user may have downloaded a model)
-        if (mounted) {
-          _redirectedForDownload = false; // allow future checks if needed
-          _initializeGemmaProvider();
-        }
-      });
-    }
+    // if (!_isAndroidOrIOS) return;
+    // if (_redirectedForDownload) return; // already handled
+    // final model = widget.model;
+    // if (model.localModel) return;
+    // final downloader = ModelDownloadService(
+    //   modelUrl: model.url,
+    //   modelFilename: model.filename,
+    //   licenseUrl: model.licenseUrl,
+    //   modelType: model.modelType,
+    // );
+    // final exists = await downloader.existsLocally();
+    // if (!exists && mounted) {
+    //   _redirectedForDownload = true;
+    //   // Use push instead of pushReplacement during initial mount to avoid
+    //   // "page-based route cannot be completed using imperative api" assertion
+    //   // with AutoRoute's page-based Navigator. We'll simply push the selection
+    //   // screen; when it pops back we can attempt initialization again if needed.
+    //   Navigator.of(context)
+    //       .push(
+    //     MaterialPageRoute<void>(
+    //       builder: (context) => const ModelSelectionScreen(),
+    //     ),
+    //   )
+    //       .then((_) {
+    //     // Re-check after returning (user may have downloaded a model)
+    //     if (mounted) {
+    //       _redirectedForDownload = false; // allow future checks if needed
+    //       _initializeGemmaProvider();
+    //     }
+    //   });
+    // }
   }
 
   Future<void> _initializeGemmaProvider() async {
@@ -414,21 +415,7 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       // On mobile (non-web), show a clear entry point to select/download models
-      floatingActionButton: _isAndroidOrIOS
-          ? FloatingActionButton.extended(
-              heroTag: 'modelsFab',
-              icon: const Icon(Icons.model_training),
-              label: const Text('Models'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => const ModelSelectionScreen(),
-                  ),
-                );
-              },
-            )
-          : null,
+
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: ResponsiveBuilder(
         builder: (context, sizingInformation) {
@@ -483,20 +470,20 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
                             appTitle: _appTitle,
                             isOnline: isModelInitialized,
                             onModelSelection: () {
-                              if (_isAndroidOrIOS) {
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute<void>(
-                                    builder: (context) => const ModelSelectionScreen(),
-                                  ),
-                                  (route) => false,
-                                );
-                              } else {
-                                // No-op on non-mobile; models are asset-only on web/desktop
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Model selection is available on Android/iOS only.')),
-                                );
-                              }
+                              // if (_isAndroidOrIOS) {
+                              //   Navigator.pushAndRemoveUntil(
+                              //     context,
+                              //     MaterialPageRoute<void>(
+                              //       builder: (context) => const ModelSelectionScreen(),
+                              //     ),
+                              //     (route) => false,
+                              //   );
+                              // } else {
+                              //   // No-op on non-mobile; models are asset-only on web/desktop
+                              //   ScaffoldMessenger.of(context).showSnackBar(
+                              //     const SnackBar(content: Text('Model selection is available on Android/iOS only.')),
+                              //   );
+                              // }
                             },
                             onOpenSettings: () => _openSettingsSheet(context),
                           ),

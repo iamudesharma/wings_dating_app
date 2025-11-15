@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:wings_dating_app/routes/app_router_provider.dart';
+import 'package:wings_dating_app/src/ai_wingman/widgets/model_download_screen.dart';
+import 'package:wings_dating_app/src/ai_wingman/widgets/model_selection_screen.dart';
 import 'package:wings_dating_app/src/album/album_view.dart';
 import 'package:wings_dating_app/src/album/create_album_view.dart';
 import 'package:wings_dating_app/src/album/widget/image_preview.dart';
@@ -57,7 +59,6 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: ChatListRoute.page, path: "chats", keepHistory: true),
         AutoRoute(page: AlbumRoute.page, path: "album", keepHistory: true),
         AutoRoute(page: MatchingRoute.page, path: "matching", keepHistory: true),
-        AutoRoute(page: AIChatRoute.page, path: "ai-wingman", keepHistory: true),
         AutoRoute(page: ProfileRoute.page, path: "profile", keepHistory: true),
       ],
       guards: [
@@ -114,6 +115,17 @@ class AppRouter extends RootStackRouter {
       page: AIAnalysisRoute.page,
       path: "/ai-analysis",
       keepHistory: true,
+    ),
+    AutoRoute(page: AIChatRoute.page, path: "/ai-wingman", keepHistory: true, guards: [
+      AIGuard(),
+    ]),
+    AutoRoute(
+      page: ModelDownloadRoute.page,
+      path: "/model-download",
+    ),
+    AutoRoute(
+      page: ModelSelectionRoute.page,
+      path: "/model-selection",
     ),
   ];
 }

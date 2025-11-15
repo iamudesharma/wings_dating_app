@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -5,16 +6,17 @@ import 'package:wings_dating_app/src/ai_wingman/models/model.dart';
 import 'package:wings_dating_app/src/ai_wingman/pages/ai_wingman_view.dart';
 import 'package:wings_dating_app/src/ai_wingman/services/model_download_service.dart';
 
-class ModelDownloadScreen extends StatefulWidget {
+@RoutePage()
+class ModelDownloadView extends StatefulWidget {
   final Model model;
 
-  const ModelDownloadScreen({super.key, required this.model});
+  const ModelDownloadView({super.key, required this.model});
 
   @override
-  State<ModelDownloadScreen> createState() => _ModelDownloadScreenState();
+  State<ModelDownloadView> createState() => _ModelDownloadViewState();
 }
 
-class _ModelDownloadScreenState extends State<ModelDownloadScreen> {
+class _ModelDownloadViewState extends State<ModelDownloadView> {
   late ModelDownloadService _downloadService;
   bool needToDownload = true;
   double _progress = 0.0; // Track download progress
@@ -28,6 +30,7 @@ class _ModelDownloadScreenState extends State<ModelDownloadScreen> {
       modelUrl: widget.model.url,
       modelFilename: widget.model.filename,
       licenseUrl: widget.model.licenseUrl,
+      modelType: widget.model.modelType,
     );
     _initialize();
   }

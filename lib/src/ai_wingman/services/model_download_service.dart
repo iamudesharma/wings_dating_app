@@ -1,175 +1,118 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_gemma/core/api/flutter_gemma.dart';
+import 'package:flutter_gemma/core/model.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wings_dating_app/src/ai_wingman/services/auth_token_service.dart';
 
 class ModelDownloadService {
-  final String modelUrl;
-  final String modelFilename;
-  final String licenseUrl;
-
   ModelDownloadService({
     required this.modelUrl,
     required this.modelFilename,
     required this.licenseUrl,
+    required this.modelType,
+    this.fileType = ModelFileType.task,
   });
 
+  final String modelUrl;
+  final String modelFilename;
+  final String licenseUrl;
+  final ModelType modelType;
+  final ModelFileType fileType;
+
   /// Load the token from SharedPreferences.
-  Future<String?> loadToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('auth_token');
-  }
+  Future<String?> loadToken() => AuthTokenService.loadToken();
 
   /// Save the token to SharedPreferences.
-  Future<void> saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('auth_token', token);
-  }
+  Future<void> saveToken(String token) => AuthTokenService.saveToken(token);
 
   /// Helper method to get the file path.
   Future<String> getFilePath() async {
+    // Use the same path correction logic as the unified system
     final directory = await getApplicationDocumentsDirectory();
-    return '${directory.path}/$modelFilename';
-  }
-
-  String get _modelPathPrefsKey => 'model_path_$modelFilename';
-
-  /// Persist the resolved model file path so other layers can quickly retrieve it.
-  Future<void> _persistModelPath(String path) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_modelPathPrefsKey, path);
-    } catch (_) {
-      // ignore
-    }
-  }
-
-  /// Load a previously persisted model path (if any).
-  Future<String?> loadPersistedModelPath() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final path = prefs.getString(_modelPathPrefsKey);
-      if (path == null) return null;
-      final file = File(path);
-      if (file.existsSync()) return path; // validate existence
-      return null;
-    } catch (_) {
-      return null;
-    }
+    // Apply Android path correction for consistency with unified download system
+    final correctedPath = directory.path.contains('/data/user/0/')
+        ? directory.path.replaceFirst('/data/user/0/', '/data/data/')
+        : directory.path;
+    return '$correctedPath/$modelFilename';
   }
 
   /// Checks if the model file exists and matches the remote file size.
   Future<bool> checkModelExistence(String token) async {
     try {
+      // Extract SAME filename that Modern API will use during download
+      final uri = Uri.parse(modelUrl);
+      print('Model URL: $modelUrl');
+      final actualFilename = uri.pathSegments.isNotEmpty ? uri.pathSegments.last : modelFilename;
+      print('Actual Filename: $actualFilename');
+      // Modern API: Check if model is installed using actual filename
+      final isInstalled = await FlutterGemma.isModelInstalled(actualFilename);
+
+      if (isInstalled) {
+        return true;
+      }
+
+      // Fallback: check physical file existence with size validation
       final filePath = await getFilePath();
       final file = File(filePath);
 
-      // Check remote file size
-      final Map<String, String> headers = token.isNotEmpty ? {'Authorization': 'Bearer $token'} : {};
-      final headResponse = await http.head(Uri.parse(modelUrl), headers: headers);
+      if (!file.existsSync()) {
+        return false;
+      }
 
-      if (headResponse.statusCode == 200) {
-        final contentLengthHeader = headResponse.headers['content-length'];
-        if (contentLengthHeader != null) {
-          final remoteFileSize = int.parse(contentLengthHeader);
-          if (file.existsSync() && await file.length() == remoteFileSize) {
-            return true;
+      // Validate size if possible
+      final Map<String, String> headers = token.isNotEmpty ? {'Authorization': 'Bearer $token'} : {};
+
+      try {
+        final headResponse = await http.head(Uri.parse(modelUrl), headers: headers);
+        if (headResponse.statusCode == 200) {
+          final contentLengthHeader = headResponse.headers['content-length'];
+          if (contentLengthHeader != null) {
+            final remoteFileSize = int.parse(contentLengthHeader);
+            return await file.length() == remoteFileSize;
           }
         }
+      } catch (e) {
+        // HEAD request failed (e.g., CORS on web), trust file existence
+        if (kDebugMode) {
+          debugPrint('HEAD request failed, trusting file existence: $e');
+        }
+        return true;
       }
+
+      return true; // File exists, size validation failed/skipped
     } catch (e) {
       if (kDebugMode) {
-        print('Error checking model existence: $e');
+        debugPrint('Error checking model existence: $e');
       }
     }
     return false;
   }
 
-  /// Checks only local file existence without any network calls.
-  /// Useful for deciding UI flows on mobile when offline or when auth is required.
-  Future<bool> existsLocally() async {
-    try {
-      final filePath = await getFilePath();
-      final file = File(filePath);
-      return file.existsSync();
-    } catch (_) {
-      return false;
-    }
-  }
-
-  /// Downloads the model file and tracks progress.
+  /// Downloads the model file and tracks progress using Modern API.
   Future<void> downloadModel({
     required String token,
     required Function(double) onProgress,
   }) async {
-    http.StreamedResponse? response;
-    IOSink? fileSink;
-
     try {
-      final filePath = await getFilePath();
-      final file = File(filePath);
+      // Convert empty string to null for cleaner API
+      final authToken = token.isEmpty ? null : token;
 
-      // Check if file already exists and partially downloaded
-      int downloadedBytes = 0;
-      if (file.existsSync()) {
-        downloadedBytes = await file.length();
-      }
-
-      // Create HTTP request
-      final request = http.Request('GET', Uri.parse(modelUrl));
-      if (token.isNotEmpty) {
-        request.headers['Authorization'] = 'Bearer $token';
-      }
-
-      // Resume download if partially downloaded
-      if (downloadedBytes > 0) {
-        request.headers['Range'] = 'bytes=$downloadedBytes-';
-      }
-
-      // Send request and handle response
-      response = await request.send();
-      if (response.statusCode == 200 || response.statusCode == 206) {
-        final contentLength = response.contentLength ?? 0;
-        final totalBytes = downloadedBytes + contentLength;
-        fileSink = file.openWrite(mode: FileMode.append);
-
-        int received = downloadedBytes;
-
-        // Listen to the stream and write to the file
-        await for (final chunk in response.stream) {
-          fileSink.add(chunk);
-          received += chunk.length;
-
-          // Update progress
-          onProgress(totalBytes > 0 ? received / totalBytes : 0.0);
-        }
-
-        // Persist final path after successful full download
-        if (await file.exists()) {
-          await _persistModelPath(filePath);
-        }
-      } else {
-        if (kDebugMode) {
-          print('Failed to download model. Status code: ${response.statusCode}');
-          print('Headers: ${response.headers}');
-          try {
-            final errorBody = await response.stream.bytesToString();
-            print('Error body: $errorBody');
-          } catch (e) {
-            print('Could not read error body: $e');
-          }
-        }
-        throw Exception('Failed to download the model.');
-      }
+      // Modern API: Install inference model from network with progress tracking
+      await FlutterGemma.installModel(
+        modelType: modelType,
+        fileType: fileType,
+      ).fromNetwork(modelUrl, token: authToken).withProgress((progress) {
+        onProgress(progress.toDouble());
+      }).install();
     } catch (e) {
       if (kDebugMode) {
-        print('Error downloading model: $e');
+        debugPrint('Error downloading model: $e');
       }
       rethrow;
-    } finally {
-      if (fileSink != null) await fileSink.close();
     }
   }
 
@@ -182,15 +125,9 @@ class ModelDownloadService {
       if (file.existsSync()) {
         await file.delete();
       }
-
-      // Remove persisted path
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.remove(_modelPathPrefsKey);
-      } catch (_) {}
     } catch (e) {
       if (kDebugMode) {
-        print('Error deleting model: $e');
+        debugPrint('Error deleting model: $e');
       }
     }
   }

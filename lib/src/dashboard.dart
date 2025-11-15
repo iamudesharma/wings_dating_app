@@ -125,6 +125,11 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
     }
 
     return Scaffold(
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () => context.router.push(AIChatRoute()),
+      //   child: const Icon(Icons.smart_toy),
+        
+      // ),
       // bottomNavigationBar: const SizedBox(height: 50, child: BannerExample()),
       body: ResponsiveBuilder(builder: (context, size) {
         return AutoTabsScaffold(
@@ -137,7 +142,6 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
             ChatListRoute(),
             AlbumRoute(),
             MatchingRoute(),
-            AIChatRoute(),
             ProfileRoute(),
           ],
           bottomNavigationBuilder: size.isMobile
@@ -171,12 +175,6 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
                             label: 'Matching',
                             icon: Icon(
                               Icons.person_2_outlined,
-                            ),
-                          ),
-                          NavigationDestination(
-                            label: 'AI Wingman',
-                            icon: Icon(
-                              Icons.smart_toy,
                             ),
                           ),
                           NavigationDestination(

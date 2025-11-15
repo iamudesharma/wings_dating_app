@@ -69,6 +69,7 @@ class ChatView extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: StreamMessageListView(
+                
                 messageBuilder: (p0, messageDetails, p2, defaultMessageWidget) {
                   return defaultMessageWidget.copyWith(
                     attachmentBuilders: [
@@ -82,6 +83,7 @@ class ChatView extends StatelessWidget {
               ),
             ),
             StreamMessageInput(
+              
               enableVoiceRecording: true,
               customAutocompleteTriggers: [
                 StreamAutocompleteTrigger(

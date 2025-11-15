@@ -316,251 +316,253 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
             : isTablet
                 ? 720
                 : double.infinity;
-        return Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(56),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Theme.of(context).colorScheme.primary.withOpacity(0.08),
-                    Theme.of(context).colorScheme.secondary.withOpacity(0.08),
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.background,
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(56),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Theme.of(context).colorScheme.primary.withOpacity(0.08),
+                      Theme.of(context).colorScheme.secondary.withOpacity(0.08),
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.06),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
                   ],
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.06),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => context.router.maybePop(),
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                  Expanded(
-                    child: otherUser.when(
-                      data: (userData) => Text(
-                        userData?.username ?? "Profile",
-                        style: Theme.of(context).textTheme.titleLarge,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      loading: () => const Text("Profile"),
-                      error: (_, __) => const Text("Profile"),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => context.router.maybePop(),
+                      color: Theme.of(context).colorScheme.onBackground,
                     ),
-                  ),
-                  // AI Chat Analysis Button
-                  otherUser.when(
-                    data: (userData) => userData != null
-                        ? IconButton(
-                            icon: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Theme.of(context).colorScheme.primary,
-                                    Theme.of(context).colorScheme.secondary,
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
+                    Expanded(
+                      child: otherUser.when(
+                        data: (userData) => Text(
+                          userData?.username ?? "Profile",
+                          style: Theme.of(context).textTheme.titleLarge,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        loading: () => const Text("Profile"),
+                        error: (_, __) => const Text("Profile"),
+                      ),
+                    ),
+                    // AI Chat Analysis Button
+                    otherUser.when(
+                      data: (userData) => userData != null
+                          ? IconButton(
+                              icon: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Theme.of(context).colorScheme.primary,
+                                      Theme.of(context).colorScheme.secondary,
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
                                   ),
-                                ],
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  Icons.psychology,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
                               ),
-                              child: const Icon(
-                                Icons.psychology,
-                                color: Colors.white,
-                                size: 20,
-                              ),
+                              tooltip: "Get AI Dating Analysis",
+                              onPressed: () async {
+                                // Set the profile data for analysis
+                                triggerProfileAnalysis(ref, userData);
+
+                                // Navigate directly to the standalone AI Analysis screen
+                                context.router.push(AIAnalysisRoute());
+                              },
+                            )
+                          : const SizedBox.shrink(),
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, __) => const SizedBox.shrink(),
+                    ),
+                    otherUser.when(
+                      data: (userData) => PopupMenuButton<int>(
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            onTap: () => context.router.maybePop(),
+                            value: 1,
+                            child: const Row(
+                              children: [Icon(Icons.block), SizedBox(width: 10), Text("Block")],
                             ),
-                            tooltip: "Get AI Dating Analysis",
-                            onPressed: () async {
-                              // Set the profile data for analysis
-                              triggerProfileAnalysis(ref, userData);
-
-                              // Navigate directly to the standalone AI Analysis screen
-                              context.router.push(AIAnalysisRoute());
-                            },
-                          )
-                        : const SizedBox.shrink(),
-                    loading: () => const SizedBox.shrink(),
-                    error: (_, __) => const SizedBox.shrink(),
-                  ),
-                  otherUser.when(
-                    data: (userData) => PopupMenuButton<int>(
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          onTap: () => context.router.maybePop(),
-                          value: 1,
-                          child: const Row(
-                            children: [Icon(Icons.block), SizedBox(width: 10), Text("Block")],
                           ),
-                        ),
-                        const PopupMenuItem(
-                          value: 2,
-                          child: Row(
-                            children: [Icon(Icons.chrome_reader_mode), SizedBox(width: 10), Text("About")],
+                          const PopupMenuItem(
+                            value: 2,
+                            child: Row(
+                              children: [Icon(Icons.chrome_reader_mode), SizedBox(width: 10), Text("About")],
+                            ),
                           ),
-                        ),
-                      ],
-                      color: Theme.of(context).colorScheme.surface,
-                      elevation: 2,
+                        ],
+                        color: Theme.of(context).colorScheme.surface,
+                        elevation: 2,
+                      ),
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, __) => const SizedBox.shrink(),
                     ),
-                    loading: () => const SizedBox.shrink(),
-                    error: (_, __) => const SizedBox.shrink(),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          body: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: maxWidth),
+            body: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: maxWidth),
+                child: otherUser.when(
+                  loading: () => const Center(child: CircularProgressIndicator.adaptive()),
+                  error: (error, stackTrace) => (error is Exception)
+                      ? const Center(child: Text("User not found"))
+                      : const Center(child: Text("Something went wrong")),
+                  data: (userData) {
+                    if (userData == null) {
+                      return const Center(child: Text("User not found"));
+                    }
+                    if (kIsWeb) {
+                      MetaSEO meta = MetaSEO();
+                      meta.author(author: userData.username);
+                      meta.description(description: userData.bio ?? "No Bio");
+                      meta.keywords(keywords: userData.bodyType.value);
+                      meta.ogImage(ogImage: userData.profileUrl ?? "https://img.icons8.com/ios/500/null.png");
+                    }
+
+                    return ScrollConfiguration(
+                      behavior: _NoScrollbarBehavior(),
+                      child: ListView(
+                        padding: EdgeInsets.symmetric(
+                          vertical: isDesktop
+                              ? 32
+                              : isTablet
+                                  ? 24
+                                  : 16,
+                          horizontal: isDesktop
+                              ? 24
+                              : isTablet
+                                  ? 16
+                                  : 12,
+                        ),
+                        children: [
+                          // Modern profile header
+                          _buildProfileHeader(context, userData, refData, isWide),
+                          const SizedBox(height: 16),
+
+                          // About section
+                          _buildSectionCard(
+                            context,
+                            title: 'About',
+                            child: Text(
+                              userData.bio?.trim().isNotEmpty == true ? userData.bio!.trim() : 'No bio provided',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Details grid
+                          _buildDetailsGrid(context, userData, isWide),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.all(16.0),
               child: otherUser.when(
-                loading: () => const Center(child: CircularProgressIndicator.adaptive()),
-                error: (error, stackTrace) => (error is Exception)
-                    ? const Center(child: Text("User not found"))
-                    : const Center(child: Text("Something went wrong")),
-                data: (userData) {
-                  if (userData == null) {
-                    return const Center(child: Text("User not found"));
-                  }
-                  if (kIsWeb) {
-                    MetaSEO meta = MetaSEO();
-                    meta.author(author: userData.username);
-                    meta.description(description: userData.bio ?? "No Bio");
-                    meta.keywords(keywords: userData.bodyType.value);
-                    meta.ogImage(ogImage: userData.profileUrl ?? "https://img.icons8.com/ios/500/null.png");
-                  }
-
-                  return ScrollConfiguration(
-                    behavior: _NoScrollbarBehavior(),
-                    child: ListView(
-                      padding: EdgeInsets.symmetric(
-                        vertical: isDesktop
-                            ? 32
-                            : isTablet
-                                ? 24
-                                : 16,
-                        horizontal: isDesktop
-                            ? 24
-                            : isTablet
-                                ? 16
-                                : 12,
-                      ),
-                      children: [
-                        // Modern profile header
-                        _buildProfileHeader(context, userData, refData, isWide),
-                        const SizedBox(height: 16),
-
-                        // About section
-                        _buildSectionCard(
-                          context,
-                          title: 'About',
-                          child: Text(
-                            userData.bio?.trim().isNotEmpty == true ? userData.bio!.trim() : 'No bio provided',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
-                            textAlign: TextAlign.start,
-                          ),
+                data: (userData) => Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 16),
-
-                        // Details grid
-                        _buildDetailsGrid(context, userData, isWide),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: otherUser.when(
-              data: (userData) => Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      icon: Icon(
-                        Icons.whatshot,
-                        color: hasTapped ? Colors.red : Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      label: Text(
-                        hasTapped ? "Tapped" : "Tap",
-                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                      ),
-                      onPressed: hasTapped
-                          ? null
-                          : () async {
-                              try {
-                                final tapResponse = await ref.read(profileRepoProvider).sendTap(userData!.id);
-                                setState(() {
-                                  hasTapped = true;
-                                  tapError = '';
-                                });
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(tapResponse.message)),
-                                );
-                              } catch (e) {
-                                if (e.toString().contains('already tapped')) {
+                        icon: Icon(
+                          Icons.whatshot,
+                          color: hasTapped ? Colors.red : Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        label: Text(
+                          hasTapped ? "Tapped" : "Tap",
+                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                        ),
+                        onPressed: hasTapped
+                            ? null
+                            : () async {
+                                try {
+                                  final tapResponse = await ref.read(profileRepoProvider).sendTap(userData!.id);
                                   setState(() {
                                     hasTapped = true;
-                                    tapError = 'You have already tapped this user today';
+                                    tapError = '';
                                   });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(tapResponse.message)),
+                                  );
+                                } catch (e) {
+                                  if (e.toString().contains('already tapped')) {
+                                    setState(() {
+                                      hasTapped = true;
+                                      tapError = 'You have already tapped this user today';
+                                    });
+                                  }
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Failed to send tap: ${e.toString()}')),
+                                  );
                                 }
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Failed to send tap: ${e.toString()}')),
-                                );
-                              }
-                            },
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              },
                       ),
-                      icon: Icon(Icons.chat_bubble, color: Theme.of(context).colorScheme.onPrimary),
-                      label: (currentUser != null && userData != null && currentUser.blockList.contains(userData.id))
-                          ? Text("Unblock", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
-                          : Text("Message", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
-                      onPressed: () async {
-                        // Todo: create chat one to one chat
-                      },
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        icon: Icon(Icons.chat_bubble, color: Theme.of(context).colorScheme.onPrimary),
+                        label: (currentUser != null && userData != null && currentUser.blockList.contains(userData.id))
+                            ? Text("Unblock", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
+                            : Text("Message", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+                        onPressed: () async {
+                          // Todo: create chat one to one chat
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
               ),
-              loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
             ),
           ),
         );
@@ -1059,6 +1061,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center, // Center text vertically within tile
               children: [
                 Text(

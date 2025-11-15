@@ -1,4 +1,5 @@
 
+import 'package:flutter_gemma/core/api/flutter_gemma.dart';
 import 'package:flutter_gemma/core/chat.dart';
 import 'package:flutter_gemma/core/tool.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,6 +34,8 @@ class GemmaNotifier extends StateNotifier<InferenceChat?> {
   Future<void> initialize(Model model, List<Tool> tools) async {
     _currentModel = model;
     _tools = tools;
+
+    
 
     _temperature = model.temperature;
     _topK = model.topK;

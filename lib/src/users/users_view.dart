@@ -278,82 +278,87 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
     });
 
     return Scaffold(
-      body: ResponsiveBuilder(builder: (context, sizingInformation) {
-        return nullWidget ??
-            CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: AppBar(
-                    leadingWidth: 40,
-                    leading: CircleAvatar(
-                      backgroundImage: CachedNetworkImageProvider(
-                          userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                    ),
-                    title: Text(userData.username),
-                    actions: [
-                      IconButton(
-                        icon: Icon(Icons.whatshot),
-                        tooltip: 'View Taps',
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => TapListView(userId: userData.id),
-                            ),
-                          );
-                        },
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: ResponsiveBuilder(builder: (context, sizingInformation) {
+          return nullWidget ??
+              CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: AppBar(
+                      leadingWidth: 40,
+                      leading: CircleAvatar(
+                        backgroundImage: CachedNetworkImageProvider(
+                            userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                       ),
-                      InkWell(
-                          onTap: () {
-                            AutoRouter.of(context).push(const SearchUsersRoute());
-                          },
-                          child: Icon(Icons.search)),
-                      SizedBox(width: 10),
-                      InkWell(
-                          onTap: () {
-                            AutoRouter.of(context).push(const FilterRoute()).then((result) {
-                              if (result != null && result is Map<String, dynamic>) {
-                                setState(() {
-                                  filters = result;
-                                });
-                                // Update filters and refresh
-                                usersNotifier.updateFilters(result);
-                                usersNotifier.loadUsers(refresh: true);
-                              }
-                            });
-                          },
-                          child: Icon(Icons.filter_list_alt)),
-                      SizedBox(width: 10),
-                    ],
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Row(
-                    children: [
-                      NavigationBarWidget(
-                        sizingInformation: sizingInformation,
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: RefreshIndicator.adaptive(
-                          onRefresh: () async {
-                            final currentLocation = await Geolocator.getCurrentPosition(
-                              locationSettings: LocationSettings(
-                                accuracy: LocationAccuracy.high,
+                      title: Text(userData.username),
+                      actions: [
+                        IconButton(
+                          icon: Icon(Icons.whatshot),
+                          tooltip: 'View Taps',
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => TapListView(userId: userData.id),
                               ),
                             );
-
-                            logger.d("currentLocation ${currentLocation.toJson()}");
-                            await usersNotifier.refresh();
                           },
-                          child: _buildUserGrid(sizingInformation, usersState, usersNotifier, userData),
                         ),
-                      ),
-                    ],
+                        InkWell(
+                            onTap: () {
+                              AutoRouter.of(context).push(const SearchUsersRoute());
+                            },
+                            child: Icon(Icons.search)),
+                        SizedBox(width: 10),
+                        InkWell(
+                            onTap: () {
+                              AutoRouter.of(context).push(const FilterRoute()).then((result) {
+                                if (result != null && result is Map<String, dynamic>) {
+                                  setState(() {
+                                    filters = result;
+                                  });
+                                  // Update filters and refresh
+                                  usersNotifier.updateFilters(result);
+                                  usersNotifier.loadUsers(refresh: true);
+                                }
+                              });
+                            },
+                            child: Icon(Icons.filter_list_alt)),
+                        SizedBox(width: 10),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-      }),
+                  SliverToBoxAdapter(
+                    child: Row(
+                      children: [
+                        NavigationBarWidget(
+                          sizingInformation: sizingInformation,
+                        ),
+                        Expanded(
+                          flex: 5,
+                          child: RefreshIndicator.adaptive(
+                            onRefresh: () async {
+                              final currentLocation = await Geolocator.getCurrentPosition(
+                                locationSettings: LocationSettings(
+                                  accuracy: LocationAccuracy.high,
+                                ),
+                              );
+
+                              logger.d("currentLocation ${currentLocation.toJson()}");
+                              await usersNotifier.refresh();
+                            },
+                            child: _buildUserGrid(sizingInformation, usersState, usersNotifier, userData),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+        }),
+      ),
     );
   }
 
@@ -501,6 +506,11 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
       );
     }
 
+    final mediaQuery = MediaQuery.of(context);
+    final horizontalPadding = sizingInformation.isMobile ? 12.0 : 16.0;
+    final verticalPadding = sizingInformation.isMobile ? 12.0 : 16.0;
+    final bottomInset = mediaQuery.padding.bottom + (sizingInformation.isMobile ? 84.0 : 40.0);
+
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollInfo) {
         if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent &&
@@ -511,8 +521,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
         return false;
       },
       child: Container(
-        height: sizingInformation.screenSize.height,
-        width: sizingInformation.screenSize.width,
+        width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -524,7 +533,13 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
           ),
         ),
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(sizingInformation.isMobile ? 12 : 16),
+          padding: EdgeInsets.fromLTRB(
+            horizontalPadding,
+            verticalPadding,
+            horizontalPadding,
+            bottomInset,
+          ),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               // Header section
