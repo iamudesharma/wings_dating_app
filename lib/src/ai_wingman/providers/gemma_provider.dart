@@ -1,5 +1,4 @@
 
-import 'package:flutter_gemma/core/api/flutter_gemma.dart';
 import 'package:flutter_gemma/core/chat.dart';
 import 'package:flutter_gemma/core/tool.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

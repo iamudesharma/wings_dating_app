@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gemma/core/chat.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:wings_dating_app/src/ai_wingman/services/gemma_model_manager.dart';
 import 'package:wings_dating_app/src/ai_wingman/widgets/chat_message.dart';

@@ -95,7 +95,7 @@ class ProfileRepo with RepositoryExceptionMixin {
       };
     }
 
-    logger.i("Payload for updateUserDoc: ${payload}");
+    logger.i("Payload for updateUserDoc: $payload");
     await httpTemplate.put("/users/${userModel.id}", body: payload);
   }
 

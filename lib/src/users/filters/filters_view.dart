@@ -28,7 +28,7 @@ class FilterView extends ConsumerWidget {
           Switch(
             value: filters.enabled,
             onChanged: (_) => filtersNotifier.toggleEnabled(),
-            activeColor: Colors.yellow,
+            activeThumbColor: Colors.yellow,
           ),
         ],
         leading: IconButton(
@@ -111,7 +111,7 @@ class FilterView extends ConsumerWidget {
   Widget _buildDropdown(
       List<String> items, String currentValue, Function(String) onChanged) {
     return DropdownButtonFormField<String>(
-      value: currentValue.isEmpty ? null : currentValue,
+      initialValue: currentValue.isEmpty ? null : currentValue,
       items: items
           .map((item) => DropdownMenuItem(value: item, child: Text(item)))
           .toList(),

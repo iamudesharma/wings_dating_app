@@ -319,7 +319,7 @@ class InterstitialExampleState extends State<InterstitialExample> {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
 
   final String title;
 

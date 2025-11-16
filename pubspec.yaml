@@ -67,11 +67,11 @@ dependencies:
   chat_bubbles: ^1.7.0
   uuid: ^4.5.2
   firebase_messaging: ^16.0.4
-  cached_network_image:
-    git:
-      url: "https://github.com/Neotech-iHoops/flutter_cached_network_image.git"
-      ref: "develop"
-      path: "cached_network_image"
+  # Use the hosted cached_network_image that is compatible with stream_chat_flutter.
+  # If you specifically require a git/forked implementation of cached_network_image,
+  # replace this hosted declaration with the git block below OR use dependency_overrides
+  # to point to the fork.
+  cached_network_image: ^3.3.1
         
 
   flutter_local_notifications: ^19.5.0
@@ -164,6 +164,8 @@ dev_dependencies:
 
 dependency_overrides:
 
+  # If you need to force the git fork for cached_network_image, uncomment the
+  # override below. Prefer the hosted entry above unless you need a custom fork.
   # cached_network_image:
   #   git:
   #     url: "https://github.com/Neotech-iHoops/flutter_cached_network_image.git"

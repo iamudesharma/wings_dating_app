@@ -2,14 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gemma/core/chat.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/src/ai_wingman/models/model.dart';
 import 'package:wings_dating_app/src/ai_wingman/providers/gemma_provider.dart';
-import 'package:wings_dating_app/src/ai_wingman/widgets/model_selection_screen.dart';
-import 'package:wings_dating_app/src/ai_wingman/services/model_download_service.dart';
 import 'package:wings_dating_app/src/ai_wingman/widgets/enhanced_wingman_header.dart';
 import 'package:wings_dating_app/src/ai_wingman/widgets/enhanced_dating_suggestions.dart';
 import 'package:wings_dating_app/src/ai_wingman/widgets/enhanced_welcome_section.dart';
@@ -33,8 +30,8 @@ class AIChatScreen extends ConsumerStatefulWidget {
 class ChatScreenState extends ConsumerState<AIChatScreen> {
   final _messages = <Message>[];
   String? _error;
-  String _appTitle = 'AI Dating Wingman 💕';
-  bool _redirectedForDownload = false; // guard to avoid multiple navigations
+  final String _appTitle = 'AI Dating Wingman 💕';
+  final bool _redirectedForDownload = false; // guard to avoid multiple navigations
 
   // Mobile-only platforms for model download/selection
   bool get _isAndroidOrIOS => !kIsWeb && (Platform.isAndroid || Platform.isIOS);
@@ -228,7 +225,7 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
     setState(() {
       _messages.add(Message.systemInfo(
         text:
-            "🔧 Calling: ${functionCall.name}(${functionCall.args.entries.map((e) => '${e.key}: \"${e.value}\"').join(', ')})",
+            "🔧 Calling: ${functionCall.name}(${functionCall.args.entries.map((e) => '${e.key}: "${e.value}"').join(', ')})",
       ));
     });
 
@@ -413,7 +410,7 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       // On mobile (non-web), show a clear entry point to select/download models
 
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -431,9 +428,9 @@ class ChatScreenState extends ConsumerState<AIChatScreen> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Theme.of(context).colorScheme.background,
+                        Theme.of(context).colorScheme.surface,
                         Theme.of(context).colorScheme.surface.withOpacity(0.2),
-                        Theme.of(context).colorScheme.background,
+                        Theme.of(context).colorScheme.surface,
                       ],
                     ),
                   ),

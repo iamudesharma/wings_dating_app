@@ -758,7 +758,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                   margin: const EdgeInsets.only(top: 24),
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
@@ -989,7 +989,7 @@ class NavigationBarWidget extends StatelessWidget {
       width: navWidth,
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background.withOpacity(0.95),
+        color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.25),
@@ -1013,7 +1013,7 @@ class NavigationBarWidget extends StatelessWidget {
                 'Wings',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
               ),
             ],
@@ -1037,7 +1037,7 @@ class NavigationBarWidget extends StatelessWidget {
                         entry.icon,
                         color: isSelected
                             ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+                            : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                         size: 24,
                       ),
                       title: Text(
@@ -1046,7 +1046,7 @@ class NavigationBarWidget extends StatelessWidget {
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                               color: isSelected
                                   ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.onBackground.withOpacity(0.65),
+                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.65),
                             ),
                       ),
                       onTap: () {
@@ -1070,13 +1070,13 @@ class NavigationBarWidget extends StatelessWidget {
               IconButton(
                 tooltip: 'Settings',
                 icon: const Icon(Icons.settings),
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
                 onPressed: () => tabsRouter.setActiveIndex(4),
               ),
               IconButton(
                 tooltip: 'AI Wingman',
                 icon: const Icon(Icons.smart_toy_outlined),
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
                 onPressed: () {
                   AutoRouter.of(context).push(AIChatRoute());
                 },

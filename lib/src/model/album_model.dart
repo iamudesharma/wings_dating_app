@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:wings_dating_app/src/model/album_owner_model.dart';
 
 part 'album_model.g.dart';

@@ -1,14 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:get_it/get_it.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart'
     show StreamAutocompleteOptions;
 import 'package:wings_dating_app/src/ai_wingman/providers/gemma_provider.dart';
 
-import '../../ai_wingman/models/model.dart';
 import 'package:substring_highlight/substring_highlight.dart'; // Assuming this is your SubstringHighlight widget
 // import 'package:stream_autocomplete_options/stream_autocomplete_options.dart'; // Assuming this is your StreamAutocompleteOptions widget
 

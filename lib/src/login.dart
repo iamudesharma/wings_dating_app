@@ -34,7 +34,7 @@ class LoginPageState extends State<LoginPage> {
   FormType _form = FormType
       .login; // our default setting is to login, and we should switch to creating an account when the user chooses to
 
-  bool _isLoginContinues = false;
+  final bool _isLoginContinues = false;
 
   LoginPageState() {
     _loginFilter.addListener(_loginListen);

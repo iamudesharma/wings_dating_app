@@ -255,25 +255,33 @@ class UserFilters extends _$UserFilters {
     final activeFilters = <String>[];
 
     if (state.enabled) activeFilters.add('Enabled');
-    if (state.ageRange != '18 - 22 yrs')
+    if (state.ageRange != '18 - 22 yrs') {
       activeFilters.add('Age: ${state.ageRange}');
-    if (state.position.isNotEmpty)
+    }
+    if (state.position.isNotEmpty) {
       activeFilters.add('Position: ${state.position}');
+    }
     if (state.hasPhotos) activeFilters.add('Has Photos');
     if (state.hasFacePics) activeFilters.add('Has Face Pics');
     if (state.hasAlbums) activeFilters.add('Has Albums');
-    if (state.distance != 10.0)
+    if (state.distance != 10.0) {
       activeFilters.add('Distance: ${state.distance.toInt()}km');
-    if (state.lastSeen.isNotEmpty)
+    }
+    if (state.lastSeen.isNotEmpty) {
       activeFilters.add('Last Seen: ${state.lastSeen}');
-    if (state.interests.isNotEmpty)
+    }
+    if (state.interests.isNotEmpty) {
       activeFilters.add('Interests: ${state.interests.length}');
-    if (state.heightRange.isNotEmpty)
+    }
+    if (state.heightRange.isNotEmpty) {
       activeFilters.add('Height: ${state.heightRange}');
-    if (state.weightRange.isNotEmpty)
+    }
+    if (state.weightRange.isNotEmpty) {
       activeFilters.add('Weight: ${state.weightRange}');
-    if (state.language.isNotEmpty)
+    }
+    if (state.language.isNotEmpty) {
       activeFilters.add('Language: ${state.language}');
+    }
 
     return activeFilters.isEmpty
         ? 'No filters active'
@@ -405,11 +413,13 @@ Map<String, String> formattedFiltersSummary(Ref ref) {
   final summary = <String, String>{};
 
   if (filters.enabled) summary['Status'] = 'Enabled';
-  if (filters.ageRange != '18 - 22 yrs')
+  if (filters.ageRange != '18 - 22 yrs') {
     summary['Age Range'] = filters.ageRange;
+  }
   if (filters.position.isNotEmpty) summary['Position'] = filters.position;
-  if (filters.distance != 10.0)
+  if (filters.distance != 10.0) {
     summary['Distance'] = '${filters.distance.toInt()}km';
+  }
   if (filters.interests.isNotEmpty) {
     summary['Interests'] = filters.interests.length > 3
         ? '${filters.interests.take(3).join(', ')}...'

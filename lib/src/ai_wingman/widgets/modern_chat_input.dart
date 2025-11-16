@@ -168,7 +168,7 @@ class _ModernChatInputState extends State<ModernChatInput>
                   Theme.of(context).colorScheme.surface.withOpacity(0.95),
                   Theme.of(context)
                       .colorScheme
-                      .surfaceVariant
+                      .surfaceContainerHighest
                       .withOpacity(0.95),
                 ],
                 begin: Alignment.topLeft,

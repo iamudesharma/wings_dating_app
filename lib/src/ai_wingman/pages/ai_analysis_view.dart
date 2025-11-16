@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gemma/core/chat.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/src/ai_wingman/models/model.dart';
 import 'package:wings_dating_app/src/ai_wingman/widgets/enhanced_wingman_header.dart';
@@ -32,7 +30,7 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
   bool _isModelInitialized = false;
   bool _isInitializing = false;
   String? _error;
-  String _appTitle = 'AI Dating Profile Analysis 💕';
+  final String _appTitle = 'AI Dating Profile Analysis 💕';
 
   // Runtime-adjustable chat settings (initialized from model defaults)
   double _temperature = 0.7;
@@ -101,7 +99,7 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
         String? token;
         if (widget.model.needsAuth) {
           // token = await AuthTokenService.loadToken();
-          debugPrint('[ChatScreen] Loaded auth token: ${token != null ? "✅" : "❌"}');
+          debugPrint('[ChatScreen] Loaded auth token: ${"❌"}');
         }
 
         print('🌐 Installing remote model from ${widget.model.url}');
@@ -339,7 +337,7 @@ Good luck! 💕''';
 
     final profileData = ref.watch(profileAnalysisProvider);
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -402,9 +400,9 @@ Good luck! 💕''';
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Theme.of(context).colorScheme.background,
+              Theme.of(context).colorScheme.surface,
               Theme.of(context).colorScheme.surface.withOpacity(0.3),
-              Theme.of(context).colorScheme.background,
+              Theme.of(context).colorScheme.surface,
             ],
           ),
         ),
@@ -686,16 +684,16 @@ Good luck! 💕''';
 
   Widget _buildLoadingState() {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Theme.of(context).colorScheme.background,
+              Theme.of(context).colorScheme.surface,
               Theme.of(context).colorScheme.surface.withOpacity(0.3),
-              Theme.of(context).colorScheme.background,
+              Theme.of(context).colorScheme.surface,
             ],
           ),
         ),

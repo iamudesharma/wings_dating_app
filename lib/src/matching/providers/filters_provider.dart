@@ -51,7 +51,7 @@ class DiscoveryFilters {
   Map<String, dynamic> toApiFilters() {
     return {
       'distance': distanceKm,
-      'ageRange': '${minAge}-${maxAge}',
+      'ageRange': '$minAge-$maxAge',
       if (position != null && position!.isNotEmpty) 'position': position,
       if (hasPhotos) 'hasPhotos': true,
       if (hasFacePics) 'hasFacePics': true,

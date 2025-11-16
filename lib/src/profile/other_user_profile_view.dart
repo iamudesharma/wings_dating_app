@@ -389,7 +389,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                 error: (_, __) => const SizedBox.shrink(),
               ),
             ),
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(56),
               child: Container(
@@ -415,7 +415,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                     IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () => context.router.maybePop(),
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                     Expanded(
                       child: otherUser.when(
@@ -789,7 +789,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
           ),
         ],
         border: Border.all(
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.surface,
           width: 6,
         ),
       ),
@@ -804,7 +804,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
             : Container(
                 width: 120,
                 height: 120,
-                color: Theme.of(context).colorScheme.surfaceVariant,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 child: Icon(Icons.person, size: 60, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
               ),
       ),

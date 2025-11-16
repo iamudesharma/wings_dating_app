@@ -298,8 +298,8 @@ class _AlbumCard extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.surfaceVariant.withOpacity(0.6),
-              theme.colorScheme.surfaceVariant.withOpacity(0.2),
+              theme.colorScheme.surfaceContainerHighest.withOpacity(0.6),
+              theme.colorScheme.surfaceContainerHighest.withOpacity(0.2),
             ],
           ),
           boxShadow: [

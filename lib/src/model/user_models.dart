@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:wings_dating_app/helpers/extra_data.dart';
 import 'geo_point_data.dart';
 // Keep user model lean; extra onboarding data is kept locally via providers

@@ -13,17 +13,12 @@ class MarkdownPreviewTest extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('GPT Markdown Preview')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: GptMarkdown(
-          markdownText,
-        ),
-      ),
+      body: Padding(padding: const EdgeInsets.all(16.0), child: GptMarkdown(markdownText)),
     );
   }
 }
 
 @Preview(name: 'My Sample Text')
 Widget mySampleText() {
-  return const Text('Hello, World!');
+  return const MarkdownPreviewTest(markdownText: '# Hello, World!');
 }

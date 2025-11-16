@@ -84,7 +84,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
   }) {
     final theme = Theme.of(context);
     final field = DropdownButtonFormField<T>(
-      value: value,
+      initialValue: value,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: icon != null ? Icon(icon, color: theme.colorScheme.primary) : null,
@@ -112,7 +112,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     final normalizedValue = options.contains(value) ? value : options.first;
 
     final field = DropdownButtonFormField<String>(
-      value: normalizedValue,
+      initialValue: normalizedValue,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: icon != null ? Icon(icon, color: theme.colorScheme.primary) : null,
@@ -427,7 +427,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     final profile = ref.watch(ProfileController.userControllerProvider);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: Text(widget.isEditProfile ? 'Edit Profile' : 'Create Profile'),
       ),
@@ -470,13 +470,13 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                   ),
                                 ],
                                 border: Border.all(
-                                  color: Theme.of(context).colorScheme.background,
+                                  color: Theme.of(context).colorScheme.surface,
                                   width: 6,
                                 ),
                               ),
                               child: CircleAvatar(
                                 radius: imageSize / 2,
-                                backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                                 backgroundImage: profile.profileImage != null
                                     ? MemoryImage(profile.profileImage!) as ImageProvider<Object>
                                     : (widget.isEditProfile && (profile.userModel?.profileUrl?.isNotEmpty ?? false))
@@ -848,11 +848,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
 class ImagePickerWidget extends StatelessWidget {
   const ImagePickerWidget({
-    Key? key,
+    super.key,
     required this.camera,
     required this.gallery,
     this.isCallEnabled = false,
-  }) : super(key: key);
+  });
 
   final VoidCallback camera;
   final VoidCallback gallery;

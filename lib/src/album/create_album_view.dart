@@ -91,7 +91,7 @@ class CreateAlbumView extends ConsumerWidget {
                                 )
                               else
                                 Container(
-                                  color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+                                  color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
                                   child: Icon(
                                     Icons.photo_album_outlined,
                                     size: 60,
@@ -126,7 +126,7 @@ class CreateAlbumView extends ConsumerWidget {
                             decoration: InputDecoration(
                               hintText: "Enter album name",
                               filled: true,
-                              fillColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.15),
+                              fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.15),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(

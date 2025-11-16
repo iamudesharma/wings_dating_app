@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gemma/core/chat.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:wings_dating_app/src/ai_wingman/widgets/chat_input_field.dart';
 import 'package:wings_dating_app/src/ai_wingman/widgets/chat_message.dart';

@@ -56,7 +56,7 @@ class ModernChatMessage extends StatelessWidget {
                               .withOpacity(0.95),
                           Theme.of(context)
                               .colorScheme
-                              .surfaceVariant
+                              .surfaceContainerHighest
                               .withOpacity(0.95),
                         ],
                         begin: Alignment.topLeft,

@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'album_model.dart';
 import 'user_models.dart';
 part 'album_access_request_model.g.dart';

@@ -314,7 +314,7 @@ class DatingInfoPanel extends StatelessWidget {
                       ],
                     ),
                   ))
-              .toList(),
+              ,
         ],
       ),
     );
