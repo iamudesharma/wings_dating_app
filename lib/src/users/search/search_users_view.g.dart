@@ -6,20 +6,51 @@ part of 'search_users_view.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(SearchUser)
+const searchUserProvider = SearchUserProvider._();
+
+final class SearchUserProvider
+    extends $AsyncNotifierProvider<SearchUser, List<UserModel?>?> {
+  const SearchUserProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'searchUserProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$searchUserHash();
+
+  @$internal
+  @override
+  SearchUser create() => SearchUser();
+}
+
 String _$searchUserHash() => r'113325d9511d31bca0d8012a25511527ff429ec1';
 
-/// See also [SearchUser].
-@ProviderFor(SearchUser)
-final searchUserProvider =
-    AutoDisposeAsyncNotifierProvider<SearchUser, List<UserModel?>?>.internal(
-  SearchUser.new,
-  name: r'searchUserProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$searchUserHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SearchUser = AutoDisposeAsyncNotifier<List<UserModel?>?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$SearchUser extends $AsyncNotifier<List<UserModel?>?> {
+  FutureOr<List<UserModel?>?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref as $Ref<AsyncValue<List<UserModel?>?>, List<UserModel?>?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<UserModel?>?>, List<UserModel?>?>,
+              AsyncValue<List<UserModel?>?>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

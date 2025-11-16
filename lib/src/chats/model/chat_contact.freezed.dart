@@ -14,414 +14,279 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$ChatContact {
-  String get name;
-  String get profilePic;
-  String get contactId;
-  DateTime get timeSent;
-  String get lastMessage;
-  String get fcmToken;
 
-  /// Create a copy of ChatContact
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $ChatContactCopyWith<ChatContact> get copyWith =>
-      _$ChatContactCopyWithImpl<ChatContact>(this as ChatContact, _$identity);
+ String get name; String get profilePic; String get contactId; DateTime get timeSent; String get lastMessage; String get fcmToken;
+/// Create a copy of ChatContact
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ChatContactCopyWith<ChatContact> get copyWith => _$ChatContactCopyWithImpl<ChatContact>(this as ChatContact, _$identity);
 
   /// Serializes this ChatContact to a JSON map.
   Map<String, dynamic> toJson();
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is ChatContact &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.profilePic, profilePic) ||
-                other.profilePic == profilePic) &&
-            (identical(other.contactId, contactId) ||
-                other.contactId == contactId) &&
-            (identical(other.timeSent, timeSent) ||
-                other.timeSent == timeSent) &&
-            (identical(other.lastMessage, lastMessage) ||
-                other.lastMessage == lastMessage) &&
-            (identical(other.fcmToken, fcmToken) ||
-                other.fcmToken == fcmToken));
-  }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, profilePic, contactId,
-      timeSent, lastMessage, fcmToken);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatContact&&(identical(other.name, name) || other.name == name)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.contactId, contactId) || other.contactId == contactId)&&(identical(other.timeSent, timeSent) || other.timeSent == timeSent)&&(identical(other.lastMessage, lastMessage) || other.lastMessage == lastMessage)&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken));
+}
 
-  @override
-  String toString() {
-    return 'ChatContact(name: $name, profilePic: $profilePic, contactId: $contactId, timeSent: $timeSent, lastMessage: $lastMessage, fcmToken: $fcmToken)';
-  }
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,profilePic,contactId,timeSent,lastMessage,fcmToken);
+
+@override
+String toString() {
+  return 'ChatContact(name: $name, profilePic: $profilePic, contactId: $contactId, timeSent: $timeSent, lastMessage: $lastMessage, fcmToken: $fcmToken)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class $ChatContactCopyWith<$Res> {
-  factory $ChatContactCopyWith(
-          ChatContact value, $Res Function(ChatContact) _then) =
-      _$ChatContactCopyWithImpl;
-  @useResult
-  $Res call(
-      {String name,
-      String profilePic,
-      String contactId,
-      DateTime timeSent,
-      String lastMessage,
-      String fcmToken});
-}
+abstract mixin class $ChatContactCopyWith<$Res>  {
+  factory $ChatContactCopyWith(ChatContact value, $Res Function(ChatContact) _then) = _$ChatContactCopyWithImpl;
+@useResult
+$Res call({
+ String name, String profilePic, String contactId, DateTime timeSent, String lastMessage, String fcmToken
+});
 
+
+
+
+}
 /// @nodoc
-class _$ChatContactCopyWithImpl<$Res> implements $ChatContactCopyWith<$Res> {
+class _$ChatContactCopyWithImpl<$Res>
+    implements $ChatContactCopyWith<$Res> {
   _$ChatContactCopyWithImpl(this._self, this._then);
 
   final ChatContact _self;
   final $Res Function(ChatContact) _then;
 
-  /// Create a copy of ChatContact
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? profilePic = null,
-    Object? contactId = null,
-    Object? timeSent = null,
-    Object? lastMessage = null,
-    Object? fcmToken = null,
-  }) {
-    return _then(_self.copyWith(
-      name: null == name
-          ? _self.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      profilePic: null == profilePic
-          ? _self.profilePic
-          : profilePic // ignore: cast_nullable_to_non_nullable
-              as String,
-      contactId: null == contactId
-          ? _self.contactId
-          : contactId // ignore: cast_nullable_to_non_nullable
-              as String,
-      timeSent: null == timeSent
-          ? _self.timeSent
-          : timeSent // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      lastMessage: null == lastMessage
-          ? _self.lastMessage
-          : lastMessage // ignore: cast_nullable_to_non_nullable
-              as String,
-      fcmToken: null == fcmToken
-          ? _self.fcmToken
-          : fcmToken // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Create a copy of ChatContact
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? profilePic = null,Object? contactId = null,Object? timeSent = null,Object? lastMessage = null,Object? fcmToken = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,profilePic: null == profilePic ? _self.profilePic : profilePic // ignore: cast_nullable_to_non_nullable
+as String,contactId: null == contactId ? _self.contactId : contactId // ignore: cast_nullable_to_non_nullable
+as String,timeSent: null == timeSent ? _self.timeSent : timeSent // ignore: cast_nullable_to_non_nullable
+as DateTime,lastMessage: null == lastMessage ? _self.lastMessage : lastMessage // ignore: cast_nullable_to_non_nullable
+as String,fcmToken: null == fcmToken ? _self.fcmToken : fcmToken // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
+
+}
+
 
 /// Adds pattern-matching-related methods to [ChatContact].
 extension ChatContactPatterns on ChatContact {
-  /// A variant of `map` that fallback to returning `orElse`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_ChatContact value)? $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _ChatContact() when $default != null:
-        return $default(_that);
-      case _:
-        return orElse();
-    }
-  }
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChatContact value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ChatContact() when $default != null:
+return $default(_that);case _:
+  return orElse();
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// Callbacks receives the raw object, upcasted.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case final Subclass2 value:
-  ///     return ...;
-  /// }
-  /// ```
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_ChatContact value) $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _ChatContact():
-        return $default(_that);
-      case _:
-        throw StateError('Unexpected subclass');
-    }
-  }
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChatContact value)  $default,){
+final _that = this;
+switch (_that) {
+case _ChatContact():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
 
-  /// A variant of `map` that fallback to returning `null`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_ChatContact value)? $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _ChatContact() when $default != null:
-        return $default(_that);
-      case _:
-        return null;
-    }
-  }
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChatContact value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ChatContact() when $default != null:
+return $default(_that);case _:
+  return null;
 
-  /// A variant of `when` that fallback to an `orElse` callback.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String name, String profilePic, String contactId,
-            DateTime timeSent, String lastMessage, String fcmToken)?
-        $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _ChatContact() when $default != null:
-        return $default(_that.name, _that.profilePic, _that.contactId,
-            _that.timeSent, _that.lastMessage, _that.fcmToken);
-      case _:
-        return orElse();
-    }
-  }
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String profilePic,  String contactId,  DateTime timeSent,  String lastMessage,  String fcmToken)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ChatContact() when $default != null:
+return $default(_that.name,_that.profilePic,_that.contactId,_that.timeSent,_that.lastMessage,_that.fcmToken);case _:
+  return orElse();
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// As opposed to `map`, this offers destructuring.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case Subclass2(:final field2):
-  ///     return ...;
-  /// }
-  /// ```
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(String name, String profilePic, String contactId,
-            DateTime timeSent, String lastMessage, String fcmToken)
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _ChatContact():
-        return $default(_that.name, _that.profilePic, _that.contactId,
-            _that.timeSent, _that.lastMessage, _that.fcmToken);
-      case _:
-        throw StateError('Unexpected subclass');
-    }
-  }
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String profilePic,  String contactId,  DateTime timeSent,  String lastMessage,  String fcmToken)  $default,) {final _that = this;
+switch (_that) {
+case _ChatContact():
+return $default(_that.name,_that.profilePic,_that.contactId,_that.timeSent,_that.lastMessage,_that.fcmToken);case _:
+  throw StateError('Unexpected subclass');
 
-  /// A variant of `when` that fallback to returning `null`
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String name, String profilePic, String contactId,
-            DateTime timeSent, String lastMessage, String fcmToken)?
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _ChatContact() when $default != null:
-        return $default(_that.name, _that.profilePic, _that.contactId,
-            _that.timeSent, _that.lastMessage, _that.fcmToken);
-      case _:
-        return null;
-    }
-  }
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String profilePic,  String contactId,  DateTime timeSent,  String lastMessage,  String fcmToken)?  $default,) {final _that = this;
+switch (_that) {
+case _ChatContact() when $default != null:
+return $default(_that.name,_that.profilePic,_that.contactId,_that.timeSent,_that.lastMessage,_that.fcmToken);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
+
 class _ChatContact implements ChatContact {
-  const _ChatContact(
-      {required this.name,
-      required this.profilePic,
-      required this.contactId,
-      required this.timeSent,
-      required this.lastMessage,
-      required this.fcmToken});
-  factory _ChatContact.fromJson(Map<String, dynamic> json) =>
-      _$ChatContactFromJson(json);
+  const _ChatContact({required this.name, required this.profilePic, required this.contactId, required this.timeSent, required this.lastMessage, required this.fcmToken});
+  factory _ChatContact.fromJson(Map<String, dynamic> json) => _$ChatContactFromJson(json);
 
-  @override
-  final String name;
-  @override
-  final String profilePic;
-  @override
-  final String contactId;
-  @override
-  final DateTime timeSent;
-  @override
-  final String lastMessage;
-  @override
-  final String fcmToken;
+@override final  String name;
+@override final  String profilePic;
+@override final  String contactId;
+@override final  DateTime timeSent;
+@override final  String lastMessage;
+@override final  String fcmToken;
 
-  /// Create a copy of ChatContact
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$ChatContactCopyWith<_ChatContact> get copyWith =>
-      __$ChatContactCopyWithImpl<_ChatContact>(this, _$identity);
+/// Create a copy of ChatContact
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ChatContactCopyWith<_ChatContact> get copyWith => __$ChatContactCopyWithImpl<_ChatContact>(this, _$identity);
 
-  @override
-  Map<String, dynamic> toJson() {
-    return _$ChatContactToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$ChatContactToJson(this, );
+}
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _ChatContact &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.profilePic, profilePic) ||
-                other.profilePic == profilePic) &&
-            (identical(other.contactId, contactId) ||
-                other.contactId == contactId) &&
-            (identical(other.timeSent, timeSent) ||
-                other.timeSent == timeSent) &&
-            (identical(other.lastMessage, lastMessage) ||
-                other.lastMessage == lastMessage) &&
-            (identical(other.fcmToken, fcmToken) ||
-                other.fcmToken == fcmToken));
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatContact&&(identical(other.name, name) || other.name == name)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.contactId, contactId) || other.contactId == contactId)&&(identical(other.timeSent, timeSent) || other.timeSent == timeSent)&&(identical(other.lastMessage, lastMessage) || other.lastMessage == lastMessage)&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken));
+}
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, profilePic, contactId,
-      timeSent, lastMessage, fcmToken);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,profilePic,contactId,timeSent,lastMessage,fcmToken);
 
-  @override
-  String toString() {
-    return 'ChatContact(name: $name, profilePic: $profilePic, contactId: $contactId, timeSent: $timeSent, lastMessage: $lastMessage, fcmToken: $fcmToken)';
-  }
+@override
+String toString() {
+  return 'ChatContact(name: $name, profilePic: $profilePic, contactId: $contactId, timeSent: $timeSent, lastMessage: $lastMessage, fcmToken: $fcmToken)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class _$ChatContactCopyWith<$Res>
-    implements $ChatContactCopyWith<$Res> {
-  factory _$ChatContactCopyWith(
-          _ChatContact value, $Res Function(_ChatContact) _then) =
-      __$ChatContactCopyWithImpl;
-  @override
-  @useResult
-  $Res call(
-      {String name,
-      String profilePic,
-      String contactId,
-      DateTime timeSent,
-      String lastMessage,
-      String fcmToken});
-}
+abstract mixin class _$ChatContactCopyWith<$Res> implements $ChatContactCopyWith<$Res> {
+  factory _$ChatContactCopyWith(_ChatContact value, $Res Function(_ChatContact) _then) = __$ChatContactCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String profilePic, String contactId, DateTime timeSent, String lastMessage, String fcmToken
+});
 
+
+
+
+}
 /// @nodoc
-class __$ChatContactCopyWithImpl<$Res> implements _$ChatContactCopyWith<$Res> {
+class __$ChatContactCopyWithImpl<$Res>
+    implements _$ChatContactCopyWith<$Res> {
   __$ChatContactCopyWithImpl(this._self, this._then);
 
   final _ChatContact _self;
   final $Res Function(_ChatContact) _then;
 
-  /// Create a copy of ChatContact
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? name = null,
-    Object? profilePic = null,
-    Object? contactId = null,
-    Object? timeSent = null,
-    Object? lastMessage = null,
-    Object? fcmToken = null,
-  }) {
-    return _then(_ChatContact(
-      name: null == name
-          ? _self.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      profilePic: null == profilePic
-          ? _self.profilePic
-          : profilePic // ignore: cast_nullable_to_non_nullable
-              as String,
-      contactId: null == contactId
-          ? _self.contactId
-          : contactId // ignore: cast_nullable_to_non_nullable
-              as String,
-      timeSent: null == timeSent
-          ? _self.timeSent
-          : timeSent // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      lastMessage: null == lastMessage
-          ? _self.lastMessage
-          : lastMessage // ignore: cast_nullable_to_non_nullable
-              as String,
-      fcmToken: null == fcmToken
-          ? _self.fcmToken
-          : fcmToken // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Create a copy of ChatContact
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? profilePic = null,Object? contactId = null,Object? timeSent = null,Object? lastMessage = null,Object? fcmToken = null,}) {
+  return _then(_ChatContact(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,profilePic: null == profilePic ? _self.profilePic : profilePic // ignore: cast_nullable_to_non_nullable
+as String,contactId: null == contactId ? _self.contactId : contactId // ignore: cast_nullable_to_non_nullable
+as String,timeSent: null == timeSent ? _self.timeSent : timeSent // ignore: cast_nullable_to_non_nullable
+as DateTime,lastMessage: null == lastMessage ? _self.lastMessage : lastMessage // ignore: cast_nullable_to_non_nullable
+as String,fcmToken: null == fcmToken ? _self.fcmToken : fcmToken // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
 }
 
 // dart format on

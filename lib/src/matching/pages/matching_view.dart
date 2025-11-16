@@ -81,7 +81,7 @@ class _MatchingViewState extends ConsumerState<MatchingView> {
                   icon: const Icon(Icons.tune),
                   tooltip: 'Filters',
                   onPressed: () async {
-                    final current = filtersAsync.valueOrNull?.current ?? const DiscoveryFilters();
+                    final current = filtersAsync.value?.current ?? const DiscoveryFilters();
                     final updated = await showModalBottomSheet<DiscoveryFilters>(
                       context: context,
                       isScrollControlled: true,
@@ -395,7 +395,7 @@ class _SavedPresetsRow extends ConsumerWidget {
   const _SavedPresetsRow({required this.onSelect});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(discoveryFiltersProvider).valueOrNull;
+    final state = ref.watch(discoveryFiltersProvider).value;
     final saved = state?.saved ?? const [];
     if (saved.isEmpty) return const SizedBox.shrink();
     return SingleChildScrollView(

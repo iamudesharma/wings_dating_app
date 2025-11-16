@@ -10,11 +10,13 @@ UserAlbumModel _$UserAlbumModelFromJson(Map<String, dynamic> json) =>
     UserAlbumModel(
       ownerId: json['ownerId'] as String,
       name: json['name'] as String,
-      photos: (json['photos'] as List<dynamic>?)
+      photos:
+          (json['photos'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const <String>[],
-      sharedWith: (json['sharedWith'] as List<dynamic>?)
+      sharedWith:
+          (json['sharedWith'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const <String>[],

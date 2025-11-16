@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 
 // Provider to hold profile data for AI analysis
@@ -15,7 +16,7 @@ void triggerProfileAnalysis(WidgetRef ref, UserModel profile) {
 }
 
 // Helper function to clear analysis state
-void clearProfileAnalysis(WidgetRef ref) {
+void clearProfileAnalysis(Ref ref) {
   ref.read(profileAnalysisProvider.notifier).state = null;
   ref.read(autoAnalysisProvider.notifier).state = false;
   ref.read(lastAnalyzedProfileIdProvider.notifier).state = null;

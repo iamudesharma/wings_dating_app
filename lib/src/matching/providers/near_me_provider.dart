@@ -13,7 +13,7 @@ class NearMeState {
       NearMeState(users: users ?? this.users, loading: loading ?? this.loading, error: error);
 }
 
-class NearMeController extends AutoDisposeAsyncNotifier<NearMeState> {
+class NearMeController extends AsyncNotifier<NearMeState> {
   @override
   Future<NearMeState> build() async {
     return _fetch();
@@ -41,6 +41,7 @@ class NearMeController extends AutoDisposeAsyncNotifier<NearMeState> {
   }
 }
 
-final nearMeProvider = AutoDisposeAsyncNotifierProvider<NearMeController, NearMeState>(
+final nearMeProvider = AsyncNotifierProvider<NearMeController, NearMeState>(
   NearMeController.new,
+  isAutoDispose: true, // Uncomment if you want the provider to auto dispose
 );

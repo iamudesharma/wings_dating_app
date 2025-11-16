@@ -7,14 +7,11 @@ part of 'geo_point_data.dart';
 // **************************************************************************
 
 GeoPointData _$GeoPointDataFromJson(Map<String, dynamic> json) => GeoPointData(
-      geopoint: (json['geopoint'] as List<dynamic>)
-          .map((e) => (e as num).toDouble())
-          .toList(),
-      type: json['type'] as String? ?? 'Point',
-    );
+  geopoint: (json['geopoint'] as List<dynamic>)
+      .map((e) => (e as num).toDouble())
+      .toList(),
+  type: json['type'] as String? ?? 'Point',
+);
 
 Map<String, dynamic> _$GeoPointDataToJson(GeoPointData instance) =>
-    <String, dynamic>{
-      'geopoint': instance.geopoint,
-      'type': instance.type,
-    };
+    <String, dynamic>{'geopoint': instance.geopoint, 'type': instance.type};

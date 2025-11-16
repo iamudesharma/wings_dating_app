@@ -6,20 +6,57 @@ part of 'chat_repo.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(ChatRepo)
+const chatRepoProvider = ChatRepoProvider._();
+
+final class ChatRepoProvider extends $NotifierProvider<ChatRepo, dynamic> {
+  const ChatRepoProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'chatRepoProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$chatRepoHash();
+
+  @$internal
+  @override
+  ChatRepo create() => ChatRepo();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(dynamic value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<dynamic>(value),
+    );
+  }
+}
+
 String _$chatRepoHash() => r'3e0d0e36022258a05f8062e9535ef715e234a7a6';
 
-/// See also [ChatRepo].
-@ProviderFor(ChatRepo)
-final chatRepoProvider =
-    AutoDisposeNotifierProvider<ChatRepo, Object?>.internal(
-  ChatRepo.new,
-  name: r'chatRepoProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$chatRepoHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ChatRepo = AutoDisposeNotifier<Object?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$ChatRepo extends $Notifier<dynamic> {
+  dynamic build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<dynamic, dynamic>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<dynamic, dynamic>,
+              dynamic,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

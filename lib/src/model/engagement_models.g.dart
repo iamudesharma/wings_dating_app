@@ -23,35 +23,35 @@ Map<String, dynamic> _$EngagementStatusToJson(_EngagementStatus instance) =>
     };
 
 _ProfileVisitResponse _$ProfileVisitResponseFromJson(
-        Map<String, dynamic> json) =>
-    _ProfileVisitResponse(
-      status: json['status'] as String? ?? '',
-      message: json['message'] as String? ?? '',
-      visitCount: (json['visitCount'] as num?)?.toInt(),
-      engagementStatus: json['engagementStatus'] == null
-          ? null
-          : EngagementStatus.fromJson(
-              json['engagementStatus'] as Map<String, dynamic>),
-    );
+  Map<String, dynamic> json,
+) => _ProfileVisitResponse(
+  status: json['status'] as String? ?? '',
+  message: json['message'] as String? ?? '',
+  visitCount: (json['visitCount'] as num?)?.toInt(),
+  engagementStatus: json['engagementStatus'] == null
+      ? null
+      : EngagementStatus.fromJson(
+          json['engagementStatus'] as Map<String, dynamic>,
+        ),
+);
 
 Map<String, dynamic> _$ProfileVisitResponseToJson(
-        _ProfileVisitResponse instance) =>
-    <String, dynamic>{
-      'status': instance.status,
-      'message': instance.message,
-      'visitCount': instance.visitCount,
-      'engagementStatus': instance.engagementStatus,
-    };
+  _ProfileVisitResponse instance,
+) => <String, dynamic>{
+  'status': instance.status,
+  'message': instance.message,
+  'visitCount': instance.visitCount,
+  'engagementStatus': instance.engagementStatus,
+};
 
 _TapResponse _$TapResponseFromJson(Map<String, dynamic> json) => _TapResponse(
-      success: json['success'] as bool? ?? false,
-      message: json['message'] as String? ?? '',
-      remainingTaps: (json['remainingTaps'] as num?)?.toInt(),
-      tappedBy: (json['tappedBy'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-    );
+  success: json['success'] as bool? ?? false,
+  message: json['message'] as String? ?? '',
+  remainingTaps: (json['remainingTaps'] as num?)?.toInt(),
+  tappedBy:
+      (json['tappedBy'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
+);
 
 Map<String, dynamic> _$TapResponseToJson(_TapResponse instance) =>
     <String, dynamic>{
@@ -66,14 +66,16 @@ _UserTapStats _$UserTapStatsFromJson(Map<String, dynamic> json) =>
       success: json['success'] as bool? ?? false,
       message: json['message'] as String? ?? '',
       remainingTaps: (json['remainingTaps'] as num?)?.toInt() ?? 0,
-      tappedBy: (json['tappedBy'] as List<dynamic>?)
+      tappedBy:
+          (json['tappedBy'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
       engagementStatus: json['engagementStatus'] == null
           ? null
           : EngagementStatus.fromJson(
-              json['engagementStatus'] as Map<String, dynamic>),
+              json['engagementStatus'] as Map<String, dynamic>,
+            ),
     );
 
 Map<String, dynamic> _$UserTapStatsToJson(_UserTapStats instance) =>
@@ -86,14 +88,14 @@ Map<String, dynamic> _$UserTapStatsToJson(_UserTapStats instance) =>
     };
 
 _TapDetails _$TapDetailsFromJson(Map<String, dynamic> json) => _TapDetails(
-      id: json['id'] as String? ?? '',
-      userId: json['userId'] as String? ?? '',
-      targetUserId: json['targetUserId'] as String? ?? '',
-      tappedAt: DateTime.parse(json['tappedAt'] as String),
-      user: json['user'] == null
-          ? null
-          : UserModel.fromJson(json['user'] as Map<String, dynamic>),
-    );
+  id: json['id'] as String? ?? '',
+  userId: json['userId'] as String? ?? '',
+  targetUserId: json['targetUserId'] as String? ?? '',
+  tappedAt: DateTime.parse(json['tappedAt'] as String),
+  user: json['user'] == null
+      ? null
+      : UserModel.fromJson(json['user'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$TapDetailsToJson(_TapDetails instance) =>
     <String, dynamic>{
@@ -105,25 +107,26 @@ Map<String, dynamic> _$TapDetailsToJson(_TapDetails instance) =>
     };
 
 _PaginatedTapResponse _$PaginatedTapResponseFromJson(
-        Map<String, dynamic> json) =>
-    _PaginatedTapResponse(
-      taps: (json['taps'] as List<dynamic>?)
-              ?.map((e) => TapDetails.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-      total: (json['total'] as num?)?.toInt() ?? 0,
-      page: (json['page'] as num?)?.toInt() ?? 1,
-      totalPages: (json['totalPages'] as num?)?.toInt() ?? 1,
-    );
+  Map<String, dynamic> json,
+) => _PaginatedTapResponse(
+  taps:
+      (json['taps'] as List<dynamic>?)
+          ?.map((e) => TapDetails.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  total: (json['total'] as num?)?.toInt() ?? 0,
+  page: (json['page'] as num?)?.toInt() ?? 1,
+  totalPages: (json['totalPages'] as num?)?.toInt() ?? 1,
+);
 
 Map<String, dynamic> _$PaginatedTapResponseToJson(
-        _PaginatedTapResponse instance) =>
-    <String, dynamic>{
-      'taps': instance.taps,
-      'total': instance.total,
-      'page': instance.page,
-      'totalPages': instance.totalPages,
-    };
+  _PaginatedTapResponse instance,
+) => <String, dynamic>{
+  'taps': instance.taps,
+  'total': instance.total,
+  'page': instance.page,
+  'totalPages': instance.totalPages,
+};
 
 _ProfileViewDetails _$ProfileViewDetailsFromJson(Map<String, dynamic> json) =>
     _ProfileViewDetails(
@@ -156,37 +159,37 @@ Map<String, dynamic> _$ProfileViewDetailsToJson(_ProfileViewDetails instance) =>
     };
 
 _PaginatedProfileViewsResponse _$PaginatedProfileViewsResponseFromJson(
-        Map<String, dynamic> json) =>
-    _PaginatedProfileViewsResponse(
-      views: (json['views'] as List<dynamic>?)
-              ?.map(
-                  (e) => ProfileViewDetails.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-      total: (json['total'] as num?)?.toInt() ?? 0,
-      page: (json['page'] as num?)?.toInt() ?? 1,
-      totalPages: (json['totalPages'] as num?)?.toInt() ?? 1,
-    );
+  Map<String, dynamic> json,
+) => _PaginatedProfileViewsResponse(
+  views:
+      (json['views'] as List<dynamic>?)
+          ?.map((e) => ProfileViewDetails.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  total: (json['total'] as num?)?.toInt() ?? 0,
+  page: (json['page'] as num?)?.toInt() ?? 1,
+  totalPages: (json['totalPages'] as num?)?.toInt() ?? 1,
+);
 
 Map<String, dynamic> _$PaginatedProfileViewsResponseToJson(
-        _PaginatedProfileViewsResponse instance) =>
-    <String, dynamic>{
-      'views': instance.views,
-      'total': instance.total,
-      'page': instance.page,
-      'totalPages': instance.totalPages,
-    };
+  _PaginatedProfileViewsResponse instance,
+) => <String, dynamic>{
+  'views': instance.views,
+  'total': instance.total,
+  'page': instance.page,
+  'totalPages': instance.totalPages,
+};
 
 _VisitRecord _$VisitRecordFromJson(Map<String, dynamic> json) => _VisitRecord(
-      id: json['id'] as String? ?? '',
-      userId: json['userId'] as String? ?? '',
-      targetUserId: json['targetUserId'] as String? ?? '',
-      visitedAt: DateTime.parse(json['visitedAt'] as String),
-      visitCount: (json['visitCount'] as num?)?.toInt() ?? 1,
-      user: json['user'] == null
-          ? null
-          : UserModel.fromJson(json['user'] as Map<String, dynamic>),
-    );
+  id: json['id'] as String? ?? '',
+  userId: json['userId'] as String? ?? '',
+  targetUserId: json['targetUserId'] as String? ?? '',
+  visitedAt: DateTime.parse(json['visitedAt'] as String),
+  visitCount: (json['visitCount'] as num?)?.toInt() ?? 1,
+  user: json['user'] == null
+      ? null
+      : UserModel.fromJson(json['user'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$VisitRecordToJson(_VisitRecord instance) =>
     <String, dynamic>{
@@ -199,25 +202,26 @@ Map<String, dynamic> _$VisitRecordToJson(_VisitRecord instance) =>
     };
 
 _PaginatedVisitsResponse _$PaginatedVisitsResponseFromJson(
-        Map<String, dynamic> json) =>
-    _PaginatedVisitsResponse(
-      visits: (json['visits'] as List<dynamic>?)
-              ?.map((e) => VisitRecord.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-      total: (json['total'] as num?)?.toInt() ?? 0,
-      page: (json['page'] as num?)?.toInt() ?? 1,
-      totalPages: (json['totalPages'] as num?)?.toInt() ?? 1,
-    );
+  Map<String, dynamic> json,
+) => _PaginatedVisitsResponse(
+  visits:
+      (json['visits'] as List<dynamic>?)
+          ?.map((e) => VisitRecord.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  total: (json['total'] as num?)?.toInt() ?? 0,
+  page: (json['page'] as num?)?.toInt() ?? 1,
+  totalPages: (json['totalPages'] as num?)?.toInt() ?? 1,
+);
 
 Map<String, dynamic> _$PaginatedVisitsResponseToJson(
-        _PaginatedVisitsResponse instance) =>
-    <String, dynamic>{
-      'visits': instance.visits,
-      'total': instance.total,
-      'page': instance.page,
-      'totalPages': instance.totalPages,
-    };
+  _PaginatedVisitsResponse instance,
+) => <String, dynamic>{
+  'visits': instance.visits,
+  'total': instance.total,
+  'page': instance.page,
+  'totalPages': instance.totalPages,
+};
 
 _FavoriteResponse _$FavoriteResponseFromJson(Map<String, dynamic> json) =>
     _FavoriteResponse(
@@ -226,68 +230,69 @@ _FavoriteResponse _$FavoriteResponseFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$FavoriteResponseToJson(_FavoriteResponse instance) =>
-    <String, dynamic>{
-      'status': instance.status,
-      'message': instance.message,
-    };
+    <String, dynamic>{'status': instance.status, 'message': instance.message};
 
 _UserAnalyticsResponse _$UserAnalyticsResponseFromJson(
-        Map<String, dynamic> json) =>
-    _UserAnalyticsResponse(
-      userId: json['userId'] as String? ?? '',
-      profileViews: ProfileViewAnalytics.fromJson(
-          json['profileViews'] as Map<String, dynamic>),
-      matches: MatchAnalytics.fromJson(json['matches'] as Map<String, dynamic>),
-      messages:
-          MessageAnalytics.fromJson(json['messages'] as Map<String, dynamic>),
-      discovery: DiscoveryAnalytics.fromJson(
-          json['discovery'] as Map<String, dynamic>),
-      location:
-          LocationAnalytics.fromJson(json['location'] as Map<String, dynamic>),
-      lastUpdated: DateTime.parse(json['lastUpdated'] as String),
-      matchRate: (json['matchRate'] as num?)?.toDouble(),
-    );
+  Map<String, dynamic> json,
+) => _UserAnalyticsResponse(
+  userId: json['userId'] as String? ?? '',
+  profileViews: ProfileViewAnalytics.fromJson(
+    json['profileViews'] as Map<String, dynamic>,
+  ),
+  matches: MatchAnalytics.fromJson(json['matches'] as Map<String, dynamic>),
+  messages: MessageAnalytics.fromJson(json['messages'] as Map<String, dynamic>),
+  discovery: DiscoveryAnalytics.fromJson(
+    json['discovery'] as Map<String, dynamic>,
+  ),
+  location: LocationAnalytics.fromJson(
+    json['location'] as Map<String, dynamic>,
+  ),
+  lastUpdated: DateTime.parse(json['lastUpdated'] as String),
+  matchRate: (json['matchRate'] as num?)?.toDouble(),
+);
 
 Map<String, dynamic> _$UserAnalyticsResponseToJson(
-        _UserAnalyticsResponse instance) =>
-    <String, dynamic>{
-      'userId': instance.userId,
-      'profileViews': instance.profileViews,
-      'matches': instance.matches,
-      'messages': instance.messages,
-      'discovery': instance.discovery,
-      'location': instance.location,
-      'lastUpdated': instance.lastUpdated.toIso8601String(),
-      'matchRate': instance.matchRate,
-    };
+  _UserAnalyticsResponse instance,
+) => <String, dynamic>{
+  'userId': instance.userId,
+  'profileViews': instance.profileViews,
+  'matches': instance.matches,
+  'messages': instance.messages,
+  'discovery': instance.discovery,
+  'location': instance.location,
+  'lastUpdated': instance.lastUpdated.toIso8601String(),
+  'matchRate': instance.matchRate,
+};
 
 _ProfileViewAnalytics _$ProfileViewAnalyticsFromJson(
-        Map<String, dynamic> json) =>
-    _ProfileViewAnalytics(
-      total: (json['total'] as num?)?.toInt() ?? 0,
-      daily: (json['daily'] as num?)?.toInt() ?? 0,
-      weekly: (json['weekly'] as num?)?.toInt() ?? 0,
-      monthly: (json['monthly'] as num?)?.toInt() ?? 0,
-      byHour: (json['byHour'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, (e as num).toInt()),
-          ) ??
-          const {},
-      byDay: (json['byDay'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, (e as num).toInt()),
-          ) ??
-          const {},
-    );
+  Map<String, dynamic> json,
+) => _ProfileViewAnalytics(
+  total: (json['total'] as num?)?.toInt() ?? 0,
+  daily: (json['daily'] as num?)?.toInt() ?? 0,
+  weekly: (json['weekly'] as num?)?.toInt() ?? 0,
+  monthly: (json['monthly'] as num?)?.toInt() ?? 0,
+  byHour:
+      (json['byHour'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, (e as num).toInt()),
+      ) ??
+      const {},
+  byDay:
+      (json['byDay'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, (e as num).toInt()),
+      ) ??
+      const {},
+);
 
 Map<String, dynamic> _$ProfileViewAnalyticsToJson(
-        _ProfileViewAnalytics instance) =>
-    <String, dynamic>{
-      'total': instance.total,
-      'daily': instance.daily,
-      'weekly': instance.weekly,
-      'monthly': instance.monthly,
-      'byHour': instance.byHour,
-      'byDay': instance.byDay,
-    };
+  _ProfileViewAnalytics instance,
+) => <String, dynamic>{
+  'total': instance.total,
+  'daily': instance.daily,
+  'weekly': instance.weekly,
+  'monthly': instance.monthly,
+  'byHour': instance.byHour,
+  'byDay': instance.byDay,
+};
 
 _MatchAnalytics _$MatchAnalyticsFromJson(Map<String, dynamic> json) =>
     _MatchAnalytics(
@@ -344,11 +349,13 @@ Map<String, dynamic> _$DiscoveryAnalyticsToJson(_DiscoveryAnalytics instance) =>
 
 _LocationAnalytics _$LocationAnalyticsFromJson(Map<String, dynamic> json) =>
     _LocationAnalytics(
-      activeHours: (json['activeHours'] as Map<String, dynamic>?)?.map(
+      activeHours:
+          (json['activeHours'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, (e as num).toInt()),
           ) ??
           const {},
-      popularLocations: (json['popularLocations'] as List<dynamic>?)
+      popularLocations:
+          (json['popularLocations'] as List<dynamic>?)
               ?.map((e) => PopularLocation.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
@@ -362,7 +369,8 @@ Map<String, dynamic> _$LocationAnalyticsToJson(_LocationAnalytics instance) =>
 
 _PopularLocation _$PopularLocationFromJson(Map<String, dynamic> json) =>
     _PopularLocation(
-      coordinates: (json['coordinates'] as List<dynamic>?)
+      coordinates:
+          (json['coordinates'] as List<dynamic>?)
               ?.map((e) => (e as num).toDouble())
               .toList() ??
           const [],

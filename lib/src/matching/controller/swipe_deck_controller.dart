@@ -13,7 +13,7 @@ class SwipeCandidate {
   SwipeCandidate(this.user, this.compatibility);
 }
 
-class SwipeDeckController extends AutoDisposeAsyncNotifier<SwipeDeckState> {
+class SwipeDeckController extends AsyncNotifier<SwipeDeckState> {
   static const int freeDailyLimit = 20; // free swipes/day
   static const int freeSuperlikes = 1; // free/day
 
@@ -65,7 +65,7 @@ class SwipeDeckController extends AutoDisposeAsyncNotifier<SwipeDeckState> {
 
   Future<void> like() async {
     final engagement = ref.read(engagementRepoProvider);
-    final s = state.valueOrNull;
+    final s = state.value;
     if (s == null || _queue.isEmpty) return;
 
     // Daily resets
@@ -82,11 +82,9 @@ class SwipeDeckController extends AutoDisposeAsyncNotifier<SwipeDeckState> {
 
     final top = _queue.removeFirst();
     _history.add(top);
-    state = AsyncData(s.copyWith(
-      candidates: _queue.toList(growable: false),
-      swipesToday: s.swipesToday + 1,
-      canRewind: true,
-    ));
+    state = AsyncData(
+      s.copyWith(candidates: _queue.toList(growable: false), swipesToday: s.swipesToday + 1, canRewind: true),
+    );
 
     // Fire and forget to backend
     try {
@@ -96,7 +94,7 @@ class SwipeDeckController extends AutoDisposeAsyncNotifier<SwipeDeckState> {
 
   Future<void> superLike() async {
     final engagement = ref.read(engagementRepoProvider);
-    final s = state.valueOrNull;
+    final s = state.value;
     if (s == null || _queue.isEmpty) return;
 
     if (s.superLikesRemaining <= 0) {
@@ -108,40 +106,37 @@ class SwipeDeckController extends AutoDisposeAsyncNotifier<SwipeDeckState> {
     final top = _queue.removeFirst();
     _history.add(top);
     _superLikesUsed += 1;
-    state = AsyncData(s.copyWith(
-      candidates: _queue.toList(growable: false),
-      swipesToday: s.swipesToday + 1,
-      superLikesRemaining: (s.superLikesRemaining - 1).clamp(0, 99),
-      canRewind: true,
-    ));
+    state = AsyncData(
+      s.copyWith(
+        candidates: _queue.toList(growable: false),
+        swipesToday: s.swipesToday + 1,
+        superLikesRemaining: (s.superLikesRemaining - 1).clamp(0, 99),
+        canRewind: true,
+      ),
+    );
     try {
       await engagement.superLikeUser(top.user.id);
     } catch (_) {}
   }
 
   Future<void> pass() async {
-    final s = state.valueOrNull;
+    final s = state.value;
     if (s == null || _queue.isEmpty) return;
     final top = _queue.removeFirst();
     _history.add(top);
-    state = AsyncData(s.copyWith(
-      candidates: _queue.toList(growable: false),
-      swipesToday: s.swipesToday + 1,
-      canRewind: true,
-    ));
+    state = AsyncData(
+      s.copyWith(candidates: _queue.toList(growable: false), swipesToday: s.swipesToday + 1, canRewind: true),
+    );
   }
 
   Future<void> rewind() async {
     final engagement = ref.read(engagementRepoProvider);
-    final s = state.valueOrNull;
+    final s = state.value;
     if (s == null || _history.isEmpty) return;
 
     final last = _history.removeLast();
     _queue.addFirst(last);
-    state = AsyncData(s.copyWith(
-      candidates: _queue.toList(growable: false),
-      canRewind: _history.isNotEmpty,
-    ));
+    state = AsyncData(s.copyWith(candidates: _queue.toList(growable: false), canRewind: _history.isNotEmpty));
     // Also ask backend to rewind last swipe (premium-gated server may error; ignore)
     try {
       await engagement.rewindLastSwipe();
@@ -158,14 +153,14 @@ class SwipeDeckController extends AutoDisposeAsyncNotifier<SwipeDeckState> {
       final list = data is List
           ? data
           : (data is Map<String, dynamic> && data['data'] is List)
-              ? data['data']
-              : <dynamic>[];
+          ? data['data']
+          : <dynamic>[];
       final users = list.map((e) => UserModel.fromJson(Map<String, dynamic>.from(e))).toList();
       _queue.clear();
       for (final u in users) {
         _queue.add(SwipeCandidate(u, _compatibilityScore(u)));
       }
-      final s = state.valueOrNull;
+      final s = state.value;
       if (s != null) {
         state = AsyncData(s.copyWith(candidates: _queue.toList(growable: false)));
       }
@@ -200,18 +195,18 @@ class SwipeDeckState {
     bool? canRewind,
     bool? limitReached,
     bool? noSuperLikesLeft,
-  }) =>
-      SwipeDeckState(
-        candidates: candidates ?? this.candidates,
-        swipesToday: swipesToday ?? this.swipesToday,
-        dailyLimit: dailyLimit ?? this.dailyLimit,
-        superLikesRemaining: superLikesRemaining ?? this.superLikesRemaining,
-        canRewind: canRewind ?? this.canRewind,
-        limitReached: limitReached ?? this.limitReached,
-        noSuperLikesLeft: noSuperLikesLeft ?? this.noSuperLikesLeft,
-      );
+  }) => SwipeDeckState(
+    candidates: candidates ?? this.candidates,
+    swipesToday: swipesToday ?? this.swipesToday,
+    dailyLimit: dailyLimit ?? this.dailyLimit,
+    superLikesRemaining: superLikesRemaining ?? this.superLikesRemaining,
+    canRewind: canRewind ?? this.canRewind,
+    limitReached: limitReached ?? this.limitReached,
+    noSuperLikesLeft: noSuperLikesLeft ?? this.noSuperLikesLeft,
+  );
 }
 
-final swipeDeckControllerProvider = AutoDisposeAsyncNotifierProvider<SwipeDeckController, SwipeDeckState>(
+final swipeDeckControllerProvider = AsyncNotifierProvider<SwipeDeckController, SwipeDeckState>(
   SwipeDeckController.new,
+  isAutoDispose: true,
 );

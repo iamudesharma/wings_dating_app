@@ -41,7 +41,7 @@ class AlbumDetailsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final albums = ref.watch(AlbumDetailsProvider(id));
+    final albums = ref.watch(albumDetailsProvider(id));
     final pendingAsync = ref.watch(pendingAlbumRequestProvider(id));
 
     final albumsWidget = albums.when(
@@ -62,69 +62,61 @@ class AlbumDetailsView extends ConsumerWidget {
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
             ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final photo = data.photos[index];
-                final isOwner = FirebaseAuth.instance.currentUser?.uid == data.ownerId;
-                return GestureDetector(
-                  onTap: () {
-                    AutoRouter.of(context).push(ImagePreviewRoute(path: photo));
-                  },
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(14),
-                        child: Hero(
-                          tag: photo,
-                          child: Image.network(
-                            photo,
-                            fit: BoxFit.cover,
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final photo = data.photos[index];
+              final isOwner = FirebaseAuth.instance.currentUser?.uid == data.ownerId;
+              return GestureDetector(
+                onTap: () {
+                  AutoRouter.of(context).push(ImagePreviewRoute(path: photo));
+                },
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: Hero(
+                        tag: photo,
+                        child: Image.network(photo, fit: BoxFit.cover),
+                      ),
+                    ),
+                    if (isOwner)
+                      Positioned(
+                        top: 6,
+                        right: 6,
+                        child: Material(
+                          color: Theme.of(context).colorScheme.surface.withOpacity(0.75),
+                          shape: const CircleBorder(),
+                          child: IconButton(
+                            visualDensity: VisualDensity.compact,
+                            iconSize: 20,
+                            tooltip: 'Remove photo',
+                            icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+                            onPressed: () async {
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: const Text('Remove photo?'),
+                                  content: const Text('This will remove the photo from the album.'),
+                                  actions: [
+                                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+                                    ElevatedButton(
+                                      onPressed: () => Navigator.pop(ctx, true),
+                                      child: const Text('Remove'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              if (confirm == true) {
+                                await ref.read(albumControllerProvider(id).notifier).removePhotos({photo});
+                                await ref.read(albumControllerProvider(id).notifier).refreshAlbum(id);
+                              }
+                            },
                           ),
                         ),
                       ),
-                      if (isOwner)
-                        Positioned(
-                          top: 6,
-                          right: 6,
-                          child: Material(
-                            color: Theme.of(context).colorScheme.surface.withOpacity(0.75),
-                            shape: const CircleBorder(),
-                            child: IconButton(
-                              visualDensity: VisualDensity.compact,
-                              iconSize: 20,
-                              tooltip: 'Remove photo',
-                              icon: Icon(
-                                Icons.delete_outline,
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                              onPressed: () async {
-                                final confirm = await showDialog<bool>(
-                                  context: context,
-                                  builder: (ctx) => AlertDialog(
-                                    title: const Text('Remove photo?'),
-                                    content: const Text('This will remove the photo from the album.'),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-                                      ElevatedButton(
-                                          onPressed: () => Navigator.pop(ctx, true), child: const Text('Remove')),
-                                    ],
-                                  ),
-                                );
-                                if (confirm == true) {
-                                  await ref.read(AlbumControllerProvider(id).notifier).removePhotos({photo});
-                                  await ref.read(AlbumControllerProvider(id).notifier).refreshAlbum(id);
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                );
-              },
-              childCount: data.photos.length,
-            ),
+                  ],
+                ),
+              );
+            }, childCount: data.photos.length),
           ),
         );
       },
@@ -147,9 +139,7 @@ class AlbumDetailsView extends ConsumerWidget {
         channel: channel ?? StreamChannel.of(context).channel,
         child: Scaffold(
           appBar: StreamChannelHeader(),
-          body: CustomScrollView(
-            slivers: [albumsWidget],
-          ),
+          body: CustomScrollView(slivers: [albumsWidget]),
         ),
       );
     }
@@ -190,11 +180,7 @@ class AlbumDetailsView extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.3)),
                         boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.06),
-                            blurRadius: 12,
-                            offset: const Offset(0, 4),
-                          )
+                          BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 12, offset: const Offset(0, 4)),
                         ],
                       ),
                       child: Row(
@@ -213,19 +199,23 @@ class AlbumDetailsView extends ConsumerWidget {
                               children: [
                                 Text(data.owner!.username, style: Theme.of(context).textTheme.titleMedium),
                                 const SizedBox(height: 2),
-                                Row(children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.primary.withOpacity(0.12),
-                                      borderRadius: BorderRadius.circular(8),
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).colorScheme.primary.withOpacity(0.12),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        'Shared album',
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.primary),
+                                      ),
                                     ),
-                                    child: Text('Shared album',
-                                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                              color: Theme.of(context).colorScheme.primary,
-                                            )),
-                                  ),
-                                ]),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -259,10 +249,7 @@ class AlbumDetailsView extends ConsumerWidget {
                                 gradient: LinearGradient(
                                   begin: Alignment.bottomCenter,
                                   end: Alignment.topCenter,
-                                  colors: [
-                                    Colors.black.withOpacity(0.4),
-                                    Colors.transparent,
-                                  ],
+                                  colors: [Colors.black.withOpacity(0.4), Colors.transparent],
                                 ),
                               ),
                             ),
@@ -272,19 +259,21 @@ class AlbumDetailsView extends ConsumerWidget {
                               right: 12,
                               child: Row(
                                 children: [
-                                  Icon(Icons.photo_library_outlined,
-                                      color: Theme.of(context).colorScheme.onSurface, size: 18),
+                                  Icon(
+                                    Icons.photo_library_outlined,
+                                    color: Theme.of(context).colorScheme.onSurface,
+                                    size: 18,
+                                  ),
                                   const SizedBox(width: 8),
                                   Text(
                                     data.name.isNotEmpty ? data.name : 'Album',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge
-                                        ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                   ),
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -336,7 +325,7 @@ class AlbumDetailsView extends ConsumerWidget {
                           );
                           if (message != null) {
                             final res = await ref
-                                .read(AlbumControllerProvider(id).notifier)
+                                .read(albumControllerProvider(id).notifier)
                                 .requestAccess(message, albumId: id);
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -372,8 +361,9 @@ class AlbumDetailsView extends ConsumerWidget {
                           ),
                         );
                         if (message != null) {
-                          final res =
-                              await ref.read(AlbumControllerProvider(id).notifier).requestAccess(message, albumId: id);
+                          final res = await ref
+                              .read(albumControllerProvider(id).notifier)
+                              .requestAccess(message, albumId: id);
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(res != null ? 'Request sent' : 'Failed to send request')),
@@ -416,16 +406,13 @@ class _EmptyAlbumCard extends StatelessWidget {
         children: [
           Icon(Icons.photo_album_outlined, size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
           const SizedBox(height: 12),
-          Text(
-            isOwner ? 'No photos yet' : 'Nothing to see yet',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text(isOwner ? 'No photos yet' : 'Nothing to see yet', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 4),
           Text(
             isOwner ? 'Add photos to get started.' : 'Ask the owner for access or wait until shared.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
             textAlign: TextAlign.center,
           ),
         ],

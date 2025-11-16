@@ -9,24 +9,22 @@ part of 'api_response.dart';
 _ApiResponse<T> _$ApiResponseFromJson<T>(
   Map<String, dynamic> json,
   T Function(Object? json) fromJsonT,
-) =>
-    _ApiResponse<T>(
-      status: json['status'] as String,
-      code: (json['code'] as num).toInt(),
-      data: fromJsonT(json['data']),
-      message: json['message'] as String?,
-    );
+) => _ApiResponse<T>(
+  status: json['status'] as String,
+  code: (json['code'] as num).toInt(),
+  data: fromJsonT(json['data']),
+  message: json['message'] as String?,
+);
 
 Map<String, dynamic> _$ApiResponseToJson<T>(
   _ApiResponse<T> instance,
   Object? Function(T value) toJsonT,
-) =>
-    <String, dynamic>{
-      'status': instance.status,
-      'code': instance.code,
-      'data': toJsonT(instance.data),
-      'message': instance.message,
-    };
+) => <String, dynamic>{
+  'status': instance.status,
+  'code': instance.code,
+  'data': toJsonT(instance.data),
+  'message': instance.message,
+};
 
 _PaginatedResponse _$PaginatedResponseFromJson(Map<String, dynamic> json) =>
     _PaginatedResponse(

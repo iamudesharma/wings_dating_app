@@ -6,21 +6,46 @@ part of 'app_router_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appRouteHash() => r'442874f4a6f3584d7663d8b1a09a383b8f18cf3e';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [appRoute].
 @ProviderFor(appRoute)
-final appRouteProvider = Provider<AppRouter>.internal(
-  appRoute,
-  name: r'appRouteProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$appRouteHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const appRouteProvider = AppRouteProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AppRouteRef = ProviderRef<AppRouter>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class AppRouteProvider
+    extends $FunctionalProvider<AppRouter, AppRouter, AppRouter>
+    with $Provider<AppRouter> {
+  const AppRouteProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appRouteProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appRouteHash();
+
+  @$internal
+  @override
+  $ProviderElement<AppRouter> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AppRouter create(Ref ref) {
+    return appRoute(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AppRouter value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AppRouter>(value),
+    );
+  }
+}
+
+String _$appRouteHash() => r'442874f4a6f3584d7663d8b1a09a383b8f18cf3e';

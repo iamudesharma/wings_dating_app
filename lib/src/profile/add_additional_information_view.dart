@@ -3,6 +3,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:velocity_x/velocity_x.dart';
 import 'package:wings_dating_app/helpers/send_notification.dart';
@@ -37,9 +38,7 @@ class AddAdditionalInformationView extends ConsumerStatefulWidget {
 
 class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInformationView> {
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     ref.watch(Dependency.profileProvider);
     final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
@@ -268,15 +267,17 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
 
   void _showRole(context) {
     showModalBottomSheet(
-        context: context,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (context, setState) {
-            return Consumer(builder: (context, ref, child) {
-              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+      context: context,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (BuildContext bc) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Consumer(
+              builder: (context, ref, child) {
+                final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
-              final role = ref.watch(roleProvider);
-              return SizedBox(
+                final role = ref.watch(roleProvider);
+                return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<Role>(
                     selected: role,
@@ -284,29 +285,33 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                       logger.i(value);
                       ref.read(roleProvider.notifier).update(value!);
                       // context.router.back();
-                      final data = profiledata?.copyWith(
-                        role: value,
-                      );
+                      final data = profiledata?.copyWith(role: value);
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: Role.values,
-                  ));
-            });
-          });
-        });
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   void _showBodyType(context) {
     showModalBottomSheet(
-        context: context,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (context, setState) {
-            return Consumer(builder: (context, ref, child) {
-              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+      context: context,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (BuildContext bc) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Consumer(
+              builder: (context, ref, child) {
+                final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
-              final bodyType = ref.watch(bodyTypeProvider);
-              return SizedBox(
+                final bodyType = ref.watch(bodyTypeProvider);
+                return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<BodyType>(
                     selected: bodyType,
@@ -316,31 +321,34 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                       // context.router.back();
                       final data = profiledata?.copyWith(
                         bodyType: value,
-                        position: GeoPointData(
-                          type: "Point",
-                          geopoint: profiledata.position?.geopoint ?? [0, 0],
-                        ),
+                        position: GeoPointData(type: "Point", geopoint: profiledata.position?.geopoint ?? [0, 0]),
                       );
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: BodyType.values,
-                  ));
-            });
-          });
-        });
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   void _showWeight(context) {
     showModalBottomSheet(
-        context: context,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (context, setState) {
+      context: context,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (BuildContext bc) {
+        return StatefulBuilder(
+          builder: (context, setState) {
             final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
-            return Consumer(builder: (context, ref, child) {
-              final weight = ref.watch(weightProvider);
-              return SizedBox(
+            return Consumer(
+              builder: (context, ref, child) {
+                final weight = ref.watch(weightProvider);
+                return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<String>(
                     isString: true,
@@ -349,29 +357,33 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                       logger.i(value);
                       ref.read(weightProvider.notifier).update((sate) => value);
 
-                      final data = profiledata?.copyWith(
-                        weight: weight,
-                      );
+                      final data = profiledata?.copyWith(weight: weight);
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: weightList,
-                  ));
-            });
-          });
-        });
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   void _showHeight(context) {
     showModalBottomSheet(
-        context: context,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (context, setState) {
-            return Consumer(builder: (context, ref, child) {
-              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+      context: context,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (BuildContext bc) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Consumer(
+              builder: (context, ref, child) {
+                final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
-              final height = ref.watch(heightProvider);
-              return SizedBox(
+                final height = ref.watch(heightProvider);
+                return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<String>(
                     isString: true,
@@ -380,29 +392,33 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                       logger.i(value);
                       ref.read(heightProvider.notifier).update((sate) => value);
                       // context.router.back();
-                      final data = profiledata?.copyWith(
-                        height: height,
-                      );
+                      final data = profiledata?.copyWith(height: height);
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: heightList,
-                  ));
-            });
-          });
-        });
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   void _showRelationshipStatus(context) {
     showModalBottomSheet(
-        context: context,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (context, setState) {
-            return Consumer(builder: (context, ref, child) {
-              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+      context: context,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (BuildContext bc) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Consumer(
+              builder: (context, ref, child) {
+                final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
-              final relationShip = ref.watch(relationshipStatusProvider);
-              return SizedBox(
+                final relationShip = ref.watch(relationshipStatusProvider);
+                return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<RelationshipStatus>(
                     selected: relationShip,
@@ -411,31 +427,35 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                       ref.read(relationshipStatusProvider.notifier).update(value!);
 
                       setState(() {});
-                      final data = profiledata?.copyWith(
-                        relationshipStatus: value,
-                      );
+                      final data = profiledata?.copyWith(relationshipStatus: value);
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
 
                       // context.router.back();
                     },
                     value: RelationshipStatus.values,
-                  ));
-            });
-          });
-        });
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   void _showEthnicityStatus(context) {
     showModalBottomSheet(
-        context: context,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (context, setState) {
-            return Consumer(builder: (context, ref, child) {
-              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+      context: context,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (BuildContext bc) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Consumer(
+              builder: (context, ref, child) {
+                final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
-              final ethnicity = ref.watch(ethnicityProvider);
-              return SizedBox(
+                final ethnicity = ref.watch(ethnicityProvider);
+                return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<Ethnicity>(
                     selected: ethnicity,
@@ -444,29 +464,33 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                       ref.read(ethnicityProvider.notifier).update(value!);
 
                       // context.router.back();
-                      final data = profiledata?.copyWith(
-                        ethnicity: value,
-                      );
+                      final data = profiledata?.copyWith(ethnicity: value);
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: Ethnicity.values,
-                  ));
-            });
-          });
-        });
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   void _showLookingForStatus(context) {
     showModalBottomSheet(
-        context: context,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (context, setState) {
-            return Consumer(builder: (context, ref, child) {
-              final lookingFor = ref.watch(lookingForProvider);
-              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+      context: context,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (BuildContext bc) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Consumer(
+              builder: (context, ref, child) {
+                final lookingFor = ref.watch(lookingForProvider);
+                final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
-              return SizedBox(
+                return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<LookingFor>(
                     selected: lookingFor,
@@ -475,29 +499,33 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                       ref.read(lookingForProvider.notifier).update(value!);
                       context.router.back();
 
-                      final data = profiledata?.copyWith(
-                        lookingFor: value,
-                      );
+                      final data = profiledata?.copyWith(lookingFor: value);
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: LookingFor.values,
-                  ));
-            });
-          });
-        });
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   void _showWhereToMeetStatus(context) {
     showModalBottomSheet(
-        context: context,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (context, setState) {
-            return Consumer(builder: (context, ref, child) {
-              final whereToMeet = ref.watch(whereToMeetProvider);
-              final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
+      context: context,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (BuildContext bc) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Consumer(
+              builder: (context, ref, child) {
+                final whereToMeet = ref.watch(whereToMeetProvider);
+                final profiledata = ref.read(ProfileController.userControllerProvider).userModel;
 
-              return SizedBox(
+                return SizedBox(
                   height: 200,
                   child: AdditionalDataWidget<WhereToMeet>(
                     selected: whereToMeet,
@@ -505,16 +533,18 @@ class _AddAdditionalInformationViewState extends ConsumerState<AddAdditionalInfo
                       logger.i(value);
                       ref.read(whereToMeetProvider.notifier).update(value!);
                       // context.router.back();
-                      final data = profiledata?.copyWith(
-                        whereToMeet: value,
-                      );
+                      final data = profiledata?.copyWith(whereToMeet: value);
                       await ref.read(ProfileController.userControllerProvider).updateUserData(data!);
                     },
                     value: WhereToMeet.values,
-                  ));
-            });
-          });
-        });
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 }
 
@@ -562,12 +592,7 @@ class _AdditionalDataWidgetState extends State<AdditionalDataWidget> {
 }
 
 class ListWheelItemWidget extends StatelessWidget {
-  const ListWheelItemWidget({
-    super.key,
-    required this.role,
-    this.onTap,
-    required this.color,
-  });
+  const ListWheelItemWidget({super.key, required this.role, this.onTap, required this.color});
 
   final String role;
   final void Function()? onTap;
@@ -580,20 +605,14 @@ class ListWheelItemWidget extends StatelessWidget {
         color: color,
         width: MediaQuery.of(context).size.width,
         height: 30,
-        child: Center(
-          child: Text(role),
-        ),
+        child: Center(child: Text(role)),
       ),
     );
   }
 }
 
 class AlbumWidgetPicker extends ConsumerStatefulWidget {
-  const AlbumWidgetPicker({
-    super.key,
-    this.path,
-    required this.index,
-  });
+  const AlbumWidgetPicker({super.key, this.path, required this.index});
 
   final String? path;
   final int index;
@@ -621,21 +640,21 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
               builder: (context) {
                 return ImagePickerWidget(
                   camera: () async {
-                    final data = await ref.read(ProfileController.userControllerProvider).pickImageFromAlbum(
-                          ImageSource.camera,
-                        );
+                    final data = await ref
+                        .read(ProfileController.userControllerProvider)
+                        .pickImageFromAlbum(ImageSource.camera);
 
                     if (data != null) {
-// albumList.update((state) => state[widget.index] = data);
+                      // albumList.update((state) => state[widget.index] = data);
 
                       // albumList[widget.index] = data;
                       setState(() {});
                     }
                   },
                   gallery: () async {
-                    final data = await ref.read(ProfileController.userControllerProvider).pickImageFromAlbum(
-                          ImageSource.gallery,
-                        );
+                    final data = await ref
+                        .read(ProfileController.userControllerProvider)
+                        .pickImageFromAlbum(ImageSource.gallery);
 
                     if (data != null) {
                       // albumList[widget.index] = data;
@@ -650,10 +669,7 @@ class _AlbumWidgetPickerState extends ConsumerState<AlbumWidgetPicker> {
       },
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(
-            width: 1.5,
-            color: Theme.of(context).primaryColor.withOpacity(0.5),
-          ),
+          border: Border.all(width: 1.5, color: Theme.of(context).primaryColor.withOpacity(0.5)),
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(10),
         ),

@@ -7,13 +7,13 @@ part of 'chat_contact.dart';
 // **************************************************************************
 
 _ChatContact _$ChatContactFromJson(Map<String, dynamic> json) => _ChatContact(
-      name: json['name'] as String,
-      profilePic: json['profilePic'] as String,
-      contactId: json['contactId'] as String,
-      timeSent: DateTime.parse(json['timeSent'] as String),
-      lastMessage: json['lastMessage'] as String,
-      fcmToken: json['fcmToken'] as String,
-    );
+  name: json['name'] as String,
+  profilePic: json['profilePic'] as String,
+  contactId: json['contactId'] as String,
+  timeSent: DateTime.parse(json['timeSent'] as String),
+  lastMessage: json['lastMessage'] as String,
+  fcmToken: json['fcmToken'] as String,
+);
 
 Map<String, dynamic> _$ChatContactToJson(_ChatContact instance) =>
     <String, dynamic>{

@@ -6,51 +6,151 @@ part of 'albums_repo.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$albumsRepoHash() => r'2253b26fd278a9aa1b6576aec54b10d044b50124';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [albumsRepo].
-@ProviderFor(albumsRepo)
-final albumsRepoProvider = AutoDisposeProvider<AlbumsRepo>.internal(
-  albumsRepo,
-  name: r'albumsRepoProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$albumsRepoHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(SharedAlbum)
+const sharedAlbumProvider = SharedAlbumProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AlbumsRepoRef = AutoDisposeProviderRef<AlbumsRepo>;
+final class SharedAlbumProvider
+    extends $AsyncNotifierProvider<SharedAlbum, List<GetMessageResponse>> {
+  const SharedAlbumProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sharedAlbumProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$sharedAlbumHash();
+
+  @$internal
+  @override
+  SharedAlbum create() => SharedAlbum();
+}
+
 String _$sharedAlbumHash() => r'5c149220e45fe3a0a968bb2da4e62587f26c5bca';
 
-/// See also [SharedAlbum].
-@ProviderFor(SharedAlbum)
-final sharedAlbumProvider =
-    AsyncNotifierProvider<SharedAlbum, List<GetMessageResponse>>.internal(
-  SharedAlbum.new,
-  name: r'sharedAlbumProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$sharedAlbumHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$SharedAlbum extends $AsyncNotifier<List<GetMessageResponse>> {
+  FutureOr<List<GetMessageResponse>> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<List<GetMessageResponse>>,
+              List<GetMessageResponse>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<List<GetMessageResponse>>,
+                List<GetMessageResponse>
+              >,
+              AsyncValue<List<GetMessageResponse>>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$SharedAlbum = AsyncNotifier<List<GetMessageResponse>>;
+@ProviderFor(albumsRepo)
+const albumsRepoProvider = AlbumsRepoProvider._();
+
+final class AlbumsRepoProvider
+    extends $FunctionalProvider<AlbumsRepo, AlbumsRepo, AlbumsRepo>
+    with $Provider<AlbumsRepo> {
+  const AlbumsRepoProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'albumsRepoProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$albumsRepoHash();
+
+  @$internal
+  @override
+  $ProviderElement<AlbumsRepo> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AlbumsRepo create(Ref ref) {
+    return albumsRepo(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AlbumsRepo value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AlbumsRepo>(value),
+    );
+  }
+}
+
+String _$albumsRepoHash() => r'2253b26fd278a9aa1b6576aec54b10d044b50124';
+
+@ProviderFor(AlbumClass)
+const albumClassProvider = AlbumClassProvider._();
+
+final class AlbumClassProvider extends $NotifierProvider<AlbumClass, dynamic> {
+  const AlbumClassProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'albumClassProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$albumClassHash();
+
+  @$internal
+  @override
+  AlbumClass create() => AlbumClass();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(dynamic value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<dynamic>(value),
+    );
+  }
+}
+
 String _$albumClassHash() => r'af37c3cd9bdcf071ac25362aa4246ce9b9a21a8c';
 
-/// See also [AlbumClass].
-@ProviderFor(AlbumClass)
-final albumClassProvider =
-    AutoDisposeNotifierProvider<AlbumClass, Object?>.internal(
-  AlbumClass.new,
-  name: r'albumClassProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$albumClassHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$AlbumClass = AutoDisposeNotifier<Object?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$AlbumClass extends $Notifier<dynamic> {
+  dynamic build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<dynamic, dynamic>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<dynamic, dynamic>,
+              dynamic,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

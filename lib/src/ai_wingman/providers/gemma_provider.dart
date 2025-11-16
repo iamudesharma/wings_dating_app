@@ -2,6 +2,7 @@
 import 'package:flutter_gemma/core/chat.dart';
 import 'package:flutter_gemma/core/tool.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:wings_dating_app/src/ai_wingman/models/model.dart';
 import 'package:wings_dating_app/src/ai_wingman/services/gemma_model_manager.dart';
 

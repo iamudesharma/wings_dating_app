@@ -10,15 +10,20 @@ _UserAnalytics _$UserAnalyticsFromJson(Map<String, dynamic> json) =>
     _UserAnalytics(
       userId: json['userId'] as String,
       profileViews: ProfileViewsAnalytics.fromJson(
-          json['profileViews'] as Map<String, dynamic>),
-      matches:
-          MatchesAnalytics.fromJson(json['matches'] as Map<String, dynamic>),
-      messages:
-          MessagesAnalytics.fromJson(json['messages'] as Map<String, dynamic>),
+        json['profileViews'] as Map<String, dynamic>,
+      ),
+      matches: MatchesAnalytics.fromJson(
+        json['matches'] as Map<String, dynamic>,
+      ),
+      messages: MessagesAnalytics.fromJson(
+        json['messages'] as Map<String, dynamic>,
+      ),
       discovery: DiscoveryAnalytics.fromJson(
-          json['discovery'] as Map<String, dynamic>),
-      location:
-          LocationAnalytics.fromJson(json['location'] as Map<String, dynamic>),
+        json['discovery'] as Map<String, dynamic>,
+      ),
+      location: LocationAnalytics.fromJson(
+        json['location'] as Map<String, dynamic>,
+      ),
       lastUpdated: DateTime.parse(json['lastUpdated'] as String),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
@@ -40,26 +45,26 @@ Map<String, dynamic> _$UserAnalyticsToJson(_UserAnalytics instance) =>
     };
 
 _ProfileViewsAnalytics _$ProfileViewsAnalyticsFromJson(
-        Map<String, dynamic> json) =>
-    _ProfileViewsAnalytics(
-      total: (json['total'] as num).toInt(),
-      daily: (json['daily'] as num).toInt(),
-      weekly: (json['weekly'] as num).toInt(),
-      monthly: (json['monthly'] as num).toInt(),
-      byHour: Map<String, int>.from(json['byHour'] as Map),
-      byDay: Map<String, int>.from(json['byDay'] as Map),
-    );
+  Map<String, dynamic> json,
+) => _ProfileViewsAnalytics(
+  total: (json['total'] as num).toInt(),
+  daily: (json['daily'] as num).toInt(),
+  weekly: (json['weekly'] as num).toInt(),
+  monthly: (json['monthly'] as num).toInt(),
+  byHour: Map<String, int>.from(json['byHour'] as Map),
+  byDay: Map<String, int>.from(json['byDay'] as Map),
+);
 
 Map<String, dynamic> _$ProfileViewsAnalyticsToJson(
-        _ProfileViewsAnalytics instance) =>
-    <String, dynamic>{
-      'total': instance.total,
-      'daily': instance.daily,
-      'weekly': instance.weekly,
-      'monthly': instance.monthly,
-      'byHour': instance.byHour,
-      'byDay': instance.byDay,
-    };
+  _ProfileViewsAnalytics instance,
+) => <String, dynamic>{
+  'total': instance.total,
+  'daily': instance.daily,
+  'weekly': instance.weekly,
+  'monthly': instance.monthly,
+  'byHour': instance.byHour,
+  'byDay': instance.byDay,
+};
 
 _MatchesAnalytics _$MatchesAnalyticsFromJson(Map<String, dynamic> json) =>
     _MatchesAnalytics(

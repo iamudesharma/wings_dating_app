@@ -6,173 +6,95 @@ part of 'album_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$albumControllerHash() => r'e5bb7717f119bca884e041cdb4cc1760cd0c07b6';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$AlbumController
-    extends BuildlessAsyncNotifier<UserAlbumModel> {
-  late final String id;
-
-  FutureOr<UserAlbumModel> build(
-    String id,
-  );
-}
-
-/// See also [AlbumController].
 @ProviderFor(AlbumController)
-const albumControllerProvider = AlbumControllerFamily();
+const albumControllerProvider = AlbumControllerFamily._();
 
-/// See also [AlbumController].
-class AlbumControllerFamily extends Family<AsyncValue<UserAlbumModel>> {
-  /// See also [AlbumController].
-  const AlbumControllerFamily();
+final class AlbumControllerProvider
+    extends $AsyncNotifierProvider<AlbumController, UserAlbumModel> {
+  const AlbumControllerProvider._({
+    required AlbumControllerFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'albumControllerProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [AlbumController].
-  AlbumControllerProvider call(
-    String id,
-  ) {
-    return AlbumControllerProvider(
-      id,
-    );
+  @override
+  String debugGetCreateSourceHash() => _$albumControllerHash();
+
+  @override
+  String toString() {
+    return r'albumControllerProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  AlbumControllerProvider getProviderOverride(
-    covariant AlbumControllerProvider provider,
-  ) {
-    return call(
-      provider.id,
-    );
-  }
-
-  static final Iterable<ProviderOrFamily> _dependencies =
-      const <ProviderOrFamily>[];
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static final Iterable<ProviderOrFamily> _allTransitiveDependencies =
-      const <ProviderOrFamily>{};
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'albumControllerProvider';
-}
-
-/// See also [AlbumController].
-class AlbumControllerProvider
-    extends AsyncNotifierProviderImpl<AlbumController, UserAlbumModel> {
-  /// See also [AlbumController].
-  AlbumControllerProvider(
-    String id,
-  ) : this._internal(
-          () => AlbumController()..id = id,
-          from: albumControllerProvider,
-          name: r'albumControllerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$albumControllerHash,
-          dependencies: AlbumControllerFamily._dependencies,
-          allTransitiveDependencies:
-              AlbumControllerFamily._allTransitiveDependencies,
-          id: id,
-        );
-
-  AlbumControllerProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.id,
-  }) : super.internal();
-
-  final String id;
-
-  @override
-  FutureOr<UserAlbumModel> runNotifierBuild(
-    covariant AlbumController notifier,
-  ) {
-    return notifier.build(
-      id,
-    );
-  }
-
-  @override
-  Override overrideWith(AlbumController Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: AlbumControllerProvider._internal(
-        () => create()..id = id,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        id: id,
-      ),
-    );
-  }
-
-  @override
-  AsyncNotifierProviderElement<AlbumController, UserAlbumModel>
-      createElement() {
-    return _AlbumControllerProviderElement(this);
-  }
+  AlbumController create() => AlbumController();
 
   @override
   bool operator ==(Object other) {
-    return other is AlbumControllerProvider && other.id == id;
+    return other is AlbumControllerProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, id.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin AlbumControllerRef on AsyncNotifierProviderRef<UserAlbumModel> {
-  /// The parameter `id` of this provider.
-  String get id;
-}
+String _$albumControllerHash() => r'e5bb7717f119bca884e041cdb4cc1760cd0c07b6';
 
-class _AlbumControllerProviderElement
-    extends AsyncNotifierProviderElement<AlbumController, UserAlbumModel>
-    with AlbumControllerRef {
-  _AlbumControllerProviderElement(super.provider);
+final class AlbumControllerFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          AlbumController,
+          AsyncValue<UserAlbumModel>,
+          UserAlbumModel,
+          FutureOr<UserAlbumModel>,
+          String
+        > {
+  const AlbumControllerFamily._()
+    : super(
+        retry: null,
+        name: r'albumControllerProvider',
+        dependencies: const <ProviderOrFamily>[],
+        $allTransitiveDependencies: const <ProviderOrFamily>[],
+        isAutoDispose: false,
+      );
+
+  AlbumControllerProvider call(String id) =>
+      AlbumControllerProvider._(argument: id, from: this);
 
   @override
-  String get id => (origin as AlbumControllerProvider).id;
+  String toString() => r'albumControllerProvider';
 }
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+
+abstract class _$AlbumController extends $AsyncNotifier<UserAlbumModel> {
+  late final _$args = ref.$arg as String;
+  String get id => _$args;
+
+  FutureOr<UserAlbumModel> build(String id);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref = this.ref as $Ref<AsyncValue<UserAlbumModel>, UserAlbumModel>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<UserAlbumModel>, UserAlbumModel>,
+              AsyncValue<UserAlbumModel>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

@@ -19,8 +19,8 @@ class CreateAlbumView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final albumController = ref.watch(AlbumControllerProvider(id));
-    final albumNotifier = ref.read(AlbumControllerProvider(id).notifier);
+    final albumController = ref.watch(albumControllerProvider(id));
+    final albumNotifier = ref.read(albumControllerProvider(id).notifier);
 
     final albumNameController = TextEditingController(text: albumController.value?.name ?? "");
 
@@ -84,10 +84,7 @@ class CreateAlbumView extends ConsumerWidget {
                               if (photos.isNotEmpty)
                                 Hero(
                                   tag: photos.last,
-                                  child: CachedNetworkImage(
-                                    imageUrl: photos.last,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  child: CachedNetworkImage(imageUrl: photos.last, fit: BoxFit.cover),
                                 )
                               else
                                 Container(
@@ -130,10 +127,9 @@ class CreateAlbumView extends ConsumerWidget {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .outlineVariant
-                                      .withOpacity(data.isShared ? 0.1 : 0.3),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.outlineVariant.withOpacity(data.isShared ? 0.1 : 0.3),
                                 ),
                               ),
                               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -143,9 +139,9 @@ class CreateAlbumView extends ConsumerWidget {
                               if (newName.isEmpty || data.isShared) return;
                               await albumNotifier.rename(newName);
                               if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Album renamed')),
-                                );
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(const SnackBar(content: Text('Album renamed')));
                               }
                             },
                           ),
@@ -194,11 +190,13 @@ class CreateAlbumView extends ConsumerWidget {
                                                                   ? Text(user.bio!)
                                                                   : null,
                                                               secondary: CircleAvatar(
-                                                                backgroundImage: (user?.profileUrl != null &&
+                                                                backgroundImage:
+                                                                    (user?.profileUrl != null &&
                                                                         (user!.profileUrl ?? '').isNotEmpty)
                                                                     ? NetworkImage(user.profileUrl!)
                                                                     : null,
-                                                                child: (user?.profileUrl == null ||
+                                                                child:
+                                                                    (user?.profileUrl == null ||
                                                                         (user!.profileUrl ?? '').isEmpty)
                                                                     ? const Icon(Icons.person)
                                                                     : null,
@@ -207,9 +205,10 @@ class CreateAlbumView extends ConsumerWidget {
                                                           },
                                                           loading: () => const ListTile(
                                                             leading: SizedBox(
-                                                                width: 24,
-                                                                height: 24,
-                                                                child: CircularProgressIndicator(strokeWidth: 2)),
+                                                              width: 24,
+                                                              height: 24,
+                                                              child: CircularProgressIndicator(strokeWidth: 2),
+                                                            ),
                                                             title: Text('Loading...'),
                                                           ),
                                                           error: (e, st) => RadioListTile<String>(
@@ -271,11 +270,9 @@ class CreateAlbumView extends ConsumerWidget {
                                 style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                               ),
                               const SizedBox(height: 16),
-                              Text(
-                                "Share with ${albumController.value?.sharedWith.length} people",
-                              )
-                            ]
-                          ]
+                              Text("Share with ${albumController.value?.sharedWith.length} people"),
+                            ],
+                          ],
                         ],
                       ),
                     ),
@@ -358,10 +355,7 @@ class CreateAlbumView extends ConsumerWidget {
                                     visualDensity: VisualDensity.compact,
                                     iconSize: 20,
                                     tooltip: 'Remove photo',
-                                    icon: Icon(
-                                      Icons.delete_outline,
-                                      color: Theme.of(context).colorScheme.error,
-                                    ),
+                                    icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
                                     onPressed: () async {
                                       final confirm = await showDialog<bool>(
                                         context: context,

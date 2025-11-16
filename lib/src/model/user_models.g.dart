@@ -7,89 +7,94 @@ part of 'user_models.dart';
 // **************************************************************************
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
-      username: json['username'] as String,
-      bio: json['bio'] as String?,
-      albumUrl: (json['albumUrl'] as List<dynamic>?)
+  username: json['username'] as String,
+  bio: json['bio'] as String?,
+  albumUrl: (json['albumUrl'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  profileUrl:
+      json['profileUrl'] as String? ??
+      "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
+  birthday: json['birthday'] as String?,
+  age: (json['age'] as num?)?.toInt(),
+  position: json['position'] == null
+      ? null
+      : GeoPointData.fromJson(json['position'] as Map<String, dynamic>),
+  dob: json['dob'] as String?,
+  height: json['height'] as String?,
+  weight: json['weight'] as String?,
+  lived: json['lived'] as String?,
+  role: $enumDecodeNullable(_$RoleEnumMap, json['role']) ?? Role.doNotShow,
+  bodyType:
+      $enumDecodeNullable(_$BodyTypeEnumMap, json['bodyType']) ??
+      BodyType.doNotShow,
+  relationshipStatus:
+      $enumDecodeNullable(
+        _$RelationshipStatusEnumMap,
+        json['relationshipStatus'],
+      ) ??
+      RelationshipStatus.doNotShow,
+  ethnicity:
+      $enumDecodeNullable(_$EthnicityEnumMap, json['ethnicity']) ??
+      Ethnicity.doNotShow,
+  lookingFor:
+      $enumDecodeNullable(_$LookingForEnumMap, json['lookingFor']) ??
+      LookingFor.doNotShow,
+  whereToMeet:
+      $enumDecodeNullable(_$WhereToMeetEnumMap, json['whereToMeet']) ??
+      WhereToMeet.doNotShow,
+  isOnline: json['isOnline'] as bool? ?? false,
+  lastSeen: json['lastSeen'] == null
+      ? null
+      : DateTime.parse(json['lastSeen'] as String),
+  distance: (json['distance'] as num?)?.toDouble(),
+  isVerified: json['isVerified'] as bool? ?? false,
+  isBlocked: json['isBlocked'] as bool? ?? false,
+  blockList:
+      (json['blockList'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
+  favoriteList:
+      (json['favoriteList'] as List<dynamic>?)
           ?.map((e) => e as String)
-          .toList(),
-      profileUrl: json['profileUrl'] as String? ??
-          "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
-      birthday: json['birthday'] as String?,
-      age: (json['age'] as num?)?.toInt(),
-      position: json['position'] == null
-          ? null
-          : GeoPointData.fromJson(json['position'] as Map<String, dynamic>),
-      dob: json['dob'] as String?,
-      height: json['height'] as String?,
-      weight: json['weight'] as String?,
-      lived: json['lived'] as String?,
-      role: $enumDecodeNullable(_$RoleEnumMap, json['role']) ?? Role.doNotShow,
-      bodyType: $enumDecodeNullable(_$BodyTypeEnumMap, json['bodyType']) ??
-          BodyType.doNotShow,
-      relationshipStatus: $enumDecodeNullable(
-              _$RelationshipStatusEnumMap, json['relationshipStatus']) ??
-          RelationshipStatus.doNotShow,
-      ethnicity: $enumDecodeNullable(_$EthnicityEnumMap, json['ethnicity']) ??
-          Ethnicity.doNotShow,
-      lookingFor:
-          $enumDecodeNullable(_$LookingForEnumMap, json['lookingFor']) ??
-              LookingFor.doNotShow,
-      whereToMeet:
-          $enumDecodeNullable(_$WhereToMeetEnumMap, json['whereToMeet']) ??
-              WhereToMeet.doNotShow,
-      isOnline: json['isOnline'] as bool? ?? false,
-      lastSeen: json['lastSeen'] == null
-          ? null
-          : DateTime.parse(json['lastSeen'] as String),
-      distance: (json['distance'] as num?)?.toDouble(),
-      isVerified: json['isVerified'] as bool? ?? false,
-      isBlocked: json['isBlocked'] as bool? ?? false,
-      blockList: (json['blockList'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      favoriteList: (json['favoriteList'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      interests: (json['interests'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      id: json['id'] as String,
-      fcmToken: json['fcmToken'] as String,
-    );
+          .toList() ??
+      const [],
+  interests:
+      (json['interests'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
+  id: json['id'] as String,
+  fcmToken: json['fcmToken'] as String?,
+);
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
-      'username': instance.username,
-      'bio': instance.bio,
-      'albumUrl': instance.albumUrl,
-      'profileUrl': instance.profileUrl,
-      'birthday': instance.birthday,
-      'age': instance.age,
-      'position': instance.position?.toJson(),
-      'dob': instance.dob,
-      'height': instance.height,
-      'weight': instance.weight,
-      'lived': instance.lived,
-      'role': _$RoleEnumMap[instance.role]!,
-      'bodyType': _$BodyTypeEnumMap[instance.bodyType]!,
-      'relationshipStatus':
-          _$RelationshipStatusEnumMap[instance.relationshipStatus]!,
-      'ethnicity': _$EthnicityEnumMap[instance.ethnicity]!,
-      'lookingFor': _$LookingForEnumMap[instance.lookingFor]!,
-      'whereToMeet': _$WhereToMeetEnumMap[instance.whereToMeet]!,
-      'isOnline': instance.isOnline,
-      'lastSeen': instance.lastSeen?.toIso8601String(),
-      'distance': instance.distance,
-      'isVerified': instance.isVerified,
-      'isBlocked': instance.isBlocked,
-      'blockList': instance.blockList,
-      'favoriteList': instance.favoriteList,
-      'interests': instance.interests,
-      'id': instance.id,
-      'fcmToken': instance.fcmToken,
-    };
+  'username': instance.username,
+  'bio': instance.bio,
+  'albumUrl': instance.albumUrl,
+  'profileUrl': instance.profileUrl,
+  'birthday': instance.birthday,
+  'age': instance.age,
+  'position': instance.position?.toJson(),
+  'dob': instance.dob,
+  'height': instance.height,
+  'weight': instance.weight,
+  'lived': instance.lived,
+  'role': _$RoleEnumMap[instance.role]!,
+  'bodyType': _$BodyTypeEnumMap[instance.bodyType]!,
+  'relationshipStatus':
+      _$RelationshipStatusEnumMap[instance.relationshipStatus]!,
+  'ethnicity': _$EthnicityEnumMap[instance.ethnicity]!,
+  'lookingFor': _$LookingForEnumMap[instance.lookingFor]!,
+  'whereToMeet': _$WhereToMeetEnumMap[instance.whereToMeet]!,
+  'isOnline': instance.isOnline,
+  'lastSeen': instance.lastSeen?.toIso8601String(),
+  'distance': instance.distance,
+  'isVerified': instance.isVerified,
+  'isBlocked': instance.isBlocked,
+  'blockList': instance.blockList,
+  'favoriteList': instance.favoriteList,
+  'interests': instance.interests,
+  'id': instance.id,
+  'fcmToken': instance.fcmToken,
+};
 
 const _$RoleEnumMap = {
   Role.doNotShow: 'Do not show',

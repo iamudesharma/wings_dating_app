@@ -18,10 +18,10 @@ class AIAnalysisRoute extends PageRouteInfo<AIAnalysisRouteArgs> {
     Model model = Model.gemma3LocalAsset,
     List<PageRouteInfo>? children,
   }) : super(
-          AIAnalysisRoute.name,
-          args: AIAnalysisRouteArgs(key: key, model: model),
-          initialChildren: children,
-        );
+         AIAnalysisRoute.name,
+         args: AIAnalysisRouteArgs(key: key, model: model),
+         initialChildren: children,
+       );
 
   static const String name = 'AIAnalysisRoute';
 
@@ -67,10 +67,10 @@ class AIChatRoute extends PageRouteInfo<AIChatRouteArgs> {
     Model model = Model.gemma3LocalAsset,
     List<PageRouteInfo>? children,
   }) : super(
-          AIChatRoute.name,
-          args: AIChatRouteArgs(key: key, model: model),
-          initialChildren: children,
-        );
+         AIChatRoute.name,
+         args: AIChatRouteArgs(key: key, model: model),
+         initialChildren: children,
+       );
 
   static const String name = 'AIChatRoute';
 
@@ -112,7 +112,7 @@ class AIChatRouteArgs {
 /// [AddAdditionalInformationView]
 class AddAdditionalInformationRoute extends PageRouteInfo<void> {
   const AddAdditionalInformationRoute({List<PageRouteInfo>? children})
-      : super(AddAdditionalInformationRoute.name, initialChildren: children);
+    : super(AddAdditionalInformationRoute.name, initialChildren: children);
 
   static const String name = 'AddAdditionalInformationRoute';
 
@@ -134,15 +134,15 @@ class AlbumDetailsRoute extends PageRouteInfo<AlbumDetailsRouteArgs> {
     Channel? channel,
     List<PageRouteInfo>? children,
   }) : super(
-          AlbumDetailsRoute.name,
-          args: AlbumDetailsRouteArgs(
-            key: key,
-            id: id,
-            isPreview: isPreview,
-            channel: channel,
-          ),
-          initialChildren: children,
-        );
+         AlbumDetailsRoute.name,
+         args: AlbumDetailsRouteArgs(
+           key: key,
+           id: id,
+           isPreview: isPreview,
+           channel: channel,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'AlbumDetailsRoute';
 
@@ -200,7 +200,7 @@ class AlbumDetailsRouteArgs {
 /// [AlbumRequestsView]
 class AlbumRequestsRoute extends PageRouteInfo<void> {
   const AlbumRequestsRoute({List<PageRouteInfo>? children})
-      : super(AlbumRequestsRoute.name, initialChildren: children);
+    : super(AlbumRequestsRoute.name, initialChildren: children);
 
   static const String name = 'AlbumRequestsRoute';
 
@@ -216,7 +216,7 @@ class AlbumRequestsRoute extends PageRouteInfo<void> {
 /// [AlbumView]
 class AlbumRoute extends PageRouteInfo<void> {
   const AlbumRoute({List<PageRouteInfo>? children})
-      : super(AlbumRoute.name, initialChildren: children);
+    : super(AlbumRoute.name, initialChildren: children);
 
   static const String name = 'AlbumRoute';
 
@@ -232,7 +232,7 @@ class AlbumRoute extends PageRouteInfo<void> {
 /// [ChatListView]
 class ChatListRoute extends PageRouteInfo<void> {
   const ChatListRoute({List<PageRouteInfo>? children})
-      : super(ChatListRoute.name, initialChildren: children);
+    : super(ChatListRoute.name, initialChildren: children);
 
   static const String name = 'ChatListRoute';
 
@@ -253,11 +253,11 @@ class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
     required String id,
     List<PageRouteInfo>? children,
   }) : super(
-          ChatRoute.name,
-          args: ChatRouteArgs(key: key, channel: channel, id: id),
-          rawPathParams: {'id': id},
-          initialChildren: children,
-        );
+         ChatRoute.name,
+         args: ChatRouteArgs(key: key, channel: channel, id: id),
+         rawPathParams: {'id': id},
+         initialChildren: children,
+       );
 
   static const String name = 'ChatRoute';
 
@@ -303,10 +303,10 @@ class CreateAlbumRoute extends PageRouteInfo<CreateAlbumRouteArgs> {
     required String id,
     List<PageRouteInfo>? children,
   }) : super(
-          CreateAlbumRoute.name,
-          args: CreateAlbumRouteArgs(key: key, id: id),
-          initialChildren: children,
-        );
+         CreateAlbumRoute.name,
+         args: CreateAlbumRouteArgs(key: key, id: id),
+         initialChildren: children,
+       );
 
   static const String name = 'CreateAlbumRoute';
 
@@ -346,7 +346,7 @@ class CreateAlbumRouteArgs {
 /// [DashboardView]
 class DashboardRoute extends PageRouteInfo<void> {
   const DashboardRoute({List<PageRouteInfo>? children})
-      : super(DashboardRoute.name, initialChildren: children);
+    : super(DashboardRoute.name, initialChildren: children);
 
   static const String name = 'DashboardRoute';
 
@@ -366,10 +366,10 @@ class EditProfileRoute extends PageRouteInfo<EditProfileRouteArgs> {
     required bool isEditProfile,
     List<PageRouteInfo>? children,
   }) : super(
-          EditProfileRoute.name,
-          args: EditProfileRouteArgs(key: key, isEditProfile: isEditProfile),
-          initialChildren: children,
-        );
+         EditProfileRoute.name,
+         args: EditProfileRouteArgs(key: key, isEditProfile: isEditProfile),
+         initialChildren: children,
+       );
 
   static const String name = 'EditProfileRoute';
 
@@ -409,7 +409,7 @@ class EditProfileRouteArgs {
 /// [FilterView]
 class FilterRoute extends PageRouteInfo<void> {
   const FilterRoute({List<PageRouteInfo>? children})
-      : super(FilterRoute.name, initialChildren: children);
+    : super(FilterRoute.name, initialChildren: children);
 
   static const String name = 'FilterRoute';
 
@@ -429,11 +429,11 @@ class ImagePreviewRoute extends PageRouteInfo<ImagePreviewRouteArgs> {
     required String path,
     List<PageRouteInfo>? children,
   }) : super(
-          ImagePreviewRoute.name,
-          args: ImagePreviewRouteArgs(key: key, path: path),
-          rawPathParams: {'path': path},
-          initialChildren: children,
-        );
+         ImagePreviewRoute.name,
+         args: ImagePreviewRouteArgs(key: key, path: path),
+         rawPathParams: {'path': path},
+         initialChildren: children,
+       );
 
   static const String name = 'ImagePreviewRoute';
 
@@ -476,7 +476,7 @@ class ImagePreviewRouteArgs {
 /// [LoginView]
 class LoginRoute extends PageRouteInfo<void> {
   const LoginRoute({List<PageRouteInfo>? children})
-      : super(LoginRoute.name, initialChildren: children);
+    : super(LoginRoute.name, initialChildren: children);
 
   static const String name = 'LoginRoute';
 
@@ -492,7 +492,7 @@ class LoginRoute extends PageRouteInfo<void> {
 /// [MatchingView]
 class MatchingRoute extends PageRouteInfo<void> {
   const MatchingRoute({List<PageRouteInfo>? children})
-      : super(MatchingRoute.name, initialChildren: children);
+    : super(MatchingRoute.name, initialChildren: children);
 
   static const String name = 'MatchingRoute';
 
@@ -512,10 +512,10 @@ class ModelDownloadRoute extends PageRouteInfo<ModelDownloadRouteArgs> {
     required Model model,
     List<PageRouteInfo>? children,
   }) : super(
-          ModelDownloadRoute.name,
-          args: ModelDownloadRouteArgs(key: key, model: model),
-          initialChildren: children,
-        );
+         ModelDownloadRoute.name,
+         args: ModelDownloadRouteArgs(key: key, model: model),
+         initialChildren: children,
+       );
 
   static const String name = 'ModelDownloadRoute';
 
@@ -555,7 +555,7 @@ class ModelDownloadRouteArgs {
 /// [ModelSelectionView]
 class ModelSelectionRoute extends PageRouteInfo<void> {
   const ModelSelectionRoute({List<PageRouteInfo>? children})
-      : super(ModelSelectionRoute.name, initialChildren: children);
+    : super(ModelSelectionRoute.name, initialChildren: children);
 
   static const String name = 'ModelSelectionRoute';
 
@@ -576,15 +576,15 @@ class OtherUserProfileRoute extends PageRouteInfo<OtherUserProfileRouteArgs> {
     bool? isCurrentUser = true,
     List<PageRouteInfo>? children,
   }) : super(
-          OtherUserProfileRoute.name,
-          args: OtherUserProfileRouteArgs(
-            key: key,
-            id: id,
-            isCurrentUser: isCurrentUser,
-          ),
-          rawPathParams: {'id': id},
-          initialChildren: children,
-        );
+         OtherUserProfileRoute.name,
+         args: OtherUserProfileRouteArgs(
+           key: key,
+           id: id,
+           isCurrentUser: isCurrentUser,
+         ),
+         rawPathParams: {'id': id},
+         initialChildren: children,
+       );
 
   static const String name = 'OtherUserProfileRoute';
 
@@ -639,7 +639,7 @@ class OtherUserProfileRouteArgs {
 /// [ProfileOnboardingView]
 class ProfileOnboardingRoute extends PageRouteInfo<void> {
   const ProfileOnboardingRoute({List<PageRouteInfo>? children})
-      : super(ProfileOnboardingRoute.name, initialChildren: children);
+    : super(ProfileOnboardingRoute.name, initialChildren: children);
 
   static const String name = 'ProfileOnboardingRoute';
 
@@ -655,7 +655,7 @@ class ProfileOnboardingRoute extends PageRouteInfo<void> {
 /// [ProfileView]
 class ProfileRoute extends PageRouteInfo<void> {
   const ProfileRoute({List<PageRouteInfo>? children})
-      : super(ProfileRoute.name, initialChildren: children);
+    : super(ProfileRoute.name, initialChildren: children);
 
   static const String name = 'ProfileRoute';
 
@@ -671,7 +671,7 @@ class ProfileRoute extends PageRouteInfo<void> {
 /// [ProfileVisitsView]
 class ProfileVisitsRoute extends PageRouteInfo<void> {
   const ProfileVisitsRoute({List<PageRouteInfo>? children})
-      : super(ProfileVisitsRoute.name, initialChildren: children);
+    : super(ProfileVisitsRoute.name, initialChildren: children);
 
   static const String name = 'ProfileVisitsRoute';
 
@@ -687,7 +687,7 @@ class ProfileVisitsRoute extends PageRouteInfo<void> {
 /// [SearchUsersView]
 class SearchUsersRoute extends PageRouteInfo<void> {
   const SearchUsersRoute({List<PageRouteInfo>? children})
-      : super(SearchUsersRoute.name, initialChildren: children);
+    : super(SearchUsersRoute.name, initialChildren: children);
 
   static const String name = 'SearchUsersRoute';
 
@@ -703,7 +703,7 @@ class SearchUsersRoute extends PageRouteInfo<void> {
 /// [SignOptionsView]
 class SignOptionsRoute extends PageRouteInfo<void> {
   const SignOptionsRoute({List<PageRouteInfo>? children})
-      : super(SignOptionsRoute.name, initialChildren: children);
+    : super(SignOptionsRoute.name, initialChildren: children);
 
   static const String name = 'SignOptionsRoute';
 
@@ -719,7 +719,7 @@ class SignOptionsRoute extends PageRouteInfo<void> {
 /// [SwipeDeckView]
 class SwipeDeckRoute extends PageRouteInfo<void> {
   const SwipeDeckRoute({List<PageRouteInfo>? children})
-      : super(SwipeDeckRoute.name, initialChildren: children);
+    : super(SwipeDeckRoute.name, initialChildren: children);
 
   static const String name = 'SwipeDeckRoute';
 
@@ -735,7 +735,7 @@ class SwipeDeckRoute extends PageRouteInfo<void> {
 /// [UserBlockListView]
 class UserBlockListRoute extends PageRouteInfo<void> {
   const UserBlockListRoute({List<PageRouteInfo>? children})
-      : super(UserBlockListRoute.name, initialChildren: children);
+    : super(UserBlockListRoute.name, initialChildren: children);
 
   static const String name = 'UserBlockListRoute';
 
@@ -751,7 +751,7 @@ class UserBlockListRoute extends PageRouteInfo<void> {
 /// [UsersView]
 class UsersRoute extends PageRouteInfo<void> {
   const UsersRoute({List<PageRouteInfo>? children})
-      : super(UsersRoute.name, initialChildren: children);
+    : super(UsersRoute.name, initialChildren: children);
 
   static const String name = 'UsersRoute';
 

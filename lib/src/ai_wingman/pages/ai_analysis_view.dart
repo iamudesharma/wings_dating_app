@@ -28,7 +28,6 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
   InferenceChat? chat;
   final _messages = <Message>[];
   bool _isModelInitialized = false;
-  bool _isInitializing = false;
   String? _error;
   final String _appTitle = 'AI Dating Profile Analysis 💕';
 
@@ -46,53 +45,42 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
 
   @override
   void dispose() {
-    _isInitializing = false; // Reset initialization flag
+// Reset initialization flag
     _isModelInitialized = false;
     super.dispose();
     // _gemma.modelManager.deleteModel();
   }
 
   Future<void> _initializeModel() async {
-    print('🤖 Starting model initialization...');
 
     // Initialize local settings from model defaults
     _temperature = widget.model.temperature;
     _topK = widget.model.topK;
     _topP = widget.model.topP;
     _supportsFunctionCalls = widget.model.supportsFunctionCalls;
-    _isInitializing = true;
-    print(
-        '⚙️ Model details -> name=${widget.model.name}, local=${widget.model.localModel}, baseUrl=${widget.model.baseUrl}, webUrl=${widget.model.webUrl ?? 'N/A'}');
 
     // Determine proper model path; local assets should use bundled file on native, but network on web
     final installer = FlutterGemma.installModel(
       modelType: widget.model.modelType,
       fileType: widget.model.fileType,
     );
-    print('🔄 Installer prepared (modelType=${widget.model.modelType}, fileType=${widget.model.fileType})');
 
     try {
       if (widget.model.localModel) {
         if (kIsWeb) {
           final remoteUrl = widget.model.webUrl ?? widget.model.baseUrl;
           if (remoteUrl.startsWith('http')) {
-            print('🌐 Web build detected. Installing local model via network: $remoteUrl');
             await installer.fromNetwork(remoteUrl).install();
-            print('📦 Network install completed for local model.');
           } else {
             setState(() {
               _error =
                   'This model relies on bundled assets which are not supported on Flutter web. Please pick an online model instead.';
-              _isInitializing = false;
               _isModelInitialized = false;
             });
-            print('❌ Aborting: local asset not accessible on web.');
             return;
           }
         } else {
-          print('💾 Installing local asset model from ${widget.model.baseUrl}');
           await installer.fromAsset(widget.model.baseUrl).install();
-          print('📦 Local asset install completed.');
         }
       } else {
         // Load token if model needs authentication
@@ -102,31 +90,24 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
           debugPrint('[ChatScreen] Loaded auth token: ${"❌"}');
         }
 
-        print('🌐 Installing remote model from ${widget.model.url}');
         await installer.fromNetwork(widget.model.url, token: token).install();
-        print('📦 Remote model install completed.');
       }
-      print('✅ Model installation step finished without exceptions.');
     } catch (e, st) {
       debugPrint('❌ Failed to install model: $e');
       debugPrintStack(stackTrace: st);
       setState(() {
         _error = 'Failed to initialise model: $e';
-        _isInitializing = false;
         _isModelInitialized = false;
       });
-      print('❌ Model installation failed. Error stored in state.');
       return;
     }
 
-    print('🔧 Creating model instance...');
     final model = await FlutterGemma.getActiveModel(
       maxTokens: widget.model.maxTokens,
       preferredBackend: widget.model.preferredBackend,
       supportImage: widget.model.supportImage,
       maxNumImages: widget.model.maxNumImages,
     );
-    print('🧠 Creating chat instance...');
     chat = await model.createChat(
       temperature: widget.model.temperature,
       randomSeed: 1,
@@ -139,25 +120,19 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
       isThinking: widget.model.isThinking,
       modelType: widget.model.modelType,
     );
-    print('✅ Chat instance created');
-    print('✅ Model instance created');
 
     setState(() {
       _isModelInitialized = true;
-      _isInitializing = false;
       _error = null;
     });
-    print('🎉 Model initialization complete');
 
     // Check if auto-analysis is requested via provider
     Future.delayed(const Duration(milliseconds: 500), () {
-      print('⏰ Delayed auto-analysis check triggered');
       _checkForAutoAnalysis();
 
       // TEMPORARY: Add a test message to verify AI is working
       Future.delayed(const Duration(seconds: 2), () {
         if (_messages.isEmpty) {
-          print('🧪 No auto-analysis triggered, testing AI manually...');
           // _sendTestMessage();
         }
       });
@@ -193,32 +168,23 @@ class _AIAnalysisScreenState extends ConsumerState<AIAnalysisScreen> {
   // }
 
   void _checkForAutoAnalysis() {
-    print('🔍 Checking for auto analysis...');
     final shouldAutoAnalyze = ref.read(autoAnalysisProvider);
     final profileData = ref.read(profileAnalysisProvider);
     final lastAnalyzedId = ref.read(lastAnalyzedProfileIdProvider);
 
-    print(
-        '📊 Auto analysis state: shouldAutoAnalyze=$shouldAutoAnalyze, profileData=${profileData?.username}, lastAnalyzed=$lastAnalyzedId');
 
     if (shouldAutoAnalyze && profileData != null) {
       if (profileData.id == lastAnalyzedId) {
-        print('⏭️ Skipping auto analysis; profile ${profileData.id} already handled.');
         ref.read(autoAnalysisProvider.notifier).state = false;
         ref.read(profileAnalysisProvider.notifier).state = null;
         return;
       }
-      print('✅ Starting auto analysis for profile: ${profileData.username}');
       final analysisPrompt = _generateProfileAnalysisPrompt(profileData);
-      print('📝 Generated prompt (${analysisPrompt.length} chars)');
       // _sendAutoMessage(analysisPrompt);
       ref.read(lastAnalyzedProfileIdProvider.notifier).state = profileData.id;
       ref.read(profileAnalysisProvider.notifier).state = null;
       ref.read(autoAnalysisProvider.notifier).state = false;
-      print('🧹 Cleared analysis request & marked ${profileData.id} as analyzed');
     } else {
-      print(
-          '❌ Auto analysis not triggered: shouldAutoAnalyze=$shouldAutoAnalyze, hasProfileData=${profileData != null}');
     }
   }
 
@@ -329,7 +295,6 @@ Good luck! 💕''';
 
   @override
   Widget build(BuildContext context) {
-    print('🏗️ AIAnalysisScreen build called, _isModelInitialized: $_isModelInitialized');
 
     if (!_isModelInitialized) {
       return _buildLoadingState();

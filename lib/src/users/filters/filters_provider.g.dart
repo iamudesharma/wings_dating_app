@@ -6,368 +6,920 @@ part of 'filters_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(UserFilters)
+const userFiltersProvider = UserFiltersProvider._();
+
+final class UserFiltersProvider
+    extends $NotifierProvider<UserFilters, FiltersModel> {
+  const UserFiltersProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userFiltersProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userFiltersHash();
+
+  @$internal
+  @override
+  UserFilters create() => UserFilters();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FiltersModel value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<FiltersModel>(value),
+    );
+  }
+}
+
+String _$userFiltersHash() => r'deeb8ec05a2a00ed083bc871dc91fba340a08dce';
+
+abstract class _$UserFilters extends $Notifier<FiltersModel> {
+  FiltersModel build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<FiltersModel, FiltersModel>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<FiltersModel, FiltersModel>,
+              FiltersModel,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+@ProviderFor(positions)
+const positionsProvider = PositionsProvider._();
+
+final class PositionsProvider
+    extends $FunctionalProvider<List<String>, List<String>, List<String>>
+    with $Provider<List<String>> {
+  const PositionsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'positionsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$positionsHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<String> create(Ref ref) {
+    return positions(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+}
+
 String _$positionsHash() => r'9ebf128cddd088581f6c19a9c83d7aeaff3cbb72';
 
-/// See also [positions].
-@ProviderFor(positions)
-final positionsProvider = Provider<List<String>>.internal(
-  positions,
-  name: r'positionsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$positionsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(ageRanges)
+const ageRangesProvider = AgeRangesProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef PositionsRef = ProviderRef<List<String>>;
+final class AgeRangesProvider
+    extends $FunctionalProvider<List<String>, List<String>, List<String>>
+    with $Provider<List<String>> {
+  const AgeRangesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'ageRangesProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$ageRangesHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<String> create(Ref ref) {
+    return ageRanges(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+}
+
 String _$ageRangesHash() => r'fc82a83613f84a2ce8ef5269dc77eabd6065e76e';
 
-/// See also [ageRanges].
-@ProviderFor(ageRanges)
-final ageRangesProvider = Provider<List<String>>.internal(
-  ageRanges,
-  name: r'ageRangesProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$ageRangesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(lastSeenOptions)
+const lastSeenOptionsProvider = LastSeenOptionsProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AgeRangesRef = ProviderRef<List<String>>;
+final class LastSeenOptionsProvider
+    extends $FunctionalProvider<List<String>, List<String>, List<String>>
+    with $Provider<List<String>> {
+  const LastSeenOptionsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'lastSeenOptionsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$lastSeenOptionsHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<String> create(Ref ref) {
+    return lastSeenOptions(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+}
+
 String _$lastSeenOptionsHash() => r'c1ce7f654660cd27cf5565b676c842f2f66e52f5';
 
-/// See also [lastSeenOptions].
-@ProviderFor(lastSeenOptions)
-final lastSeenOptionsProvider = Provider<List<String>>.internal(
-  lastSeenOptions,
-  name: r'lastSeenOptionsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$lastSeenOptionsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(interestOptions)
+const interestOptionsProvider = InterestOptionsProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LastSeenOptionsRef = ProviderRef<List<String>>;
+final class InterestOptionsProvider
+    extends $FunctionalProvider<List<String>, List<String>, List<String>>
+    with $Provider<List<String>> {
+  const InterestOptionsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'interestOptionsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$interestOptionsHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<String> create(Ref ref) {
+    return interestOptions(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+}
+
 String _$interestOptionsHash() => r'00470885f031f43c560d441e4a23165490d69543';
 
-/// See also [interestOptions].
-@ProviderFor(interestOptions)
-final interestOptionsProvider = Provider<List<String>>.internal(
-  interestOptions,
-  name: r'interestOptionsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$interestOptionsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(heightRanges)
+const heightRangesProvider = HeightRangesProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef InterestOptionsRef = ProviderRef<List<String>>;
+final class HeightRangesProvider
+    extends $FunctionalProvider<List<String>, List<String>, List<String>>
+    with $Provider<List<String>> {
+  const HeightRangesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'heightRangesProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$heightRangesHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<String> create(Ref ref) {
+    return heightRanges(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+}
+
 String _$heightRangesHash() => r'435c8c340d88de7e43650e3ab2c37cca82e3c5a0';
 
-/// See also [heightRanges].
-@ProviderFor(heightRanges)
-final heightRangesProvider = Provider<List<String>>.internal(
-  heightRanges,
-  name: r'heightRangesProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$heightRangesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(weightRanges)
+const weightRangesProvider = WeightRangesProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef HeightRangesRef = ProviderRef<List<String>>;
+final class WeightRangesProvider
+    extends $FunctionalProvider<List<String>, List<String>, List<String>>
+    with $Provider<List<String>> {
+  const WeightRangesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'weightRangesProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$weightRangesHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<String> create(Ref ref) {
+    return weightRanges(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+}
+
 String _$weightRangesHash() => r'20af1876aac5bfc74e4a3eb9b9796c17aaffcb40';
 
-/// See also [weightRanges].
-@ProviderFor(weightRanges)
-final weightRangesProvider = Provider<List<String>>.internal(
-  weightRanges,
-  name: r'weightRangesProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$weightRangesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(languageOptions)
+const languageOptionsProvider = LanguageOptionsProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef WeightRangesRef = ProviderRef<List<String>>;
+final class LanguageOptionsProvider
+    extends $FunctionalProvider<List<String>, List<String>, List<String>>
+    with $Provider<List<String>> {
+  const LanguageOptionsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'languageOptionsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$languageOptionsHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<String> create(Ref ref) {
+    return languageOptions(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+}
+
 String _$languageOptionsHash() => r'3581d62666ee9e4c5df5b261377aee5e7078d71b';
 
-/// See also [languageOptions].
-@ProviderFor(languageOptions)
-final languageOptionsProvider = Provider<List<String>>.internal(
-  languageOptions,
-  name: r'languageOptionsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$languageOptionsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(hasActiveFilters)
+const hasActiveFiltersProvider = HasActiveFiltersProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LanguageOptionsRef = ProviderRef<List<String>>;
+final class HasActiveFiltersProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  const HasActiveFiltersProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'hasActiveFiltersProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$hasActiveFiltersHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return hasActiveFilters(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$hasActiveFiltersHash() => r'4fb53fc963f3e9fff6337e42a6539ab2584e84fd';
 
-/// See also [hasActiveFilters].
-@ProviderFor(hasActiveFilters)
-final hasActiveFiltersProvider = AutoDisposeProvider<bool>.internal(
-  hasActiveFilters,
-  name: r'hasActiveFiltersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hasActiveFiltersHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(activeFiltersCount)
+const activeFiltersCountProvider = ActiveFiltersCountProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef HasActiveFiltersRef = AutoDisposeProviderRef<bool>;
+final class ActiveFiltersCountProvider
+    extends $FunctionalProvider<int, int, int>
+    with $Provider<int> {
+  const ActiveFiltersCountProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'activeFiltersCountProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$activeFiltersCountHash();
+
+  @$internal
+  @override
+  $ProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  int create(Ref ref) {
+    return activeFiltersCount(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
+  }
+}
+
 String _$activeFiltersCountHash() =>
     r'fe2f7718e298bb4e463ed56573532b8bfafed2f3';
 
-/// See also [activeFiltersCount].
-@ProviderFor(activeFiltersCount)
-final activeFiltersCountProvider = AutoDisposeProvider<int>.internal(
-  activeFiltersCount,
-  name: r'activeFiltersCountProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeFiltersCountHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(filtersDisplayText)
+const filtersDisplayTextProvider = FiltersDisplayTextProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ActiveFiltersCountRef = AutoDisposeProviderRef<int>;
+final class FiltersDisplayTextProvider
+    extends $FunctionalProvider<String, String, String>
+    with $Provider<String> {
+  const FiltersDisplayTextProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'filtersDisplayTextProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$filtersDisplayTextHash();
+
+  @$internal
+  @override
+  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String create(Ref ref) {
+    return filtersDisplayText(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
 String _$filtersDisplayTextHash() =>
     r'6fea178c0a8cb61ed8103d0ede38a1943376d31b';
 
-/// See also [filtersDisplayText].
-@ProviderFor(filtersDisplayText)
-final filtersDisplayTextProvider = AutoDisposeProvider<String>.internal(
-  filtersDisplayText,
-  name: r'filtersDisplayTextProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$filtersDisplayTextHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(isValidFilterConfiguration)
+const isValidFilterConfigurationProvider =
+    IsValidFilterConfigurationProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef FiltersDisplayTextRef = AutoDisposeProviderRef<String>;
+final class IsValidFilterConfigurationProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  const IsValidFilterConfigurationProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'isValidFilterConfigurationProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$isValidFilterConfigurationHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return isValidFilterConfiguration(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$isValidFilterConfigurationHash() =>
     r'd6c6b816e689f3d36dd0a12fac4dcd5bbe242277';
 
-/// See also [isValidFilterConfiguration].
-@ProviderFor(isValidFilterConfiguration)
-final isValidFilterConfigurationProvider = AutoDisposeProvider<bool>.internal(
-  isValidFilterConfiguration,
-  name: r'isValidFilterConfigurationProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$isValidFilterConfigurationHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef IsValidFilterConfigurationRef = AutoDisposeProviderRef<bool>;
-String _$formattedFiltersSummaryHash() =>
-    r'9a5587c9bbdf52a73e9315d096506b25ed40134e';
-
-/// See also [formattedFiltersSummary].
 @ProviderFor(formattedFiltersSummary)
-final formattedFiltersSummaryProvider =
-    AutoDisposeProvider<Map<String, String>>.internal(
-  formattedFiltersSummary,
-  name: r'formattedFiltersSummaryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$formattedFiltersSummaryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const formattedFiltersSummaryProvider = FormattedFiltersSummaryProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef FormattedFiltersSummaryRef
-    = AutoDisposeProviderRef<Map<String, String>>;
+final class FormattedFiltersSummaryProvider
+    extends
+        $FunctionalProvider<
+          Map<String, String>,
+          Map<String, String>,
+          Map<String, String>
+        >
+    with $Provider<Map<String, String>> {
+  const FormattedFiltersSummaryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'formattedFiltersSummaryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$formattedFiltersSummaryHash();
+
+  @$internal
+  @override
+  $ProviderElement<Map<String, String>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  Map<String, String> create(Ref ref) {
+    return formattedFiltersSummary(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<String, String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<String, String>>(value),
+    );
+  }
+}
+
+String _$formattedFiltersSummaryHash() =>
+    r'bd3713c1b2d8b8c74baca1a5a50791acd98934a3';
+
+@ProviderFor(hasLocationFilters)
+const hasLocationFiltersProvider = HasLocationFiltersProvider._();
+
+final class HasLocationFiltersProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  const HasLocationFiltersProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'hasLocationFiltersProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$hasLocationFiltersHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return hasLocationFilters(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$hasLocationFiltersHash() =>
     r'3667a7b26581f32cec0f24da6938e9a61023c63c';
 
-/// See also [hasLocationFilters].
-@ProviderFor(hasLocationFilters)
-final hasLocationFiltersProvider = AutoDisposeProvider<bool>.internal(
-  hasLocationFilters,
-  name: r'hasLocationFiltersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hasLocationFiltersHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(hasPhysicalFilters)
+const hasPhysicalFiltersProvider = HasPhysicalFiltersProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef HasLocationFiltersRef = AutoDisposeProviderRef<bool>;
+final class HasPhysicalFiltersProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  const HasPhysicalFiltersProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'hasPhysicalFiltersProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$hasPhysicalFiltersHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return hasPhysicalFilters(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$hasPhysicalFiltersHash() =>
     r'c1041a5b9b033b6f5fabbc6279736919771013d4';
 
-/// See also [hasPhysicalFilters].
-@ProviderFor(hasPhysicalFilters)
-final hasPhysicalFiltersProvider = AutoDisposeProvider<bool>.internal(
-  hasPhysicalFilters,
-  name: r'hasPhysicalFiltersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hasPhysicalFiltersHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(hasPreferenceFilters)
+const hasPreferenceFiltersProvider = HasPreferenceFiltersProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef HasPhysicalFiltersRef = AutoDisposeProviderRef<bool>;
+final class HasPreferenceFiltersProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  const HasPreferenceFiltersProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'hasPreferenceFiltersProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$hasPreferenceFiltersHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return hasPreferenceFilters(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
 String _$hasPreferenceFiltersHash() =>
     r'4acbe64144a208caf477769d04ac01f93fb3cb03';
 
-/// See also [hasPreferenceFilters].
-@ProviderFor(hasPreferenceFilters)
-final hasPreferenceFiltersProvider = AutoDisposeProvider<bool>.internal(
-  hasPreferenceFilters,
-  name: r'hasPreferenceFiltersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hasPreferenceFiltersHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(FiltersPersistence)
+const filtersPersistenceProvider = FiltersPersistenceProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef HasPreferenceFiltersRef = AutoDisposeProviderRef<bool>;
-String _$filterRecommendationsHash() =>
-    r'7e9014f983d2bdf8d8b818e5c30f0f925933ed40';
+final class FiltersPersistenceProvider
+    extends $NotifierProvider<FiltersPersistence, bool> {
+  const FiltersPersistenceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'filtersPersistenceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-/// See also [filterRecommendations].
-@ProviderFor(filterRecommendations)
-final filterRecommendationsProvider =
-    AutoDisposeProvider<List<String>>.internal(
-  filterRecommendations,
-  name: r'filterRecommendationsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$filterRecommendationsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+  @override
+  String debugGetCreateSourceHash() => _$filtersPersistenceHash();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef FilterRecommendationsRef = AutoDisposeProviderRef<List<String>>;
-String _$filterComplexityScoreHash() =>
-    r'fbe2d4d32e3d3587bcf632c20e3cebbbd7213766';
+  @$internal
+  @override
+  FiltersPersistence create() => FiltersPersistence();
 
-/// See also [filterComplexityScore].
-@ProviderFor(filterComplexityScore)
-final filterComplexityScoreProvider = AutoDisposeProvider<double>.internal(
-  filterComplexityScore,
-  name: r'filterComplexityScoreProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$filterComplexityScoreHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef FilterComplexityScoreRef = AutoDisposeProviderRef<double>;
-String _$estimatedMatchCountHash() =>
-    r'67cee8a2ae6c161f64b832920ebf761b169a4fd1';
-
-/// See also [estimatedMatchCount].
-@ProviderFor(estimatedMatchCount)
-final estimatedMatchCountProvider = AutoDisposeProvider<String>.internal(
-  estimatedMatchCount,
-  name: r'estimatedMatchCountProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$estimatedMatchCountHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef EstimatedMatchCountRef = AutoDisposeProviderRef<String>;
-String _$userFiltersHash() => r'cb9bcf0142e3f8908ddaded047a8bf68585fdcf9';
-
-/// See also [UserFilters].
-@ProviderFor(UserFilters)
-final userFiltersProvider =
-    AutoDisposeNotifierProvider<UserFilters, FiltersModel>.internal(
-  UserFilters.new,
-  name: r'userFiltersProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$userFiltersHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$UserFilters = AutoDisposeNotifier<FiltersModel>;
 String _$filtersPersistenceHash() =>
     r'bc28fb6eccca1143380d9dc525c31c6993257e6a';
 
-/// See also [FiltersPersistence].
-@ProviderFor(FiltersPersistence)
-final filtersPersistenceProvider =
-    AutoDisposeNotifierProvider<FiltersPersistence, bool>.internal(
-  FiltersPersistence.new,
-  name: r'filtersPersistenceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$filtersPersistenceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$FiltersPersistence extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$FiltersPersistence = AutoDisposeNotifier<bool>;
+@ProviderFor(FiltersAnalytics)
+const filtersAnalyticsProvider = FiltersAnalyticsProvider._();
+
+final class FiltersAnalyticsProvider
+    extends $NotifierProvider<FiltersAnalytics, Map<String, int>> {
+  const FiltersAnalyticsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'filtersAnalyticsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$filtersAnalyticsHash();
+
+  @$internal
+  @override
+  FiltersAnalytics create() => FiltersAnalytics();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<String, int> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<String, int>>(value),
+    );
+  }
+}
+
 String _$filtersAnalyticsHash() => r'2781d826b205eb571afc739ce5ad0e4482e03577';
 
-/// See also [FiltersAnalytics].
-@ProviderFor(FiltersAnalytics)
-final filtersAnalyticsProvider =
-    AutoDisposeNotifierProvider<FiltersAnalytics, Map<String, int>>.internal(
-  FiltersAnalytics.new,
-  name: r'filtersAnalyticsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$filtersAnalyticsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$FiltersAnalytics extends $Notifier<Map<String, int>> {
+  Map<String, int> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<Map<String, int>, Map<String, int>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Map<String, int>, Map<String, int>>,
+              Map<String, int>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$FiltersAnalytics = AutoDisposeNotifier<Map<String, int>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+@ProviderFor(filterRecommendations)
+const filterRecommendationsProvider = FilterRecommendationsProvider._();
+
+final class FilterRecommendationsProvider
+    extends $FunctionalProvider<List<String>, List<String>, List<String>>
+    with $Provider<List<String>> {
+  const FilterRecommendationsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'filterRecommendationsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$filterRecommendationsHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<String> create(Ref ref) {
+    return filterRecommendations(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+}
+
+String _$filterRecommendationsHash() =>
+    r'7e9014f983d2bdf8d8b818e5c30f0f925933ed40';
+
+@ProviderFor(filterComplexityScore)
+const filterComplexityScoreProvider = FilterComplexityScoreProvider._();
+
+final class FilterComplexityScoreProvider
+    extends $FunctionalProvider<double, double, double>
+    with $Provider<double> {
+  const FilterComplexityScoreProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'filterComplexityScoreProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$filterComplexityScoreHash();
+
+  @$internal
+  @override
+  $ProviderElement<double> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  double create(Ref ref) {
+    return filterComplexityScore(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
+String _$filterComplexityScoreHash() =>
+    r'fbe2d4d32e3d3587bcf632c20e3cebbbd7213766';
+
+@ProviderFor(estimatedMatchCount)
+const estimatedMatchCountProvider = EstimatedMatchCountProvider._();
+
+final class EstimatedMatchCountProvider
+    extends $FunctionalProvider<String, String, String>
+    with $Provider<String> {
+  const EstimatedMatchCountProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'estimatedMatchCountProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$estimatedMatchCountHash();
+
+  @$internal
+  @override
+  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String create(Ref ref) {
+    return estimatedMatchCount(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
+String _$estimatedMatchCountHash() =>
+    r'67cee8a2ae6c161f64b832920ebf761b169a4fd1';

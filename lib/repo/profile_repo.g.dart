@@ -6,21 +6,46 @@ part of 'profile_repo.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$profileRepoHash() => r'cbe76fc97842ba6de330f7089d32d84b7f9e01dc';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [profileRepo].
 @ProviderFor(profileRepo)
-final profileRepoProvider = AutoDisposeProvider<ProfileRepo>.internal(
-  profileRepo,
-  name: r'profileRepoProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$profileRepoHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const profileRepoProvider = ProfileRepoProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ProfileRepoRef = AutoDisposeProviderRef<ProfileRepo>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class ProfileRepoProvider
+    extends $FunctionalProvider<ProfileRepo, ProfileRepo, ProfileRepo>
+    with $Provider<ProfileRepo> {
+  const ProfileRepoProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'profileRepoProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$profileRepoHash();
+
+  @$internal
+  @override
+  $ProviderElement<ProfileRepo> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ProfileRepo create(Ref ref) {
+    return profileRepo(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ProfileRepo value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ProfileRepo>(value),
+    );
+  }
+}
+
+String _$profileRepoHash() => r'cbe76fc97842ba6de330f7089d32d84b7f9e01dc';

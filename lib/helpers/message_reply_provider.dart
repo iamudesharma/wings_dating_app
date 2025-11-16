@@ -1,5 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wings_dating_app/helpers/message_enum.dart';
+import 'package:flutter_riverpod/legacy.dart';
 // import 'package:whatsapp_ui/common/enums/message_enum.dart';
 
 class MessageReply {

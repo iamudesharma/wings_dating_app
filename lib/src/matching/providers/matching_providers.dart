@@ -36,9 +36,10 @@ class DiscoveryState {
       );
 }
 
-class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
+class DiscoveryController extends AsyncNotifier<DiscoveryState> {
   // We only show a few profiles per cycle.
   static const int limit = 3;
+  
   // Profiles reset every 24 hours.
   static const Duration cooldown = Duration(hours: 24);
 
@@ -95,7 +96,7 @@ class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
         state = AsyncData(newState);
       } catch (_) {
         // If fetch fails, at least mark cooldown as over to enable manual retry
-        final current = state.valueOrNull;
+        final current = state.value;
         if (current != null) {
           state = AsyncData(current.copyWith(isCooldown: false));
         }
@@ -104,7 +105,7 @@ class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
   }
 
   Future<void> refreshIfAllowed() async {
-    final current = state.valueOrNull;
+    final current = state.value;
     if (current != null && current.isCooldown) return;
     final newState = await _fetchDiscovery();
     _scheduleCooldownCheck(newState.nextAvailableAt);
@@ -235,7 +236,7 @@ class DiscoveryController extends AutoDisposeAsyncNotifier<DiscoveryState> {
   }
 }
 
-final discoveryControllerProvider = AutoDisposeAsyncNotifierProvider<DiscoveryController, DiscoveryState>(
+final discoveryControllerProvider = AsyncNotifierProvider<DiscoveryController, DiscoveryState>(
   DiscoveryController.new,
 );
 
@@ -244,7 +245,7 @@ final discoveryControllerProvider = AutoDisposeAsyncNotifierProvider<DiscoveryCo
 final discoveryCountdownProvider = StreamProvider.autoDispose<Duration>((ref) async* {
   // Recompute when discovery state changes (e.g., after auto-refresh)
   final asyncState = ref.watch(discoveryControllerProvider);
-  final state = asyncState.valueOrNull;
+  final state = asyncState.value;
   if (state == null) {
     yield Duration.zero;
     return;
@@ -260,7 +261,7 @@ final discoveryCountdownProvider = StreamProvider.autoDispose<Duration>((ref) as
     // Small delay; autoDispose ensures cancellation on widget dispose
     await Future<void>.delayed(const Duration(seconds: 1));
     // If discovery state changed (e.g., auto-refresh), restart loop to use new target time
-    final latest = ref.read(discoveryControllerProvider).valueOrNull;
+    final latest = ref.read(discoveryControllerProvider).value;
     if (latest == null || latest.nextAvailableAt != state.nextAvailableAt) {
       // Exit so the outer watch triggers a new stream with updated target
       break;

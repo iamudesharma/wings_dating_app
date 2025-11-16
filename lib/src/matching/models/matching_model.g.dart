@@ -10,8 +10,9 @@ MatchingModel _$MatchingModelFromJson(Map<String, dynamic> json) =>
     MatchingModel(
       minAge: (json['minAge'] as num).toInt(),
       maxAge: (json['maxAge'] as num).toInt(),
-      skills:
-          (json['skills'] as List<dynamic>).map((e) => e as String).toList(),
+      skills: (json['skills'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
       freeTimeActivities: (json['freeTimeActivities'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),

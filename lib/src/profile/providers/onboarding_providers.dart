@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
@@ -19,7 +20,7 @@ const _kSocialKey = 'profile.social';
 const _kOnboardingSkipKey = 'onboarding.skipPrompt';
 
 @Riverpod(keepAlive: true)
-Future<SharedPreferences> sharedPrefs(SharedPrefsRef ref) async {
+Future<SharedPreferences> sharedPrefs(Ref ref) async {
   return SharedPreferences.getInstance();
 }
 

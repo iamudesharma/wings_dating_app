@@ -74,13 +74,10 @@ class ProfileController extends _$ProfileController {
           .read(Dependency.firebaseStorageProvider)
           .ref("profileImages")
           .child("${DateTime.now().millisecondsSinceEpoch.toString()}.jpg")
-          .putData(
-            state.profileImage!,
-            SettableMetadata(contentType: 'image/jpeg'),
-          )
+          .putData(state.profileImage!, SettableMetadata(contentType: 'image/jpeg'))
           .then((p0) async {
-        return await p0.ref.getDownloadURL();
-      });
+            return await p0.ref.getDownloadURL();
+          });
 
       return image;
     } else {
@@ -234,9 +231,9 @@ class WhereToMeetNotifier extends _$WhereToMeetNotifier {
 }
 
 // Compatibility providers for existing code
-final roleProvider = roleNotifierProvider;
-final bodyTypeProvider = bodyTypeNotifierProvider;
-final relationshipStatusProvider = relationshipStatusNotifierProvider;
-final ethnicityProvider = ethnicityNotifierProvider;
-final lookingForProvider = lookingForNotifierProvider;
-final whereToMeetProvider = whereToMeetNotifierProvider;
+// final roleProvider = roleNotifierProvider;
+// final bodyTypeProvider = bodyTypeNotifierProvider;
+// final relationshipStatusProvider = relationshipStatusNotifierProvider;
+// final ethnicityProvider = ethnicityNotifierProvider;
+// final lookingForProvider = lookingForNotifierProvider;
+// final whereToMeetProvider = whereToMeetNotifierProvider;

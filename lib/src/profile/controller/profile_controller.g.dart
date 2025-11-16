@@ -6,119 +6,379 @@ part of 'profile_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(ProfileController)
+const profileControllerProvider = ProfileControllerProvider._();
+
+final class ProfileControllerProvider
+    extends $NotifierProvider<ProfileController, ProfileState> {
+  const ProfileControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'profileControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$profileControllerHash();
+
+  @$internal
+  @override
+  ProfileController create() => ProfileController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ProfileState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ProfileState>(value),
+    );
+  }
+}
+
 String _$profileControllerHash() => r'13d77d94eb2be5821987e17430b8848b3c116af8';
 
-/// See also [ProfileController].
-@ProviderFor(ProfileController)
-final profileControllerProvider =
-    NotifierProvider<ProfileController, ProfileState>.internal(
-  ProfileController.new,
-  name: r'profileControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$profileControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$ProfileController extends $Notifier<ProfileState> {
+  ProfileState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<ProfileState, ProfileState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<ProfileState, ProfileState>,
+              ProfileState,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$ProfileController = Notifier<ProfileState>;
+@ProviderFor(RoleNotifier)
+const roleProvider = RoleNotifierProvider._();
+
+final class RoleNotifierProvider extends $NotifierProvider<RoleNotifier, Role> {
+  const RoleNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'roleProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$roleNotifierHash();
+
+  @$internal
+  @override
+  RoleNotifier create() => RoleNotifier();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Role value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Role>(value),
+    );
+  }
+}
+
 String _$roleNotifierHash() => r'b7ba246ca66d4052a99100359abb6d604d91f95a';
 
-/// See also [RoleNotifier].
-@ProviderFor(RoleNotifier)
-final roleNotifierProvider =
-    AutoDisposeNotifierProvider<RoleNotifier, Role>.internal(
-  RoleNotifier.new,
-  name: r'roleNotifierProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$roleNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$RoleNotifier extends $Notifier<Role> {
+  Role build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<Role, Role>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Role, Role>,
+              Role,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$RoleNotifier = AutoDisposeNotifier<Role>;
+@ProviderFor(BodyTypeNotifier)
+const bodyTypeProvider = BodyTypeNotifierProvider._();
+
+final class BodyTypeNotifierProvider
+    extends $NotifierProvider<BodyTypeNotifier, BodyType> {
+  const BodyTypeNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'bodyTypeProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$bodyTypeNotifierHash();
+
+  @$internal
+  @override
+  BodyTypeNotifier create() => BodyTypeNotifier();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BodyType value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BodyType>(value),
+    );
+  }
+}
+
 String _$bodyTypeNotifierHash() => r'7f4fd32bedfcedeb819da6a6e15cde68765ce86d';
 
-/// See also [BodyTypeNotifier].
-@ProviderFor(BodyTypeNotifier)
-final bodyTypeNotifierProvider =
-    AutoDisposeNotifierProvider<BodyTypeNotifier, BodyType>.internal(
-  BodyTypeNotifier.new,
-  name: r'bodyTypeNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$bodyTypeNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$BodyTypeNotifier extends $Notifier<BodyType> {
+  BodyType build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<BodyType, BodyType>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<BodyType, BodyType>,
+              BodyType,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$BodyTypeNotifier = AutoDisposeNotifier<BodyType>;
+@ProviderFor(RelationshipStatusNotifier)
+const relationshipStatusProvider = RelationshipStatusNotifierProvider._();
+
+final class RelationshipStatusNotifierProvider
+    extends $NotifierProvider<RelationshipStatusNotifier, RelationshipStatus> {
+  const RelationshipStatusNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'relationshipStatusProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$relationshipStatusNotifierHash();
+
+  @$internal
+  @override
+  RelationshipStatusNotifier create() => RelationshipStatusNotifier();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(RelationshipStatus value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<RelationshipStatus>(value),
+    );
+  }
+}
+
 String _$relationshipStatusNotifierHash() =>
     r'0d7411ba92f5cc93ae465b5badf65fde351008e0';
 
-/// See also [RelationshipStatusNotifier].
-@ProviderFor(RelationshipStatusNotifier)
-final relationshipStatusNotifierProvider = AutoDisposeNotifierProvider<
-    RelationshipStatusNotifier, RelationshipStatus>.internal(
-  RelationshipStatusNotifier.new,
-  name: r'relationshipStatusNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$relationshipStatusNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$RelationshipStatusNotifier
+    extends $Notifier<RelationshipStatus> {
+  RelationshipStatus build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<RelationshipStatus, RelationshipStatus>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<RelationshipStatus, RelationshipStatus>,
+              RelationshipStatus,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$RelationshipStatusNotifier = AutoDisposeNotifier<RelationshipStatus>;
+@ProviderFor(EthnicityNotifier)
+const ethnicityProvider = EthnicityNotifierProvider._();
+
+final class EthnicityNotifierProvider
+    extends $NotifierProvider<EthnicityNotifier, Ethnicity> {
+  const EthnicityNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'ethnicityProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$ethnicityNotifierHash();
+
+  @$internal
+  @override
+  EthnicityNotifier create() => EthnicityNotifier();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Ethnicity value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Ethnicity>(value),
+    );
+  }
+}
+
 String _$ethnicityNotifierHash() => r'cb04913404e688110bb47ed1c437e85b7bc7c927';
 
-/// See also [EthnicityNotifier].
-@ProviderFor(EthnicityNotifier)
-final ethnicityNotifierProvider =
-    AutoDisposeNotifierProvider<EthnicityNotifier, Ethnicity>.internal(
-  EthnicityNotifier.new,
-  name: r'ethnicityNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$ethnicityNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$EthnicityNotifier extends $Notifier<Ethnicity> {
+  Ethnicity build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<Ethnicity, Ethnicity>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Ethnicity, Ethnicity>,
+              Ethnicity,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$EthnicityNotifier = AutoDisposeNotifier<Ethnicity>;
+@ProviderFor(LookingForNotifier)
+const lookingForProvider = LookingForNotifierProvider._();
+
+final class LookingForNotifierProvider
+    extends $NotifierProvider<LookingForNotifier, LookingFor> {
+  const LookingForNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'lookingForProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$lookingForNotifierHash();
+
+  @$internal
+  @override
+  LookingForNotifier create() => LookingForNotifier();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LookingFor value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LookingFor>(value),
+    );
+  }
+}
+
 String _$lookingForNotifierHash() =>
     r'55226a4eb2f6d7e3fadd53d2f232159b335a5171';
 
-/// See also [LookingForNotifier].
-@ProviderFor(LookingForNotifier)
-final lookingForNotifierProvider =
-    AutoDisposeNotifierProvider<LookingForNotifier, LookingFor>.internal(
-  LookingForNotifier.new,
-  name: r'lookingForNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$lookingForNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$LookingForNotifier extends $Notifier<LookingFor> {
+  LookingFor build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<LookingFor, LookingFor>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<LookingFor, LookingFor>,
+              LookingFor,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$LookingForNotifier = AutoDisposeNotifier<LookingFor>;
+@ProviderFor(WhereToMeetNotifier)
+const whereToMeetProvider = WhereToMeetNotifierProvider._();
+
+final class WhereToMeetNotifierProvider
+    extends $NotifierProvider<WhereToMeetNotifier, WhereToMeet> {
+  const WhereToMeetNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'whereToMeetProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$whereToMeetNotifierHash();
+
+  @$internal
+  @override
+  WhereToMeetNotifier create() => WhereToMeetNotifier();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WhereToMeet value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WhereToMeet>(value),
+    );
+  }
+}
+
 String _$whereToMeetNotifierHash() =>
     r'c7bc5b191237a3ffe13d6d8cc4ca39c2cf92e703';
 
-/// See also [WhereToMeetNotifier].
-@ProviderFor(WhereToMeetNotifier)
-final whereToMeetNotifierProvider =
-    AutoDisposeNotifierProvider<WhereToMeetNotifier, WhereToMeet>.internal(
-  WhereToMeetNotifier.new,
-  name: r'whereToMeetNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$whereToMeetNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$WhereToMeetNotifier = AutoDisposeNotifier<WhereToMeet>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$WhereToMeetNotifier extends $Notifier<WhereToMeet> {
+  WhereToMeet build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<WhereToMeet, WhereToMeet>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<WhereToMeet, WhereToMeet>,
+              WhereToMeet,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

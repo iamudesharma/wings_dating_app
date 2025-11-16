@@ -85,17 +85,18 @@ const _$NotificationTypeEnumMap = {
 };
 
 _TapResult _$TapResultFromJson(Map<String, dynamic> json) => _TapResult(
-      success: json['success'] as bool,
-      message: json['message'] as String,
-      remainingTaps: (json['remainingTaps'] as num?)?.toInt(),
-      tappedBy: (json['tappedBy'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      engagementStatus: json['engagementStatus'] == null
-          ? null
-          : EngagementStatus.fromJson(
-              json['engagementStatus'] as Map<String, dynamic>),
-    );
+  success: json['success'] as bool,
+  message: json['message'] as String,
+  remainingTaps: (json['remainingTaps'] as num?)?.toInt(),
+  tappedBy: (json['tappedBy'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  engagementStatus: json['engagementStatus'] == null
+      ? null
+      : EngagementStatus.fromJson(
+          json['engagementStatus'] as Map<String, dynamic>,
+        ),
+);
 
 Map<String, dynamic> _$TapResultToJson(_TapResult instance) =>
     <String, dynamic>{
@@ -107,26 +108,28 @@ Map<String, dynamic> _$TapResultToJson(_TapResult instance) =>
     };
 
 _TapStats _$TapStatsFromJson(Map<String, dynamic> json) => _TapStats(
-      totalTaps: (json['totalTaps'] as num).toInt(),
-      dailyTaps: (json['dailyTaps'] as num).toInt(),
-      remainingTaps: (json['remainingTaps'] as num).toInt(),
-      tappedBy:
-          (json['tappedBy'] as List<dynamic>).map((e) => e as String).toList(),
-      lastTapTime: DateTime.parse(json['lastTapTime'] as String),
-      engagementStatus: json['engagementStatus'] == null
-          ? null
-          : EngagementStatus.fromJson(
-              json['engagementStatus'] as Map<String, dynamic>),
-    );
+  totalTaps: (json['totalTaps'] as num).toInt(),
+  dailyTaps: (json['dailyTaps'] as num).toInt(),
+  remainingTaps: (json['remainingTaps'] as num).toInt(),
+  tappedBy: (json['tappedBy'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList(),
+  lastTapTime: DateTime.parse(json['lastTapTime'] as String),
+  engagementStatus: json['engagementStatus'] == null
+      ? null
+      : EngagementStatus.fromJson(
+          json['engagementStatus'] as Map<String, dynamic>,
+        ),
+);
 
 Map<String, dynamic> _$TapStatsToJson(_TapStats instance) => <String, dynamic>{
-      'totalTaps': instance.totalTaps,
-      'dailyTaps': instance.dailyTaps,
-      'remainingTaps': instance.remainingTaps,
-      'tappedBy': instance.tappedBy,
-      'lastTapTime': instance.lastTapTime.toIso8601String(),
-      'engagementStatus': instance.engagementStatus,
-    };
+  'totalTaps': instance.totalTaps,
+  'dailyTaps': instance.dailyTaps,
+  'remainingTaps': instance.remainingTaps,
+  'tappedBy': instance.tappedBy,
+  'lastTapTime': instance.lastTapTime.toIso8601String(),
+  'engagementStatus': instance.engagementStatus,
+};
 
 _EngagementStatus _$EngagementStatusFromJson(Map<String, dynamic> json) =>
     _EngagementStatus(
@@ -147,12 +150,12 @@ Map<String, dynamic> _$EngagementStatusToJson(_EngagementStatus instance) =>
     };
 
 _ViewResult _$ViewResultFromJson(Map<String, dynamic> json) => _ViewResult(
-      totalViews: (json['totalViews'] as num).toInt(),
-      uniqueViewers: (json['uniqueViewers'] as num).toInt(),
-      viewers: (json['viewers'] as List<dynamic>)
-          .map((e) => ViewerInfo.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+  totalViews: (json['totalViews'] as num).toInt(),
+  uniqueViewers: (json['uniqueViewers'] as num).toInt(),
+  viewers: (json['viewers'] as List<dynamic>)
+      .map((e) => ViewerInfo.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
 
 Map<String, dynamic> _$ViewResultToJson(_ViewResult instance) =>
     <String, dynamic>{
@@ -162,13 +165,13 @@ Map<String, dynamic> _$ViewResultToJson(_ViewResult instance) =>
     };
 
 _ViewerInfo _$ViewerInfoFromJson(Map<String, dynamic> json) => _ViewerInfo(
-      userId: json['userId'] as String,
-      viewCount: (json['viewCount'] as num).toInt(),
-      lastViewed: DateTime.parse(json['lastViewed'] as String),
-      user: json['user'] == null
-          ? null
-          : UserModel.fromJson(json['user'] as Map<String, dynamic>),
-    );
+  userId: json['userId'] as String,
+  viewCount: (json['viewCount'] as num).toInt(),
+  lastViewed: DateTime.parse(json['lastViewed'] as String),
+  user: json['user'] == null
+      ? null
+      : UserModel.fromJson(json['user'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$ViewerInfoToJson(_ViewerInfo instance) =>
     <String, dynamic>{
@@ -179,18 +182,18 @@ Map<String, dynamic> _$ViewerInfoToJson(_ViewerInfo instance) =>
     };
 
 _MatchResult _$MatchResultFromJson(Map<String, dynamic> json) => _MatchResult(
-      id: json['id'] as String,
-      userId1: json['userId1'] as String,
-      userId2: json['userId2'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      isActive: json['isActive'] as bool,
-      user1: json['user1'] == null
-          ? null
-          : UserModel.fromJson(json['user1'] as Map<String, dynamic>),
-      user2: json['user2'] == null
-          ? null
-          : UserModel.fromJson(json['user2'] as Map<String, dynamic>),
-    );
+  id: json['id'] as String,
+  userId1: json['userId1'] as String,
+  userId2: json['userId2'] as String,
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  isActive: json['isActive'] as bool,
+  user1: json['user1'] == null
+      ? null
+      : UserModel.fromJson(json['user1'] as Map<String, dynamic>),
+  user2: json['user2'] == null
+      ? null
+      : UserModel.fromJson(json['user2'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$MatchResultToJson(_MatchResult instance) =>
     <String, dynamic>{

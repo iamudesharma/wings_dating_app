@@ -15,7 +15,8 @@ _UserSubscription _$UserSubscriptionFromJson(Map<String, dynamic> json) =>
       startDate: DateTime.parse(json['startDate'] as String),
       endDate: DateTime.parse(json['endDate'] as String),
       features: SubscriptionFeatures.fromJson(
-          json['features'] as Map<String, dynamic>),
+        json['features'] as Map<String, dynamic>,
+      ),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       transactionId: json['transactionId'] as String?,
@@ -55,36 +56,36 @@ const _$SubscriptionStatusEnumMap = {
 };
 
 _SubscriptionFeatures _$SubscriptionFeaturesFromJson(
-        Map<String, dynamic> json) =>
-    _SubscriptionFeatures(
-      unlimitedLikes: json['unlimitedLikes'] as bool,
-      rewindSwipe: json['rewindSwipe'] as bool,
-      whoLikedYou: json['whoLikedYou'] as bool,
-      analytics: json['analytics'] as bool,
-      prioritySupport: json['prioritySupport'] as bool,
-      adFree: json['adFree'] as bool,
-      superLikes: json['superLikes'] as bool,
-      dailySuperLikes: (json['dailySuperLikes'] as num).toInt(),
-      boosts: json['boosts'] as bool,
-      monthlyBoosts: (json['monthlyBoosts'] as num).toInt(),
-      readReceipts: json['readReceipts'] as bool,
-    );
+  Map<String, dynamic> json,
+) => _SubscriptionFeatures(
+  unlimitedLikes: json['unlimitedLikes'] as bool,
+  rewindSwipe: json['rewindSwipe'] as bool,
+  whoLikedYou: json['whoLikedYou'] as bool,
+  analytics: json['analytics'] as bool,
+  prioritySupport: json['prioritySupport'] as bool,
+  adFree: json['adFree'] as bool,
+  superLikes: json['superLikes'] as bool,
+  dailySuperLikes: (json['dailySuperLikes'] as num).toInt(),
+  boosts: json['boosts'] as bool,
+  monthlyBoosts: (json['monthlyBoosts'] as num).toInt(),
+  readReceipts: json['readReceipts'] as bool,
+);
 
 Map<String, dynamic> _$SubscriptionFeaturesToJson(
-        _SubscriptionFeatures instance) =>
-    <String, dynamic>{
-      'unlimitedLikes': instance.unlimitedLikes,
-      'rewindSwipe': instance.rewindSwipe,
-      'whoLikedYou': instance.whoLikedYou,
-      'analytics': instance.analytics,
-      'prioritySupport': instance.prioritySupport,
-      'adFree': instance.adFree,
-      'superLikes': instance.superLikes,
-      'dailySuperLikes': instance.dailySuperLikes,
-      'boosts': instance.boosts,
-      'monthlyBoosts': instance.monthlyBoosts,
-      'readReceipts': instance.readReceipts,
-    };
+  _SubscriptionFeatures instance,
+) => <String, dynamic>{
+  'unlimitedLikes': instance.unlimitedLikes,
+  'rewindSwipe': instance.rewindSwipe,
+  'whoLikedYou': instance.whoLikedYou,
+  'analytics': instance.analytics,
+  'prioritySupport': instance.prioritySupport,
+  'adFree': instance.adFree,
+  'superLikes': instance.superLikes,
+  'dailySuperLikes': instance.dailySuperLikes,
+  'boosts': instance.boosts,
+  'monthlyBoosts': instance.monthlyBoosts,
+  'readReceipts': instance.readReceipts,
+};
 
 _SubscriptionStats _$SubscriptionStatsFromJson(Map<String, dynamic> json) =>
     _SubscriptionStats(

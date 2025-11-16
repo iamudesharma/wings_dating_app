@@ -35,18 +35,17 @@ class DiscoveryFilters {
     List<String>? interests,
     String? position,
     String? lastSeen,
-  }) =>
-      DiscoveryFilters(
-        distanceKm: distanceKm ?? this.distanceKm,
-        minAge: minAge ?? this.minAge,
-        maxAge: maxAge ?? this.maxAge,
-        hasPhotos: hasPhotos ?? this.hasPhotos,
-        hasFacePics: hasFacePics ?? this.hasFacePics,
-        hasAlbums: hasAlbums ?? this.hasAlbums,
-        interests: interests ?? this.interests,
-        position: position ?? this.position,
-        lastSeen: lastSeen ?? this.lastSeen,
-      );
+  }) => DiscoveryFilters(
+    distanceKm: distanceKm ?? this.distanceKm,
+    minAge: minAge ?? this.minAge,
+    maxAge: maxAge ?? this.maxAge,
+    hasPhotos: hasPhotos ?? this.hasPhotos,
+    hasFacePics: hasFacePics ?? this.hasFacePics,
+    hasAlbums: hasAlbums ?? this.hasAlbums,
+    interests: interests ?? this.interests,
+    position: position ?? this.position,
+    lastSeen: lastSeen ?? this.lastSeen,
+  );
 
   Map<String, dynamic> toApiFilters() {
     return {
@@ -62,28 +61,28 @@ class DiscoveryFilters {
   }
 
   Map<String, dynamic> toJson() => {
-        'distanceKm': distanceKm,
-        'minAge': minAge,
-        'maxAge': maxAge,
-        'hasPhotos': hasPhotos,
-        'hasFacePics': hasFacePics,
-        'hasAlbums': hasAlbums,
-        'interests': interests,
-        'position': position,
-        'lastSeen': lastSeen,
-      };
+    'distanceKm': distanceKm,
+    'minAge': minAge,
+    'maxAge': maxAge,
+    'hasPhotos': hasPhotos,
+    'hasFacePics': hasFacePics,
+    'hasAlbums': hasAlbums,
+    'interests': interests,
+    'position': position,
+    'lastSeen': lastSeen,
+  };
 
   factory DiscoveryFilters.fromJson(Map<String, dynamic> json) => DiscoveryFilters(
-        distanceKm: (json['distanceKm'] as num?)?.toInt() ?? 50,
-        minAge: (json['minAge'] as num?)?.toInt() ?? 18,
-        maxAge: (json['maxAge'] as num?)?.toInt() ?? 99,
-        hasPhotos: json['hasPhotos'] == true,
-        hasFacePics: json['hasFacePics'] == true,
-        hasAlbums: json['hasAlbums'] == true,
-        interests: (json['interests'] as List?)?.whereType<String>().toList() ?? const [],
-        position: json['position'] as String?,
-        lastSeen: json['lastSeen'] as String?,
-      );
+    distanceKm: (json['distanceKm'] as num?)?.toInt() ?? 50,
+    minAge: (json['minAge'] as num?)?.toInt() ?? 18,
+    maxAge: (json['maxAge'] as num?)?.toInt() ?? 99,
+    hasPhotos: json['hasPhotos'] == true,
+    hasFacePics: json['hasFacePics'] == true,
+    hasAlbums: json['hasAlbums'] == true,
+    interests: (json['interests'] as List?)?.whereType<String>().toList() ?? const [],
+    position: json['position'] as String?,
+    lastSeen: json['lastSeen'] as String?,
+  );
 }
 
 class FiltersState {
@@ -95,7 +94,7 @@ class FiltersState {
       FiltersState(current: current ?? this.current, saved: saved ?? this.saved);
 }
 
-class DiscoveryFiltersController extends AutoDisposeAsyncNotifier<FiltersState> {
+class DiscoveryFiltersController extends AsyncNotifier<FiltersState> {
   static const _kFilters = 'discovery_filters_current';
   static const _kSaved = 'discovery_filters_saved';
 
@@ -123,7 +122,7 @@ class DiscoveryFiltersController extends AutoDisposeAsyncNotifier<FiltersState> 
   }
 
   void setFilters(DiscoveryFilters f) {
-    final s = state.valueOrNull;
+    final s = state.value;
     if (s == null) return;
     final next = s.copyWith(current: f);
     state = AsyncData(next);
@@ -131,7 +130,7 @@ class DiscoveryFiltersController extends AutoDisposeAsyncNotifier<FiltersState> 
   }
 
   void savePreset() {
-    final s = state.valueOrNull;
+    final s = state.value;
     if (s == null) return;
     final list = [...s.saved];
     if (list.length >= 3) list.removeAt(0);
@@ -142,7 +141,7 @@ class DiscoveryFiltersController extends AutoDisposeAsyncNotifier<FiltersState> 
   }
 
   void applyPreset(int index) {
-    final s = state.valueOrNull;
+    final s = state.value;
     if (s == null) return;
     if (index < 0 || index >= s.saved.length) return;
     final next = s.copyWith(current: s.saved[index]);
@@ -151,6 +150,7 @@ class DiscoveryFiltersController extends AutoDisposeAsyncNotifier<FiltersState> 
   }
 }
 
-final discoveryFiltersProvider = AutoDisposeAsyncNotifierProvider<DiscoveryFiltersController, FiltersState>(
+final discoveryFiltersProvider = AsyncNotifierProvider<DiscoveryFiltersController, FiltersState>(
   DiscoveryFiltersController.new,
+  isAutoDispose: true,
 );

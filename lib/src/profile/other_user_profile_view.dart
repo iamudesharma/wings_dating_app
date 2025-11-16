@@ -22,13 +22,15 @@ import 'package:wings_dating_app/helpers/logger.dart';
 
 import '../../helpers/responsive_layout.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
+import 'package:flutter_riverpod/legacy.dart';
 part 'other_user_profile_view.g.dart';
 
 typedef AlbumAccessStateRecord = ({String? albumId, bool hasAlbum, bool canView, bool pending, bool isOwner});
 
-final albumAccessStateProvider =
-    FutureProvider.autoDispose.family<AlbumAccessStateRecord, String>((ref, otherUserId) async {
+final albumAccessStateProvider = FutureProvider.autoDispose.family<AlbumAccessStateRecord, String>((
+  ref,
+  otherUserId,
+) async {
   final viewerId = ref.read(ProfileController.userControllerProvider).userModel?.id;
   if (viewerId == null) {
     return (albumId: null, hasAlbum: false, canView: false, pending: false, isOwner: false);
@@ -66,11 +68,7 @@ class Fav extends _$Fav {
 
 @RoutePage()
 class OtherUserProfileView extends ConsumerStatefulWidget {
-  const OtherUserProfileView({
-    super.key,
-    @pathParam this.id,
-    this.isCurrentUser = true,
-  });
+  const OtherUserProfileView({super.key, @pathParam this.id, this.isCurrentUser = true});
 
   final String? id;
   final bool? isCurrentUser;
@@ -128,74 +126,78 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
     await showDialog(
       context: context,
       builder: (ctx) {
-        return StatefulBuilder(builder: (ctx, setState) {
-          return AlertDialog(
-            title: const Text('Request album access'),
-            content: SizedBox(
-              width: 420,
-              child: Column(mainAxisSize: MainAxisSize.min, children: [
-                SizedBox(
-                  height: 320,
-                  child: ListView.separated(
-                    shrinkWrap: false,
-                    primary: false,
-                    itemCount: albums.length,
-                    separatorBuilder: (_, __) => const Divider(height: 1),
-                    itemBuilder: (_, i) {
-                      final a = albums[i];
-                      final id = a.id ?? '${a.name}-$i';
-                      final canView = a.sharedWith.contains(viewerId);
-                      final isPending = pendingMap[id] == true;
-                      return RadioListTile<String>(
-                        value: id,
-                        groupValue: selectedAlbumId,
-                        onChanged: (canView || isPending) ? null : (v) => setState(() => selectedAlbumId = v),
-                        title: Text(a.name, overflow: TextOverflow.ellipsis),
-                        subtitle: canView
-                            ? const Text('Shared with you', style: TextStyle(color: Colors.green))
-                            : isPending
+        return StatefulBuilder(
+          builder: (ctx, setState) {
+            return AlertDialog(
+              title: const Text('Request album access'),
+              content: SizedBox(
+                width: 420,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 320,
+                      child: ListView.separated(
+                        shrinkWrap: false,
+                        primary: false,
+                        itemCount: albums.length,
+                        separatorBuilder: (_, __) => const Divider(height: 1),
+                        itemBuilder: (_, i) {
+                          final a = albums[i];
+                          final id = a.id ?? '${a.name}-$i';
+                          final canView = a.sharedWith.contains(viewerId);
+                          final isPending = pendingMap[id] == true;
+                          return RadioListTile<String>(
+                            value: id,
+                            groupValue: selectedAlbumId,
+                            onChanged: (canView || isPending) ? null : (v) => setState(() => selectedAlbumId = v),
+                            title: Text(a.name, overflow: TextOverflow.ellipsis),
+                            subtitle: canView
+                                ? const Text('Shared with you', style: TextStyle(color: Colors.green))
+                                : isPending
                                 ? const Text('Request pending', style: TextStyle(color: Colors.orange))
                                 : null,
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 8),
-                TextField(
-                  controller: messageController,
-                  decoration: const InputDecoration(hintText: 'Add a message (optional)'),
-                ),
-              ]),
-            ),
-            actions: [
-              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-              ElevatedButton(
-                onPressed: selectedAlbumId == null
-                    ? null
-                    : () async {
-                        final id = selectedAlbumId!;
-                        final target = albums.firstWhere((a) => (a.id ?? '') == id, orElse: () => albums.first);
-                        final albumId = target.id!; // safe, owner albums should have id
-                        final res = await ref.read(AlbumControllerProvider(albumId).notifier).requestAccess(
-                              messageController.text.trim(),
-                              albumId: albumId,
-                            );
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(res != null ? 'Request sent' : 'Failed to send request')),
                           );
-                          if (res != null) {
-                            // Refresh access state so the CTA reflects 'Requested'
-                            ref.invalidate(albumAccessStateProvider(ownerId));
-                          }
-                        }
-                        if (context.mounted) Navigator.pop(ctx);
-                      },
-                child: const Text('Send Request'),
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    TextField(
+                      controller: messageController,
+                      decoration: const InputDecoration(hintText: 'Add a message (optional)'),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          );
-        });
+              actions: [
+                TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+                ElevatedButton(
+                  onPressed: selectedAlbumId == null
+                      ? null
+                      : () async {
+                          final id = selectedAlbumId!;
+                          final target = albums.firstWhere((a) => (a.id ?? '') == id, orElse: () => albums.first);
+                          final albumId = target.id!; // safe, owner albums should have id
+                          final res = await ref
+                              .read(albumControllerProvider(albumId).notifier)
+                              .requestAccess(messageController.text.trim(), albumId: albumId);
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(res != null ? 'Request sent' : 'Failed to send request')),
+                            );
+                            if (res != null) {
+                              // Refresh access state so the CTA reflects 'Requested'
+                              ref.invalidate(albumAccessStateProvider(ownerId));
+                            }
+                          }
+                          if (context.mounted) Navigator.pop(ctx);
+                        },
+                  child: const Text('Send Request'),
+                ),
+              ],
+            );
+          },
+        );
       },
     );
   }
@@ -296,9 +298,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
   Widget build(BuildContext context) {
     FirebaseAnalytics.instance.logEvent(
       name: 'user_profile_view',
-      parameters: <String, Object>{
-        'user_id': widget.id as Object,
-      },
+      parameters: <String, Object>{'user_id': widget.id as Object},
     );
     final currentUser = ref.watch(ProfileController.userControllerProvider).userModel;
     final otherUser = ref.watch(getUserByIdProvider(widget.id!));
@@ -312,8 +312,8 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
         final double maxWidth = isDesktop
             ? 980
             : isTablet
-                ? 720
-                : double.infinity;
+            ? 720
+            : double.infinity;
         return SafeArea(
           child: Scaffold(
             bottomNavigationBar: Padding(
@@ -347,9 +347,9 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                                     hasTapped = true;
                                     tapError = '';
                                   });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(tapResponse.message)),
-                                  );
+                                  ScaffoldMessenger.of(
+                                    context,
+                                  ).showSnackBar(SnackBar(content: Text(tapResponse.message)));
                                 } catch (e) {
                                   if (e.toString().contains('already tapped')) {
                                     setState(() {
@@ -357,9 +357,9 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                                       tapError = 'You have already tapped this user today';
                                     });
                                   }
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Failed to send tap: ${e.toString()}')),
-                                  );
+                                  ScaffoldMessenger.of(
+                                    context,
+                                  ).showSnackBar(SnackBar(content: Text('Failed to send tap: ${e.toString()}')));
                                 }
                               },
                       ),
@@ -403,11 +403,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                     ],
                   ),
                   boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.06),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
+                    BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, 4)),
                   ],
                 ),
                 child: Row(
@@ -452,11 +448,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                                     ),
                                   ],
                                 ),
-                                child: const Icon(
-                                  Icons.psychology,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
+                                child: const Icon(Icons.psychology, color: Colors.white, size: 20),
                               ),
                               tooltip: "Get AI Dating Analysis",
                               onPressed: () async {
@@ -477,15 +469,11 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                           PopupMenuItem(
                             onTap: () => context.router.maybePop(),
                             value: 1,
-                            child: const Row(
-                              children: [Icon(Icons.block), SizedBox(width: 10), Text("Block")],
-                            ),
+                            child: const Row(children: [Icon(Icons.block), SizedBox(width: 10), Text("Block")]),
                           ),
                           const PopupMenuItem(
                             value: 2,
-                            child: Row(
-                              children: [Icon(Icons.chrome_reader_mode), SizedBox(width: 10), Text("About")],
-                            ),
+                            child: Row(children: [Icon(Icons.chrome_reader_mode), SizedBox(width: 10), Text("About")]),
                           ),
                         ],
                         color: Theme.of(context).colorScheme.surface,
@@ -555,13 +543,13 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                               vertical: isDesktop
                                   ? 32
                                   : isTablet
-                                      ? 24
-                                      : 16,
+                                  ? 24
+                                  : 16,
                               horizontal: isDesktop
                                   ? 24
                                   : isTablet
-                                      ? 16
-                                      : 12,
+                                  ? 16
+                                  : 12,
                             ),
                             children: [
                               // Modern profile header
@@ -574,10 +562,10 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                                 title: 'About',
                                 child: Text(
                                   userData.bio?.trim().isNotEmpty == true ? userData.bio!.trim() : 'No bio provided',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontSize: 16,
+                                    color: Theme.of(context).colorScheme.onSurface,
+                                  ),
                                   textAlign: TextAlign.start,
                                 ),
                               ),
@@ -601,7 +589,11 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
   }
 
   Widget _buildProfileHeader(
-      BuildContext context, dynamic userData, firebase_database.DatabaseReference refData, bool isWide) {
+    BuildContext context,
+    dynamic userData,
+    firebase_database.DatabaseReference refData,
+    bool isWide,
+  ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -615,13 +607,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
         ),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.2)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 12, offset: const Offset(0, 4))],
       ),
       child: isWide
           ? Row(
@@ -781,26 +767,12 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.25),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
-          ),
-        ],
-        border: Border.all(
-          color: Theme.of(context).colorScheme.surface,
-          width: 6,
-        ),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.25), blurRadius: 24, offset: const Offset(0, 8))],
+        border: Border.all(color: Theme.of(context).colorScheme.surface, width: 6),
       ),
       child: ClipOval(
         child: (userData.profileUrl != null && userData.profileUrl!.isNotEmpty)
-            ? CachedNetworkImage(
-                imageUrl: userData.profileUrl!,
-                width: 120,
-                height: 120,
-                fit: BoxFit.cover,
-              )
+            ? CachedNetworkImage(imageUrl: userData.profileUrl!, width: 120, height: 120, fit: BoxFit.cover)
             : Container(
                 width: 120,
                 height: 120,
@@ -821,9 +793,9 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
               child: Text(
                 userData.username ?? 'Profile',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -849,30 +821,21 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                   decoration: BoxDecoration(
                     color: isOnline ? Colors.green.withOpacity(0.15) : Colors.amber.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: isOnline ? Colors.greenAccent : Colors.amberAccent,
-                    ),
+                    border: Border.all(color: isOnline ? Colors.greenAccent : Colors.amberAccent),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.circle,
-                        size: 8,
-                        color: isOnline ? Colors.greenAccent : Colors.amberAccent,
-                      ),
+                      Icon(Icons.circle, size: 8, color: isOnline ? Colors.greenAccent : Colors.amberAccent),
                       const SizedBox(width: 6),
                       Text(
                         isOnline
                             ? 'Online'
                             : lastSeen != null
-                                ? 'Last seen: '
-                                    '${timeago.format(DateTime.fromMillisecondsSinceEpoch(lastSeen.millisecondsSinceEpoch))}'
-                                : 'Offline',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
-                        ),
+                            ? 'Last seen: '
+                                  '${timeago.format(DateTime.fromMillisecondsSinceEpoch(lastSeen.millisecondsSinceEpoch))}'
+                            : 'Offline',
+                        style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
                       ),
                     ],
                   ),
@@ -898,67 +861,65 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
   }
 
   Widget _buildFavoriteButton(BuildContext context, dynamic userData) {
-    return Consumer(builder: (context, ref, child) {
-      final isFav = ref.watch(favProvider(widget.id!));
-      return isFav.when(
-        error: (_, __) => const SizedBox(),
-        loading: () => const SizedBox(),
-        data: (value) => Tooltip(
-          message: value ? 'Favorited' : 'Favorite',
-          child: InkWell(
-            borderRadius: BorderRadius.circular(30),
-            onTap: () async {
-              final favNotifier = ref.read(favProvider(widget.id!).notifier);
-              if (value) {
-                await favNotifier.removeUserFromFavorite(widget.id!);
-              } else {
-                await favNotifier.addUserToFavorite(widget.id!);
-              }
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: value
-                    ? Theme.of(context).colorScheme.primary.withOpacity(0.12)
-                    : Theme.of(context).colorScheme.surface.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: value ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.outlineVariant,
+    return Consumer(
+      builder: (context, ref, child) {
+        final isFav = ref.watch(favProvider(widget.id!));
+        return isFav.when(
+          error: (_, __) => const SizedBox(),
+          loading: () => const SizedBox(),
+          data: (value) => Tooltip(
+            message: value ? 'Favorited' : 'Favorite',
+            child: InkWell(
+              borderRadius: BorderRadius.circular(30),
+              onTap: () async {
+                final favNotifier = ref.read(favProvider(widget.id!).notifier);
+                if (value) {
+                  await favNotifier.removeUserFromFavorite(widget.id!);
+                } else {
+                  await favNotifier.addUserToFavorite(widget.id!);
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: value
+                      ? Theme.of(context).colorScheme.primary.withOpacity(0.12)
+                      : Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: value ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.outlineVariant,
+                  ),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 8, offset: const Offset(0, 2)),
+                  ],
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.06),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    value ? Icons.favorite : Icons.favorite_border,
-                    color: value
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                    size: 18,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    value ? 'Favorited' : 'Favorite',
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: value
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                        ),
-                  ),
-                ],
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      value ? Icons.favorite : Icons.favorite_border,
+                      color: value
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      size: 18,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      value ? 'Favorited' : 'Favorite',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: value
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   Widget _buildChip(BuildContext context, IconData icon, String value) {
@@ -975,13 +936,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
         children: [
           Icon(icon, size: 14, color: Theme.of(context).colorScheme.primary),
           const SizedBox(width: 6),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9),
-            ),
-          ),
+          Text(value, style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9))),
         ],
       ),
     );
@@ -994,13 +949,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
         color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1009,10 +958,7 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
             children: [
               Icon(Icons.info_outline, color: Theme.of(context).colorScheme.primary, size: 18),
               const SizedBox(width: 8),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
+              Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 12),
@@ -1097,9 +1043,9 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -1107,9 +1053,9 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),

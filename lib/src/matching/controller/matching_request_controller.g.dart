@@ -6,22 +6,59 @@ part of 'matching_request_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(MatchingRequestController)
+const matchingRequestControllerProvider = MatchingRequestControllerProvider._();
+
+final class MatchingRequestControllerProvider
+    extends $NotifierProvider<MatchingRequestController, dynamic> {
+  const MatchingRequestControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'matchingRequestControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$matchingRequestControllerHash();
+
+  @$internal
+  @override
+  MatchingRequestController create() => MatchingRequestController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(dynamic value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<dynamic>(value),
+    );
+  }
+}
+
 String _$matchingRequestControllerHash() =>
     r'50c93070cb0f9a561ecdc7134506f56d0488dc93';
 
-/// See also [MatchingRequestController].
-@ProviderFor(MatchingRequestController)
-final matchingRequestControllerProvider =
-    AutoDisposeNotifierProvider<MatchingRequestController, Object?>.internal(
-  MatchingRequestController.new,
-  name: r'matchingRequestControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$matchingRequestControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$MatchingRequestController = AutoDisposeNotifier<Object?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$MatchingRequestController extends $Notifier<dynamic> {
+  dynamic build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<dynamic, dynamic>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<dynamic, dynamic>,
+              dynamic,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

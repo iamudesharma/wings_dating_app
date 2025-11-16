@@ -43,10 +43,7 @@ class AlbumView extends ConsumerWidget {
           decoration: const InputDecoration(hintText: 'Album Name'),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () async {
               if (nameController.text.trim().isEmpty || userId == null) return;
@@ -99,43 +96,37 @@ class AlbumView extends ConsumerWidget {
           title: const Text("Albums"),
           actions: [
             // Pending album requests shortcut
-            Consumer(builder: (context, ref, _) {
-              final pending = ref.watch(albumAccessRequestsProvider);
-              final count = pending.maybeWhen(
-                data: (items) => items.length,
-                orElse: () => 0,
-              );
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  IconButton(
-                    tooltip: 'Album Requests',
-                    icon: const Icon(Icons.notifications),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const AlbumRequestsView()),
-                      );
-                    },
-                  ),
-                  if (count > 0)
-                    Positioned(
-                      right: 10,
-                      top: 10,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.redAccent,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          count > 9 ? '9+' : '$count',
-                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+            Consumer(
+              builder: (context, ref, _) {
+                final pending = ref.watch(albumAccessRequestsProvider);
+                final count = pending.maybeWhen(data: (items) => items.length, orElse: () => 0);
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    IconButton(
+                      tooltip: 'Album Requests',
+                      icon: const Icon(Icons.notifications),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AlbumRequestsView()));
+                      },
+                    ),
+                    if (count > 0)
+                      Positioned(
+                        right: 10,
+                        top: 10,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(color: Colors.redAccent, borderRadius: BorderRadius.circular(10)),
+                          child: Text(
+                            count > 9 ? '9+' : '$count',
+                            style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
-                    ),
-                ],
-              );
-            }),
+                  ],
+                );
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.add_photo_alternate_rounded),
               tooltip: 'Create Album',
@@ -195,42 +186,43 @@ class AlbumView extends ConsumerWidget {
                       }
 
                       Widget gridFor(List<UserAlbumModel> list) => GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: isWide ? 4 : 2,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                              childAspectRatio: 0.85,
-                            ),
-                            itemCount: list.length,
-                            itemBuilder: (context, index) {
-                              final album = list[index];
-                              final ownerId = album.owner?.id ?? album.ownerId;
-                              final ownerName =
-                                  album.owner != null ? album.owner!.username : (ownerId == userId ? 'You' : 'Owner');
-                              final ownerAvatar = album.owner?.profilePicture;
-                              return _AlbumCard(
-                                isShared: album.isShared,
-                                name: album.name,
-                                imageUrl: album.photos.isNotEmpty ? album.photos.first : null,
-                                ownerId: ownerId,
-                                ownerName: ownerName,
-                                ownerAvatar: ownerAvatar,
-                                onTap: () {
-                                  if (album.id == null) return;
-                                  final currentUserId = FirebaseAuth.instance.currentUser?.uid;
-                                  final isOwner = currentUserId != null && album.ownerId == currentUserId;
-                                  if (isOwner) {
-                                    context.router.push(CreateAlbumRoute(id: album.id!));
-                                  } else {
-                                    context.router.push(AlbumDetailsRoute(id: album.id!));
-                                  }
-                                },
-                              );
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: isWide ? 4 : 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.85,
+                        ),
+                        itemCount: list.length,
+                        itemBuilder: (context, index) {
+                          final album = list[index];
+                          final ownerId = album.owner?.id ?? album.ownerId;
+                          final ownerName = album.owner != null
+                              ? album.owner!.username
+                              : (ownerId == userId ? 'You' : 'Owner');
+                          final ownerAvatar = album.owner?.profilePicture;
+                          return _AlbumCard(
+                            isShared: album.isShared,
+                            name: album.name,
+                            imageUrl: album.photos.isNotEmpty ? album.photos.first : null,
+                            ownerId: ownerId,
+                            ownerName: ownerName,
+                            ownerAvatar: ownerAvatar,
+                            onTap: () {
+                              if (album.id == null) return;
+                              final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+                              final isOwner = currentUserId != null && album.ownerId == currentUserId;
+                              if (isOwner) {
+                                context.router.push(CreateAlbumRoute(id: album.id!));
+                              } else {
+                                context.router.push(AlbumDetailsRoute(id: album.id!));
+                              }
                             },
                           );
+                        },
+                      );
 
                       return ListView(
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -302,9 +294,7 @@ class _AlbumCard extends StatelessWidget {
               theme.colorScheme.surfaceContainerHighest.withOpacity(0.2),
             ],
           ),
-          boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 12, offset: const Offset(0, 6)),
-          ],
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 12, offset: const Offset(0, 6))],
           border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.4)),
         ),
         child: Stack(
@@ -386,11 +376,7 @@ class _AlbumCard extends StatelessWidget {
                     Text(
                       name,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -405,8 +391,9 @@ class _AlbumCard extends StatelessWidget {
                           children: [
                             CircleAvatar(
                               radius: 9,
-                              backgroundImage:
-                                  (ownerAvatar != null && ownerAvatar!.isNotEmpty) ? NetworkImage(ownerAvatar!) : null,
+                              backgroundImage: (ownerAvatar != null && ownerAvatar!.isNotEmpty)
+                                  ? NetworkImage(ownerAvatar!)
+                                  : null,
                               child: (ownerAvatar == null || ownerAvatar!.isEmpty)
                                   ? const Icon(Icons.person, size: 12, color: Colors.white)
                                   : null,
@@ -446,7 +433,7 @@ Future<void> openEditor(BuildContext context, WidgetRef ref, {required Uint8List
                   final uploadedPath = await uploadFileToFirebaseAlbum(bytes);
                   logger.i('[AlbumEditor] Upload success. url=$uploadedPath');
                   // Add image to album after upload
-                  final controller = ref.read(AlbumControllerProvider(id).notifier);
+                  final controller = ref.read(albumControllerProvider(id).notifier);
                   await controller.addImageToAlbum(uploadedPath);
                   if (context.mounted) {
                     logger.i('[AlbumEditor] Closing editor after successful save.');
@@ -463,7 +450,7 @@ Future<void> openEditor(BuildContext context, WidgetRef ref, {required Uint8List
                   final uploadedPath = await uploadFileToFirebaseAlbum(bytes);
                   logger.i('[AlbumEditor] Upload success. url=$uploadedPath');
                   // Add image to album after upload
-                  final controller = ref.read(AlbumControllerProvider(id).notifier);
+                  final controller = ref.read(albumControllerProvider(id).notifier);
                   await controller.addImageToAlbum(uploadedPath);
                   if (context.mounted) {
                     logger.i('[AlbumEditor] Closing editor after successful save.');

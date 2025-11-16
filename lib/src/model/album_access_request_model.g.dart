@@ -7,52 +7,52 @@ part of 'album_access_request_model.dart';
 // **************************************************************************
 
 AlbumAccessRequestModel _$AlbumAccessRequestModelFromJson(
-        Map<String, dynamic> json) =>
-    AlbumAccessRequestModel(
-      id: json['id'] as String?,
-      albumId: json['albumId'] as String,
-      requesterId: json['requesterId'] as String,
-      message: json['message'] as String,
-      status:
-          $enumDecodeNullable(_$AccessRequestStatusEnumMap, json['status']) ??
-              AccessRequestStatus.pending,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
-      albumOwnerId: json['albumOwnerId'] as String?,
-      moderatorId: json['moderatorId'] as String?,
-      respondedAt: json['respondedAt'] == null
-          ? null
-          : DateTime.parse(json['respondedAt'] as String),
-      rejectionReason: json['rejectionReason'] as String?,
-      requester: json['requester'] == null
-          ? null
-          : UserModel.fromJson(json['requester'] as Map<String, dynamic>),
-      albumOwner: json['albumOwner'] == null
-          ? null
-          : UserModel.fromJson(json['albumOwner'] as Map<String, dynamic>),
-      album: json['album'] == null
-          ? null
-          : UserAlbumModel.fromJson(json['album'] as Map<String, dynamic>),
-    );
+  Map<String, dynamic> json,
+) => AlbumAccessRequestModel(
+  id: json['id'] as String?,
+  albumId: json['albumId'] as String,
+  requesterId: json['requesterId'] as String,
+  message: json['message'] as String,
+  status:
+      $enumDecodeNullable(_$AccessRequestStatusEnumMap, json['status']) ??
+      AccessRequestStatus.pending,
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  updatedAt: DateTime.parse(json['updatedAt'] as String),
+  albumOwnerId: json['albumOwnerId'] as String?,
+  moderatorId: json['moderatorId'] as String?,
+  respondedAt: json['respondedAt'] == null
+      ? null
+      : DateTime.parse(json['respondedAt'] as String),
+  rejectionReason: json['rejectionReason'] as String?,
+  requester: json['requester'] == null
+      ? null
+      : UserModel.fromJson(json['requester'] as Map<String, dynamic>),
+  albumOwner: json['albumOwner'] == null
+      ? null
+      : UserModel.fromJson(json['albumOwner'] as Map<String, dynamic>),
+  album: json['album'] == null
+      ? null
+      : UserAlbumModel.fromJson(json['album'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$AlbumAccessRequestModelToJson(
-        AlbumAccessRequestModel instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'albumId': instance.albumId,
-      'requesterId': instance.requesterId,
-      'message': instance.message,
-      'status': _$AccessRequestStatusEnumMap[instance.status]!,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
-      'albumOwnerId': instance.albumOwnerId,
-      'moderatorId': instance.moderatorId,
-      'respondedAt': instance.respondedAt?.toIso8601String(),
-      'rejectionReason': instance.rejectionReason,
-      'requester': instance.requester?.toJson(),
-      'albumOwner': instance.albumOwner?.toJson(),
-      'album': instance.album?.toJson(),
-    };
+  AlbumAccessRequestModel instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'albumId': instance.albumId,
+  'requesterId': instance.requesterId,
+  'message': instance.message,
+  'status': _$AccessRequestStatusEnumMap[instance.status]!,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt.toIso8601String(),
+  'albumOwnerId': instance.albumOwnerId,
+  'moderatorId': instance.moderatorId,
+  'respondedAt': instance.respondedAt?.toIso8601String(),
+  'rejectionReason': instance.rejectionReason,
+  'requester': instance.requester?.toJson(),
+  'albumOwner': instance.albumOwner?.toJson(),
+  'album': instance.album?.toJson(),
+};
 
 const _$AccessRequestStatusEnumMap = {
   AccessRequestStatus.pending: 'pending',
