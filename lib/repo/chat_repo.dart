@@ -21,7 +21,7 @@ class ChatRepo extends _$ChatRepo {
         "members": [currentUserId, otherUserId],
       },
     );
-
+    // await createChannel;
     return createChannel;
   }
 

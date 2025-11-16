@@ -2,6 +2,7 @@
 // It will be used to replace flutter_markdown in ModernChatMessage.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 
 class MarkdownPreviewTest extends StatelessWidget {
@@ -20,4 +21,9 @@ class MarkdownPreviewTest extends StatelessWidget {
       ),
     );
   }
+}
+
+@Preview(name: 'My Sample Text')
+Widget mySampleText() {
+  return const Text('Hello, World!');
 }

@@ -1,5 +1,3 @@
-
-
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,6 +17,7 @@ import 'package:wings_dating_app/src/model/geo_point_data.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/profile/controller/profile_controller.dart';
 import 'package:wings_dating_app/src/profile/providers/onboarding_providers.dart';
+import 'package:wings_dating_app/repo/profile_extras_api_repo.dart';
 import 'package:wings_dating_app/src/profile/onboarding/onboarding_view.dart';
 import 'package:wings_dating_app/src/profile/widgets/profile_completion_meter.dart';
 import 'package:wings_dating_app/src/profile/widgets/prompts_editor.dart';
@@ -385,9 +384,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
           if (!mounted) return;
           ref.read(roleProvider.notifier).update(userdata.role);
           ref.read(bodyTypeProvider.notifier).update(userdata.bodyType);
-          ref
-              .read(relationshipStatusProvider.notifier)
-              .update(userdata.relationshipStatus);
+          ref.read(relationshipStatusProvider.notifier).update(userdata.relationshipStatus);
           ref.read(ethnicityProvider.notifier).update(userdata.ethnicity);
           ref.read(lookingForProvider.notifier).update(userdata.lookingFor);
           ref.read(whereToMeetProvider.notifier).update(userdata.whereToMeet);
@@ -659,8 +656,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       final myLocation = GeoFirePoint(GeoPoint(data.latitude, data.longitude));
                                       final profileNotifier =
                                           ref.read(ProfileController.userControllerProvider.notifier);
-                                      final userdata =
-                                          ref.read(ProfileController.userControllerProvider).userModel;
+                                      final userdata = ref.read(ProfileController.userControllerProvider).userModel;
 
                                       final updatedRole = ref.read(roleProvider);
                                       final updatedBodyType = ref.read(bodyTypeProvider);
@@ -672,9 +668,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       final updatedWeight = ref.read(weightProvider);
                                       final updatedHabits = ref.read(habitsProvider);
                                       final updatedValues = ref.read(valuesProvider);
-                                      final uploadedProfileUrl = isImageUpdate
-                                          ? await profileNotifier.uploadImage()
-                                          : null;
+                                      final uploadedProfileUrl =
+                                          isImageUpdate ? await profileNotifier.uploadImage() : null;
 
                                       await ref.read(Dependency.profileProvider).updateUserDoc(
                                             userdata!.copyWith(
@@ -688,8 +683,6 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                               whereToMeet: updatedWhereToMeet,
                                               height: updatedHeight,
                                               weight: updatedWeight,
-                                              habits: updatedHabits,
-                                              values: updatedValues,
                                               position: GeoPointData(
                                                 geopoint: [
                                                   myLocation.geopoint.longitude,
@@ -698,6 +691,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                               ),
                                               profileUrl: uploadedProfileUrl ?? userdata.profileUrl,
                                             ),
+                                          );
+                                      // Save onboarding extras (stored separately from UserModel)
+                                      await ref.read(profileExtrasApiRepoProvider).saveAll(
+                                            habits: updatedHabits,
+                                            values: updatedValues,
                                           );
                                       await profileNotifier.getCurrentUser();
 

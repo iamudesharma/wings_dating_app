@@ -42,7 +42,7 @@ class UserModel with _$UserModel {
     this.favoriteList = const [],
     this.interests = const [],
     required this.id,
-    required this.fcmToken,
+    this.fcmToken,
   });
 
   @override
@@ -100,7 +100,7 @@ class UserModel with _$UserModel {
   @override
   final String id;
   @override
-  final String fcmToken;
+  final String? fcmToken;
 
   factory UserModel.fromJson(Map<String, Object?> json) => _$UserModelFromJson(json);
 

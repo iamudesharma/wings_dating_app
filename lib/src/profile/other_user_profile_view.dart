@@ -18,6 +18,7 @@ import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:wings_dating_app/src/ai_wingman/providers/profile_analysis_provider.dart';
 import 'package:wings_dating_app/repo/albums_repo.dart';
 import 'package:wings_dating_app/src/album/controller/album_controller.dart';
+import 'package:wings_dating_app/helpers/logger.dart';
 
 import '../../helpers/responsive_layout.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -132,42 +133,39 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
             title: const Text('Request album access'),
             content: SizedBox(
               width: 420,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    height: 320,
-                    child: ListView.separated(
-                      shrinkWrap: false,
-                      primary: false,
-                      itemCount: albums.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
-                      itemBuilder: (_, i) {
-                        final a = albums[i];
-                        final id = a.id ?? '${a.name}-$i';
-                        final canView = a.sharedWith.contains(viewerId);
-                        final isPending = pendingMap[id] == true;
-                        return RadioListTile<String>(
-                          value: id,
-                          groupValue: selectedAlbumId,
-                          onChanged: (canView || isPending) ? null : (v) => setState(() => selectedAlbumId = v),
-                          title: Text(a.name, overflow: TextOverflow.ellipsis),
-                          subtitle: canView
-                              ? const Text('Shared with you', style: TextStyle(color: Colors.green))
-                              : isPending
-                                  ? const Text('Request pending', style: TextStyle(color: Colors.orange))
-                                  : null,
-                        );
-                      },
-                    ),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                SizedBox(
+                  height: 320,
+                  child: ListView.separated(
+                    shrinkWrap: false,
+                    primary: false,
+                    itemCount: albums.length,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemBuilder: (_, i) {
+                      final a = albums[i];
+                      final id = a.id ?? '${a.name}-$i';
+                      final canView = a.sharedWith.contains(viewerId);
+                      final isPending = pendingMap[id] == true;
+                      return RadioListTile<String>(
+                        value: id,
+                        groupValue: selectedAlbumId,
+                        onChanged: (canView || isPending) ? null : (v) => setState(() => selectedAlbumId = v),
+                        title: Text(a.name, overflow: TextOverflow.ellipsis),
+                        subtitle: canView
+                            ? const Text('Shared with you', style: TextStyle(color: Colors.green))
+                            : isPending
+                                ? const Text('Request pending', style: TextStyle(color: Colors.orange))
+                                : null,
+                      );
+                    },
                   ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: messageController,
-                    decoration: const InputDecoration(hintText: 'Add a message (optional)'),
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(height: 8),
+                TextField(
+                  controller: messageController,
+                  decoration: const InputDecoration(hintText: 'Add a message (optional)'),
+                ),
+              ]),
             ),
             actions: [
               TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
@@ -318,6 +316,79 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
                 : double.infinity;
         return SafeArea(
           child: Scaffold(
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: otherUser.when(
+                data: (userData) => Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        icon: Icon(
+                          Icons.whatshot,
+                          color: hasTapped ? Colors.red : Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        label: Text(
+                          hasTapped ? "Tapped" : "Tap",
+                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                        ),
+                        onPressed: hasTapped
+                            ? null
+                            : () async {
+                                try {
+                                  final tapResponse = await ref.read(profileRepoProvider).sendTap(userData!.id);
+                                  setState(() {
+                                    hasTapped = true;
+                                    tapError = '';
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(tapResponse.message)),
+                                  );
+                                } catch (e) {
+                                  if (e.toString().contains('already tapped')) {
+                                    setState(() {
+                                      hasTapped = true;
+                                      tapError = 'You have already tapped this user today';
+                                    });
+                                  }
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Failed to send tap: ${e.toString()}')),
+                                  );
+                                }
+                              },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        icon: Icon(Icons.chat_bubble, color: Theme.of(context).colorScheme.onPrimary),
+                        label: (currentUser != null && userData != null && currentUser.blockList.contains(userData.id))
+                            ? Text("Unblock", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
+                            : Text("Message", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+                        onPressed: () async {
+                          // Todo: create chat one to one chat
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
+              ),
+            ),
             backgroundColor: Theme.of(context).colorScheme.background,
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(56),
@@ -449,119 +520,78 @@ class _OtherUserProfileViewState extends ConsumerState<OtherUserProfileView> {
 
                     return ScrollConfiguration(
                       behavior: _NoScrollbarBehavior(),
-                      child: ListView(
-                        padding: EdgeInsets.symmetric(
-                          vertical: isDesktop
-                              ? 32
-                              : isTablet
+                      child: RefreshIndicator.adaptive(
+                        onRefresh: () async {
+                          try {
+                            if (widget.id == null) return;
+
+                            // Re-fetch user profile
+                            await ref.read(userProfileProvider(widget.id!).notifier).refresh();
+
+                            // Refresh album access state
+                            ref.invalidate(albumAccessStateProvider(widget.id!));
+
+                            // Record the visit again and check tapping status
+                            await _recordProfileVisit();
+                            await _checkTapStatus();
+                          } catch (e) {
+                            logger.e('Refresh failed: $e');
+                          }
+                        },
+                        child: RefreshIndicator.adaptive(
+                          onRefresh: () async {
+                            try {
+                              if (widget.id == null) return;
+                              await ref.read(userProfileProvider(widget.id!).notifier).refresh();
+                              ref.invalidate(albumAccessStateProvider(widget.id!));
+                              await _recordProfileVisit();
+                              await _checkTapStatus();
+                            } catch (e) {
+                              // ignore
+                            }
+                          },
+                          child: ListView(
+                            padding: EdgeInsets.symmetric(
+                              vertical: isDesktop
+                                  ? 32
+                                  : isTablet
+                                      ? 24
+                                      : 16,
+                              horizontal: isDesktop
                                   ? 24
-                                  : 16,
-                          horizontal: isDesktop
-                              ? 24
-                              : isTablet
-                                  ? 16
-                                  : 12,
-                        ),
-                        children: [
-                          // Modern profile header
-                          _buildProfileHeader(context, userData, refData, isWide),
-                          const SizedBox(height: 16),
-
-                          // About section
-                          _buildSectionCard(
-                            context,
-                            title: 'About',
-                            child: Text(
-                              userData.bio?.trim().isNotEmpty == true ? userData.bio!.trim() : 'No bio provided',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
-                              textAlign: TextAlign.start,
+                                  : isTablet
+                                      ? 16
+                                      : 12,
                             ),
-                          ),
-                          const SizedBox(height: 16),
+                            children: [
+                              // Modern profile header
+                              _buildProfileHeader(context, userData, refData, isWide),
+                              const SizedBox(height: 16),
 
-                          // Details grid
-                          _buildDetailsGrid(context, userData, isWide),
-                        ],
+                              // About section
+                              _buildSectionCard(
+                                context,
+                                title: 'About',
+                                child: Text(
+                                  userData.bio?.trim().isNotEmpty == true ? userData.bio!.trim() : 'No bio provided',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+
+                              // Details grid
+                              _buildDetailsGrid(context, userData, isWide),
+                            ],
+                          ),
+                        ),
                       ),
                     );
                   },
                 ),
-              ),
-            ),
-            bottomNavigationBar: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: otherUser.when(
-                data: (userData) => Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
-                          foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        icon: Icon(
-                          Icons.whatshot,
-                          color: hasTapped ? Colors.red : Theme.of(context).colorScheme.onPrimary,
-                        ),
-                        label: Text(
-                          hasTapped ? "Tapped" : "Tap",
-                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                        ),
-                        onPressed: hasTapped
-                            ? null
-                            : () async {
-                                try {
-                                  final tapResponse = await ref.read(profileRepoProvider).sendTap(userData!.id);
-                                  setState(() {
-                                    hasTapped = true;
-                                    tapError = '';
-                                  });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(tapResponse.message)),
-                                  );
-                                } catch (e) {
-                                  if (e.toString().contains('already tapped')) {
-                                    setState(() {
-                                      hasTapped = true;
-                                      tapError = 'You have already tapped this user today';
-                                    });
-                                  }
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Failed to send tap: ${e.toString()}')),
-                                  );
-                                }
-                              },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
-                          foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        icon: Icon(Icons.chat_bubble, color: Theme.of(context).colorScheme.onPrimary),
-                        label: (currentUser != null && userData != null && currentUser.blockList.contains(userData.id))
-                            ? Text("Unblock", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
-                            : Text("Message", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
-                        onPressed: () async {
-                          // Todo: create chat one to one chat
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                loading: () => const SizedBox.shrink(),
-                error: (_, __) => const SizedBox.shrink(),
               ),
             ),
           ),

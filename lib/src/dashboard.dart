@@ -125,11 +125,14 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
     }
 
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => context.router.push(AIChatRoute()),
-      //   child: const Icon(Icons.smart_toy),
-        
-      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.e,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 60.0),
+        child: FloatingActionButton(
+          onPressed: () => context.router.push(AIChatRoute()),
+          child: const Icon(Icons.smart_toy),
+        ),
+      ),
       // bottomNavigationBar: const SizedBox(height: 50, child: BannerExample()),
       body: ResponsiveBuilder(builder: (context, size) {
         return AutoTabsScaffold(

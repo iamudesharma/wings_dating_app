@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -17,6 +18,7 @@ import 'package:wings_dating_app/src/users/widget/tap_list_view.dart';
 import 'package:wings_dating_app/src/users/providers/paginated_users_provider.dart';
 
 import '../model/user_models.dart';
+import 'package:wings_dating_app/src/model/geo_point_data.dart';
 import '../profile/controller/profile_controller.dart';
 import 'widget/user_grid_item.dart';
 
@@ -163,11 +165,64 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
     };
   }
 
+  Future<void> _startPositionStream() async {
+    // Do not start a stream on web
+    if (kIsWeb) return;
+
+    try {
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return;
+
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+        return;
+      }
+
+      await _positionSubscription?.cancel();
+
+      final settings = LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 100);
+
+      _positionSubscription = Geolocator.getPositionStream(locationSettings: settings).listen(
+        (Position position) async {
+          try {
+            final userData = ref.read(ProfileController.userControllerProvider).userModel;
+            if (userData == null) return;
+
+            final currentLat = position.latitude;
+            final currentLng = position.longitude;
+
+            final oldGeo = userData.position;
+            final hasChanged = oldGeo == null || oldGeo.geopoint[0] != currentLng || oldGeo.geopoint[1] != currentLat;
+
+            if (hasChanged) {
+              final updatedUser = userData.copyWith(position: GeoPointData(geopoint: [currentLng, currentLat]));
+              await ref.read(ProfileController.userControllerProvider.notifier).updateUserData(updatedUser);
+
+              // Refresh the users list so matches update with new location
+              await ref.read(paginatedUsersProvider(null).notifier).refresh();
+            }
+          } catch (e, st) {
+            logger.e('Error while handling position stream: $e', stackTrace: st);
+          }
+        },
+        onError: (err) => logger.e('Position stream error: $err'),
+      );
+    } catch (e, st) {
+      logger.e('Failed to start position stream: $e', stackTrace: st);
+    }
+  }
+
   @override
   void initState() {
     // _loginToCubeChat(); s
 
-    checkIfService();
+    checkIfService().then((_) {
+      _startPositionStream();
+    });
 
     if (!kIsWeb) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -194,8 +249,8 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
   @override
   void dispose() {
     // connectivityStateSubscription.cancel();
-
     WidgetsBinding.instance.removeObserver(this);
+    _positionSubscription?.cancel();
     super.dispose();
   }
 
@@ -204,6 +259,8 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
     final statusRef = FirebaseDatabase.instance.ref("status/${FirebaseAuth.instance.currentUser!.uid}");
 
     if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      // Stop listening to conserve battery while app is not active.
+      _positionSubscription?.cancel();
       statusRef.set({
         "isOnline": false,
         "lastSeen": ServerValue.timestamp,
@@ -215,6 +272,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
       });
       // Re-check permissions/services when returning from Settings
       checkIfService();
+      _startPositionStream();
     }
   }
 
@@ -226,6 +284,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
   }
 
   bool? isOnline = false;
+  StreamSubscription<Position>? _positionSubscription;
 
   @override
   Widget build(BuildContext context) {
@@ -236,44 +295,22 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
     // Load initial users
     ref.listen(usersProvider, (prev, current) {
-      print('UsersView: ref.listen triggered');
-      print('UsersView: prev = $prev');
-      print('UsersView: current.users.length = ${current.users.length}');
-      print('UsersView: current.isLoading = ${current.isLoading}');
-      print('UsersView: current.error = ${current.error}');
-
       // Check individual conditions
       final prevIsNull = prev == null;
       final usersIsEmpty = current.users.isEmpty;
       final notLoading = !current.isLoading;
 
-      print('UsersView: prevIsNull = $prevIsNull');
-      print('UsersView: usersIsEmpty = $usersIsEmpty');
-      print('UsersView: notLoading = $notLoading');
-
       if (prevIsNull && usersIsEmpty && notLoading) {
-        print('UsersView: All conditions met, triggering loadUsers');
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          print('UsersView: Executing loadUsers(refresh: true) in post frame callback');
           usersNotifier.loadUsers(refresh: true);
         });
-      } else {
-        print('UsersView: Conditions not met, not triggering loadUsers');
       }
     });
 
     // Alternative trigger - load users on first build if no users
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('UsersView: Post frame callback - checking if we need to load users');
-      print('UsersView: usersState.users.length = ${usersState.users.length}');
-      print('UsersView: usersState.isLoading = ${usersState.isLoading}');
-      print('UsersView: usersState.error = ${usersState.error}');
-
       if (usersState.users.isEmpty && !usersState.isLoading && usersState.error == null) {
-        print('UsersView: Alternative trigger - loading users because list is empty and not loading');
         usersNotifier.loadUsers(refresh: true);
-      } else {
-        print('UsersView: Alternative trigger - not loading users');
       }
     });
 
@@ -283,61 +320,135 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
         top: false,
         bottom: false,
         child: ResponsiveBuilder(builder: (context, sizingInformation) {
-          return nullWidget ??
-              CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: AppBar(
-                      leadingWidth: 40,
-                      leading: CircleAvatar(
-                        backgroundImage: CachedNetworkImageProvider(
-                            userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                      ),
-                      title: Text(userData.username),
-                      actions: [
-                        IconButton(
-                          icon: Icon(Icons.whatshot),
-                          tooltip: 'View Taps',
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => TapListView(userId: userData.id),
-                              ),
-                            );
-                          },
+          if (sizingInformation.isMobile) {
+            return nullWidget ??
+                CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: AppBar(
+                        leadingWidth: 40,
+                        leading: CircleAvatar(
+                          backgroundImage: CachedNetworkImageProvider(
+                              userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
                         ),
-                        InkWell(
-                            onTap: () {
-                              AutoRouter.of(context).push(const SearchUsersRoute());
+                        title: Text(userData.username),
+                        actions: [
+                          IconButton(
+                            icon: Icon(Icons.whatshot),
+                            tooltip: 'View Taps',
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => TapListView(userId: userData.id),
+                                ),
+                              );
                             },
-                            child: Icon(Icons.search)),
-                        SizedBox(width: 10),
-                        InkWell(
-                            onTap: () {
-                              AutoRouter.of(context).push(const FilterRoute()).then((result) {
-                                if (result != null && result is Map<String, dynamic>) {
-                                  setState(() {
-                                    filters = result;
-                                  });
-                                  // Update filters and refresh
-                                  usersNotifier.updateFilters(result);
-                                  usersNotifier.loadUsers(refresh: true);
-                                }
-                              });
-                            },
-                            child: Icon(Icons.filter_list_alt)),
-                        SizedBox(width: 10),
-                      ],
+                          ),
+                          InkWell(
+                              onTap: () {
+                                AutoRouter.of(context).push(const SearchUsersRoute());
+                              },
+                              child: Icon(Icons.search)),
+                          SizedBox(width: 10),
+                          InkWell(
+                              onTap: () {
+                                AutoRouter.of(context).push(const FilterRoute()).then((result) {
+                                  if (result != null && result is Map<String, dynamic>) {
+                                    // setState(() {
+                                      filters = result;
+                                    // });
+                                    // Update filters and refresh
+                                    usersNotifier.updateFilters(result);
+                                    usersNotifier.loadUsers(refresh: true);
+                                  }
+                                });
+                              },
+                              child: Icon(Icons.filter_list_alt)),
+                          SizedBox(width: 10),
+                        ],
+                      ),
                     ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Row(
+                    SliverToBoxAdapter(
+                      child: Row(
+                        children: [
+                          NavigationBarWidget(
+                            sizingInformation: sizingInformation,
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: RefreshIndicator.adaptive(
+                              onRefresh: () async {
+                                final currentLocation = await Geolocator.getCurrentPosition(
+                                  locationSettings: LocationSettings(
+                                    accuracy: LocationAccuracy.high,
+                                  ),
+                                );
+
+                                logger.d("currentLocation ${currentLocation.toJson()}");
+                                await usersNotifier.refresh();
+                              },
+                              child: _buildUserGrid(sizingInformation, usersState, usersNotifier, userData),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+          }
+
+          // Not mobile: keep nav out of scrollable area and make it persistent
+          return nullWidget ??
+              Row(
+                children: [
+                  NavigationBarWidget(sizingInformation: sizingInformation),
+                  Expanded(
+                    child: Column(
                       children: [
-                        NavigationBarWidget(
-                          sizingInformation: sizingInformation,
+                        AppBar(
+                          leadingWidth: 40,
+                          leading: CircleAvatar(
+                            backgroundImage: CachedNetworkImageProvider(
+                              userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
+                            ),
+                          ),
+                          title: Text(userData.username),
+                          actions: [
+                            IconButton(
+                              icon: Icon(Icons.whatshot),
+                              tooltip: 'View Taps',
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => TapListView(userId: userData.id),
+                                  ),
+                                );
+                              },
+                            ),
+                            InkWell(
+                                onTap: () {
+                                  AutoRouter.of(context).push(const SearchUsersRoute());
+                                },
+                                child: Icon(Icons.search)),
+                            SizedBox(width: 10),
+                            InkWell(
+                                onTap: () {
+                                  AutoRouter.of(context).push(const FilterRoute()).then((result) {
+                                    if (result != null && result is Map<String, dynamic>) {
+                                      setState(() {
+                                        filters = result;
+                                      });
+                                      // Update filters and refresh
+                                      usersNotifier.updateFilters(result);
+                                      usersNotifier.loadUsers(refresh: true);
+                                    }
+                                  });
+                                },
+                                child: Icon(Icons.filter_list_alt)),
+                            SizedBox(width: 10),
+                          ],
                         ),
                         Expanded(
-                          flex: 5,
                           child: RefreshIndicator.adaptive(
                             onRefresh: () async {
                               final currentLocation = await Geolocator.getCurrentPosition(
@@ -862,43 +973,130 @@ class NavigationBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!sizingInformation.isMobile) {
-      return Expanded(
-        child: SizedBox(
-          height: sizingInformation.screenSize.height,
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: ListenableBuilder(
-              listenable: AutoTabsRouter.of(context),
-              builder: (context, child) {
-                return NavigationRail(
-                  selectedIndex: AutoTabsRouter.of(context).activeIndex,
-                  extended: sizingInformation.isTablet ? false : true,
-                  onDestinationSelected: (value) {
-                    FirebaseAnalytics.instance.logEvent(
-                      name: 'navigation_rail_tapped',
-                      parameters: <String, Object>{
-                        'index': value as Object,
+    if (sizingInformation.isMobile) return const SizedBox.shrink();
+
+    final tabsRouter = AutoTabsRouter.of(context);
+    final double navWidth = sizingInformation.isTablet ? 200 : 230;
+    const entries = [
+      _NavigationEntry(label: 'Users', icon: Icons.home, tabIndex: 0),
+      _NavigationEntry(label: 'Chat', icon: Icons.chat_bubble, tabIndex: 1),
+      _NavigationEntry(label: 'Album', icon: Icons.album_outlined, tabIndex: 2),
+      _NavigationEntry(label: 'Matching', icon: Icons.add_card, tabIndex: 3),
+      _NavigationEntry(label: 'Profile', icon: Icons.person, tabIndex: 4),
+    ];
+
+    return Container(
+      width: navWidth,
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.background.withOpacity(0.95),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 14,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                child: const Icon(Icons.home, size: 20, color: Colors.white),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Wings',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: ListView.builder(
+              itemCount: entries.length,
+              padding: EdgeInsets.zero,
+              itemBuilder: (context, index) {
+                final entry = entries[index];
+                final bool isSelected = tabsRouter.activeIndex == entry.tabIndex;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Material(
+                    color: isSelected ? Theme.of(context).colorScheme.primary.withOpacity(0.2) : Colors.transparent,
+                    borderRadius: BorderRadius.circular(16),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                      leading: Icon(
+                        entry.icon,
+                        color: isSelected
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+                        size: 24,
+                      ),
+                      title: Text(
+                        entry.label,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                              color: isSelected
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.onBackground.withOpacity(0.65),
+                            ),
+                      ),
+                      onTap: () {
+                        FirebaseAnalytics.instance.logEvent(
+                          name: 'navigation_item_tapped',
+                          parameters: {'label': entry.label, 'index': entry.tabIndex},
+                        );
+                        tabsRouter.setActiveIndex(entry.tabIndex);
                       },
-                    );
-                    AutoTabsRouter.of(context).setActiveIndex(value);
-                  },
-                  destinations: const [
-                    NavigationRailDestination(icon: Icon(Icons.home), label: Text("Users")),
-                    NavigationRailDestination(icon: Icon(Icons.chat_bubble), label: Text("Chat")),
-                    NavigationRailDestination(icon: Icon(Icons.album_outlined), label: Text("Album")),
-                    NavigationRailDestination(icon: Icon(Icons.add_card), label: Text("Matching")),
-                    NavigationRailDestination(icon: Icon(Icons.psychology), label: Text("AI Wingman")),
-                    NavigationRailDestination(icon: Icon(Icons.person), label: Text("Profile"))
-                  ],
+                    ),
+                  ),
                 );
               },
             ),
           ),
-        ),
-      );
-    } else {
-      return Container();
-    }
+          const Divider(height: 1, color: Colors.white24),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                tooltip: 'Settings',
+                icon: const Icon(Icons.settings),
+                color: Theme.of(context).colorScheme.onBackground,
+                onPressed: () => tabsRouter.setActiveIndex(4),
+              ),
+              IconButton(
+                tooltip: 'AI Wingman',
+                icon: const Icon(Icons.smart_toy_outlined),
+                color: Theme.of(context).colorScheme.onBackground,
+                onPressed: () {
+                  AutoRouter.of(context).push(AIChatRoute());
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
+}
+
+class _NavigationEntry {
+  const _NavigationEntry({
+    required this.label,
+    required this.icon,
+    required this.tabIndex,
+  });
+
+  final String label;
+  final IconData icon;
+  final int tabIndex;
 }
