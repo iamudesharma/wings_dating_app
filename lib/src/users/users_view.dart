@@ -15,6 +15,7 @@ import 'package:wings_dating_app/helpers/helpers.dart';
 import 'package:wings_dating_app/routes/app_router.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:wings_dating_app/src/users/widget/tap_list_view.dart';
+import 'package:wings_dating_app/src/widgets/wings_animated_logo.dart';
 import 'package:wings_dating_app/src/users/providers/paginated_users_provider.dart';
 
 import '../model/user_models.dart';
@@ -25,15 +26,9 @@ import 'widget/user_grid_item.dart';
 final user = FirebaseAuth.instance.currentUser;
 final DatabaseReference statusRef = FirebaseDatabase.instance.ref("status/${user!.uid}");
 
-final onlineStatus = {
-  "isOnline": true,
-  "lastSeen": ServerValue.timestamp,
-};
+final onlineStatus = {"isOnline": true, "lastSeen": ServerValue.timestamp};
 
-final offlineStatus = {
-  "isOnline": false,
-  "lastSeen": ServerValue.timestamp,
-};
+final offlineStatus = {"isOnline": false, "lastSeen": ServerValue.timestamp};
 
 void setPresence() {
   statusRef.onDisconnect().set(offlineStatus).then((_) {
@@ -131,16 +126,12 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
             Text(
               message,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
             ),
             const SizedBox(height: 20),
-            FilledButton.icon(
-              onPressed: onAction,
-              icon: const Icon(Icons.settings_outlined),
-              label: Text(actionText),
-            ),
+            FilledButton.icon(onPressed: onAction, icon: const Icon(Icons.settings_outlined), label: Text(actionText)),
             const SizedBox(height: 8),
             TextButton(
               onPressed: () {
@@ -186,31 +177,30 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 
       final settings = LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 100);
 
-      _positionSubscription = Geolocator.getPositionStream(locationSettings: settings).listen(
-        (Position position) async {
-          try {
-            final userData = ref.read(ProfileController.userControllerProvider).userModel;
-            if (userData == null) return;
+      _positionSubscription = Geolocator.getPositionStream(locationSettings: settings).listen((
+        Position position,
+      ) async {
+        try {
+          final userData = ref.read(ProfileController.userControllerProvider).userModel;
+          if (userData == null) return;
 
-            final currentLat = position.latitude;
-            final currentLng = position.longitude;
+          final currentLat = position.latitude;
+          final currentLng = position.longitude;
 
-            final oldGeo = userData.position;
-            final hasChanged = oldGeo == null || oldGeo.geopoint[0] != currentLng || oldGeo.geopoint[1] != currentLat;
+          final oldGeo = userData.position;
+          final hasChanged = oldGeo == null || oldGeo.geopoint[0] != currentLng || oldGeo.geopoint[1] != currentLat;
 
-            if (hasChanged) {
-              final updatedUser = userData.copyWith(position: GeoPointData(geopoint: [currentLng, currentLat]));
-              await ref.read(ProfileController.userControllerProvider.notifier).updateUserData(updatedUser);
+          if (hasChanged) {
+            final updatedUser = userData.copyWith(position: GeoPointData(geopoint: [currentLng, currentLat]));
+            await ref.read(ProfileController.userControllerProvider.notifier).updateUserData(updatedUser);
 
-              // Refresh the users list so matches update with new location
-              await ref.read(paginatedUsersProvider(null).notifier).refresh();
-            }
-          } catch (e, st) {
-            logger.e('Error while handling position stream: $e', stackTrace: st);
+            // Refresh the users list so matches update with new location
+            await ref.read(paginatedUsersProvider(null).notifier).refresh();
           }
-        },
-        onError: (err) => logger.e('Position stream error: $err'),
-      );
+        } catch (e, st) {
+          logger.e('Error while handling position stream: $e', stackTrace: st);
+        }
+      }, onError: (err) => logger.e('Position stream error: $err'));
     } catch (e, st) {
       logger.e('Failed to start position stream: $e', stackTrace: st);
     }
@@ -261,15 +251,9 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
     if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
       // Stop listening to conserve battery while app is not active.
       _positionSubscription?.cancel();
-      statusRef.set({
-        "isOnline": false,
-        "lastSeen": ServerValue.timestamp,
-      });
+      statusRef.set({"isOnline": false, "lastSeen": ServerValue.timestamp});
     } else if (state == AppLifecycleState.resumed) {
-      statusRef.set({
-        "isOnline": true,
-        "lastSeen": ServerValue.timestamp,
-      });
+      statusRef.set({"isOnline": true, "lastSeen": ServerValue.timestamp});
       // Re-check permissions/services when returning from Settings
       checkIfService();
       _startPositionStream();
@@ -319,43 +303,44 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
       body: SafeArea(
         top: false,
         bottom: false,
-        child: ResponsiveBuilder(builder: (context, sizingInformation) {
-          if (sizingInformation.isMobile) {
-            return nullWidget ??
-                CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: AppBar(
-                        leadingWidth: 40,
-                        leading: CircleAvatar(
-                          backgroundImage: CachedNetworkImageProvider(
-                              userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png"),
-                        ),
-                        title: Text(userData.username),
-                        actions: [
-                          IconButton(
-                            icon: Icon(Icons.whatshot),
-                            tooltip: 'View Taps',
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => TapListView(userId: userData.id),
-                                ),
-                              );
-                            },
+        child: ResponsiveBuilder(
+          builder: (context, sizingInformation) {
+            if (sizingInformation.isMobile) {
+              return nullWidget ??
+                  CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: AppBar(
+                          leadingWidth: 40,
+                          leading: CircleAvatar(
+                            backgroundImage: CachedNetworkImageProvider(
+                              userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
+                            ),
                           ),
-                          InkWell(
+                          title: Text(userData.username),
+                          actions: [
+                            IconButton(
+                              icon: Icon(Icons.whatshot),
+                              tooltip: 'View Taps',
+                              onPressed: () {
+                                Navigator.of(
+                                  context,
+                                ).push(MaterialPageRoute(builder: (_) => TapListView(userId: userData.id)));
+                              },
+                            ),
+                            InkWell(
                               onTap: () {
                                 AutoRouter.of(context).push(const SearchUsersRoute());
                               },
-                              child: Icon(Icons.search)),
-                          SizedBox(width: 10),
-                          InkWell(
+                              child: Icon(Icons.search),
+                            ),
+                            SizedBox(width: 10),
+                            InkWell(
                               onTap: () {
                                 AutoRouter.of(context).push(const FilterRoute()).then((result) {
                                   if (result != null && result is Map<String, dynamic>) {
                                     // setState(() {
-                                      filters = result;
+                                    filters = result;
                                     // });
                                     // Update filters and refresh
                                     usersNotifier.updateFilters(result);
@@ -363,25 +348,93 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                                   }
                                 });
                               },
-                              child: Icon(Icons.filter_list_alt)),
-                          SizedBox(width: 10),
-                        ],
+                              child: Icon(Icons.filter_list_alt),
+                            ),
+                            SizedBox(width: 10),
+                          ],
+                        ),
                       ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: Row(
+                      SliverToBoxAdapter(
+                        child: Row(
+                          children: [
+                            NavigationBarWidget(sizingInformation: sizingInformation),
+                            Expanded(
+                              flex: 5,
+                              child: RefreshIndicator.adaptive(
+                                onRefresh: () async {
+                                  final currentLocation = await Geolocator.getCurrentPosition(
+                                    locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+                                  );
+
+                                  logger.d("currentLocation ${currentLocation.toJson()}");
+                                  await usersNotifier.refresh();
+                                },
+                                child: _buildUserGrid(sizingInformation, usersState, usersNotifier, userData),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+            }
+
+            // Not mobile: keep nav out of scrollable area and make it persistent
+            return nullWidget ??
+                Row(
+                  children: [
+                    NavigationBarWidget(sizingInformation: sizingInformation),
+                    Expanded(
+                      child: Column(
                         children: [
-                          NavigationBarWidget(
-                            sizingInformation: sizingInformation,
+                          AppBar(
+                            leadingWidth: 40,
+                            leading: CircleAvatar(
+                              backgroundImage: CachedNetworkImageProvider(
+                                userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
+                              ),
+                            ),
+                            title: Text(userData.username),
+                            actions: [
+                              IconButton(
+                                icon: Icon(Icons.whatshot),
+                                tooltip: 'View Taps',
+                                onPressed: () {
+                                  Navigator.of(
+                                    context,
+                                  ).push(MaterialPageRoute(builder: (_) => TapListView(userId: userData.id)));
+                                },
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  AutoRouter.of(context).push(const SearchUsersRoute());
+                                },
+                                child: Icon(Icons.search),
+                              ),
+                              SizedBox(width: 10),
+                              InkWell(
+                                onTap: () {
+                                  AutoRouter.of(context).push(const FilterRoute()).then((result) {
+                                    if (result != null && result is Map<String, dynamic>) {
+                                      setState(() {
+                                        filters = result;
+                                      });
+                                      // Update filters and refresh
+                                      usersNotifier.updateFilters(result);
+                                      usersNotifier.loadUsers(refresh: true);
+                                    }
+                                  });
+                                },
+                                child: Icon(Icons.filter_list_alt),
+                              ),
+                              SizedBox(width: 10),
+                            ],
                           ),
                           Expanded(
-                            flex: 5,
                             child: RefreshIndicator.adaptive(
                               onRefresh: () async {
                                 final currentLocation = await Geolocator.getCurrentPosition(
-                                  locationSettings: LocationSettings(
-                                    accuracy: LocationAccuracy.high,
-                                  ),
+                                  locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
                                 );
 
                                 logger.d("currentLocation ${currentLocation.toJson()}");
@@ -395,80 +448,8 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                     ),
                   ],
                 );
-          }
-
-          // Not mobile: keep nav out of scrollable area and make it persistent
-          return nullWidget ??
-              Row(
-                children: [
-                  NavigationBarWidget(sizingInformation: sizingInformation),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        AppBar(
-                          leadingWidth: 40,
-                          leading: CircleAvatar(
-                            backgroundImage: CachedNetworkImageProvider(
-                              userData!.profileUrl ?? "https://img.icons8.com/ios/500/null/user-male-circle--v1.png",
-                            ),
-                          ),
-                          title: Text(userData.username),
-                          actions: [
-                            IconButton(
-                              icon: Icon(Icons.whatshot),
-                              tooltip: 'View Taps',
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => TapListView(userId: userData.id),
-                                  ),
-                                );
-                              },
-                            ),
-                            InkWell(
-                                onTap: () {
-                                  AutoRouter.of(context).push(const SearchUsersRoute());
-                                },
-                                child: Icon(Icons.search)),
-                            SizedBox(width: 10),
-                            InkWell(
-                                onTap: () {
-                                  AutoRouter.of(context).push(const FilterRoute()).then((result) {
-                                    if (result != null && result is Map<String, dynamic>) {
-                                      setState(() {
-                                        filters = result;
-                                      });
-                                      // Update filters and refresh
-                                      usersNotifier.updateFilters(result);
-                                      usersNotifier.loadUsers(refresh: true);
-                                    }
-                                  });
-                                },
-                                child: Icon(Icons.filter_list_alt)),
-                            SizedBox(width: 10),
-                          ],
-                        ),
-                        Expanded(
-                          child: RefreshIndicator.adaptive(
-                            onRefresh: () async {
-                              final currentLocation = await Geolocator.getCurrentPosition(
-                                locationSettings: LocationSettings(
-                                  accuracy: LocationAccuracy.high,
-                                ),
-                              );
-
-                              logger.d("currentLocation ${currentLocation.toJson()}");
-                              await usersNotifier.refresh();
-                            },
-                            child: _buildUserGrid(sizingInformation, usersState, usersNotifier, userData),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-        }),
+          },
+        ),
       ),
     );
   }
@@ -488,9 +469,9 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
             const SizedBox(height: 16),
             Text(
               'Discovering amazing people...',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
             ),
           ],
         ),
@@ -505,37 +486,27 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.errorContainer,
             borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.error_outline,
-                size: 48,
-                color: Theme.of(context).colorScheme.error,
-              ),
+              Icon(Icons.error_outline, size: 48, color: Theme.of(context).colorScheme.error),
               const SizedBox(height: 16),
               Text(
                 'Oops! Something went wrong',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onErrorContainer,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: Theme.of(context).colorScheme.onErrorContainer,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 usersState.error!,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onErrorContainer,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onErrorContainer),
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
@@ -546,9 +517,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
             ],
@@ -572,13 +541,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
               ],
             ),
             borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 15,
-                offset: const Offset(0, 5),
-              ),
-            ],
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 15, offset: const Offset(0, 5))],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -589,27 +552,23 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                   color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  Icons.people_outline,
-                  size: 48,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                child: Icon(Icons.people_outline, size: 48, color: Theme.of(context).colorScheme.primary),
               ),
               const SizedBox(height: 20),
               Text(
                 'No users found',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Try adjusting your filters or check back later',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.8),
-                    ),
+                  color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.8),
+                ),
               ),
             ],
           ),
@@ -637,19 +596,11 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Theme.of(context).colorScheme.surface,
-              Theme.of(context).colorScheme.surface.withOpacity(0.8),
-            ],
+            colors: [Theme.of(context).colorScheme.surface, Theme.of(context).colorScheme.surface.withOpacity(0.8)],
           ),
         ),
         child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(
-            horizontalPadding,
-            verticalPadding,
-            horizontalPadding,
-            bottomInset,
-          ),
+          padding: EdgeInsets.fromLTRB(horizontalPadding, verticalPadding, horizontalPadding, bottomInset),
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
@@ -660,9 +611,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                  ),
+                  border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.2)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -673,15 +622,15 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                         Text(
                           'Discover People',
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onPrimaryContainer,
-                              ),
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          ),
                         ),
                         Text(
                           '${usersState.users.length} people nearby',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
-                              ),
+                            color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7),
+                          ),
                         ),
                       ],
                     ),
@@ -695,9 +644,9 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                         child: Text(
                           'More available',
                           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                   ],
@@ -712,8 +661,8 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                   crossAxisCount: sizingInformation.isMobile
                       ? 2
                       : sizingInformation.isTablet
-                          ? 3
-                          : 4,
+                      ? 3
+                      : 4,
                   mainAxisSpacing: sizingInformation.isMobile ? 16 : 20,
                   crossAxisSpacing: sizingInformation.isMobile ? 16 : 20,
                   childAspectRatio: 0.68, // Adjusted to accommodate more content
@@ -722,27 +671,27 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                   final user = usersState.users[index];
 
                   return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          blurRadius: 15,
-                          offset: const Offset(0, 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 15,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: UserGridItem(
-                      onTapEditProfile: () async {
-                        AutoTabsRouter.of(context).setActiveIndex(4);
-                      },
-                      isCurrentUser: user.id == userData.id,
-                      users: user,
-                      userCoordinates: userData.position != null
-                          ? GeoPoint(userData.position!.geopoint[1], userData.position!.geopoint[0])
-                          : null,
-                    ),
-                  )
+                        child: UserGridItem(
+                          onTapEditProfile: () async {
+                            AutoTabsRouter.of(context).setActiveIndex(4);
+                          },
+                          isCurrentUser: user.id == userData.id,
+                          users: user,
+                          userCoordinates: userData.position != null
+                              ? GeoPoint(userData.position!.geopoint[1], userData.position!.geopoint[0])
+                              : null,
+                        ),
+                      )
                       .animate()
                       .fadeIn(duration: const Duration(milliseconds: 300))
                       .slideY(begin: 0.2, end: 0, duration: const Duration(milliseconds: 400))
@@ -767,9 +716,9 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                       const SizedBox(height: 12),
                       Text(
                         'Loading more amazing people...',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -788,25 +737,19 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
                       ],
                     ),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                    ),
+                    border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.2)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.check_circle_outline,
-                        color: Theme.of(context).colorScheme.primary,
-                        size: 20,
-                      ),
+                      Icon(Icons.check_circle_outline, color: Theme.of(context).colorScheme.primary, size: 20),
                       const SizedBox(width: 8),
                       Text(
                         "You've seen everyone nearby!",
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ],
                   ),
@@ -965,10 +908,7 @@ class _UsersViewState extends ConsumerState<UsersView> with WidgetsBindingObserv
 // }
 
 class NavigationBarWidget extends StatelessWidget {
-  const NavigationBarWidget({
-    super.key,
-    required this.sizingInformation,
-  });
+  const NavigationBarWidget({super.key, required this.sizingInformation});
   final SizingInformation sizingInformation;
 
   @override
@@ -990,31 +930,21 @@ class NavigationBarWidget extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.25),
-            blurRadius: 14,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.25), blurRadius: 14, offset: const Offset(0, 2))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                child: const Icon(Icons.home, size: 20, color: Colors.white),
-              ),
+              WingsAnimatedLogo(size: 36),
               const SizedBox(width: 12),
               Text(
                 'Wings',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
             ],
           ),
@@ -1043,11 +973,11 @@ class NavigationBarWidget extends StatelessWidget {
                       title: Text(
                         entry.label,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                              color: isSelected
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.65),
-                            ),
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurface.withOpacity(0.65),
+                        ),
                       ),
                       onTap: () {
                         FirebaseAnalytics.instance.logEvent(
@@ -1090,11 +1020,7 @@ class NavigationBarWidget extends StatelessWidget {
 }
 
 class _NavigationEntry {
-  const _NavigationEntry({
-    required this.label,
-    required this.icon,
-    required this.tabIndex,
-  });
+  const _NavigationEntry({required this.label, required this.icon, required this.tabIndex});
 
   final String label;
   final IconData icon;

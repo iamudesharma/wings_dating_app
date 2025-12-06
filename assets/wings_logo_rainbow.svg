@@ -1,0 +1,86 @@
+<svg width="512" height="600" viewBox="0 0 512 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Rainbow Gradient for Circle -->
+    <linearGradient id="rainbowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF0055" />
+      <stop offset="20%" stop-color="#FF9900" />
+      <stop offset="40%" stop-color="#FFDD00" />
+      <stop offset="60%" stop-color="#00EE55" />
+      <stop offset="80%" stop-color="#0099FF" />
+      <stop offset="100%" stop-color="#AA00FF" />
+    </linearGradient>
+
+    <!-- Wing Gradient -->
+    <linearGradient id="wingGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#E0E0E0" stop-opacity="0.7" />
+    </linearGradient>
+
+    <!-- Shimmer Gradient -->
+    <linearGradient id="shimmerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#444" />
+      <stop offset="40%" stop-color="#444" />
+      <stop offset="50%" stop-color="#FFF" />
+      <stop offset="60%" stop-color="#444" />
+      <stop offset="100%" stop-color="#444" />
+      <animate attributeName="x1" from="-100%" to="100%" dur="2s" repeatCount="indefinite" />
+      <animate attributeName="x2" from="0%" to="200%" dur="2s" repeatCount="indefinite" />
+    </linearGradient>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    
+    <filter id="heartGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <style>
+      .wing-left {
+        transform-origin: 166px 256px;
+        animation: flapLeft 2s ease-in-out infinite alternate;
+      }
+      .wing-right {
+        transform-origin: 346px 256px;
+        animation: flapRight 2s ease-in-out infinite alternate;
+      }
+      .heart {
+        transform-origin: 256px 160px;
+        animation: bounce 1s cubic-bezier(0.28, 0.84, 0.42, 1) infinite alternate;
+      }
+      
+      @keyframes flapLeft {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(-15deg); }
+      }
+      @keyframes flapRight {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(15deg); }
+      }
+      @keyframes bounce {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.1); }
+      }
+    </style>
+  </defs>
+
+  <!-- Left Angel Wing -->
+  <path class="wing-left" d="M166,256 C140,200 40,180 20,240 C10,280 40,320 80,340 C60,360 40,380 30,420 C50,440 100,420 166,380 Z" fill="url(#wingGradient)" stroke="#DDD" stroke-width="2" />
+  <path class="wing-left" d="M166,256 C140,220 80,220 60,260 M60,260 C50,290 80,310 100,320 M100,320 C80,340 60,360 50,390" fill="none" stroke="#DDD" stroke-width="1" opacity="0.6" />
+
+  <!-- Right Angel Wing -->
+  <path class="wing-right" d="M346,256 C372,200 472,180 492,240 C502,280 472,320 432,340 C452,360 472,380 482,420 C462,440 412,420 346,380 Z" fill="url(#wingGradient)" stroke="#DDD" stroke-width="2" />
+  <path class="wing-right" d="M346,256 C372,220 432,220 452,260 M452,260 C462,290 432,310 412,320 M412,320 C432,340 452,360 462,390" fill="none" stroke="#DDD" stroke-width="1" opacity="0.6" />
+
+  <!-- Rainbow Circle (Filled) -->
+  <circle cx="256" cy="256" r="90" fill="white" stroke="url(#rainbowGradient)" stroke-width="8" />
+  
+  <!-- Small Heart on Top -->
+  <!-- Scaled down to 0.5 and positioned at top of circle (y=166 approx) -->
+  <path class="heart" d="M256 300l-20-20C150 200 100 150 100 100c0-45 35-80 80-80 25 0 48 12 63 32 3-4 6-8 9-12 15-20 38-32 63-32 45 0 80 35 80 80 0 50-50 100-144 192l-20 20z" fill="#FF0055" filter="url(#heartGlow)" transform="translate(0, 100) scale(0.5)" transform-origin="256 160" />
+
+  <!-- Bottom Shimmer Logo -->
+  <text x="50%" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="60" fill="url(#shimmerGradient)" letter-spacing="4">WINGS</text>
+</svg>

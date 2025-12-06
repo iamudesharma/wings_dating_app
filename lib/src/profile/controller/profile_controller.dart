@@ -2,12 +2,15 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wings_dating_app/services/chat_services.dart';
 import 'package:wings_dating_app/src/model/user_models.dart';
 import 'package:wings_dating_app/src/model/engagement_models.dart';
 
@@ -141,6 +144,12 @@ class ProfileController extends _$ProfileController {
   Future<List<VisitRecord>> getProfileVisitors() async {
     final response = await ref.read(Dependency.profileProvider).getProfileVisitors();
     return response.visits;
+  }
+
+  Future<void> logout() async {
+    await SharedPreferences.getInstance().then((prefs) => prefs.clear());
+    await ref.read(chatClientProvider).disconnectUser();
+    await FirebaseAuth.instance.signOut();
   }
 }
 

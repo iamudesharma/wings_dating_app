@@ -50,10 +50,7 @@ class ProfileView extends ConsumerWidget {
     Widget avatar({double size = 56}) {
       final url = userData.profileUrl;
       if (url != null && url.isNotEmpty) {
-        return CircleAvatar(
-          radius: size / 2,
-          backgroundImage: CachedNetworkImageProvider(url),
-        );
+        return CircleAvatar(radius: size / 2, backgroundImage: CachedNetworkImageProvider(url));
       }
       return CircleAvatar(
         radius: size / 2,
@@ -67,9 +64,7 @@ class ProfileView extends ConsumerWidget {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(userData.username),
-        ),
+        appBar: AppBar(title: Text(userData.username)),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             // Navigate to edit profile screen via AutoRoute
@@ -78,120 +73,128 @@ class ProfileView extends ConsumerWidget {
           icon: const Icon(Icons.edit_outlined),
           label: const Text('Edit'),
         ),
-        body: ResponsiveBuilder(builder: (context, sizingInformation) {
-          return Row(
-            children: [
-              NavigationBarWidget(
-                sizingInformation: sizingInformation,
-              ),
-              Expanded(
-                flex: 5,
-                child: ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    Row(
-                      children: [
-                        avatar(size: 64),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(userData.username, style: theme.textTheme.titleLarge),
-                              if ((userData.bio ?? '').isNotEmpty)
-                                Text(userData.bio!, maxLines: 2, overflow: TextOverflow.ellipsis),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    const ProfileCompletionMeter(),
-                    const SizedBox(height: 16),
-                    // Settings Section
-                    Text('Settings', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 8),
-                    Card(
-                      elevation: 0,
-                      color: colorScheme.surface,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      child: Column(
+        body: ResponsiveBuilder(
+          builder: (context, sizingInformation) {
+            return Row(
+              children: [
+                NavigationBarWidget(sizingInformation: sizingInformation),
+                Expanded(
+                  flex: 5,
+                  child: ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      Row(
                         children: [
-                          ListTile(
-                            leading: Icon(Icons.palette_outlined, color: colorScheme.primary),
-                            title: const Text('Theme Settings'),
-                            subtitle: const Text('Customize app appearance'),
-                            trailing: Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const ThemeSelector(),
-                                ),
-                              );
-                            },
+                          avatar(size: 64),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(userData.username, style: theme.textTheme.titleLarge),
+                                if ((userData.bio ?? '').isNotEmpty)
+                                  Text(userData.bio!, maxLines: 2, overflow: TextOverflow.ellipsis),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    // About Section
-                    Text('About', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 8),
-                    Card(
-                      elevation: 0,
-                      color: colorScheme.surface,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          (userData.bio ?? '').isEmpty ? 'No bio added yet.' : userData.bio!,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.textTheme.bodyMedium?.color,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    // Interests (display only)
-                    Text('Interests', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 4),
-                    Wrap(
-                      spacing: 8,
-                      children: userData.interests.isNotEmpty
-                          ? userData.interests.map((e) => Chip(label: Text(e))).toList()
-                          : [Text('No interests added yet.', style: theme.textTheme.bodySmall)],
-                    ),
-                    const SizedBox(height: 16),
-                    // Details grid
-                    Text('Details', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 8),
-                    Card(
-                      elevation: 0,
-                      color: colorScheme.surface,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      const SizedBox(height: 16),
+                      const ProfileCompletionMeter(),
+                      const SizedBox(height: 16),
+                      // Settings Section
+                      Text('Settings', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 8),
+                      Card(
+                        elevation: 0,
+                        color: colorScheme.surface,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         child: Column(
                           children: [
-                            ProfileInputCard(title: 'Role', value: userData.role.value),
-                            ProfileInputCard(title: 'Body Type', value: userData.bodyType.value),
-                            ProfileInputCard(title: 'Ethnicity', value: userData.ethnicity.value),
-                            ProfileInputCard(title: 'Relationship Status', value: userData.relationshipStatus.value),
-                            ProfileInputCard(title: 'Looking for', value: userData.lookingFor.value),
-                            ProfileInputCard(title: 'Where to meet', value: userData.whereToMeet.value),
-                            ProfileInputCard(title: 'Height', value: userData.height ?? 'Do not Show'),
-                            ProfileInputCard(title: 'Weight', value: userData.weight ?? 'Do not Show'),
+                            ListTile(
+                              leading: Icon(Icons.palette_outlined, color: colorScheme.primary),
+                              title: const Text('Theme Settings'),
+                              subtitle: const Text('Customize app appearance'),
+                              trailing: Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
+                              onTap: () {
+                                Navigator.of(
+                                  context,
+                                ).push(MaterialPageRoute(builder: (context) => const ThemeSelector()));
+                              },
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: Icon(Icons.logout, color: colorScheme.error),
+                              title: Text('Logout', style: TextStyle(color: colorScheme.error)),
+                              subtitle: const Text('Sign out of your account'),
+                              onTap: () async {
+                                await ref.read(ProfileController.userControllerProvider.notifier).logout();
+                                if (context.mounted) {
+                                  context.router.replaceAll([const SignOptionsRoute()]);
+                                }
+                              },
+                            ),
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
+                      const SizedBox(height: 16),
+                      // About Section
+                      Text('About', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 8),
+                      Card(
+                        elevation: 0,
+                        color: colorScheme.surface,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            (userData.bio ?? '').isEmpty ? 'No bio added yet.' : userData.bio!,
+                            style: theme.textTheme.bodyMedium?.copyWith(color: theme.textTheme.bodyMedium?.color),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Interests (display only)
+                      Text('Interests', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 4),
+                      Wrap(
+                        spacing: 8,
+                        children: userData.interests.isNotEmpty
+                            ? userData.interests.map((e) => Chip(label: Text(e))).toList()
+                            : [Text('No interests added yet.', style: theme.textTheme.bodySmall)],
+                      ),
+                      const SizedBox(height: 16),
+                      // Details grid
+                      Text('Details', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 8),
+                      Card(
+                        elevation: 0,
+                        color: colorScheme.surface,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                          child: Column(
+                            children: [
+                              ProfileInputCard(title: 'Role', value: userData.role.value),
+                              ProfileInputCard(title: 'Body Type', value: userData.bodyType.value),
+                              ProfileInputCard(title: 'Ethnicity', value: userData.ethnicity.value),
+                              ProfileInputCard(title: 'Relationship Status', value: userData.relationshipStatus.value),
+                              ProfileInputCard(title: 'Looking for', value: userData.lookingFor.value),
+                              ProfileInputCard(title: 'Where to meet', value: userData.whereToMeet.value),
+                              ProfileInputCard(title: 'Height', value: userData.height ?? 'Do not Show'),
+                              ProfileInputCard(title: 'Weight', value: userData.weight ?? 'Do not Show'),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        }),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:wings_dating_app/src/widgets/wings_animated_logo.dart';
+import 'dart:ui';
 
 @RoutePage()
 class LoginView extends StatelessWidget {
@@ -8,9 +11,59 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(automaticallyImplyLeading: false, title: const Text('Chat')),
-      body: const LoginPage(),
+      body: Stack(
+        children: [
+          // Background Gradient
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF1A1A2E), // Dark Blue
+                  Color(0xFF16213E), // Darker Blue
+                  Color(0xFF0F3460), // Navy
+                ],
+              ),
+            ),
+          ),
+
+          // Animated Background Shapes
+          Positioned(
+            top: -100,
+            left: -100,
+            child:
+                Container(
+                      width: 300,
+                      height: 300,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFFE94560).withOpacity(0.3),
+                      ),
+                    )
+                    .animate(onPlay: (controller) => controller.repeat(reverse: true))
+                    .scale(duration: 3.seconds, begin: const Offset(1, 1), end: const Offset(1.2, 1.2)),
+          ),
+          Positioned(
+            bottom: -50,
+            right: -50,
+            child:
+                Container(
+                      width: 250,
+                      height: 250,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFF533483).withOpacity(0.3),
+                      ),
+                    )
+                    .animate(onPlay: (controller) => controller.repeat(reverse: true))
+                    .scale(duration: 4.seconds, begin: const Offset(1, 1), end: const Offset(1.3, 1.3)),
+          ),
+
+          // Main Content
+          const LoginPage(),
+        ],
+      ),
     );
   }
 }
@@ -31,8 +84,7 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordFilter = TextEditingController();
   String _login = "";
   String _password = "";
-  FormType _form = FormType
-      .login; // our default setting is to login, and we should switch to creating an account when the user chooses to
+  FormType _form = FormType.login;
 
   final bool _isLoginContinues = false;
 
@@ -70,129 +122,181 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[_buildLogoField(), _initLoginWidgets()],
+    return Center(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                padding: const EdgeInsets.all(32.0),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.white.withOpacity(0.2)),
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 20, spreadRadius: 5)],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[_buildLogoField(), const SizedBox(height: 30), _initLoginWidgets()],
+                ),
+              ),
+            ),
           ),
-        ),
+        ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.1, end: 0),
       ),
     );
   }
 
   Widget _buildLogoField() {
-//    return Image.asset('assets/images/splash.png');
-    return Container(
-      child: Align(
-        alignment: FractionalOffset.center,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Image.asset('assets/images/splash.png'),
+    return Column(
+      children: [
+        const WingsAnimatedLogo(size: 120),
+        const SizedBox(height: 20),
+        Text(
+          'Wings Dating',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.5,
+            shadows: [Shadow(color: Colors.black.withOpacity(0.3), offset: const Offset(2, 2), blurRadius: 4)],
+          ),
+        ).animate().fadeIn(delay: 300.ms).scale(),
+        Container(
+          margin: const EdgeInsets.only(top: 10),
+          height: 18,
+          width: 18,
+          child: Visibility(
+            visible: _isLoginContinues,
+            child: const CircularProgressIndicator.adaptive(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
-            Container(
-              margin: const EdgeInsets.only(left: 8),
-              height: 18,
-              width: 18,
-              child: Visibility(
-                visible: _isLoginContinues,
-                child: const CircularProgressIndicator.adaptive(
-                  strokeWidth: 2,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
   _initLoginWidgets() {
     return FutureBuilder<Widget>(
-        future: getFilterChipsWidgets(),
-        builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-          if (snapshot.hasData) {
-            return snapshot.data!;
-          }
-          return const SizedBox.shrink();
-        });
+      future: getFilterChipsWidgets(),
+      builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data!;
+        }
+        return const SizedBox.shrink();
+      },
+    );
   }
 
   Future<Widget> getFilterChipsWidgets() async {
-    // if (_isLoginContinues) return const SizedBox.shrink();
-    // SharedPrefs sharedPrefs = await SharedPrefs.instance.init();
-    // CubeUser? user = sharedPrefs.getUser();
-    // if (user != null) {
-    //   _loginToCC(context, user);
-    //   return const SizedBox.shrink();
-    // } else {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[_buildTextFields(), _buildButtons()],
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[_buildTextFields(), const SizedBox(height: 20), _buildButtons()],
     );
   }
-  // }
 
   Widget _buildTextFields() {
     return Column(
       children: <Widget>[
-        TextField(
-          controller: _loginFilter,
-          decoration: const InputDecoration(labelText: 'Login'),
-        ),
-        TextField(
+        _buildStyledTextField(controller: _loginFilter, label: 'Login', icon: Icons.person_outline),
+        const SizedBox(height: 16),
+        _buildStyledTextField(
           controller: _passwordFilter,
-          decoration: const InputDecoration(labelText: 'Password'),
+          label: 'Password',
+          icon: Icons.lock_outline,
           obscureText: true,
-        )
+        ),
       ],
+    );
+  }
+
+  Widget _buildStyledTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    bool obscureText = false,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+        prefixIcon: Icon(icon, color: Colors.white.withOpacity(0.7)),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.1),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFE94560)),
+        ),
+      ),
     );
   }
 
   Widget _buildButtons() {
     if (_form == FormType.login) {
-      return Container(
-        child: Column(
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Login'),
-            ),
-            TextButton(
-              onPressed: _formChange,
-              child:
-                  const Text('Don\'t have an account? Tap here to register.'),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: const Text('Delete user?'),
-            )
-          ],
-        ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _buildPrimaryButton(onPressed: () {}, text: 'Login'),
+          const SizedBox(height: 10),
+          _buildTextButton(onPressed: _formChange, text: 'Don\'t have an account? Register.'),
+          _buildTextButton(onPressed: () {}, text: 'Delete user?', color: Colors.redAccent.withOpacity(0.8)),
+        ],
       );
     } else {
-      return Container(
-        child: Column(
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Create an Account'),
-            ),
-            TextButton(
-              onPressed: _formChange,
-              child: const Text('Have an account? Click here to login.'),
-            )
-          ],
-        ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _buildPrimaryButton(onPressed: () {}, text: 'Create an Account'),
+          const SizedBox(height: 10),
+          _buildTextButton(onPressed: _formChange, text: 'Have an account? Login.'),
+        ],
       );
     }
+  }
+
+  Widget _buildPrimaryButton({required VoidCallback onPressed, required String text}) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(colors: [Color(0xFFE94560), Color(0xFF533483)]),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: const Color(0xFFE94560).withOpacity(0.4), blurRadius: 10, offset: const Offset(0, 4)),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextButton({required VoidCallback onPressed, required String text, Color? color}) {
+    return TextButton(
+      onPressed: onPressed,
+      child: Text(text, style: TextStyle(color: color ?? Colors.white.withOpacity(0.8))),
+    );
   }
 }

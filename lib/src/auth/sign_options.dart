@@ -3,13 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 // import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:wings_dating_app/assets.dart';
 
 import 'package:wings_dating_app/routes/app_router.dart';
+
+import 'package:wings_dating_app/src/widgets/wings_animated_logo.dart';
 
 @RoutePage()
 class SignOptionsView extends ConsumerWidget {
@@ -33,109 +32,23 @@ class SignOptionsView extends ConsumerWidget {
             return SizedBox(
               height: constraints.maxHeight,
               width: constraints.maxWidth,
-              child: Center(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 100,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        gradient: const LinearGradient(
-                          colors: [Colors.purple, Colors.blue, Colors.green, Colors.yellow, Colors.orange, Colors.red],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                      child: const Icon(
-                        Icons.favorite,
-                        color: Colors.white,
-                        size: 50,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Wings Dating',
-                          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
-                        )
-                            .animate(
-                              adapter: ValueNotifierAdapter(isFromCom, animated: true),
-                            )
-                            .shake(),
-                        SvgPicture.asset(
-                          Assets.rainbow3SVG,
-                          height: 50,
-                          width: 50,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              child: const Center(child: WingsAnimatedLogo(size: 150)),
             );
           },
           sideBuilder: (context, constraints) => SizedBox(
             height: constraints.maxHeight,
             width: constraints.maxWidth,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 300,
-                    width: 300,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(150),
-                      gradient: const LinearGradient(
-                        colors: [Colors.purple, Colors.blue, Colors.green, Colors.yellow, Colors.orange, Colors.red],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.favorite,
-                      color: Colors.white,
-                      size: 150,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Wings Dating',
-                        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
-                      ).animate(onInit: (controller) => controller.repeat(reverse: true), effects: [
-                        const ShakeEffect(),
-                      ]),
-                      SvgPicture.asset(
-                        Assets.rainbow3SVG,
-                        height: 50,
-                        width: 50,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            child: const Center(child: WingsAnimatedLogo(size: 300)),
           ),
           auth: FirebaseAuth.instance,
           actions: [
             AuthStateChangeAction<SignedIn>((context, state) async {
-              await AutoRouter.of(context).replace(
-                const DashboardRoute(),
-              );
+              await AutoRouter.of(context).replace(const DashboardRoute());
               // });
               // });
             }),
             AuthStateChangeAction<UserCreated>((context, state) async {
-              await AutoRouter.of(context).replace(
-                const DashboardRoute(),
-              );
+              await AutoRouter.of(context).replace(const DashboardRoute());
               //       });
               // });
             }),
