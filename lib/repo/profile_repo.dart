@@ -493,4 +493,44 @@ class ProfileRepo with RepositoryExceptionMixin {
         .get("/users/$currentUserId/visitors?page=$page&limit=$limit");
     return PaginatedVisitsResponse.fromJson(response["data"]);
   }
+
+  /// Upload a new profile picture for admin verification
+  Future<Map<String, dynamic>> uploadProfilePicture(String photoUrl) async {
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserId == null) {
+      throw Exception('No current user logged in');
+    }
+    
+    try {
+      final response = await httpTemplate.post(
+        "/users/profile-picture",
+        body: {
+          "userId": currentUserId,
+          "url": photoUrl,
+        },
+      );
+      return response;
+    } catch (e) {
+      logger.e("Error uploading profile picture: $e");
+      rethrow;
+    }
+  }
+
+  /// Get profile picture verification status
+  Future<Map<String, dynamic>> getProfilePictureStatus() async {
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserId == null) {
+      throw Exception('No current user logged in');
+    }
+    
+    try {
+      final response = await httpTemplate.get(
+        "/users/$currentUserId/profile-picture-status",
+      );
+      return response;
+    } catch (e) {
+      logger.e("Error getting profile picture status: $e");
+      rethrow;
+    }
+  }
 }

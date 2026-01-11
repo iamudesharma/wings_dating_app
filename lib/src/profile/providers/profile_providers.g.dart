@@ -10,7 +10,7 @@ part of 'profile_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(getUserById)
-const getUserByIdProvider = GetUserByIdFamily._();
+final getUserByIdProvider = GetUserByIdFamily._();
 
 final class GetUserByIdProvider
     extends
@@ -20,7 +20,7 @@ final class GetUserByIdProvider
           FutureOr<UserModel?>
         >
     with $FutureModifier<UserModel?>, $FutureProvider<UserModel?> {
-  const GetUserByIdProvider._({
+  GetUserByIdProvider._({
     required GetUserByIdFamily super.from,
     required String super.argument,
   }) : super(
@@ -67,7 +67,7 @@ String _$getUserByIdHash() => r'f119cbbad83c4e27b9fc42506d4da0d04694c09e';
 
 final class GetUserByIdFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<UserModel?>, String> {
-  const GetUserByIdFamily._()
+  GetUserByIdFamily._()
     : super(
         retry: null,
         name: r'getUserByIdProvider',
@@ -84,11 +84,11 @@ final class GetUserByIdFamily extends $Family
 }
 
 @ProviderFor(UserProfile)
-const userProfileProvider = UserProfileFamily._();
+final userProfileProvider = UserProfileFamily._();
 
 final class UserProfileProvider
     extends $AsyncNotifierProvider<UserProfile, UserModel?> {
-  const UserProfileProvider._({
+  UserProfileProvider._({
     required UserProfileFamily super.from,
     required String super.argument,
   }) : super(
@@ -135,7 +135,7 @@ final class UserProfileFamily extends $Family
           FutureOr<UserModel?>,
           String
         > {
-  const UserProfileFamily._()
+  UserProfileFamily._()
     : super(
         retry: null,
         name: r'userProfileProvider',
@@ -159,7 +159,6 @@ abstract class _$UserProfile extends $AsyncNotifier<UserModel?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref = this.ref as $Ref<AsyncValue<UserModel?>, UserModel?>;
     final element =
         ref.element
@@ -169,16 +168,16 @@ abstract class _$UserProfile extends $AsyncNotifier<UserModel?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }
 
 @ProviderFor(UserFavoriteStatus)
-const userFavoriteStatusProvider = UserFavoriteStatusFamily._();
+final userFavoriteStatusProvider = UserFavoriteStatusFamily._();
 
 final class UserFavoriteStatusProvider
     extends $AsyncNotifierProvider<UserFavoriteStatus, bool> {
-  const UserFavoriteStatusProvider._({
+  UserFavoriteStatusProvider._({
     required UserFavoriteStatusFamily super.from,
     required String super.argument,
   }) : super(
@@ -226,7 +225,7 @@ final class UserFavoriteStatusFamily extends $Family
           FutureOr<bool>,
           String
         > {
-  const UserFavoriteStatusFamily._()
+  UserFavoriteStatusFamily._()
     : super(
         retry: null,
         name: r'userFavoriteStatusProvider',
@@ -250,7 +249,6 @@ abstract class _$UserFavoriteStatus extends $AsyncNotifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
@@ -260,16 +258,16 @@ abstract class _$UserFavoriteStatus extends $AsyncNotifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }
 
 @ProviderFor(ProfileVisits)
-const profileVisitsProvider = ProfileVisitsProvider._();
+final profileVisitsProvider = ProfileVisitsProvider._();
 
 final class ProfileVisitsProvider
     extends $AsyncNotifierProvider<ProfileVisits, PaginatedVisitsResponse> {
-  const ProfileVisitsProvider._()
+  ProfileVisitsProvider._()
     : super(
         from: null,
         argument: null,
@@ -295,7 +293,6 @@ abstract class _$ProfileVisits extends $AsyncNotifier<PaginatedVisitsResponse> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -313,16 +310,16 @@ abstract class _$ProfileVisits extends $AsyncNotifier<PaginatedVisitsResponse> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(ProfileVisitors)
-const profileVisitorsProvider = ProfileVisitorsProvider._();
+final profileVisitorsProvider = ProfileVisitorsProvider._();
 
 final class ProfileVisitorsProvider
     extends $AsyncNotifierProvider<ProfileVisitors, PaginatedVisitsResponse> {
-  const ProfileVisitorsProvider._()
+  ProfileVisitorsProvider._()
     : super(
         from: null,
         argument: null,
@@ -349,7 +346,6 @@ abstract class _$ProfileVisitors
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -367,16 +363,16 @@ abstract class _$ProfileVisitors
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(UserBlockList)
-const userBlockListProvider = UserBlockListProvider._();
+final userBlockListProvider = UserBlockListProvider._();
 
 final class UserBlockListProvider
     extends $AsyncNotifierProvider<UserBlockList, List<UserModel?>> {
-  const UserBlockListProvider._()
+  UserBlockListProvider._()
     : super(
         from: null,
         argument: null,
@@ -402,7 +398,6 @@ abstract class _$UserBlockList extends $AsyncNotifier<List<UserModel?>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<AsyncValue<List<UserModel?>>, List<UserModel?>>;
     final element =
@@ -413,16 +408,16 @@ abstract class _$UserBlockList extends $AsyncNotifier<List<UserModel?>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(UserTapList)
-const userTapListProvider = UserTapListFamily._();
+final userTapListProvider = UserTapListFamily._();
 
 final class UserTapListProvider
     extends $AsyncNotifierProvider<UserTapList, List<UserModel?>> {
-  const UserTapListProvider._({
+  UserTapListProvider._({
     required UserTapListFamily super.from,
     required String super.argument,
   }) : super(
@@ -469,7 +464,7 @@ final class UserTapListFamily extends $Family
           FutureOr<List<UserModel?>>,
           String
         > {
-  const UserTapListFamily._()
+  UserTapListFamily._()
     : super(
         retry: null,
         name: r'userTapListProvider',
@@ -493,7 +488,6 @@ abstract class _$UserTapList extends $AsyncNotifier<List<UserModel?>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref =
         this.ref as $Ref<AsyncValue<List<UserModel?>>, List<UserModel?>>;
     final element =
@@ -504,16 +498,16 @@ abstract class _$UserTapList extends $AsyncNotifier<List<UserModel?>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }
 
 @ProviderFor(UserEngagementStatus)
-const userEngagementStatusProvider = UserEngagementStatusFamily._();
+final userEngagementStatusProvider = UserEngagementStatusFamily._();
 
 final class UserEngagementStatusProvider
     extends $AsyncNotifierProvider<UserEngagementStatus, EngagementStatus?> {
-  const UserEngagementStatusProvider._({
+  UserEngagementStatusProvider._({
     required UserEngagementStatusFamily super.from,
     required String super.argument,
   }) : super(
@@ -561,7 +555,7 @@ final class UserEngagementStatusFamily extends $Family
           FutureOr<EngagementStatus?>,
           String
         > {
-  const UserEngagementStatusFamily._()
+  UserEngagementStatusFamily._()
     : super(
         retry: null,
         name: r'userEngagementStatusProvider',
@@ -586,7 +580,6 @@ abstract class _$UserEngagementStatus
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref =
         this.ref as $Ref<AsyncValue<EngagementStatus?>, EngagementStatus?>;
     final element =
@@ -597,6 +590,6 @@ abstract class _$UserEngagementStatus
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }

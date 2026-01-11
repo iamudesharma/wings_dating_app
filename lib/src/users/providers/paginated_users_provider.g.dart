@@ -10,11 +10,11 @@ part of 'paginated_users_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(PaginatedUsers)
-const paginatedUsersProvider = PaginatedUsersFamily._();
+final paginatedUsersProvider = PaginatedUsersFamily._();
 
 final class PaginatedUsersProvider
     extends $NotifierProvider<PaginatedUsers, PaginatedUsersState> {
-  const PaginatedUsersProvider._({
+  PaginatedUsersProvider._({
     required PaginatedUsersFamily super.from,
     required Map<String, dynamic>? super.argument,
   }) : super(
@@ -69,7 +69,7 @@ final class PaginatedUsersFamily extends $Family
           PaginatedUsersState,
           Map<String, dynamic>?
         > {
-  const PaginatedUsersFamily._()
+  PaginatedUsersFamily._()
     : super(
         retry: null,
         name: r'paginatedUsersProvider',
@@ -93,7 +93,6 @@ abstract class _$PaginatedUsers extends $Notifier<PaginatedUsersState> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref = this.ref as $Ref<PaginatedUsersState, PaginatedUsersState>;
     final element =
         ref.element
@@ -103,6 +102,6 @@ abstract class _$PaginatedUsers extends $Notifier<PaginatedUsersState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }

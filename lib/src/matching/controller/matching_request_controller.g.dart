@@ -10,11 +10,11 @@ part of 'matching_request_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(MatchingRequestController)
-const matchingRequestControllerProvider = MatchingRequestControllerProvider._();
+final matchingRequestControllerProvider = MatchingRequestControllerProvider._();
 
 final class MatchingRequestControllerProvider
     extends $NotifierProvider<MatchingRequestController, dynamic> {
-  const MatchingRequestControllerProvider._()
+  MatchingRequestControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -49,7 +49,6 @@ abstract class _$MatchingRequestController extends $Notifier<dynamic> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<dynamic, dynamic>;
     final element =
         ref.element
@@ -59,6 +58,6 @@ abstract class _$MatchingRequestController extends $Notifier<dynamic> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

@@ -10,11 +10,11 @@ part of 'albums_repo.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(SharedAlbum)
-const sharedAlbumProvider = SharedAlbumProvider._();
+final sharedAlbumProvider = SharedAlbumProvider._();
 
 final class SharedAlbumProvider
     extends $AsyncNotifierProvider<SharedAlbum, List<GetMessageResponse>> {
-  const SharedAlbumProvider._()
+  SharedAlbumProvider._()
     : super(
         from: null,
         argument: null,
@@ -40,7 +40,6 @@ abstract class _$SharedAlbum extends $AsyncNotifier<List<GetMessageResponse>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -58,17 +57,17 @@ abstract class _$SharedAlbum extends $AsyncNotifier<List<GetMessageResponse>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(albumsRepo)
-const albumsRepoProvider = AlbumsRepoProvider._();
+final albumsRepoProvider = AlbumsRepoProvider._();
 
 final class AlbumsRepoProvider
     extends $FunctionalProvider<AlbumsRepo, AlbumsRepo, AlbumsRepo>
     with $Provider<AlbumsRepo> {
-  const AlbumsRepoProvider._()
+  AlbumsRepoProvider._()
     : super(
         from: null,
         argument: null,
@@ -104,10 +103,10 @@ final class AlbumsRepoProvider
 String _$albumsRepoHash() => r'2253b26fd278a9aa1b6576aec54b10d044b50124';
 
 @ProviderFor(AlbumClass)
-const albumClassProvider = AlbumClassProvider._();
+final albumClassProvider = AlbumClassProvider._();
 
 final class AlbumClassProvider extends $NotifierProvider<AlbumClass, dynamic> {
-  const AlbumClassProvider._()
+  AlbumClassProvider._()
     : super(
         from: null,
         argument: null,
@@ -141,7 +140,6 @@ abstract class _$AlbumClass extends $Notifier<dynamic> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<dynamic, dynamic>;
     final element =
         ref.element
@@ -151,6 +149,6 @@ abstract class _$AlbumClass extends $Notifier<dynamic> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

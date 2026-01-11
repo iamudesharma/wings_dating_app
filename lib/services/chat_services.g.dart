@@ -10,7 +10,7 @@ part of 'chat_services.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(chatClient)
-const chatClientProvider = ChatClientProvider._();
+final chatClientProvider = ChatClientProvider._();
 
 final class ChatClientProvider
     extends
@@ -20,7 +20,7 @@ final class ChatClientProvider
           StreamChatClient
         >
     with $Provider<StreamChatClient> {
-  const ChatClientProvider._()
+  ChatClientProvider._()
     : super(
         from: null,
         argument: null,

@@ -2,6 +2,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
@@ -29,10 +30,7 @@ import 'package:wings_dating_app/src/profile/add_additional_information_view.dar
 
 @RoutePage()
 class EditProfileView extends ConsumerStatefulWidget {
-  const EditProfileView({
-    super.key,
-    required this.isEditProfile,
-  });
+  const EditProfileView({super.key, required this.isEditProfile});
 
   final bool isEditProfile;
 
@@ -59,16 +57,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     final theme = Theme.of(context);
     return Row(
       children: [
-        if (icon != null)
-          Icon(
-            icon,
-            color: theme.colorScheme.primary,
-          ),
+        if (icon != null) Icon(icon, color: theme.colorScheme.primary),
         if (icon != null) const SizedBox(width: 8),
-        Text(
-          title,
-          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-        ),
+        Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
       ],
     );
   }
@@ -118,14 +109,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
         prefixIcon: icon != null ? Icon(icon, color: theme.colorScheme.primary) : null,
         isDense: true,
       ),
-      items: options
-          .map(
-            (option) => DropdownMenuItem<String>(
-              value: option,
-              child: Text(option),
-            ),
-          )
-          .toList(),
+      items: options.map((option) => DropdownMenuItem<String>(value: option, child: Text(option))).toList(),
       onChanged: onChanged,
     );
     if (width != null) {
@@ -164,10 +148,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                   label: 'Role',
                   value: role,
                   items: Role.values
-                      .map((value) => DropdownMenuItem<Role>(
-                            value: value,
-                            child: Text(value.value),
-                          ))
+                      .map((value) => DropdownMenuItem<Role>(value: value, child: Text(value.value)))
                       .toList(),
                   icon: Icons.person_outline,
                   onChanged: (value) {
@@ -182,10 +163,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                   label: 'Body Type',
                   value: bodyType,
                   items: BodyType.values
-                      .map((value) => DropdownMenuItem<BodyType>(
-                            value: value,
-                            child: Text(value.value),
-                          ))
+                      .map((value) => DropdownMenuItem<BodyType>(value: value, child: Text(value.value)))
                       .toList(),
                   icon: Icons.accessibility_new_outlined,
                   onChanged: (value) {
@@ -200,10 +178,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                   label: 'Relationship Status',
                   value: relationshipStatus,
                   items: RelationshipStatus.values
-                      .map((value) => DropdownMenuItem<RelationshipStatus>(
-                            value: value,
-                            child: Text(value.value),
-                          ))
+                      .map((value) => DropdownMenuItem<RelationshipStatus>(value: value, child: Text(value.value)))
                       .toList(),
                   icon: Icons.favorite_outline,
                   onChanged: (value) {
@@ -218,10 +193,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                   label: 'Ethnicity',
                   value: ethnicity,
                   items: Ethnicity.values
-                      .map((value) => DropdownMenuItem<Ethnicity>(
-                            value: value,
-                            child: Text(value.value),
-                          ))
+                      .map((value) => DropdownMenuItem<Ethnicity>(value: value, child: Text(value.value)))
                       .toList(),
                   icon: Icons.public_outlined,
                   onChanged: (value) {
@@ -236,10 +208,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                   label: 'Looking For',
                   value: lookingFor,
                   items: LookingFor.values
-                      .map((value) => DropdownMenuItem<LookingFor>(
-                            value: value,
-                            child: Text(value.value),
-                          ))
+                      .map((value) => DropdownMenuItem<LookingFor>(value: value, child: Text(value.value)))
                       .toList(),
                   icon: Icons.search_outlined,
                   onChanged: (value) {
@@ -254,10 +223,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                   label: 'Where to Meet',
                   value: whereToMeet,
                   items: WhereToMeet.values
-                      .map((value) => DropdownMenuItem<WhereToMeet>(
-                            value: value,
-                            child: Text(value.value),
-                          ))
+                      .map((value) => DropdownMenuItem<WhereToMeet>(value: value, child: Text(value.value)))
                       .toList(),
                   icon: Icons.place_outlined,
                   onChanged: (value) {
@@ -316,19 +282,13 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
           children: [
             _sectionHeader(context, 'Profile Story', icon: Icons.auto_awesome_outlined),
             const SizedBox(height: 16),
-            SizedBox(
-              width: maxWidth,
-              child: const ProfileCompletionMeter(),
-            ),
+            SizedBox(width: maxWidth, child: const ProfileCompletionMeter()),
             const SizedBox(height: 16),
             Wrap(
               spacing: 16,
               runSpacing: 16,
               children: [
-                SizedBox(
-                  width: columnWidth,
-                  child: const PromptsEditor(),
-                ),
+                SizedBox(width: columnWidth, child: const PromptsEditor()),
                 SizedBox(
                   width: columnWidth,
                   child: ChipsSelector(
@@ -347,14 +307,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                     onToggle: (value) => ref.read(valuesProvider.notifier).toggle(value),
                   ),
                 ),
-                SizedBox(
-                  width: columnWidth,
-                  child: const SocialLinksForm(),
-                ),
-                SizedBox(
-                  width: columnWidth,
-                  child: const VideoClipUploader(),
-                ),
+                SizedBox(width: columnWidth, child: const SocialLinksForm()),
+                SizedBox(width: columnWidth, child: const VideoClipUploader()),
               ],
             ),
           ],
@@ -388,10 +342,12 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
           ref.read(ethnicityProvider.notifier).update(userdata.ethnicity);
           ref.read(lookingForProvider.notifier).update(userdata.lookingFor);
           ref.read(whereToMeetProvider.notifier).update(userdata.whereToMeet);
-          ref.read(heightProvider.notifier).state =
-              (userdata.height?.isNotEmpty ?? false) ? userdata.height! : heightList.first;
-          ref.read(weightProvider.notifier).state =
-              (userdata.weight?.isNotEmpty ?? false) ? userdata.weight! : weightList.first;
+          ref.read(heightProvider.notifier).state = (userdata.height?.isNotEmpty ?? false)
+              ? userdata.height!
+              : heightList.first;
+          ref.read(weightProvider.notifier).state = (userdata.weight?.isNotEmpty ?? false)
+              ? userdata.weight!
+              : weightList.first;
         });
       }
     }
@@ -410,27 +366,25 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
     final double maxWidth = isDesktop
         ? 1040
         : isTablet
-            ? 720
-            : double.infinity;
+        ? 720
+        : double.infinity;
     final double cardPadding = isDesktop
         ? 48
         : isTablet
-            ? 32
-            : 16;
+        ? 32
+        : 16;
     final double imageSize = isDesktop
         ? 120
         : isTablet
-            ? 100
-            : 90;
+        ? 100
+        : 90;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final profile = ref.watch(ProfileController.userControllerProvider);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        title: Text(widget.isEditProfile ? 'Edit Profile' : 'Create Profile'),
-      ),
+      appBar: AppBar(title: Text(widget.isEditProfile ? 'Edit Profile' : 'Create Profile')),
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: maxWidth),
@@ -439,8 +393,8 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
               vertical: isDesktop
                   ? 48
                   : isTablet
-                      ? 32
-                      : 16,
+                  ? 32
+                  : 16,
               horizontal: cardPadding,
             ),
             children: [
@@ -469,10 +423,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                     offset: const Offset(0, 8),
                                   ),
                                 ],
-                                border: Border.all(
-                                  color: Theme.of(context).colorScheme.surface,
-                                  width: 6,
-                                ),
+                                border: Border.all(color: Theme.of(context).colorScheme.surface, width: 6),
                               ),
                               child: CircleAvatar(
                                 radius: imageSize / 2,
@@ -480,13 +431,16 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 backgroundImage: profile.profileImage != null
                                     ? MemoryImage(profile.profileImage!) as ImageProvider<Object>
                                     : (widget.isEditProfile && (profile.userModel?.profileUrl?.isNotEmpty ?? false))
-                                        ? NetworkImage(profile.userModel!.profileUrl!) as ImageProvider<Object>
-                                        : null,
-                                child: (profile.profileImage == null &&
+                                    ? NetworkImage(profile.userModel!.profileUrl!) as ImageProvider<Object>
+                                    : null,
+                                child:
+                                    (profile.profileImage == null &&
                                         (!widget.isEditProfile || (profile.userModel?.profileUrl?.isEmpty ?? true)))
-                                    ? Icon(Icons.person,
+                                    ? Icon(
+                                        Icons.person,
                                         size: imageSize / 2,
-                                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))
+                                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                      )
                                     : null,
                               ),
                             ),
@@ -498,31 +452,42 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(24),
                                   onTap: () async {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      builder: (context) {
-                                        return ImagePickerWidget(
-                                          camera: () async {
-                                            setState(() {
-                                              isImageUpdate = true;
-                                            });
-                                            await ref
-                                                .read(ProfileController.userControllerProvider)
-                                                .pickImage(imageSource: ImageSource.camera);
-                                            Navigator.pop(context);
-                                          },
-                                          gallery: () async {
-                                            setState(() {
-                                              isImageUpdate = true;
-                                            });
-                                            await ref
-                                                .read(ProfileController.userControllerProvider)
-                                                .pickImage(imageSource: ImageSource.gallery);
-                                            Navigator.pop(context);
-                                          },
-                                        );
-                                      },
-                                    );
+                                    // On web, directly open file picker (no camera support)
+                                    if (kIsWeb) {
+                                      setState(() {
+                                        isImageUpdate = true;
+                                      });
+                                      await ref
+                                          .read(ProfileController.userControllerProvider.notifier)
+                                          .pickImage(imageSource: ImageSource.gallery);
+                                    } else {
+                                      // On mobile, show modal with camera/gallery options
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) {
+                                          return ImagePickerWidget(
+                                            camera: () async {
+                                              setState(() {
+                                                isImageUpdate = true;
+                                              });
+                                              await ref
+                                                  .read(ProfileController.userControllerProvider.notifier)
+                                                  .pickImage(imageSource: ImageSource.camera);
+                                              Navigator.pop(context);
+                                            },
+                                            gallery: () async {
+                                              setState(() {
+                                                isImageUpdate = true;
+                                              });
+                                              await ref
+                                                  .read(ProfileController.userControllerProvider.notifier)
+                                                  .pickImage(imageSource: ImageSource.gallery);
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        },
+                                      );
+                                    }
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.all(8),
@@ -537,8 +502,11 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                         ),
                                       ],
                                     ),
-                                    child: Icon(Icons.edit,
-                                        color: Theme.of(context).colorScheme.onSecondaryContainer, size: 22),
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                      size: 22,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -616,11 +584,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                             child: FilledButton.tonalIcon(
                               icon: const Icon(Icons.add),
                               onPressed: () async {
-                                await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => const AddAdditionalInformationView(),
-                                  ),
-                                );
+                                await Navigator.of(
+                                  context,
+                                ).push(MaterialPageRoute(builder: (_) => const AddAdditionalInformationView()));
                               },
                               label: const Text("Add Additional Information"),
                             ),
@@ -654,8 +620,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       }
                                       final data = await Geolocator.getCurrentPosition();
                                       final myLocation = GeoFirePoint(GeoPoint(data.latitude, data.longitude));
-                                      final profileNotifier =
-                                          ref.read(ProfileController.userControllerProvider.notifier);
+                                      final profileNotifier = ref.read(
+                                        ProfileController.userControllerProvider.notifier,
+                                      );
                                       final userdata = ref.read(ProfileController.userControllerProvider).userModel;
 
                                       final updatedRole = ref.read(roleProvider);
@@ -668,10 +635,28 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       final updatedWeight = ref.read(weightProvider);
                                       final updatedHabits = ref.read(habitsProvider);
                                       final updatedValues = ref.read(valuesProvider);
-                                      final uploadedProfileUrl =
-                                          isImageUpdate ? await profileNotifier.uploadImage() : null;
 
-                                      await ref.read(Dependency.profileProvider).updateUserDoc(
+                                      String? uploadedProfileUrl;
+                                      if (isImageUpdate) {
+                                        uploadedProfileUrl = await profileNotifier.uploadImage();
+                                        if (uploadedProfileUrl != null) {
+                                          // Upload to verification queue instead of directly updating profile
+                                          await profileNotifier.uploadProfilePicture(uploadedProfileUrl);
+                                          // Show notification that picture is pending verification
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(
+                                                content: Text('Profile picture submitted for admin verification'),
+                                                duration: Duration(seconds: 3),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      }
+
+                                      await ref
+                                          .read(Dependency.profileProvider)
+                                          .updateUserDoc(
                                             userdata!.copyWith(
                                               bio: _bioController.text,
                                               username: _usernameController.text,
@@ -684,19 +669,16 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                               height: updatedHeight,
                                               weight: updatedWeight,
                                               position: GeoPointData(
-                                                geopoint: [
-                                                  myLocation.geopoint.longitude,
-                                                  myLocation.geopoint.latitude,
-                                                ],
+                                                geopoint: [myLocation.geopoint.longitude, myLocation.geopoint.latitude],
                                               ),
-                                              profileUrl: uploadedProfileUrl ?? userdata.profileUrl,
+                                              // Don't update profileUrl directly - it gets updated when admin approves
+                                              profileUrl: userdata.profileUrl,
                                             ),
                                           );
                                       // Save onboarding extras (stored separately from UserModel)
-                                      await ref.read(profileExtrasApiRepoProvider).saveAll(
-                                            habits: updatedHabits,
-                                            values: updatedValues,
-                                          );
+                                      await ref
+                                          .read(profileExtrasApiRepoProvider)
+                                          .saveAll(habits: updatedHabits, values: updatedValues);
                                       await profileNotifier.getCurrentUser();
 
                                       if (!mounted) return;
@@ -704,9 +686,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                         _loading = false;
                                         isImageUpdate = false;
                                       });
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Profile updated')),
-                                      );
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(const SnackBar(content: Text('Profile updated')));
                                       if (Navigator.of(context).canPop()) {
                                         Navigator.of(context).pop();
                                       }
@@ -715,9 +697,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       logger.e('Update failed: $e', stackTrace: st);
                                       if (mounted) {
                                         setState(() => _loading = false);
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(content: Text('Failed to update profile')),
-                                        );
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(const SnackBar(content: Text('Failed to update profile')));
                                       }
                                       return;
                                     }
@@ -795,10 +777,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       height: height,
                                       weight: weight,
                                       position: GeoPointData(
-                                        geopoint: [
-                                          myLocation.geopoint.longitude,
-                                          myLocation.geopoint.latitude,
-                                        ],
+                                        geopoint: [myLocation.geopoint.longitude, myLocation.geopoint.latitude],
                                       ),
                                     );
 
@@ -806,11 +785,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 
                                     if (!mounted) return;
                                     // After creating profile, take user to onboarding flow
-                                    Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                        builder: (_) => const ProfileOnboardingView(),
-                                      ),
-                                    );
+                                    Navigator.of(
+                                      context,
+                                    ).pushReplacement(MaterialPageRoute(builder: (_) => const ProfileOnboardingView()));
                                   } catch (e, st) {
                                     logger.e('Create failed: $e', stackTrace: st);
                                     _bioController.clear();
@@ -821,9 +798,9 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
                                       setState(() {
                                         _loading = false;
                                       });
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Failed to create profile')),
-                                      );
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(const SnackBar(content: Text('Failed to create profile')));
                                     }
                                   }
                                 },
@@ -847,12 +824,7 @@ class _EditProfileViewState extends ConsumerState<EditProfileView> {
 }
 
 class ImagePickerWidget extends StatelessWidget {
-  const ImagePickerWidget({
-    super.key,
-    required this.camera,
-    required this.gallery,
-    this.isCallEnabled = false,
-  });
+  const ImagePickerWidget({super.key, required this.camera, required this.gallery, this.isCallEnabled = false});
 
   final VoidCallback camera;
   final VoidCallback gallery;
@@ -864,16 +836,8 @@ class ImagePickerWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          ListTile(
-            leading: Icon(Icons.camera_alt),
-            title: const Text("Camera"),
-            onTap: camera,
-          ),
-          ListTile(
-            leading: Icon(Icons.photo_album),
-            title: const Text("Gallery"),
-            onTap: gallery,
-          ),
+          ListTile(leading: Icon(Icons.camera_alt), title: const Text("Camera"), onTap: camera),
+          ListTile(leading: Icon(Icons.photo_album), title: const Text("Gallery"), onTap: gallery),
         ],
       ),
     );

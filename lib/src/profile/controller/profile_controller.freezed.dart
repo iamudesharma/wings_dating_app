@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProfileState {
 
- UserModel? get userModel; Uint8List? get profileImage; List<String> get albumImages; bool get isLoading; String? get error;
+ UserModel? get userModel; Uint8List? get profileImage; List<String> get albumImages; bool get isLoading; String? get error; String? get profilePictureStatus; bool get hasPendingProfilePicture;
 /// Create a copy of ProfileState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ProfileStateCopyWith<ProfileState> get copyWith => _$ProfileStateCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileState&&(identical(other.userModel, userModel) || other.userModel == userModel)&&const DeepCollectionEquality().equals(other.profileImage, profileImage)&&const DeepCollectionEquality().equals(other.albumImages, albumImages)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileState&&(identical(other.userModel, userModel) || other.userModel == userModel)&&const DeepCollectionEquality().equals(other.profileImage, profileImage)&&const DeepCollectionEquality().equals(other.albumImages, albumImages)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error)&&(identical(other.profilePictureStatus, profilePictureStatus) || other.profilePictureStatus == profilePictureStatus)&&(identical(other.hasPendingProfilePicture, hasPendingProfilePicture) || other.hasPendingProfilePicture == hasPendingProfilePicture));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userModel,const DeepCollectionEquality().hash(profileImage),const DeepCollectionEquality().hash(albumImages),isLoading,error);
+int get hashCode => Object.hash(runtimeType,userModel,const DeepCollectionEquality().hash(profileImage),const DeepCollectionEquality().hash(albumImages),isLoading,error,profilePictureStatus,hasPendingProfilePicture);
 
 @override
 String toString() {
-  return 'ProfileState(userModel: $userModel, profileImage: $profileImage, albumImages: $albumImages, isLoading: $isLoading, error: $error)';
+  return 'ProfileState(userModel: $userModel, profileImage: $profileImage, albumImages: $albumImages, isLoading: $isLoading, error: $error, profilePictureStatus: $profilePictureStatus, hasPendingProfilePicture: $hasPendingProfilePicture)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ProfileStateCopyWith<$Res>  {
   factory $ProfileStateCopyWith(ProfileState value, $Res Function(ProfileState) _then) = _$ProfileStateCopyWithImpl;
 @useResult
 $Res call({
- UserModel? userModel, Uint8List? profileImage, List<String> albumImages, bool isLoading, String? error
+ UserModel? userModel, Uint8List? profileImage, List<String> albumImages, bool isLoading, String? error, String? profilePictureStatus, bool hasPendingProfilePicture
 });
 
 
@@ -62,14 +62,16 @@ class _$ProfileStateCopyWithImpl<$Res>
 
 /// Create a copy of ProfileState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userModel = freezed,Object? profileImage = freezed,Object? albumImages = null,Object? isLoading = null,Object? error = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userModel = freezed,Object? profileImage = freezed,Object? albumImages = null,Object? isLoading = null,Object? error = freezed,Object? profilePictureStatus = freezed,Object? hasPendingProfilePicture = null,}) {
   return _then(_self.copyWith(
 userModel: freezed == userModel ? _self.userModel : userModel // ignore: cast_nullable_to_non_nullable
 as UserModel?,profileImage: freezed == profileImage ? _self.profileImage : profileImage // ignore: cast_nullable_to_non_nullable
 as Uint8List?,albumImages: null == albumImages ? _self.albumImages : albumImages // ignore: cast_nullable_to_non_nullable
 as List<String>,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,profilePictureStatus: freezed == profilePictureStatus ? _self.profilePictureStatus : profilePictureStatus // ignore: cast_nullable_to_non_nullable
+as String?,hasPendingProfilePicture: null == hasPendingProfilePicture ? _self.hasPendingProfilePicture : hasPendingProfilePicture // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of ProfileState
@@ -166,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( UserModel? userModel,  Uint8List? profileImage,  List<String> albumImages,  bool isLoading,  String? error)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( UserModel? userModel,  Uint8List? profileImage,  List<String> albumImages,  bool isLoading,  String? error,  String? profilePictureStatus,  bool hasPendingProfilePicture)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProfileState() when $default != null:
-return $default(_that.userModel,_that.profileImage,_that.albumImages,_that.isLoading,_that.error);case _:
+return $default(_that.userModel,_that.profileImage,_that.albumImages,_that.isLoading,_that.error,_that.profilePictureStatus,_that.hasPendingProfilePicture);case _:
   return orElse();
 
 }
@@ -187,10 +189,10 @@ return $default(_that.userModel,_that.profileImage,_that.albumImages,_that.isLoa
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( UserModel? userModel,  Uint8List? profileImage,  List<String> albumImages,  bool isLoading,  String? error)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( UserModel? userModel,  Uint8List? profileImage,  List<String> albumImages,  bool isLoading,  String? error,  String? profilePictureStatus,  bool hasPendingProfilePicture)  $default,) {final _that = this;
 switch (_that) {
 case _ProfileState():
-return $default(_that.userModel,_that.profileImage,_that.albumImages,_that.isLoading,_that.error);case _:
+return $default(_that.userModel,_that.profileImage,_that.albumImages,_that.isLoading,_that.error,_that.profilePictureStatus,_that.hasPendingProfilePicture);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +209,10 @@ return $default(_that.userModel,_that.profileImage,_that.albumImages,_that.isLoa
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( UserModel? userModel,  Uint8List? profileImage,  List<String> albumImages,  bool isLoading,  String? error)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( UserModel? userModel,  Uint8List? profileImage,  List<String> albumImages,  bool isLoading,  String? error,  String? profilePictureStatus,  bool hasPendingProfilePicture)?  $default,) {final _that = this;
 switch (_that) {
 case _ProfileState() when $default != null:
-return $default(_that.userModel,_that.profileImage,_that.albumImages,_that.isLoading,_that.error);case _:
+return $default(_that.userModel,_that.profileImage,_that.albumImages,_that.isLoading,_that.error,_that.profilePictureStatus,_that.hasPendingProfilePicture);case _:
   return null;
 
 }
@@ -222,7 +224,7 @@ return $default(_that.userModel,_that.profileImage,_that.albumImages,_that.isLoa
 
 
 class _ProfileState implements ProfileState {
-  const _ProfileState({this.userModel = null, this.profileImage = null, final  List<String> albumImages = const [], this.isLoading = false, this.error = null}): _albumImages = albumImages;
+  const _ProfileState({this.userModel = null, this.profileImage = null, final  List<String> albumImages = const [], this.isLoading = false, this.error = null, this.profilePictureStatus = null, this.hasPendingProfilePicture = false}): _albumImages = albumImages;
   
 
 @override@JsonKey() final  UserModel? userModel;
@@ -236,6 +238,8 @@ class _ProfileState implements ProfileState {
 
 @override@JsonKey() final  bool isLoading;
 @override@JsonKey() final  String? error;
+@override@JsonKey() final  String? profilePictureStatus;
+@override@JsonKey() final  bool hasPendingProfilePicture;
 
 /// Create a copy of ProfileState
 /// with the given fields replaced by the non-null parameter values.
@@ -247,16 +251,16 @@ _$ProfileStateCopyWith<_ProfileState> get copyWith => __$ProfileStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfileState&&(identical(other.userModel, userModel) || other.userModel == userModel)&&const DeepCollectionEquality().equals(other.profileImage, profileImage)&&const DeepCollectionEquality().equals(other._albumImages, _albumImages)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfileState&&(identical(other.userModel, userModel) || other.userModel == userModel)&&const DeepCollectionEquality().equals(other.profileImage, profileImage)&&const DeepCollectionEquality().equals(other._albumImages, _albumImages)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error)&&(identical(other.profilePictureStatus, profilePictureStatus) || other.profilePictureStatus == profilePictureStatus)&&(identical(other.hasPendingProfilePicture, hasPendingProfilePicture) || other.hasPendingProfilePicture == hasPendingProfilePicture));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userModel,const DeepCollectionEquality().hash(profileImage),const DeepCollectionEquality().hash(_albumImages),isLoading,error);
+int get hashCode => Object.hash(runtimeType,userModel,const DeepCollectionEquality().hash(profileImage),const DeepCollectionEquality().hash(_albumImages),isLoading,error,profilePictureStatus,hasPendingProfilePicture);
 
 @override
 String toString() {
-  return 'ProfileState(userModel: $userModel, profileImage: $profileImage, albumImages: $albumImages, isLoading: $isLoading, error: $error)';
+  return 'ProfileState(userModel: $userModel, profileImage: $profileImage, albumImages: $albumImages, isLoading: $isLoading, error: $error, profilePictureStatus: $profilePictureStatus, hasPendingProfilePicture: $hasPendingProfilePicture)';
 }
 
 
@@ -267,7 +271,7 @@ abstract mixin class _$ProfileStateCopyWith<$Res> implements $ProfileStateCopyWi
   factory _$ProfileStateCopyWith(_ProfileState value, $Res Function(_ProfileState) _then) = __$ProfileStateCopyWithImpl;
 @override @useResult
 $Res call({
- UserModel? userModel, Uint8List? profileImage, List<String> albumImages, bool isLoading, String? error
+ UserModel? userModel, Uint8List? profileImage, List<String> albumImages, bool isLoading, String? error, String? profilePictureStatus, bool hasPendingProfilePicture
 });
 
 
@@ -284,14 +288,16 @@ class __$ProfileStateCopyWithImpl<$Res>
 
 /// Create a copy of ProfileState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userModel = freezed,Object? profileImage = freezed,Object? albumImages = null,Object? isLoading = null,Object? error = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userModel = freezed,Object? profileImage = freezed,Object? albumImages = null,Object? isLoading = null,Object? error = freezed,Object? profilePictureStatus = freezed,Object? hasPendingProfilePicture = null,}) {
   return _then(_ProfileState(
 userModel: freezed == userModel ? _self.userModel : userModel // ignore: cast_nullable_to_non_nullable
 as UserModel?,profileImage: freezed == profileImage ? _self.profileImage : profileImage // ignore: cast_nullable_to_non_nullable
 as Uint8List?,albumImages: null == albumImages ? _self._albumImages : albumImages // ignore: cast_nullable_to_non_nullable
 as List<String>,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,profilePictureStatus: freezed == profilePictureStatus ? _self.profilePictureStatus : profilePictureStatus // ignore: cast_nullable_to_non_nullable
+as String?,hasPendingProfilePicture: null == hasPendingProfilePicture ? _self.hasPendingProfilePicture : hasPendingProfilePicture // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

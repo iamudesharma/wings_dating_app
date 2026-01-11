@@ -10,7 +10,7 @@ part of 'onboarding_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(sharedPrefs)
-const sharedPrefsProvider = SharedPrefsProvider._();
+final sharedPrefsProvider = SharedPrefsProvider._();
 
 final class SharedPrefsProvider
     extends
@@ -22,7 +22,7 @@ final class SharedPrefsProvider
     with
         $FutureModifier<SharedPreferences>,
         $FutureProvider<SharedPreferences> {
-  const SharedPrefsProvider._()
+  SharedPrefsProvider._()
     : super(
         from: null,
         argument: null,
@@ -48,14 +48,14 @@ final class SharedPrefsProvider
   }
 }
 
-String _$sharedPrefsHash() => r'b96dfa2fa6cbae073c31860457b07bacd49ab6c1';
+String _$sharedPrefsHash() => r'9c7014d33364649094e9a05f9400a2a1679d827a';
 
 @ProviderFor(OnboardingSkip)
-const onboardingSkipProvider = OnboardingSkipProvider._();
+final onboardingSkipProvider = OnboardingSkipProvider._();
 
 final class OnboardingSkipProvider
     extends $NotifierProvider<OnboardingSkip, bool> {
-  const OnboardingSkipProvider._()
+  OnboardingSkipProvider._()
     : super(
         from: null,
         argument: null,
@@ -89,7 +89,6 @@ abstract class _$OnboardingSkip extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -99,6 +98,6 @@ abstract class _$OnboardingSkip extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

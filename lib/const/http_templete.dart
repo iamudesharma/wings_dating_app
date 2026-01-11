@@ -12,13 +12,14 @@ class HttpTemplate {
     String? baseUrl,
     this.defaultHeaders = const {'Content-Type': 'application/json'},
     this.timeout = const Duration(seconds: 10),
-  }) : baseUrl = baseUrl ??
-            (
-                // Platform.isAndroid ?
-                "http://192.168.1.5:3000"
-            //  :
-            //  "http://localhost:3000"
-            );
+  }) : baseUrl =
+           baseUrl ??
+           (
+           // Platform.isAndroid ?
+           "http://192.168.1.8:3000"
+           //  :
+           //  "http://localhost:3000"
+           );
 
   Future<Map<String, dynamic>> get(String endpoint) async {
     logger.i('GET request to $baseUrl$endpoint');
@@ -40,11 +41,7 @@ class HttpTemplate {
     return _makeRequest('DELETE', endpoint);
   }
 
-  Future<Map<String, dynamic>> _makeRequest(
-    String method,
-    String endpoint, {
-    Map<String, dynamic>? body,
-  }) async {
+  Future<Map<String, dynamic>> _makeRequest(String method, String endpoint, {Map<String, dynamic>? body}) async {
     final url = Uri.parse('$baseUrl$endpoint');
     try {
       late http.Response response;

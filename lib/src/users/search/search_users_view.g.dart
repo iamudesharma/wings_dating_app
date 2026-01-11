@@ -10,11 +10,11 @@ part of 'search_users_view.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(SearchUser)
-const searchUserProvider = SearchUserProvider._();
+final searchUserProvider = SearchUserProvider._();
 
 final class SearchUserProvider
     extends $AsyncNotifierProvider<SearchUser, List<UserModel?>?> {
-  const SearchUserProvider._()
+  SearchUserProvider._()
     : super(
         from: null,
         argument: null,
@@ -40,7 +40,6 @@ abstract class _$SearchUser extends $AsyncNotifier<List<UserModel?>?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref as $Ref<AsyncValue<List<UserModel?>?>, List<UserModel?>?>;
     final element =
@@ -51,6 +50,6 @@ abstract class _$SearchUser extends $AsyncNotifier<List<UserModel?>?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

@@ -29,6 +29,8 @@ abstract class ProfileState with _$ProfileState {
     @Default([]) List<String> albumImages,
     @Default(false) bool isLoading,
     @Default(null) String? error,
+    @Default(null) String? profilePictureStatus,
+    @Default(false) bool hasPendingProfilePicture,
   }) = _ProfileState;
 }
 
@@ -144,6 +146,33 @@ class ProfileController extends _$ProfileController {
   Future<List<VisitRecord>> getProfileVisitors() async {
     final response = await ref.read(Dependency.profileProvider).getProfileVisitors();
     return response.visits;
+  }
+
+  /// Upload a new profile picture for admin verification
+  Future<void> uploadProfilePicture(String photoUrl) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      await ref.read(Dependency.profileProvider).uploadProfilePicture(photoUrl);
+      // Refresh status after upload
+      await checkProfilePictureStatus();
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      state = state.copyWith(error: e.toString(), isLoading: false);
+      rethrow;
+    }
+  }
+
+  /// Check profile picture verification status
+  Future<void> checkProfilePictureStatus() async {
+    try {
+      final response = await ref.read(Dependency.profileProvider).getProfilePictureStatus();
+      state = state.copyWith(
+        profilePictureStatus: response['pendingStatus'],
+        hasPendingProfilePicture: response['hasPendingPicture'] ?? false,
+      );
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+    }
   }
 
   Future<void> logout() async {

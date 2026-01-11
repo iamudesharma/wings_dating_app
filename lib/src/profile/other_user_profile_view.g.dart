@@ -10,19 +10,17 @@ part of 'other_user_profile_view.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(Fav)
-const favProvider = FavFamily._();
+final favProvider = FavFamily._();
 
 final class FavProvider extends $AsyncNotifierProvider<Fav, bool> {
-  const FavProvider._({
-    required FavFamily super.from,
-    required String super.argument,
-  }) : super(
-         retry: null,
-         name: r'favProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
+  FavProvider._({required FavFamily super.from, required String super.argument})
+    : super(
+        retry: null,
+        name: r'favProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$favHash();
@@ -60,7 +58,7 @@ final class FavFamily extends $Family
           FutureOr<bool>,
           String
         > {
-  const FavFamily._()
+  FavFamily._()
     : super(
         retry: null,
         name: r'favProvider',
@@ -83,7 +81,6 @@ abstract class _$Fav extends $AsyncNotifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
@@ -93,6 +90,6 @@ abstract class _$Fav extends $AsyncNotifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }

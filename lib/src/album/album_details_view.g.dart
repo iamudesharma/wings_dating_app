@@ -10,11 +10,11 @@ part of 'album_details_view.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(AlbumDetails)
-const albumDetailsProvider = AlbumDetailsFamily._();
+final albumDetailsProvider = AlbumDetailsFamily._();
 
 final class AlbumDetailsProvider
     extends $AsyncNotifierProvider<AlbumDetails, UserAlbumModel> {
-  const AlbumDetailsProvider._({
+  AlbumDetailsProvider._({
     required AlbumDetailsFamily super.from,
     required String super.argument,
   }) : super(
@@ -61,7 +61,7 @@ final class AlbumDetailsFamily extends $Family
           FutureOr<UserAlbumModel>,
           String
         > {
-  const AlbumDetailsFamily._()
+  AlbumDetailsFamily._()
     : super(
         retry: null,
         name: r'albumDetailsProvider',
@@ -85,7 +85,6 @@ abstract class _$AlbumDetails extends $AsyncNotifier<UserAlbumModel> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref = this.ref as $Ref<AsyncValue<UserAlbumModel>, UserAlbumModel>;
     final element =
         ref.element
@@ -95,6 +94,6 @@ abstract class _$AlbumDetails extends $AsyncNotifier<UserAlbumModel> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }

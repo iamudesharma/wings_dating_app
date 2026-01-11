@@ -10,11 +10,11 @@ part of 'filters_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(UserFilters)
-const userFiltersProvider = UserFiltersProvider._();
+final userFiltersProvider = UserFiltersProvider._();
 
 final class UserFiltersProvider
     extends $NotifierProvider<UserFilters, FiltersModel> {
-  const UserFiltersProvider._()
+  UserFiltersProvider._()
     : super(
         from: null,
         argument: null,
@@ -48,7 +48,6 @@ abstract class _$UserFilters extends $Notifier<FiltersModel> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<FiltersModel, FiltersModel>;
     final element =
         ref.element
@@ -58,17 +57,17 @@ abstract class _$UserFilters extends $Notifier<FiltersModel> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(positions)
-const positionsProvider = PositionsProvider._();
+final positionsProvider = PositionsProvider._();
 
 final class PositionsProvider
     extends $FunctionalProvider<List<String>, List<String>, List<String>>
     with $Provider<List<String>> {
-  const PositionsProvider._()
+  PositionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -104,12 +103,12 @@ final class PositionsProvider
 String _$positionsHash() => r'9ebf128cddd088581f6c19a9c83d7aeaff3cbb72';
 
 @ProviderFor(ageRanges)
-const ageRangesProvider = AgeRangesProvider._();
+final ageRangesProvider = AgeRangesProvider._();
 
 final class AgeRangesProvider
     extends $FunctionalProvider<List<String>, List<String>, List<String>>
     with $Provider<List<String>> {
-  const AgeRangesProvider._()
+  AgeRangesProvider._()
     : super(
         from: null,
         argument: null,
@@ -145,12 +144,12 @@ final class AgeRangesProvider
 String _$ageRangesHash() => r'fc82a83613f84a2ce8ef5269dc77eabd6065e76e';
 
 @ProviderFor(lastSeenOptions)
-const lastSeenOptionsProvider = LastSeenOptionsProvider._();
+final lastSeenOptionsProvider = LastSeenOptionsProvider._();
 
 final class LastSeenOptionsProvider
     extends $FunctionalProvider<List<String>, List<String>, List<String>>
     with $Provider<List<String>> {
-  const LastSeenOptionsProvider._()
+  LastSeenOptionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -186,12 +185,12 @@ final class LastSeenOptionsProvider
 String _$lastSeenOptionsHash() => r'c1ce7f654660cd27cf5565b676c842f2f66e52f5';
 
 @ProviderFor(interestOptions)
-const interestOptionsProvider = InterestOptionsProvider._();
+final interestOptionsProvider = InterestOptionsProvider._();
 
 final class InterestOptionsProvider
     extends $FunctionalProvider<List<String>, List<String>, List<String>>
     with $Provider<List<String>> {
-  const InterestOptionsProvider._()
+  InterestOptionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -227,12 +226,12 @@ final class InterestOptionsProvider
 String _$interestOptionsHash() => r'00470885f031f43c560d441e4a23165490d69543';
 
 @ProviderFor(heightRanges)
-const heightRangesProvider = HeightRangesProvider._();
+final heightRangesProvider = HeightRangesProvider._();
 
 final class HeightRangesProvider
     extends $FunctionalProvider<List<String>, List<String>, List<String>>
     with $Provider<List<String>> {
-  const HeightRangesProvider._()
+  HeightRangesProvider._()
     : super(
         from: null,
         argument: null,
@@ -268,12 +267,12 @@ final class HeightRangesProvider
 String _$heightRangesHash() => r'435c8c340d88de7e43650e3ab2c37cca82e3c5a0';
 
 @ProviderFor(weightRanges)
-const weightRangesProvider = WeightRangesProvider._();
+final weightRangesProvider = WeightRangesProvider._();
 
 final class WeightRangesProvider
     extends $FunctionalProvider<List<String>, List<String>, List<String>>
     with $Provider<List<String>> {
-  const WeightRangesProvider._()
+  WeightRangesProvider._()
     : super(
         from: null,
         argument: null,
@@ -309,12 +308,12 @@ final class WeightRangesProvider
 String _$weightRangesHash() => r'20af1876aac5bfc74e4a3eb9b9796c17aaffcb40';
 
 @ProviderFor(languageOptions)
-const languageOptionsProvider = LanguageOptionsProvider._();
+final languageOptionsProvider = LanguageOptionsProvider._();
 
 final class LanguageOptionsProvider
     extends $FunctionalProvider<List<String>, List<String>, List<String>>
     with $Provider<List<String>> {
-  const LanguageOptionsProvider._()
+  LanguageOptionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -350,12 +349,12 @@ final class LanguageOptionsProvider
 String _$languageOptionsHash() => r'3581d62666ee9e4c5df5b261377aee5e7078d71b';
 
 @ProviderFor(hasActiveFilters)
-const hasActiveFiltersProvider = HasActiveFiltersProvider._();
+final hasActiveFiltersProvider = HasActiveFiltersProvider._();
 
 final class HasActiveFiltersProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  const HasActiveFiltersProvider._()
+  HasActiveFiltersProvider._()
     : super(
         from: null,
         argument: null,
@@ -391,12 +390,12 @@ final class HasActiveFiltersProvider
 String _$hasActiveFiltersHash() => r'4fb53fc963f3e9fff6337e42a6539ab2584e84fd';
 
 @ProviderFor(activeFiltersCount)
-const activeFiltersCountProvider = ActiveFiltersCountProvider._();
+final activeFiltersCountProvider = ActiveFiltersCountProvider._();
 
 final class ActiveFiltersCountProvider
     extends $FunctionalProvider<int, int, int>
     with $Provider<int> {
-  const ActiveFiltersCountProvider._()
+  ActiveFiltersCountProvider._()
     : super(
         from: null,
         argument: null,
@@ -433,12 +432,12 @@ String _$activeFiltersCountHash() =>
     r'fe2f7718e298bb4e463ed56573532b8bfafed2f3';
 
 @ProviderFor(filtersDisplayText)
-const filtersDisplayTextProvider = FiltersDisplayTextProvider._();
+final filtersDisplayTextProvider = FiltersDisplayTextProvider._();
 
 final class FiltersDisplayTextProvider
     extends $FunctionalProvider<String, String, String>
     with $Provider<String> {
-  const FiltersDisplayTextProvider._()
+  FiltersDisplayTextProvider._()
     : super(
         from: null,
         argument: null,
@@ -475,13 +474,13 @@ String _$filtersDisplayTextHash() =>
     r'6fea178c0a8cb61ed8103d0ede38a1943376d31b';
 
 @ProviderFor(isValidFilterConfiguration)
-const isValidFilterConfigurationProvider =
+final isValidFilterConfigurationProvider =
     IsValidFilterConfigurationProvider._();
 
 final class IsValidFilterConfigurationProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  const IsValidFilterConfigurationProvider._()
+  IsValidFilterConfigurationProvider._()
     : super(
         from: null,
         argument: null,
@@ -518,7 +517,7 @@ String _$isValidFilterConfigurationHash() =>
     r'd6c6b816e689f3d36dd0a12fac4dcd5bbe242277';
 
 @ProviderFor(formattedFiltersSummary)
-const formattedFiltersSummaryProvider = FormattedFiltersSummaryProvider._();
+final formattedFiltersSummaryProvider = FormattedFiltersSummaryProvider._();
 
 final class FormattedFiltersSummaryProvider
     extends
@@ -528,7 +527,7 @@ final class FormattedFiltersSummaryProvider
           Map<String, String>
         >
     with $Provider<Map<String, String>> {
-  const FormattedFiltersSummaryProvider._()
+  FormattedFiltersSummaryProvider._()
     : super(
         from: null,
         argument: null,
@@ -566,12 +565,12 @@ String _$formattedFiltersSummaryHash() =>
     r'bd3713c1b2d8b8c74baca1a5a50791acd98934a3';
 
 @ProviderFor(hasLocationFilters)
-const hasLocationFiltersProvider = HasLocationFiltersProvider._();
+final hasLocationFiltersProvider = HasLocationFiltersProvider._();
 
 final class HasLocationFiltersProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  const HasLocationFiltersProvider._()
+  HasLocationFiltersProvider._()
     : super(
         from: null,
         argument: null,
@@ -608,12 +607,12 @@ String _$hasLocationFiltersHash() =>
     r'3667a7b26581f32cec0f24da6938e9a61023c63c';
 
 @ProviderFor(hasPhysicalFilters)
-const hasPhysicalFiltersProvider = HasPhysicalFiltersProvider._();
+final hasPhysicalFiltersProvider = HasPhysicalFiltersProvider._();
 
 final class HasPhysicalFiltersProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  const HasPhysicalFiltersProvider._()
+  HasPhysicalFiltersProvider._()
     : super(
         from: null,
         argument: null,
@@ -650,12 +649,12 @@ String _$hasPhysicalFiltersHash() =>
     r'c1041a5b9b033b6f5fabbc6279736919771013d4';
 
 @ProviderFor(hasPreferenceFilters)
-const hasPreferenceFiltersProvider = HasPreferenceFiltersProvider._();
+final hasPreferenceFiltersProvider = HasPreferenceFiltersProvider._();
 
 final class HasPreferenceFiltersProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  const HasPreferenceFiltersProvider._()
+  HasPreferenceFiltersProvider._()
     : super(
         from: null,
         argument: null,
@@ -692,11 +691,11 @@ String _$hasPreferenceFiltersHash() =>
     r'4acbe64144a208caf477769d04ac01f93fb3cb03';
 
 @ProviderFor(FiltersPersistence)
-const filtersPersistenceProvider = FiltersPersistenceProvider._();
+final filtersPersistenceProvider = FiltersPersistenceProvider._();
 
 final class FiltersPersistenceProvider
     extends $NotifierProvider<FiltersPersistence, bool> {
-  const FiltersPersistenceProvider._()
+  FiltersPersistenceProvider._()
     : super(
         from: null,
         argument: null,
@@ -731,7 +730,6 @@ abstract class _$FiltersPersistence extends $Notifier<bool> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -741,16 +739,16 @@ abstract class _$FiltersPersistence extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(FiltersAnalytics)
-const filtersAnalyticsProvider = FiltersAnalyticsProvider._();
+final filtersAnalyticsProvider = FiltersAnalyticsProvider._();
 
 final class FiltersAnalyticsProvider
     extends $NotifierProvider<FiltersAnalytics, Map<String, int>> {
-  const FiltersAnalyticsProvider._()
+  FiltersAnalyticsProvider._()
     : super(
         from: null,
         argument: null,
@@ -784,7 +782,6 @@ abstract class _$FiltersAnalytics extends $Notifier<Map<String, int>> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Map<String, int>, Map<String, int>>;
     final element =
         ref.element
@@ -794,17 +791,17 @@ abstract class _$FiltersAnalytics extends $Notifier<Map<String, int>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(filterRecommendations)
-const filterRecommendationsProvider = FilterRecommendationsProvider._();
+final filterRecommendationsProvider = FilterRecommendationsProvider._();
 
 final class FilterRecommendationsProvider
     extends $FunctionalProvider<List<String>, List<String>, List<String>>
     with $Provider<List<String>> {
-  const FilterRecommendationsProvider._()
+  FilterRecommendationsProvider._()
     : super(
         from: null,
         argument: null,
@@ -841,12 +838,12 @@ String _$filterRecommendationsHash() =>
     r'7e9014f983d2bdf8d8b818e5c30f0f925933ed40';
 
 @ProviderFor(filterComplexityScore)
-const filterComplexityScoreProvider = FilterComplexityScoreProvider._();
+final filterComplexityScoreProvider = FilterComplexityScoreProvider._();
 
 final class FilterComplexityScoreProvider
     extends $FunctionalProvider<double, double, double>
     with $Provider<double> {
-  const FilterComplexityScoreProvider._()
+  FilterComplexityScoreProvider._()
     : super(
         from: null,
         argument: null,
@@ -883,12 +880,12 @@ String _$filterComplexityScoreHash() =>
     r'fbe2d4d32e3d3587bcf632c20e3cebbbd7213766';
 
 @ProviderFor(estimatedMatchCount)
-const estimatedMatchCountProvider = EstimatedMatchCountProvider._();
+final estimatedMatchCountProvider = EstimatedMatchCountProvider._();
 
 final class EstimatedMatchCountProvider
     extends $FunctionalProvider<String, String, String>
     with $Provider<String> {
-  const EstimatedMatchCountProvider._()
+  EstimatedMatchCountProvider._()
     : super(
         from: null,
         argument: null,

@@ -10,11 +10,11 @@ part of 'album_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(AlbumController)
-const albumControllerProvider = AlbumControllerFamily._();
+final albumControllerProvider = AlbumControllerFamily._();
 
 final class AlbumControllerProvider
     extends $AsyncNotifierProvider<AlbumController, UserAlbumModel> {
-  const AlbumControllerProvider._({
+  AlbumControllerProvider._({
     required AlbumControllerFamily super.from,
     required String super.argument,
   }) : super(
@@ -61,12 +61,12 @@ final class AlbumControllerFamily extends $Family
           FutureOr<UserAlbumModel>,
           String
         > {
-  const AlbumControllerFamily._()
+  AlbumControllerFamily._()
     : super(
         retry: null,
         name: r'albumControllerProvider',
-        dependencies: const <ProviderOrFamily>[],
-        $allTransitiveDependencies: const <ProviderOrFamily>[],
+        dependencies: <ProviderOrFamily>[],
+        $allTransitiveDependencies: <ProviderOrFamily>[],
         isAutoDispose: false,
       );
 
@@ -85,7 +85,6 @@ abstract class _$AlbumController extends $AsyncNotifier<UserAlbumModel> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref = this.ref as $Ref<AsyncValue<UserAlbumModel>, UserAlbumModel>;
     final element =
         ref.element
@@ -95,6 +94,6 @@ abstract class _$AlbumController extends $AsyncNotifier<UserAlbumModel> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }

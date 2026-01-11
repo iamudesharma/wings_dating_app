@@ -10,10 +10,10 @@ part of 'chat_repo.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ChatRepo)
-const chatRepoProvider = ChatRepoProvider._();
+final chatRepoProvider = ChatRepoProvider._();
 
 final class ChatRepoProvider extends $NotifierProvider<ChatRepo, dynamic> {
-  const ChatRepoProvider._()
+  ChatRepoProvider._()
     : super(
         from: null,
         argument: null,
@@ -47,7 +47,6 @@ abstract class _$ChatRepo extends $Notifier<dynamic> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<dynamic, dynamic>;
     final element =
         ref.element
@@ -57,6 +56,6 @@ abstract class _$ChatRepo extends $Notifier<dynamic> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

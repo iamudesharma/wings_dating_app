@@ -11,12 +11,12 @@ part of 'theme_provider.dart';
 /// Theme provider using Riverpod 3.0 syntax
 
 @ProviderFor(Theme)
-const themeProvider = ThemeProvider._();
+final themeProvider = ThemeProvider._();
 
 /// Theme provider using Riverpod 3.0 syntax
 final class ThemeProvider extends $NotifierProvider<Theme, ThemeState> {
   /// Theme provider using Riverpod 3.0 syntax
-  const ThemeProvider._()
+  ThemeProvider._()
     : super(
         from: null,
         argument: null,
@@ -52,7 +52,6 @@ abstract class _$Theme extends $Notifier<ThemeState> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ThemeState, ThemeState>;
     final element =
         ref.element
@@ -62,14 +61,14 @@ abstract class _$Theme extends $Notifier<ThemeState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Provider for accessing current theme mode
 
 @ProviderFor(themeMode)
-const themeModeProvider = ThemeModeProvider._();
+final themeModeProvider = ThemeModeProvider._();
 
 /// Provider for accessing current theme mode
 
@@ -77,7 +76,7 @@ final class ThemeModeProvider
     extends $FunctionalProvider<ThemeMode, ThemeMode, ThemeMode>
     with $Provider<ThemeMode> {
   /// Provider for accessing current theme mode
-  const ThemeModeProvider._()
+  ThemeModeProvider._()
     : super(
         from: null,
         argument: null,
@@ -115,7 +114,7 @@ String _$themeModeHash() => r'1bcd9d7b5e497b928afa6343b9d383415e1ce587';
 /// Provider for accessing current light theme
 
 @ProviderFor(lightTheme)
-const lightThemeProvider = LightThemeProvider._();
+final lightThemeProvider = LightThemeProvider._();
 
 /// Provider for accessing current light theme
 
@@ -123,7 +122,7 @@ final class LightThemeProvider
     extends $FunctionalProvider<ThemeData, ThemeData, ThemeData>
     with $Provider<ThemeData> {
   /// Provider for accessing current light theme
-  const LightThemeProvider._()
+  LightThemeProvider._()
     : super(
         from: null,
         argument: null,
@@ -161,7 +160,7 @@ String _$lightThemeHash() => r'7328049d93c0d090151f2e12245446f8bdab79a2';
 /// Provider for accessing current dark theme
 
 @ProviderFor(darkTheme)
-const darkThemeProvider = DarkThemeProvider._();
+final darkThemeProvider = DarkThemeProvider._();
 
 /// Provider for accessing current dark theme
 
@@ -169,7 +168,7 @@ final class DarkThemeProvider
     extends $FunctionalProvider<ThemeData, ThemeData, ThemeData>
     with $Provider<ThemeData> {
   /// Provider for accessing current dark theme
-  const DarkThemeProvider._()
+  DarkThemeProvider._()
     : super(
         from: null,
         argument: null,
@@ -207,7 +206,7 @@ String _$darkThemeHash() => r'974a683dbd31e48d6e9037022634517b7b164880';
 /// Provider for accessing theme preferences
 
 @ProviderFor(themePreferences)
-const themePreferencesProvider = ThemePreferencesProvider._();
+final themePreferencesProvider = ThemePreferencesProvider._();
 
 /// Provider for accessing theme preferences
 
@@ -220,7 +219,7 @@ final class ThemePreferencesProvider
         >
     with $Provider<ThemePreferences> {
   /// Provider for accessing theme preferences
-  const ThemePreferencesProvider._()
+  ThemePreferencesProvider._()
     : super(
         from: null,
         argument: null,
@@ -258,14 +257,14 @@ String _$themePreferencesHash() => r'6f8eb0522761d10bc28de55a722c66c821d20f53';
 /// Provider for checking if theme is loading
 
 @ProviderFor(themeLoading)
-const themeLoadingProvider = ThemeLoadingProvider._();
+final themeLoadingProvider = ThemeLoadingProvider._();
 
 /// Provider for checking if theme is loading
 
 final class ThemeLoadingProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Provider for checking if theme is loading
-  const ThemeLoadingProvider._()
+  ThemeLoadingProvider._()
     : super(
         from: null,
         argument: null,
@@ -303,7 +302,7 @@ String _$themeLoadingHash() => r'4c9047829b5ac71d2bf8c880a0d74dd621a1731b';
 /// Provider for theme error state
 
 @ProviderFor(themeError)
-const themeErrorProvider = ThemeErrorProvider._();
+final themeErrorProvider = ThemeErrorProvider._();
 
 /// Provider for theme error state
 
@@ -311,7 +310,7 @@ final class ThemeErrorProvider
     extends $FunctionalProvider<String?, String?, String?>
     with $Provider<String?> {
   /// Provider for theme error state
-  const ThemeErrorProvider._()
+  ThemeErrorProvider._()
     : super(
         from: null,
         argument: null,

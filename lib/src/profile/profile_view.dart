@@ -28,6 +28,7 @@ class ProfileView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userData = ref.watch(ProfileController.userControllerProvider).userModel;
+    final profileState = ref.watch(ProfileController.userControllerProvider);
 
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -92,7 +93,27 @@ class ProfileView extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(userData.username, style: theme.textTheme.titleLarge),
-                                if ((userData.bio ?? '').isNotEmpty)
+                                if (profileState.hasPendingProfilePicture)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.hourglass_empty, size: 16, color: Colors.amber.shade700),
+                                        const SizedBox(width: 4),
+                                        Flexible(
+                                          child: Text(
+                                            'Profile picture under review',
+                                            style: TextStyle(
+                                              color: Colors.amber.shade700,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                if ((userData.bio ?? '').isNotEmpty && !profileState.hasPendingProfilePicture)
                                   Text(userData.bio!, maxLines: 2, overflow: TextOverflow.ellipsis),
                               ],
                             ),
@@ -101,6 +122,49 @@ class ProfileView extends ConsumerWidget {
                       ),
                       const SizedBox(height: 16),
                       const ProfileCompletionMeter(),
+                      if (profileState.hasPendingProfilePicture) ...[
+                        const SizedBox(height: 16),
+                        Card(
+                          elevation: 0,
+                          color: Colors.amber.shade50,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            side: BorderSide(color: Colors.amber.shade200, width: 1),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(color: Colors.amber.shade100, shape: BoxShape.circle),
+                                  child: Icon(Icons.schedule, color: Colors.amber.shade700, size: 24),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Profile Picture Under Review',
+                                        style: theme.textTheme.titleSmall?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.amber.shade900,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Your new profile picture is being reviewed by our admin team. Once approved, it will be visible to other users.',
+                                        style: theme.textTheme.bodySmall?.copyWith(color: Colors.amber.shade800),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 16),
                       // Settings Section
                       Text('Settings', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),

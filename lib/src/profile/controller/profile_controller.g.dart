@@ -10,11 +10,11 @@ part of 'profile_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ProfileController)
-const profileControllerProvider = ProfileControllerProvider._();
+final profileControllerProvider = ProfileControllerProvider._();
 
 final class ProfileControllerProvider
     extends $NotifierProvider<ProfileController, ProfileState> {
-  const ProfileControllerProvider._()
+  ProfileControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -41,14 +41,13 @@ final class ProfileControllerProvider
   }
 }
 
-String _$profileControllerHash() => r'13d77d94eb2be5821987e17430b8848b3c116af8';
+String _$profileControllerHash() => r'abc3b8ad9f7ff2737b8d3105d319bb0b522148f1';
 
 abstract class _$ProfileController extends $Notifier<ProfileState> {
   ProfileState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<ProfileState, ProfileState>;
     final element =
         ref.element
@@ -58,15 +57,15 @@ abstract class _$ProfileController extends $Notifier<ProfileState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(RoleNotifier)
-const roleProvider = RoleNotifierProvider._();
+final roleProvider = RoleNotifierProvider._();
 
 final class RoleNotifierProvider extends $NotifierProvider<RoleNotifier, Role> {
-  const RoleNotifierProvider._()
+  RoleNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -100,7 +99,6 @@ abstract class _$RoleNotifier extends $Notifier<Role> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Role, Role>;
     final element =
         ref.element
@@ -110,16 +108,16 @@ abstract class _$RoleNotifier extends $Notifier<Role> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(BodyTypeNotifier)
-const bodyTypeProvider = BodyTypeNotifierProvider._();
+final bodyTypeProvider = BodyTypeNotifierProvider._();
 
 final class BodyTypeNotifierProvider
     extends $NotifierProvider<BodyTypeNotifier, BodyType> {
-  const BodyTypeNotifierProvider._()
+  BodyTypeNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -153,7 +151,6 @@ abstract class _$BodyTypeNotifier extends $Notifier<BodyType> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<BodyType, BodyType>;
     final element =
         ref.element
@@ -163,16 +160,16 @@ abstract class _$BodyTypeNotifier extends $Notifier<BodyType> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(RelationshipStatusNotifier)
-const relationshipStatusProvider = RelationshipStatusNotifierProvider._();
+final relationshipStatusProvider = RelationshipStatusNotifierProvider._();
 
 final class RelationshipStatusNotifierProvider
     extends $NotifierProvider<RelationshipStatusNotifier, RelationshipStatus> {
-  const RelationshipStatusNotifierProvider._()
+  RelationshipStatusNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -208,7 +205,6 @@ abstract class _$RelationshipStatusNotifier
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<RelationshipStatus, RelationshipStatus>;
     final element =
         ref.element
@@ -218,16 +214,16 @@ abstract class _$RelationshipStatusNotifier
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(EthnicityNotifier)
-const ethnicityProvider = EthnicityNotifierProvider._();
+final ethnicityProvider = EthnicityNotifierProvider._();
 
 final class EthnicityNotifierProvider
     extends $NotifierProvider<EthnicityNotifier, Ethnicity> {
-  const EthnicityNotifierProvider._()
+  EthnicityNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -261,7 +257,6 @@ abstract class _$EthnicityNotifier extends $Notifier<Ethnicity> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Ethnicity, Ethnicity>;
     final element =
         ref.element
@@ -271,16 +266,16 @@ abstract class _$EthnicityNotifier extends $Notifier<Ethnicity> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(LookingForNotifier)
-const lookingForProvider = LookingForNotifierProvider._();
+final lookingForProvider = LookingForNotifierProvider._();
 
 final class LookingForNotifierProvider
     extends $NotifierProvider<LookingForNotifier, LookingFor> {
-  const LookingForNotifierProvider._()
+  LookingForNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -315,7 +310,6 @@ abstract class _$LookingForNotifier extends $Notifier<LookingFor> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<LookingFor, LookingFor>;
     final element =
         ref.element
@@ -325,16 +319,16 @@ abstract class _$LookingForNotifier extends $Notifier<LookingFor> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(WhereToMeetNotifier)
-const whereToMeetProvider = WhereToMeetNotifierProvider._();
+final whereToMeetProvider = WhereToMeetNotifierProvider._();
 
 final class WhereToMeetNotifierProvider
     extends $NotifierProvider<WhereToMeetNotifier, WhereToMeet> {
-  const WhereToMeetNotifierProvider._()
+  WhereToMeetNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -369,7 +363,6 @@ abstract class _$WhereToMeetNotifier extends $Notifier<WhereToMeet> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<WhereToMeet, WhereToMeet>;
     final element =
         ref.element
@@ -379,6 +372,6 @@ abstract class _$WhereToMeetNotifier extends $Notifier<WhereToMeet> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

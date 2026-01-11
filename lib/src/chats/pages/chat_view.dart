@@ -72,6 +72,8 @@ class ChatView extends StatelessWidget {
                 
                 messageBuilder: (p0, messageDetails, p2, defaultMessageWidget) {
                   return defaultMessageWidget.copyWith(
+                    showSendingIndicator: true,
+                    
                     attachmentBuilders: [
                       ...StreamAttachmentWidgetBuilder.defaultBuilders(
                         message: messageDetails.message,
